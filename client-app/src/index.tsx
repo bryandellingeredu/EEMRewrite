@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import './app/layout/styles.css';
 import reportWebVitals from './reportWebVitals';
 import { Providers } from '@microsoft/mgt-element';
 import { Msal2Provider } from '@microsoft/mgt-msal2-provider';
+import App from './app/layout/App';
 
 Providers.globalProvider = new Msal2Provider({
   clientId: "bd7c447b-e640-4a8a-99b9-f31769b9ab66",
