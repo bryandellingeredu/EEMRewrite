@@ -6,4 +6,5 @@ export interface Activity{
     bodyPreview: string
     start: ActivityDate
     end: ActivityDate
+    category: string
 }
