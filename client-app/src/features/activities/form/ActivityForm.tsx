@@ -6,10 +6,11 @@ interface Props{
     activity: Activity | undefined
     closeForm: () => void
     createOrEdit: (activity: Activity) => void;
+    submitting: boolean;
 }
 
 export default function ActivityForm(
-    {activity: selectedActivity, closeForm, createOrEdit}: Props){
+    {activity: selectedActivity, closeForm, createOrEdit, submitting}: Props){
 
     const initialState = selectedActivity ?? {
         id: '',
@@ -26,7 +27,13 @@ export default function ActivityForm(
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
       const{name, value} = event.target
+      if(name === 'start.dateTime'){
+        setActivity({...activity, 'start': {'dateTime': value, 'timeZone': 'UTC'}});
+      } else if (name === 'end.dateTime'){
+        setActivity({...activity, 'end': {'dateTime': value, 'timeZone': 'UTC'}});
+      } else{
       setActivity({...activity, [name]: value})
+      }
     }
 
     const [activity, setActivity] = useState(initialState)
@@ -54,7 +61,7 @@ export default function ActivityForm(
                 name='end.dateTime'
                 onChange={handleInputChange}
                  />
-                <Button floated='right' positive type='submit' content='Submit'/>
+                <Button loading={submitting} floated='right' positive type='submit' content='Submit'/>
                 <Button floated='right'  type='button' content='Cancel'
                 onClick={closeForm}
                 />

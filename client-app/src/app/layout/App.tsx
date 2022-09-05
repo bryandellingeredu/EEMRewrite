@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Providers, ProviderState } from '@microsoft/mgt';
-import { Container } from 'semantic-ui-react';
+import { Button, Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import Navbar from './Navbar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 import {v4 as uuid} from 'uuid';
+import agent from '../api/agent';
+import LoadingComponent from './LoadingComponent';
+import { useStore } from '../stores/store';
+import { observer } from 'mobx-react-lite';
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -25,28 +29,30 @@ function useIsSignedIn(): [boolean] {
 }
 
 function App() {
+  const {activityStore} = useStore();
+
   const [isSignedIn] = useIsSignedIn();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
 
 
   const getActivities = () => {
-    if (Providers.globalProvider.state === ProviderState.SignedIn) {
-      const provider = Providers.globalProvider;
-      let graphClient = provider.graph.client;
-      graphClient.api('/groups/88d59881-7b15-4adc-a756-5d10681cf99d/calendar/events')
-        .get()
-        .then(response => {
-          console.log(response);
-          setActivities(
-            response.value.map((activity: Activity) => (
-              { ...activity,
-                category: 'Academic Calendar',  
-                bodyPreview: activity.bodyPreview.split('\r')[0] }))
+    if(agent.IsSignedIn()){
+    agent.Activities.list().then(response =>{
+      console.log(response);
+      setActivities(
+        response.map((activity: Activity) => (
+          { ...activity,
+            category: 'Academic Calendar',  
+            bodyPreview: activity.bodyPreview.split('\r')[0] }))
           );
-        })
-    }
+          setLoading(false);
+    })
+  }
   }
 
   const providerStateChanged = () => { getActivities(); }
@@ -73,15 +79,31 @@ function App() {
   }
 
   function handleCreateorEditActivty(activity: Activity){
-   activity.id 
-    ? setActivities([...activities.filter(x => x.id !== activity.id), activity])
-    : setActivities([...activities, {...activity, id: uuid()}]);
+  setSubmitting(true);
+  if(activity.id){
+    agent.Activities.update(activity).then(() =>{
+    setSubmitting(false);
+    setActivities([...activities.filter(x => x.id !== activity.id), activity]);
+    setSelectedActivity(activity);
     setEditMode(false);
     setSelectedActivity(activity);
-  }
+  })
+  } else {
+    agent.Activities.create(activity).then(response=>{
+      const newActivity = {...response, category: activity.category, bodyPreview: activity.bodyPreview};
+      setActivities([...activities, newActivity]);
+      setSelectedActivity(newActivity);
+      setEditMode(false);
+      setSubmitting(false);
+  })}}
 
   function handleDeleteActivity(id: string){
-    setActivities([...activities.filter(x => x.id !== id)])
+    setSubmitting(true);
+    agent.Activities.delete(id).then(() => {
+      setActivities([...activities.filter(x => x.id !== id)])
+      setSubmitting(false);
+    })
+    
   }
 
 
@@ -90,7 +112,14 @@ function App() {
       <Container style={{ marginTop: '7em' }}>
         <Navbar openForm={handleFormOpen} />
       </Container>
-      {isSignedIn &&
+      {isSignedIn && loading
+       &&<LoadingComponent content = 'Loading App'/>
+      }
+      {isSignedIn && !loading &&
+       
+       <Container style={{marginTop: '7em'}}>
+         <h2>{activityStore.title}</h2> 
+         <Button content='Add' positive onClick={activityStore.setTitle}/>
         <ActivityDashboard
          activities={activities}
          selectedActivity={selectedActivity}
@@ -101,10 +130,12 @@ function App() {
          closeForm = {handleFormClose}
          createOrEdit = {handleCreateorEditActivty}
          deleteActivity = {handleDeleteActivity}
+         submitting = {submitting}
           />
+      </Container>
       }
     </>
   );
 }
 
-export default App;
+export default observer(App);

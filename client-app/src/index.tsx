@@ -5,12 +5,15 @@ import reportWebVitals from './reportWebVitals';
 import { Providers } from '@microsoft/mgt-element';
 import { Msal2Provider } from '@microsoft/mgt-msal2-provider';
 import App from './app/layout/App';
+import { store, StoreContext } from './app/stores/store';
 
 Providers.globalProvider = new Msal2Provider({
   clientId: "bd7c447b-e640-4a8a-99b9-f31769b9ab66",
   authority: "https://login.microsoftonline.com/0b23030e-3028-4f52-a8f1-a9898322c7fe",
   redirectUri: "http://localhost:3000/",
   scopes: ['calendars.read',
+            'Calendars.ReadWrite',
+            'Group.ReadWrite.All',
            'user.read',
            'user.read.all',
            'openid',
@@ -25,9 +28,13 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
+  
   <React.StrictMode>
-    <App />
+    <StoreContext.Provider value={store}>
+      <App />
+    </StoreContext.Provider>
   </React.StrictMode>
+  
 );
 
 // If you want to start measuring performance in your app, pass a function
