@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Providers, ProviderState } from '@microsoft/mgt';
-import { Button, Container } from 'semantic-ui-react';
+import {  Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import Navbar from './Navbar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
@@ -35,29 +35,13 @@ function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
+  const providerStateChanged = () => activityStore.loadActivites();
 
-
-  const getActivities = () => {
-    if(agent.IsSignedIn()){
-    agent.Activities.list().then(response =>{
-      console.log(response);
-      setActivities(
-        response.map((activity: Activity) => (
-          { ...activity,
-            category: 'Academic Calendar',  
-            bodyPreview: activity.bodyPreview.split('\r')[0] }))
-          );
-          setLoading(false);
-    })
-  }
-  }
-
-  const providerStateChanged = () => { getActivities(); }
-
-  useEffect(() => { getActivities(); }, [])
+  useEffect(() => {
+    activityStore.loadActivites()
+    }, [activityStore])
 
   Providers.onProviderUpdated(providerStateChanged);
 
@@ -112,16 +96,14 @@ function App() {
       <Container style={{ marginTop: '7em' }}>
         <Navbar openForm={handleFormOpen} />
       </Container>
-      {isSignedIn && loading
+      {isSignedIn && activityStore.loadingInitial
        &&<LoadingComponent content = 'Loading App'/>
       }
-      {isSignedIn && !loading &&
+      {isSignedIn && !activityStore.loadingInitial &&
        
-       <Container style={{marginTop: '7em'}}>
-         <h2>{activityStore.title}</h2> 
-         <Button content='Add' positive onClick={activityStore.setTitle}/>
+       <Container style={{marginTop: '7em'}}> 
         <ActivityDashboard
-         activities={activities}
+         activities={activityStore.activities}
          selectedActivity={selectedActivity}
          selectActivity = {handleSelectActivity}
          cancelSelectActivity = {handleCancelSelectActivity}
