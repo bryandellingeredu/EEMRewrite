@@ -1,11 +1,12 @@
 import { Login } from "@microsoft/mgt-react";
 import { Button, Container, Menu } from "semantic-ui-react";
+import { useStore } from "../stores/store";
 
-interface Props{
-    openForm: () => void;
-}
 
-export default function Navbar({openForm}: Props){
+
+export default function Navbar(){
+    const {activityStore} = useStore();
+
     return(
         <Menu  fixed='top' inverted color='teal'>
            <Container>
@@ -16,7 +17,7 @@ export default function Navbar({openForm}: Props){
              <Menu.Item name='calendar events' />
              <Menu.Item>
                 <Button
-                   onClick={openForm} positive content='New Calendar Event'
+                   onClick={() => activityStore.openForm()} positive content='New Calendar Event'
                  />
              </Menu.Item>
              <Menu.Item position="right">

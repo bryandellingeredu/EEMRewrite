@@ -45,22 +45,7 @@ function App() {
 
   Providers.onProviderUpdated(providerStateChanged);
 
-  function handleSelectActivity(id: string){
-    setSelectedActivity(activities.find(x => x.id === id))
-  }
-
-  function handleCancelSelectActivity(){
-    setSelectedActivity(undefined);
-  }
-
-  function handleFormOpen(id?: string){
-    id ? handleSelectActivity(id) : handleCancelSelectActivity();
-    setEditMode(true);
-  }
-
-  function handleFormClose(){
-    setEditMode(false);
-  }
+ 
 
   function handleCreateorEditActivty(activity: Activity){
   setSubmitting(true);
@@ -94,7 +79,7 @@ function App() {
   return (
     <>
       <Container style={{ marginTop: '7em' }}>
-        <Navbar openForm={handleFormOpen} />
+        <Navbar />
       </Container>
       {isSignedIn && activityStore.loadingInitial
        &&<LoadingComponent content = 'Loading App'/>
@@ -104,12 +89,6 @@ function App() {
        <Container style={{marginTop: '7em'}}> 
         <ActivityDashboard
          activities={activityStore.activities}
-         selectedActivity={selectedActivity}
-         selectActivity = {handleSelectActivity}
-         cancelSelectActivity = {handleCancelSelectActivity}
-         editMode = {editMode}
-         openForm = {handleFormOpen}
-         closeForm = {handleFormClose}
          createOrEdit = {handleCreateorEditActivty}
          deleteActivity = {handleDeleteActivity}
          submitting = {submitting}
