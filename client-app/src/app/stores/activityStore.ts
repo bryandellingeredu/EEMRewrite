@@ -3,32 +3,36 @@ import agent from "../api/agent";
 import { Activity } from "../models/activity";
 
 export default class ActivityStore  {
-   activities: Activity[] = [];
+   activityRegistry = new Map<string, Activity>();
    selectedActivity: Activity | undefined = undefined;
    editMode = false;
    loading = false;
-   loadingInitial = false;
+   loadingInitial = true;
 
     constructor(){
         makeAutoObservable(this);
     }
 
+    get activitiesByDate(){
+      return Array.from(this.activityRegistry.values()).sort((a, b) =>
+       Date.parse(a.start.dateTime) - Date.parse(b.start.dateTime));
+    }
+
     loadActivites = async() => {
         if(agent.IsSignedIn()){
-        this.setLoadingInitial(true);
         try{
            const response : Activity[] = await agent.Activities.list();
            runInAction(() => {
-           this.activities = [];
+           this.activityRegistry.clear();
            response.forEach(activity =>{
              activity.category = 'Academic Calendar';
              activity.bodyPreview = activity.bodyPreview.split('\r')[0];
-             this.activities.push(activity);
+             this.activityRegistry.set(activity.id, activity);
             })
            })
            this.setLoadingInitial(false);
            console.log('activities');
-           console.log(this.activities);
+           console.log(this.activitiesByDate);
         }catch(error){
           console.log(error);
           this.setLoadingInitial(false);
@@ -41,11 +45,10 @@ export default class ActivityStore  {
     try{
      const response =  await agent.Activities.create(activity);
      runInAction(() =>{
-        console.log('id');
+        console.log('response');
         console.log(response);
-        const newActivity = {...response, category: activity.category, bodyPreview: activity.bodyPreview};
-        this.activities.push(newActivity);
-        this.selectedActivity = newActivity;
+        this.activityRegistry.set(activity.id, activity);
+        this.selectedActivity = activity;
         this.editMode = false;
         this.loading = false;
      })
@@ -62,7 +65,7 @@ export default class ActivityStore  {
     try{
       await agent.Activities.update(activity);
       runInAction(() =>{
-       this.activities = [...this.activities.filter(a => a.id !== activity.id), activity];  
+       this.activityRegistry.set(activity.id, activity);
        this.selectedActivity = activity;
        this.editMode = false;
        this.loading = false;    
@@ -80,7 +83,7 @@ export default class ActivityStore  {
     try{
       await agent.Activities.delete(id);
       runInAction(() =>{
-        this.activities = [...this.activities.filter(a => a.id !== id)]; 
+        this.activityRegistry.delete(id);
         if(this.selectedActivity?.id === id) this.cancelSelectedActivity();
        this.loading = false;
       })
@@ -95,7 +98,7 @@ export default class ActivityStore  {
 
   setLoadingInitial = (state: boolean) => this.loadingInitial = state;
 
-  selectActivity = (id: string) => this.selectedActivity = this.activities.find(x => x.id === id);
+  selectActivity = (id: string) => this.selectedActivity = this.activityRegistry.get(id);
   
   cancelSelectedActivity = () => this.selectedActivity = undefined;
 

@@ -1,7 +1,7 @@
 import { Providers, ProviderState } from '@microsoft/mgt';
 import { Activity } from '../models/activity';
 
-const responseBody = (response: any) => response.value;
+const responseBody = (response: any) => response.value || response;
 const academicCalendarURL = '/groups/88d59881-7b15-4adc-a756-5d10681cf99d/calendar/events';
 const getGraphClient = () => Providers.globalProvider.graph.client;
 const IsSignedIn = () => Providers.globalProvider.state === ProviderState.SignedIn;
