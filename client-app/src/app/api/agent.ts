@@ -1,13 +1,18 @@
 import { Providers, ProviderState } from '@microsoft/mgt';
 import { Activity } from '../models/activity';
 
+const acedemicCalendarId ={
+    p2fb: '88d59881-7b15-4adc-a756-5d10681cf99d',
+    hossRob: '53c49041-d533-48e0-8c08-874a95b064ee'
+} 
+
 const responseBody = (response: any) => response.value || response;
-const academicCalendarURL = '/groups/88d59881-7b15-4adc-a756-5d10681cf99d/calendar/events';
+const academicCalendarURL = `/groups/${acedemicCalendarId.hossRob}/calendar/events`;
 const getGraphClient = () => Providers.globalProvider.graph.client;
 const IsSignedIn = () => Providers.globalProvider.state === ProviderState.SignedIn;
 
 const requests = {
-    get: (url: string) => getGraphClient().api(url).get().then(responseBody),
+    get: (url: string) => getGraphClient().api(url).orderby('start/dateTime').top(20).get().then(responseBody),
     update: (url: string, body:{}) => getGraphClient().api(url).update(body),
     create: (url: string, body:{}) => getGraphClient().api(url).create(body).then(responseBody),
     delete: (url: string) => getGraphClient().api(url).delete()

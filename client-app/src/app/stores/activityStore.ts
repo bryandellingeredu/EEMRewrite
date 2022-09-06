@@ -13,9 +13,13 @@ export default class ActivityStore  {
         makeAutoObservable(this);
     }
 
-    get activitiesByDate(){
+    /*get activitiesByDate(){
       return Array.from(this.activityRegistry.values()).sort((a, b) =>
        Date.parse(a.start.dateTime) - Date.parse(b.start.dateTime));
+    }*/
+
+    get activitiesByDate(){
+      return Array.from(this.activityRegistry.values());
     }
 
     loadActivites = async() => {

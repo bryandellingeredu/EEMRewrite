@@ -7,9 +7,19 @@ import { Msal2Provider } from '@microsoft/mgt-msal2-provider';
 import App from './app/layout/App';
 import { store, StoreContext } from './app/stores/store';
 
-Providers.globalProvider = new Msal2Provider({
+const p2fb ={
   clientId: "bd7c447b-e640-4a8a-99b9-f31769b9ab66",
-  authority: "https://login.microsoftonline.com/0b23030e-3028-4f52-a8f1-a9898322c7fe",
+  tenantId: "0b23030e-3028-4f52-a8f1-a9898322c7fe"
+};
+
+const hossRob = {
+  clientId: "7d102e0f-20f7-4883-84b7-c49b17645db0",
+  tenantId: "44f5f615-327a-4d5a-86d5-c9251297d7e4"
+}
+
+Providers.globalProvider = new Msal2Provider({
+  clientId: hossRob.clientId,
+  authority: `https://login.microsoftonline.com/${hossRob.tenantId}`,
   redirectUri: "http://localhost:3000/",
   scopes: ['calendars.read',
             'Calendars.ReadWrite',
