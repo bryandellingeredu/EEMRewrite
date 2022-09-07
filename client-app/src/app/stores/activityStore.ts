@@ -75,11 +75,13 @@ export default class ActivityStore  {
      runInAction(() =>{
         console.log('response');
         console.log(response);
+        activity.id = response.id;
         this.activityRegistry.set(activity.id, activity);
         this.selectedActivity = activity;
         this.editMode = false;
         this.loading = false;
-     })
+     });
+     return activity;
     }catch(error){
         console.log(error);
         runInAction(() =>{
