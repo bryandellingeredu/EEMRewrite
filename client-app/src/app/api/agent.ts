@@ -6,7 +6,12 @@ const acedemicCalendarId ={
     hossRob: '53c49041-d533-48e0-8c08-874a95b064ee'
 } 
 
-const responseBody = (response: any) => response.value || response;
+const responseBody = (response: any) => {
+    const retVal = response.value || response;
+    console.log('response');
+    console.log(retVal);
+    return retVal;
+} 
 const academicCalendarURL = `/groups/${acedemicCalendarId.hossRob}/calendar/events`;
 const getGraphClient = () => Providers.globalProvider.graph.client;
 const IsSignedIn = () => Providers.globalProvider.state === ProviderState.SignedIn;
