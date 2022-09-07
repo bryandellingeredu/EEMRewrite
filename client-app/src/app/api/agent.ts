@@ -28,7 +28,8 @@ const Activities = {
     list: () => requests.get(academicCalendarURL),
     update: (activity: Activity) => requests.update(`${academicCalendarURL}/${activity.id}`, getGraphEvent(activity)),
     create: (activity: Activity) => requests.create(academicCalendarURL, getGraphEvent(activity)),
-    delete: (id: string) =>requests.delete(`${academicCalendarURL}/${id}`)
+    delete: (id: string) =>requests.delete(`${academicCalendarURL}/${id}`),
+    details: (id: string) => requests.get(`${academicCalendarURL}/${id}`)
     }
 
 const agent = {

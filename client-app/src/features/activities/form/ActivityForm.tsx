@@ -1,21 +1,28 @@
 import { observer } from "mobx-react-lite";
 import { ChangeEvent, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Button, Form, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
+import { useEffect} from "react";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 export default observer(function ActivityForm(){
 
         const {activityStore} = useStore();
-        const {selectedActivity, closeForm, createActivity, updateActivity, loading} = activityStore
-
-    const initialState = selectedActivity ?? {
+        const {createActivity, updateActivity, loading, loadActivity, loadingInitial} = activityStore
+        const [activity, setActivity] = useState({
         id: '',
         subject: '',
         bodyPreview: '',
         category: '',
         start: {dateTime: '', timeZone: 'utc' },
         end: {dateTime: '', timeZone: 'utc' },
-    }
+      });
+        const {id} = useParams<{id: string}>();
+      
+      useEffect(() => {
+        if(id) loadActivity(id).then(activity => setActivity(activity))      
+      },[id, loadActivity ])
 
     function handleSubmit(){
        activity.id ? updateActivity(activity) : createActivity(activity);
@@ -32,7 +39,12 @@ export default observer(function ActivityForm(){
       }
     }
 
-    const [activity, setActivity] = useState(initialState)
+    if(loadingInitial){
+      return (
+      <LoadingComponent content='Loading calendar event...'/>
+      )
+    } 
+
     return(
         <Segment clearing>
             <Form onSubmit={handleSubmit} autoComplete='off'>
@@ -59,7 +71,6 @@ export default observer(function ActivityForm(){
                  />
                 <Button loading={loading} floated='right' positive type='submit' content='Submit'/>
                 <Button floated='right'  type='button' content='Cancel'
-                onClick={closeForm}
                 />
             </Form>
         </Segment>

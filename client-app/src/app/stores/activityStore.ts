@@ -23,6 +23,7 @@ export default class ActivityStore  {
     }
 
     loadActivites = async() => {
+      this.setLoadingInitial(true);
         if(agent.IsSignedIn()){
         try{
            const response : Activity[] = await agent.Activities.list();
@@ -43,6 +44,29 @@ export default class ActivityStore  {
         }
     }
   }
+
+  loadActivity = async(id: string) =>{
+
+    this.setLoadingInitial(true);
+      try{
+      const activity = await agent.Activities.details(id);
+       if(activity){
+        activity.category = 'Academic Calendar';
+        activity.bodyPreview = activity.bodyPreview.split('\r')[0];
+        this.setActivity(activity);
+        runInAction(() =>{
+          this.selectedActivity = activity;
+        })    
+        this.setLoadingInitial(false);
+        return activity;
+       }     
+      }catch(error){
+        console.log(error)
+        this.setLoadingInitial(false);
+      }
+  }
+
+   private setActivity = (activity: Activity) => this.activityRegistry.set(activity.id, activity);
 
   createActivity = async (activity: Activity) => {
     this.loading = true;
@@ -88,7 +112,6 @@ export default class ActivityStore  {
       await agent.Activities.delete(id);
       runInAction(() =>{
         this.activityRegistry.delete(id);
-        if(this.selectedActivity?.id === id) this.cancelSelectedActivity();
        this.loading = false;
       })
     }
@@ -101,16 +124,5 @@ export default class ActivityStore  {
   }
 
   setLoadingInitial = (state: boolean) => this.loadingInitial = state;
-
-  selectActivity = (id: string) => this.selectedActivity = this.activityRegistry.get(id);
-  
-  cancelSelectedActivity = () => this.selectedActivity = undefined;
-
-  openForm = (id?: string) => {
-    id ? this.selectActivity(id) : this.cancelSelectedActivity();
-    this.editMode = true;
-  }
-
-  closeForm = () => this.editMode = false;
 
 }
