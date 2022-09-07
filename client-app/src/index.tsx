@@ -1,4 +1,4 @@
-import React from 'react';
+
 import ReactDOM from 'react-dom/client';
 import './app/layout/styles.css';
 import reportWebVitals from './reportWebVitals';
@@ -6,6 +6,7 @@ import { Providers } from '@microsoft/mgt-element';
 import { Msal2Provider } from '@microsoft/mgt-msal2-provider';
 import App from './app/layout/App';
 import { store, StoreContext } from './app/stores/store';
+import { BrowserRouter } from 'react-router-dom';
 
 const p2fb ={
   clientId: "bd7c447b-e640-4a8a-99b9-f31769b9ab66",
@@ -38,13 +39,11 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  
-  <React.StrictMode>
     <StoreContext.Provider value={store}>
-      <App />
-    </StoreContext.Provider>
-  </React.StrictMode>
-  
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </StoreContext.Provider>  
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -18,7 +18,7 @@ export default class ActivityStore  {
        Date.parse(a.start.dateTime) - Date.parse(b.start.dateTime));
     }*/
 
-    get activitiesByDate(){
+    get activities(){
       return Array.from(this.activityRegistry.values());
     }
 
@@ -36,7 +36,7 @@ export default class ActivityStore  {
            })
            this.setLoadingInitial(false);
            console.log('activities');
-           console.log(this.activitiesByDate);
+           console.log(this.activities);
         }catch(error){
           console.log(error);
           this.setLoadingInitial(false);

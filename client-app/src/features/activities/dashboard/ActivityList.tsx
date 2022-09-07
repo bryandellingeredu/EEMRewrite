@@ -8,7 +8,7 @@ import { useStore } from "../../../app/stores/store";
 export default observer (function ActivityList() {
 
     const {activityStore} = useStore();
-    const {deleteActivity, activitiesByDate : activities, loading} = activityStore;
+    const {deleteActivity, activities, loading} = activityStore;
     const [target, setTarget] = useState('');
 
     function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
