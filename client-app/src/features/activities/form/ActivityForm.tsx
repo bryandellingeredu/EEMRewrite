@@ -18,6 +18,7 @@ export default observer(function ActivityForm(){
         category: '',
         start: {dateTime: '', timeZone: 'utc' },
         end: {dateTime: '', timeZone: 'utc' },
+        attendees: null
       });
         const {id} = useParams<{id: string}>();
       

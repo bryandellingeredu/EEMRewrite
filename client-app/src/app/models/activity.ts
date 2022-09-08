@@ -1,4 +1,5 @@
 import { ActivityDate } from "./activityDate"
+import { Attendee } from "./attendee"
 
 export interface Activity{
     id: string
@@ -7,4 +8,5 @@ export interface Activity{
     start: ActivityDate
     end: ActivityDate
     category: string
+    attendees: Attendee[] | null
 }

@@ -1,5 +1,4 @@
 import {  makeAutoObservable, runInAction  } from "mobx";
-import { objectPrototype } from "mobx/dist/internal";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
 
@@ -37,7 +36,6 @@ export default class ActivityStore  {
            this.activityRegistry.clear();
            response.forEach(activity =>{
              activity.category = 'Academic Calendar';
-             activity.bodyPreview = activity.bodyPreview.split('\r')[0];
              this.activityRegistry.set(activity.id, activity);
             })
            })
@@ -56,7 +54,6 @@ export default class ActivityStore  {
       const activity = await agent.Activities.details(id);
        if(activity){
         activity.category = 'Academic Calendar';
-        activity.bodyPreview = activity.bodyPreview.split('\r')[0];
         this.setActivity(activity);
         runInAction(() =>{
           this.selectedActivity = activity;

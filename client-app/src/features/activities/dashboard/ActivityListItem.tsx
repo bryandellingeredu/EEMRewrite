@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button, Item, Label } from "semantic-ui-react";
+import { Button, Icon, Item,  Segment, SegmentGroup } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
@@ -20,12 +20,24 @@ export default function ActivityListItem({activity}:Props){
       }
 
     return (
-        <Item key={activity.id}>
-        <Item.Content>
-            <Item.Header as='a'>
-                {activity.subject}
-            </Item.Header>
-            <Item.Meta>
+      <SegmentGroup>
+        <Segment>
+          <Item.Group>
+            <Item>
+                <Icon circular inverted color='teal' name='graduation cap' size='big' />
+              
+                <Item.Content>
+                    <Item.Header as={Link} to={`/activities/${activity.id}`}>
+                    {activity.subject}
+                    </Item.Header> 
+                    <Item.Description> {activity.category}
+                    </Item.Description>                 
+                </Item.Content>
+            </Item>
+          </Item.Group>
+        </Segment>
+        <Segment>
+                <Icon name='clock'/>
                 {new Date(activity.start.dateTime)
                     .toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
                 }
@@ -41,25 +53,29 @@ export default function ActivityListItem({activity}:Props){
                         new Date(activity.start.dateTime)
                             .toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
                 }
-            </Item.Meta>
-            {activity.bodyPreview && (
-            <Item.Description>
-                <div>{activity.bodyPreview}</div>
-            </Item.Description>
-            )}
-            <Item.Extra>
-                <Button as={Link} to={`/activities/${activity.id}`}
-                 floated='right' content='View' color='blue'/>
-                  <Button
+                </Segment>
+                <Segment>
+             <Icon name='marker' style={{marginLeft: '10'}}/> Unites States Army War College
+             </Segment>
+    
+        <Segment secondary>
+          attendees go here
+        </Segment>
+        <Segment clearing>
+            <span>{activity.bodyPreview}</span>
+        </Segment>
+        <Segment clearing>
+        <Button
                     name={activity.id}
                     onClick={(e) =>handleActivityDelete(e, activity.id)}
                     floated='right'
                     content='Delete'
                     color='red'
-                    loading={loading && target === activity.id}/>
-                <Label basic content= {activity.category}/>
-            </Item.Extra>
-        </Item.Content>
-    </Item>
+            loading={loading && target === activity.id}/>
+            <Button as={Link} to={`/activities/${activity.id}`}
+                 floated='right' content='View' color='blue'/>
+
+      </Segment>
+      </SegmentGroup>
     )
 }
