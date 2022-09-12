@@ -22,7 +22,7 @@ function App() {
              <Navbar /> 
             <Container style={{marginTop: '7em'}}>    
               <Route exact path='/activities' component={ActivityDashboard}/>
-              <Route path='/activities/:id' component={ActivityDetails} sensitive/>
+              <Route path='/activities/:id/:email' component={ActivityDetails} sensitive/>
               <Route key={location.key} exact path={['/createActivity', '/manage/:id']} component={ActivityForm}/>
             </Container>
            </>

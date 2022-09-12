@@ -1,4 +1,6 @@
-﻿namespace API
+﻿using Microsoft.Extensions.Configuration;
+
+namespace Application
 {
     public class Settings
     {
@@ -11,12 +13,6 @@
 
         public Settings LoadSettings(IConfiguration config)
         {
-
-            /*   IConfiguration config = new ConfigurationBuilder()
-                   .AddJsonFile("appsettings.json", optional: false)
-                   .AddJsonFile($"appsettings.Development.json", optional: true)
-                   .AddUserSecrets<Program>()
-                   .Build();*/
             var c = config.GetRequiredSection("Settings");
             return c.Get<Settings>();
         }

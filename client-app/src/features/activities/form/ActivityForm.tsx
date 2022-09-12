@@ -18,12 +18,13 @@ export default observer(function ActivityForm(){
         category: '',
         start: {dateTime: '', timeZone: 'utc' },
         end: {dateTime: '', timeZone: 'utc' },
-        attendees: null
       });
+
         const {id} = useParams<{id: string}>();
+        const {email} = useParams<{email: string}>();
       
       useEffect(() => {
-        if(id) loadActivity(id).then(activity => setActivity(activity))      
+        if(id) loadActivity(id,email).then(activity => setActivity(activity))      
       },[id, loadActivity ])
 
     function handleSubmit(){

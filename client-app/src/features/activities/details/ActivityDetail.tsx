@@ -13,9 +13,12 @@ export default observer (function ActivityDetails() {
     const{activityStore} = useStore();
     const {selectedActivity: activity, loadActivity, loadingInitial} = activityStore
     const {id} = useParams<{id: string}>();
+    const {email} = useParams<{email: string}>();
 
     useEffect(() => {
-      if(id) loadActivity(id);
+      if(id){
+        loadActivity(id, email);
+      } 
     },[id, loadActivity])
 
     if (loadingInitial || !activity) return <LoadingComponent/>;
@@ -27,7 +30,7 @@ export default observer (function ActivityDetails() {
             <ActivityDetailedInfo activity={activity}/>
          </Grid.Column>
          <Grid.Column width={6}>
-          <ActivityDetailedSideBar attendees={activity.attendees}/>
+          <ActivityDetailedSideBar attendees={activity.attendees || null}/>
          </Grid.Column>
       </Grid>
     )

@@ -4,6 +4,7 @@ import { Activity } from "../../../app/models/activity";
 import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
 
+
 interface Props{
     activity: Activity
 }
@@ -24,10 +25,12 @@ export default function ActivityListItem({activity}:Props){
         <Segment>
           <Item.Group>
             <Item>
-                <Icon circular inverted color='teal' name='graduation cap' size='big' />
-              
+              {activity.category === 'Academic Calendar' &&
+              <Icon circular inverted color='teal' name='graduation cap' size='big' />}
+            {activity.category !== 'Academic Calendar' &&
+              <Icon circular inverted color='teal' name='building' size='big' />}                   
                 <Item.Content>
-                    <Item.Header as={Link} to={`/activities/${activity.id}`}>
+                    <Item.Header as={Link} to={`/activities/${activity.id}/${activity.location?.locationUri}`}>
                     {activity.subject}
                     </Item.Header> 
                     <Item.Description> {activity.category}
@@ -72,7 +75,7 @@ export default function ActivityListItem({activity}:Props){
                     content='Delete'
                     color='red'
             loading={loading && target === activity.id}/>
-            <Button as={Link} to={`/activities/${activity.id}`}
+            <Button as={Link} to={`/activities/${activity.id}/${activity.location?.locationUri}`}
                  floated='right' content='View' color='blue'/>
 
       </Segment>

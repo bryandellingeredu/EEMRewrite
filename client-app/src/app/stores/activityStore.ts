@@ -28,16 +28,22 @@ export default class ActivityStore  {
     }
 
     loadActivites = async() => {
+      if(!this.activityRegistry.size){
       this.setLoadingInitial(true);
         if(agent.IsSignedIn()){
         try{
-           const response : Activity[] = await agent.Activities.list();
+           const graphResponse : Activity[] = await agent.Activities.list();
+           const roomResponse : Activity[] = await agent.RoomActivities.list();
            runInAction(() => {
            this.activityRegistry.clear();
-           response.forEach(activity =>{
+           graphResponse.forEach(activity =>{
              activity.category = 'Academic Calendar';
              this.activityRegistry.set(activity.id, activity);
             })
+            roomResponse.forEach(activity =>{
+              activity.category = activity.location?.displayName || 'Academic Calendar';
+              this.activityRegistry.set(activity.id, activity);
+             })
            })
            this.setLoadingInitial(false);
         }catch(error){
@@ -46,26 +52,48 @@ export default class ActivityStore  {
         }
     }
   }
+}
 
-  loadActivity = async(id: string) =>{
-
+  loadActivity = async(id: string, email: string) =>{
+    let activity = this.getActivity(id);
+    if (activity) {
+      this.selectedActivity = activity;
+      return activity;
+  } else {
     this.setLoadingInitial(true);
       try{
-      const activity = await agent.Activities.details(id);
-       if(activity){
-        activity.category = 'Academic Calendar';
-        this.setActivity(activity);
-        runInAction(() =>{
-          this.selectedActivity = activity;
-        })    
-        this.setLoadingInitial(false);
+      if (email && email !== 'undefined'){
+        let activity = await agent.RoomActivities.details(email, id);
+        const category = activity.location?.displayName || 'Unknown';     
+        this.processLoadActivity(activity, category);
         return activity;
-       }     
+      } else {
+        let activity = await agent.Activities.details(id);
+        this.processLoadActivity(activity, 'Academic Calendar');
+        return activity;
+      }         
       }catch(error){
         console.log(error)
         this.setLoadingInitial(false);
       }
+  }}
+
+  
+  processLoadActivity(activity: Activity, category: string){    
+    if(activity){
+      activity.category = category;
+      this.setActivity(activity);
+      runInAction(() =>{
+        this.selectedActivity = activity;
+      })    
+      this.setLoadingInitial(false);
+      return activity;
+     } 
   }
+
+  private getActivity = (id: string) => {
+    return this.activityRegistry.get(id);
+}
 
    private setActivity = (activity: Activity) => this.activityRegistry.set(activity.id, activity);
 

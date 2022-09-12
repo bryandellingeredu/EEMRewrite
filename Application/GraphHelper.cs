@@ -1,4 +1,4 @@
-﻿namespace API
+﻿namespace Application
 {
     using Azure.Identity;
     using Microsoft.Graph;
@@ -53,6 +53,39 @@
                 // Sort by display name
                 .OrderBy("DisplayName")
                 .GetAsync();
+        }
+
+        public static Task<IUserEventsCollectionPage> GetEventsAsync(string email)
+        {
+
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            return _appClient.Users[email].Events
+            .Request()
+            .GetAsync();
+        }
+        public static Task<Event> GetEventAsync(string email, string id)
+        {
+
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            return _appClient.Users[email].Events[id]
+            .Request()
+            .GetAsync();
+        }
+
+        public static Task<IGraphServicePlacesCollectionPage> GetRoomsAsync()
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+            var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
+            var placesRequest = new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
+            return placesRequest;
         }
     }
 }
