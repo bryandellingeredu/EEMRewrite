@@ -1,6 +1,7 @@
 import {  makeAutoObservable, runInAction  } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
+import { CalendarEvent } from "../models/calendarEvent"
 
 export default class ActivityStore  {
    activityRegistry = new Map<string, Activity>();
@@ -8,6 +9,7 @@ export default class ActivityStore  {
    editMode = false;
    loading = false;
    loadingInitial = true;
+   events: CalendarEvent[] = []
 
     constructor(){
         makeAutoObservable(this);
@@ -16,6 +18,8 @@ export default class ActivityStore  {
     get activities(){
       return Array.from(this.activityRegistry.values());
     }
+
+    
 
     get groupedActivities(){
       return Object.entries(
@@ -45,6 +49,8 @@ export default class ActivityStore  {
               this.activityRegistry.set(activity.id, activity);
              })
            })
+           debugger;
+           this.getEvents();
            this.setLoadingInitial(false);
         }catch(error){
           console.log(error);
@@ -94,6 +100,8 @@ export default class ActivityStore  {
   private getActivity = (id: string) => {
     return this.activityRegistry.get(id);
 }
+
+
 
    private setActivity = (activity: Activity) => this.activityRegistry.set(activity.id, activity);
 
@@ -155,5 +163,18 @@ export default class ActivityStore  {
   }
 
   setLoadingInitial = (state: boolean) => this.loadingInitial = state;
+
+  getEvents = () => {
+    debugger;
+    console.log('activities')
+    console.log(this.activities)
+     this.events = [];
+     this.activities.forEach(activity => 
+      {
+        this.events.push({title: activity.subject, date: new Date(activity.start.dateTime)})
+      });
+      console.log('events');
+      console.log(this.events);
+  }
 
 }

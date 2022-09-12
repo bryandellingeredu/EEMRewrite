@@ -12,6 +12,7 @@ export default function Navbar(){
                  EEM
              </Menu.Item>
              <Menu.Item as={NavLink} to='/activities' name='Activities' />
+             <Menu.Item as={NavLink} to='/calendar' name='Calendar' />
              <Menu.Item>
                 <Button as={NavLink} to='/createActivity'
                   positive content='New Calendar Event'
