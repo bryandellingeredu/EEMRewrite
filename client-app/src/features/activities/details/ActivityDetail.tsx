@@ -17,7 +17,7 @@ export default observer (function ActivityDetails() {
 
     useEffect(() => {
       if(id){
-        loadActivity(id, email);
+        loadActivity(id, email||'undefined');
       } 
     },[id, loadActivity])
 

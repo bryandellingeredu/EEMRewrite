@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
 using System.Net.Mail;
+using System.Numerics;
 
 namespace API.Controllers
 {
@@ -10,32 +11,40 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllGraphEvents()
         {
-            var places = await Mediator.Send(new Application.GraphRooms.List.Query());
-            List<Event> events = new List<Event>();
-            foreach (var place in places)
+            var result = await Mediator.Send(new Application.GraphRooms.List.Query());
+            if (result.IsSuccess && result.Value != null)
             {
-                string emailAddress = place.AdditionalData["emailAddress"].ToString();
-                var evts = await Mediator.Send(new Application.GraphEvents.List.Query { Email = emailAddress });
-                foreach (var e in evts)
+                List<Event> events = new List<Event>();
+                foreach (var place in result.Value)
                 {
-                    events.Add(e);
-                }
-            }
+                    string emailAddress = place.AdditionalData["emailAddress"].ToString();
+                    var result2 = await Mediator.Send(new Application.GraphEvents.List.Query { Email = emailAddress });
 
-            return Ok(events);
+                    if (result2.IsSuccess && result2.Value != null)
+                    {
+                        foreach (var e in result2.Value)
+                        {
+                            events.Add(e);
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("Problem retrieving events");
+                    }
+                }
+
+                return Ok(events);
+            } else
+            {
+                return BadRequest("Problem retrieving events");
+            }     
         }
 
         [HttpGet("{email}")]
-        public async Task<IActionResult> GetGraphEvents(string email)
-        {
-            var result = await Mediator.Send(new Application.GraphEvents.List.Query{ Email = email});
-            return Ok(result);
-        }
+        public async Task<IActionResult> GetGraphEvents(string email) => HandleResult(await Mediator.Send(new Application.GraphEvents.List.Query { Email = email }));
+
+
         [HttpGet("{email}/events/{id}")]
-        public async Task<IActionResult> GetGraphEvent(string email, string id)
-        {
-            var result = await Mediator.Send(new Application.GraphEvents.Details.Query { Email = email, Id = id });
-            return Ok(result);
-        }
+        public async Task<IActionResult> GetGraphEvent(string email, string id) => HandleResult(await Mediator.Send(new Application.GraphEvents.Details.Query { Email = email, Id = id }));
     }
 }

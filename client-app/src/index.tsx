@@ -6,7 +6,10 @@ import { Providers } from '@microsoft/mgt-element';
 import { Msal2Provider } from '@microsoft/mgt-msal2-provider';
 import App from './app/layout/App';
 import { store, StoreContext } from './app/stores/store';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import {createBrowserHistory} from 'history';
+
+export const history = createBrowserHistory();
 
 const p2fb ={
   clientId: "bd7c447b-e640-4a8a-99b9-f31769b9ab66",
@@ -40,9 +43,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
     <StoreContext.Provider value={store}>
-      <BrowserRouter>
+      <Router history={history}>
         <App />
-      </BrowserRouter>
+      </Router>
     </StoreContext.Provider>  
 );
 

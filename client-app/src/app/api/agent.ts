@@ -1,8 +1,32 @@
 import { Providers, ProviderState } from '@microsoft/mgt';
 import { Activity } from '../models/activity';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
+import { history } from '../..';
 
 axios.defaults.baseURL = 'https://localhost:7285/api';
+
+axios.interceptors.response.use(async response => {
+   return response;
+}, (error: AxiosError) => {
+    const{data, status} = error.response!;
+    switch (status){
+        case 400: 
+        toast.error('bad request');
+        break;
+        case 401:
+        toast.error('unauthorised');
+        break;
+        case 404:
+        history.push('/not-found')
+        break;
+        case 500:
+        toast.error('server error');
+        break;
+    }
+    return Promise.reject(error);
+
+});
 
 const acedemicCalendarId ={
     p2fb: '88d59881-7b15-4adc-a756-5d10681cf99d',
@@ -28,7 +52,7 @@ const getGraphClient = () => Providers.globalProvider.graph.client;
 const IsSignedIn = () => Providers.globalProvider.state === ProviderState.SignedIn;
 
 const graphRequests = {
-    get: (url: string) => getGraphClient().api(url).orderby('start/dateTime').top(20).get().then(graphResponseBody),
+    get: (url: string) => getGraphClient().api(url).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
     update: (url: string, body:{}) => getGraphClient().api(url).update(body),
     create: (url: string, body:{}) => getGraphClient().api(url).create(body).then(graphResponseBody),
     delete: (url: string) => getGraphClient().api(url).delete()

@@ -171,7 +171,13 @@ export default class ActivityStore  {
      this.events = [];
      this.activities.forEach(activity => 
       {
-        this.events.push({title: activity.subject, date: new Date(activity.start.dateTime)})
+        this.events.push({
+          title: activity.subject,
+          start: new Date(activity.start.dateTime),
+          end: new Date(activity.end.dateTime),
+          allDay: false,
+          id: activity.id
+          });
       });
       console.log('events');
       console.log(this.events);

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Core;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 using System;
@@ -11,12 +12,12 @@ namespace Application.GraphUsers
 {
     public class List
     {
-        public class Query : IRequest<IGraphServiceUsersCollectionPage>
+        public class Query : IRequest<Result<IGraphServiceUsersCollectionPage>>
         {
 
         }
 
-        public class Handler : IRequestHandler<Query, IGraphServiceUsersCollectionPage>
+        public class Handler : IRequestHandler<Query, Result<IGraphServiceUsersCollectionPage>>
         {
             private readonly IConfiguration _config;
             public Handler(IConfiguration config)
@@ -24,13 +25,13 @@ namespace Application.GraphUsers
                 _config = config;
             }
 
-            public async Task<IGraphServiceUsersCollectionPage> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<IGraphServiceUsersCollectionPage>> Handle(Query request, CancellationToken cancellationToken)
             {
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                 var result = await GraphHelper.GetUsersAsync();
-                return result;
+                return Result<IGraphServiceUsersCollectionPage>.Success(result);
             }
         }
     }

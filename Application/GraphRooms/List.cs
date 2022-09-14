@@ -6,16 +6,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Core;
 
 namespace Application.GraphRooms
 {
     public class List
     {
-        public class Query : IRequest<IGraphServicePlacesCollectionPage>
+        public class Query : IRequest<Result<IGraphServicePlacesCollectionPage>>
         {
         }
 
-        public class Handler : IRequestHandler<Query, IGraphServicePlacesCollectionPage>
+        public class Handler : IRequestHandler<Query, Result<IGraphServicePlacesCollectionPage>>
         {
             private readonly IConfiguration _config;
             public Handler(IConfiguration config)
@@ -23,13 +24,13 @@ namespace Application.GraphRooms
                 _config = config;
             }
 
-            public async Task<IGraphServicePlacesCollectionPage> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<IGraphServicePlacesCollectionPage>> Handle(Query request, CancellationToken cancellationToken)
             {
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                 var result = await GraphHelper.GetRoomsAsync();
-                return result;
+                return Result<IGraphServicePlacesCollectionPage>.Success(result);
             }
         }
     }
