@@ -3,6 +3,7 @@ import { Activity } from '../models/activity';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { history } from '../..';
+import { store } from '../stores/store';
 
 axios.defaults.baseURL = 'https://localhost:7285/api';
 
@@ -12,7 +13,18 @@ axios.interceptors.response.use(async response => {
     const{data, status} = error.response!;
     switch (status){
         case 400: 
-        toast.error('bad request');
+       if(data.errors){
+        const modalStateErrors = [];
+        for (const key in data.errors){
+            if (data.errors[key]){
+                modalStateErrors.push(data.errors[key])
+
+            }
+        }
+        throw modalStateErrors.flat();
+       } else {
+        toast.error(data);
+       }
         break;
         case 401:
         toast.error('unauthorised');
@@ -21,7 +33,8 @@ axios.interceptors.response.use(async response => {
         history.push('/not-found')
         break;
         case 500:
-        toast.error('server error');
+        store.commonStore.setServerError(data);
+        history.push('/server-error');
         break;
     }
     return Promise.reject(error);
