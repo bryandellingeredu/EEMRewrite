@@ -13,7 +13,7 @@ import { buildSegCompareObj } from "@fullcalendar/react";
 import MyTextInput from "../../../app/common/form/MyTextInput";
 import MyTextArea from "../../../app/common/form/MyTextArea";
 import MySelectInput from "../../../app/common/form/MySelectInput";
-import { SubCalendarOptions } from "../../../app/common/form/options/subCalendarOptions";
+import { SubCalendarOptions } from "../../../app/common/options/subCalendarOptions";
 
 export default observer(function ActivityForm(){
 
