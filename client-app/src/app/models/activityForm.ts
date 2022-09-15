@@ -3,6 +3,6 @@ export interface ActivityForm{
     subject: string,
     bodyPreview: string,
     category: string,
-    start: string,
-    end: string
+    start: Date,
+    end: Date
 }

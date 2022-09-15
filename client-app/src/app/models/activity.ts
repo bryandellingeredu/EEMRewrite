@@ -1,5 +1,6 @@
 import { ActivityDate } from "./activityDate"
 import { Attendee } from "./attendee"
+import { Body } from "./body"
 import { EmailAddress } from "./emailAddress"
 import { Location } from "./location"
 
@@ -13,4 +14,5 @@ export interface Activity{
     attendees?: Attendee[]
     location?: Location
     emailAddress?: EmailAddress
+    body: Body
 }

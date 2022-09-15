@@ -4,7 +4,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../app/stores/store";
 import {useCallback} from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useHistory  } from "react-router-dom";
 import "@fullcalendar/daygrid/main.css";
 
 export default observer( function Calendar(){
@@ -15,7 +15,7 @@ export default observer( function Calendar(){
       history.push(`/activities/${clickInfo.event.id}/undefined`);
     }, []);
 
-   //const events = [{ title: "today's event", date: new Date() }];
+
     return(
         <FullCalendar
         initialView="dayGridMonth"

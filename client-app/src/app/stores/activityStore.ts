@@ -1,7 +1,10 @@
 import {  makeAutoObservable, runInAction  } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
+import { ActivityForm } from "../models/activityForm";
 import { CalendarEvent } from "../models/calendarEvent"
+import { Body } from "../models/body";
+import { ActivityDate } from "../models/activityDate";
 
 export default class ActivityStore  {
    activityRegistry = new Map<string, Activity>();
@@ -103,37 +106,20 @@ export default class ActivityStore  {
 
 
 
-   private setActivity = (activity: Activity) => this.activityRegistry.set(activity.id, activity);
+   private setActivity = (activity: Activity) => {
+    this.activityRegistry.set(activity.id, activity);
+   }
 
-  createActivity = async (activity: Activity) => {
+   updateActivity = async (activityForm: ActivityForm) => {
     this.loading = true;
+    let activityToBeUpdated = this.activityRegistry.get(activityForm.id);
+    if (activityToBeUpdated){
+    activityToBeUpdated = this.convertActivityFormToActivity(activityForm, activityToBeUpdated)  
     try{
-     const response =  await agent.Activities.create(activity);
-     runInAction(() =>{
-        console.log('response');
-        console.log(response);
-        activity.id = response.id;
-        this.activityRegistry.set(activity.id, activity);
-        this.selectedActivity = activity;
-        this.editMode = false;
-        this.loading = false;
-     });
-     return activity;
-    }catch(error){
-        console.log(error);
-        runInAction(() =>{
-            this.loading = false;
-        })
-    }
-  }
-
-  updateActivity = async (activity: Activity) => {
-    this.loading = true;
-    try{
-      await agent.Activities.update(activity);
+      await agent.Activities.update(activityToBeUpdated);
       runInAction(() =>{
-       this.activityRegistry.set(activity.id, activity);
-       this.selectedActivity = activity;
+       this.activityRegistry.set(activityToBeUpdated!.id, activityToBeUpdated!);
+       this.selectedActivity = activityToBeUpdated;
        this.editMode = false;
        this.loading = false;    
     })
@@ -144,6 +130,66 @@ export default class ActivityStore  {
         })
     }
   }
+}
+
+  createActivity = async (activityForm: ActivityForm) => {
+    this.loading = true;
+    const activityToBeCreated = this.convertActivityFormToActivity(activityForm);
+    try{
+     const response =  await agent.Activities.create(activityToBeCreated );
+     runInAction(() =>{
+        console.log('response');
+        console.log(response);
+        activityToBeCreated.id = response.id;
+        this.activityRegistry.set(activityToBeCreated.id, activityToBeCreated);
+        this.selectedActivity = activityToBeCreated;
+        this.editMode = false;
+        this.loading = false;
+     });
+     return activityToBeCreated;
+    }catch(error){
+        console.log(error);
+        runInAction(() =>{
+            this.loading = false;
+        })
+    }
+  }
+
+  convertDateToGraph = (date: Date) : string => {
+    const isoStringDate = date.toISOString().split('T')[0];
+    const hour = ("0" + date.getHours()).slice(-2);
+    const minute = ("0" + date.getMinutes()).slice(-2);
+    const convertedDate = `${isoStringDate}T${hour}:${minute}:00.0000000`
+   return convertedDate;
+  }
+
+  convertActivityFormToActivity(activityForm: ActivityForm, activityToBeUpdated?: Activity) : Activity {
+    const body: Body = {contentType: 'Html', content: activityForm.bodyPreview}
+    const start: ActivityDate ={ dateTime: this.convertDateToGraph(activityForm.start), timeZone: 'UTC'  }
+    const end: ActivityDate ={ dateTime: this.convertDateToGraph(activityForm.end), timeZone: 'UTC'  }
+    if(activityToBeUpdated){
+      return {
+        ...activityToBeUpdated,
+         subject: activityForm.subject,
+         bodyPreview: activityForm.bodyPreview,
+         category: activityForm.category,
+         body,
+         start,
+         end
+      }
+    } else {
+      return{
+        id: '',
+        subject: activityForm.subject,
+        bodyPreview: activityForm.bodyPreview,
+        category: activityForm.category,
+        body,
+        start,
+        end,
+      }
+    }
+  }
+
 
   deleteActivity = async(id: string) =>{
     this.loading = true;
