@@ -2,13 +2,10 @@
 import { Segment, List, Label, Item, Image, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
-import { Attendee } from '../../../app/models/attendee'
 
-interface Props {
-    attendees: Attendee[] | null 
-}
 
-export default observer(function ActivityDetailedSidebar ({attendees} : Props) {
+
+export default observer(function ActivityDetailedSidebar () {
     return (
         <>
             <Segment
@@ -19,11 +16,12 @@ export default observer(function ActivityDetailedSidebar ({attendees} : Props) {
                 inverted
                 color='teal'
             >
-                {attendees ?  attendees.length : 0 } Responses
+            
+                {/*attendees ?  attendees.length : 0 } Responses */}
             </Segment>
             <Segment attached>
                 <List relaxed divided>
-                {attendees && attendees.map((attendee) => (
+                {/*attendees && attendees.map((attendee) => (
                        <Item style={{ position: 'relative' }} key={attendee.emailAddress.address}>
                         {attendee.type === 'required' &&
                        <Label
@@ -44,11 +42,11 @@ export default observer(function ActivityDetailedSidebar ({attendees} : Props) {
                            <Label as='a' href={`mailto: ${attendee.emailAddress.address}`}>
                            <Icon name='mail' /> {attendee.emailAddress.address}                           
                         </Label>
-                        <h4>status: {attendee.status.response}</h4>
+                        {attendee.status && <h4>status: {attendee.status.response}</h4>}
                            </Item.Extra>
                        </Item.Content>
                    </Item>      
-                ))}
+                    ))*/}
                 </List>
             </Segment>
         </>

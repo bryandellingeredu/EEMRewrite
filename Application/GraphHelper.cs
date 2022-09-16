@@ -87,5 +87,27 @@
             var placesRequest = new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
             return placesRequest;
         }
+
+        public static Task<User> GetUserAsync(string email)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            return _appClient.Users[email]
+            .Request()
+            .GetAsync();
+        }
+
+        public static Task<Event> CreateEvent(Event @event)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            return _appClient.Users[@event.Attendees.First().EmailAddress.Address].Calendar.Events
+                    .Request()
+                    .AddAsync(@event);
+        }
     }
 }

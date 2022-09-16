@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.GraphEvents;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
 using System.Net.Mail;
 using System.Numerics;
@@ -41,10 +42,18 @@ namespace API.Controllers
         }
 
         [HttpGet("{email}")]
-        public async Task<IActionResult> GetGraphEvents(string email) => HandleResult(await Mediator.Send(new Application.GraphEvents.List.Query { Email = email }));
+        public async Task<IActionResult> GetGraphEvents(string email) =>
+            HandleResult(await Mediator.Send(new Application.GraphEvents.List.Query { Email = email }));
 
 
         [HttpGet("{email}/events/{id}")]
-        public async Task<IActionResult> GetGraphEvent(string email, string id) => HandleResult(await Mediator.Send(new Application.GraphEvents.Details.Query { Email = email, Id = id }));
+        public async Task<IActionResult> GetGraphEvent(string email, string id) =>
+            HandleResult(await Mediator.Send(new Application.GraphEvents.Details.Query { Email = email, Id = id }));
+
+        [HttpPost]
+        public async Task<IActionResult> CreateActivity(Event e) =>
+          HandleResult(await Mediator.Send(new Create.Command { Event = e }));
+
     }
 }
+

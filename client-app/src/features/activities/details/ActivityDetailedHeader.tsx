@@ -1,7 +1,8 @@
+import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
 import {Button, Header, Item, Segment, Image} from 'semantic-ui-react'
-import {Activity} from "../../../app/models/activity";
+import { Activity } from '../../../app/models/activity';
 
 const activityImageStyle = {
     filter: 'brightness(30%)'
@@ -31,26 +32,12 @@ export default observer (function ActivityDetailedHeader({activity}: Props) {
                             <Item.Content>
                                 <Header
                                     size='huge'
-                                    content={activity.subject}
+                                    content={activity.title}
                                     style={{color: 'white'}}
                                 />
                                 <p>
-                         
-            {new Date(activity.start.dateTime)
-                                    .toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-                                }
-                                &nbsp; - &nbsp;
-
-                                {
-
-                                    new Date(activity.start.dateTime).toLocaleDateString() ===
-                                        new Date(activity.end.dateTime).toLocaleDateString() ?
-                                        new Date(activity.end.dateTime)
-                                            .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                                        :
-                                        new Date(activity.start.dateTime)
-                                            .toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-                                }
+                                {format(activity.start, 'MMMM d, yyyy h:mm aa')} - 
+                                {format(activity.end, 'MMMM d, yyyy h:mm aa')}
           
                                 </p>
                                 <p>

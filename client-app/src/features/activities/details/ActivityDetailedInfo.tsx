@@ -1,6 +1,7 @@
+import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import {Segment, Grid, Icon} from 'semantic-ui-react'
-import {Activity} from "../../../app/models/activity";
+import { Activity } from '../../../app/models/activity';
 
 interface Props {
     activity: Activity
@@ -15,7 +16,7 @@ export default observer(function ActivityDetailedInfo({activity}: Props) {
                         <Icon size='large' color='teal' name='info'/>
                     </Grid.Column>
                     <Grid.Column width={15}>
-                        <p>{activity.bodyPreview}</p>
+                        <p>{activity.description}</p>
                     </Grid.Column>
                 </Grid>
             </Segment>
@@ -26,21 +27,8 @@ export default observer(function ActivityDetailedInfo({activity}: Props) {
                     </Grid.Column>
                     <Grid.Column width={15}>
             <span>
-            {new Date(activity.start.dateTime)
-                                    .toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-                                }
-                                &nbsp; - &nbsp;
-
-                                {
-
-                                    new Date(activity.start.dateTime).toLocaleDateString() ===
-                                        new Date(activity.end.dateTime).toLocaleDateString() ?
-                                        new Date(activity.end.dateTime)
-                                            .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                                        :
-                                        new Date(activity.start.dateTime)
-                                            .toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-                                }
+            {format(activity.start, 'MMMM d, yyyy h:mm aa')} - 
+            {format(activity.end, 'MMMM d, yyyy h:mm aa')}
 
             </span>
                     </Grid.Column>

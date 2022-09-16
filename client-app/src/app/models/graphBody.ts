@@ -1,4 +1,4 @@
-export interface Body{
+export interface GraphBody{
     content: string
     contentType: string
 }

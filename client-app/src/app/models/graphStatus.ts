@@ -1,4 +1,4 @@
-export interface Status{
+export interface GraphStatus{
     response: string
     time: string
 }

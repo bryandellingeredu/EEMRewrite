@@ -1,9 +1,10 @@
 import { Providers, ProviderState } from '@microsoft/mgt';
-import { Activity } from '../models/activity';
+import { GraphEvent } from '../models/graphEvent';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { history } from '../..';
 import { store } from '../stores/store';
+import { Activity } from '../models/activity';
 
 axios.defaults.baseURL = 'https://localhost:7285/api';
 
@@ -38,7 +39,6 @@ axios.interceptors.response.use(async response => {
         break;
     }
     return Promise.reject(error);
-
 });
 
 const acedemicCalendarId ={
@@ -53,7 +53,7 @@ const graphResponseBody = (response: any) => {
     return retVal;
 } 
 
-const axiosResponseBody = (response: AxiosResponse) =>{
+const axiosResponseBody = <T> (response: AxiosResponse<T>) =>{
     const retval = response.data;
     console.log('axios response');
     console.log(retval);
@@ -72,34 +72,33 @@ const graphRequests = {
 }
 
 const axiosRequest = {
-    get: (url: string) => axios.get(url).then(axiosResponseBody)
+    get: <T> (url: string) => axios.get<T>(url).then(axiosResponseBody),
+    post: <T> (url: string, body: {}) => axios.post<T>(url, body).then(axiosResponseBody),
+    put: <T> (url: string, body: {}) => axios.put<T>(url, body).then(axiosResponseBody),
+    del: <T> (url: string) => axios.delete<T>(url).then(axiosResponseBody),
 }
 
-const getGraphEvent = (activity: Activity) => {
-    const { category, ...rest  } = activity;
-    const body = {'contentType': 'html', 'content': `<b>${activity.bodyPreview}</b>` };
-    return {...rest, body};
-}
-
-const Activities = {
+const GraphEvents = {
     list: () => graphRequests.get(academicCalendarURL),
-    update: (activity: Activity) => graphRequests.update(`${academicCalendarURL}/${activity.id}`, getGraphEvent(activity)),
-    create: (activity: Activity) => graphRequests.create(academicCalendarURL, getGraphEvent(activity)),
+    update: (graphEvent: GraphEvent) => graphRequests.update(`${academicCalendarURL}/${graphEvent.id}`, graphEvent),
+    create: (graphEvent: GraphEvent) => graphRequests.create(academicCalendarURL, graphEvent),
     delete: (id: string) =>graphRequests.delete(`${academicCalendarURL}/${id}`),
     details: (id: string) => graphRequests.get(`${academicCalendarURL}/${id}`)
     }
 
-const RoomActivities = {
-    list: () => axiosRequest.get('/graphEvents'),
-    details: (email: string, id: string) => axiosRequest.get(`/graphEvents/${email}/events/${id}`)
+const Activities = {
+    list: () => axiosRequest.get<Activity[]>('/activities'),
+    details: (id: string) => axiosRequest.get<Activity>(`/activities/${id}`),
+    create: (activity: Activity) => axiosRequest.post<void>('/activities', activity),
+    update: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/${id}`, activity),
+    delete: (id: string) =>  axiosRequest.del<void>(`/activities/${id}`)
 }
 
 const agent = {
     Activities,
-    RoomActivities,
+    GraphEvents,
     IsSignedIn
 }
 
 export default agent;
 
-//groups/{id}/calendar/events/{id}{id}

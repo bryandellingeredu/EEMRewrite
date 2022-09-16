@@ -1,4 +1,4 @@
-export interface Address{
+export interface GraphAddress{
     city: string
     countryOrRegion: string
     postalCode: string

@@ -1,4 +1,4 @@
-export interface EmailAddress{
+export interface GraphEmailAddress{
     name: string
     address: string
 }

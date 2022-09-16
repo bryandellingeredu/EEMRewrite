@@ -10,8 +10,11 @@ namespace API.Controllers
     public class GraphUsersController : BaseApiController
     {
    
-      [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GetGraphUsers() => HandleResult(await Mediator.Send(new Application.GraphUsers.List.Query()));
-                 
+
+        [HttpGet("{email}")]
+        public async Task<IActionResult> GetGraphUsers(string email) => HandleResult(await Mediator.Send(new Details.Query { Email = email }));
+
     }
 }

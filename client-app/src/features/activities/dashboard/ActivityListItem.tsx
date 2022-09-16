@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button, Icon, Item,  Segment, SegmentGroup } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
 import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
+import { Activity } from "../../../app/models/activity";
+import { format } from "date-fns";
 
 
 interface Props{
@@ -12,12 +13,12 @@ interface Props{
 export default function ActivityListItem({activity}:Props){
 
     const {activityStore} = useStore();
-    const {deleteActivity, loading} = activityStore;
+    const {deleteGraphEvent, loading} = activityStore;
     const [target, setTarget] = useState('');
 
-    function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
+    function handleAcademicCalendarDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
         setTarget(e.currentTarget.name);
-        deleteActivity(id);
+        deleteGraphEvent(id);
       }
 
     return (
@@ -26,12 +27,10 @@ export default function ActivityListItem({activity}:Props){
           <Item.Group>
             <Item>
               {activity.category === 'Academic Calendar' &&
-              <Icon circular inverted color='teal' name='graduation cap' size='big' />}
-            {activity.category !== 'Academic Calendar' &&
-              <Icon circular inverted color='teal' name='building' size='big' />}                   
+              <Icon circular inverted color='teal' name='graduation cap' size='big' />}                  
                 <Item.Content>
-                    <Item.Header as={Link} to={`/activities/${activity.id}/${activity.location?.locationUri}`}>
-                    {activity.subject}
+                    <Item.Header as={Link} to={`/activities/${activity.id}`}>
+                    {activity.title}
                     </Item.Header> 
                     <Item.Description> {activity.category}
                     </Item.Description>                 
@@ -41,21 +40,8 @@ export default function ActivityListItem({activity}:Props){
         </Segment>
         <Segment>
                 <Icon name='clock'/>
-                {new Date(activity.start.dateTime)
-                    .toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-                }
-                &nbsp; - &nbsp;
-
-                {
-
-                    new Date(activity.start.dateTime).toLocaleDateString() ===
-                        new Date(activity.end.dateTime).toLocaleDateString() ?
-                        new Date(activity.end.dateTime)
-                            .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                        :
-                        new Date(activity.start.dateTime)
-                            .toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-                }
+                {format(activity.start, 'MMMM d, yyyy h:mm aa')} - 
+                {format(activity.end, 'MMMM d, yyyy h:mm aa')}
                 </Segment>
                 <Segment>
              <Icon name='marker' style={{marginLeft: '10'}}/> Unites States Army War College
@@ -65,17 +51,18 @@ export default function ActivityListItem({activity}:Props){
           attendees go here
         </Segment>
         <Segment clearing>
-            <span>{activity.bodyPreview}</span>
+            <span>{activity.description}</span>
         </Segment>
         <Segment clearing>
+        {activity.category === 'Academic Calendar' && 
         <Button
                     name={activity.id}
-                    onClick={(e) =>handleActivityDelete(e, activity.id)}
+                    onClick={(e) =>handleAcademicCalendarDelete(e, activity.id)}
                     floated='right'
                     content='Delete'
                     color='red'
-            loading={loading && target === activity.id}/>
-            <Button as={Link} to={`/activities/${activity.id}/${activity.location?.locationUri}`}
+            loading={loading && target === activity.id}/> }
+            <Button as={Link} to={`/activities/${activity.id}`}
                  floated='right' content='View' color='blue'/>
 
       </Segment>

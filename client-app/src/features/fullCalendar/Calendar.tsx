@@ -12,11 +12,10 @@ export default observer( function Calendar(){
     const {events} = activityStore;
     const history = useHistory();
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-      history.push(`/activities/${clickInfo.event.id}/undefined`);
+      history.push(`/activities/${clickInfo.event.id}`);
     }, []);
 
-
-    return(
+     return(
         <FullCalendar
         initialView="dayGridMonth"
         headerToolbar={{
