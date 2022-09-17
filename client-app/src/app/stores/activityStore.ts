@@ -42,12 +42,17 @@ export default class ActivityStore {
       if (agent.IsSignedIn()) {
         try {
           const graphResponse: GraphEvent[] = await agent.GraphEvents.list();
+          const axiosResponse : Activity[] = await agent.Activities.list();
           runInAction(() => {
-            this.activityRegistry.clear();
             graphResponse.forEach(graphEvent => {
               const activity: Activity = this.convertGraphEventToActivity(
                 graphEvent, "Academic Calendar");
               this.activityRegistry.set(activity.id, activity);
+            })
+            axiosResponse.forEach(response => {
+              response.start = new Date(response.start);
+              response.end = new Date(response.end);
+              this.activityRegistry.set(response.id, response);
             })
           })
           this.populateEventsForFullCalendar();

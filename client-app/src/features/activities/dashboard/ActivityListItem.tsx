@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button, Icon, Item,  Segment, SegmentGroup } from "semantic-ui-react";
+import { Button, Container, Icon, Item,  Label,  Segment, SegmentGroup } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
 import { Activity } from "../../../app/models/activity";
@@ -27,7 +27,10 @@ export default function ActivityListItem({activity}:Props){
           <Item.Group>
             <Item>
               {activity.category === 'Academic Calendar' &&
-              <Icon circular inverted color='teal' name='graduation cap' size='big' />}                  
+              <Icon circular inverted color='teal' name='graduation cap' size='big' />} 
+              {activity.category === 'CSL Calendar' && 
+                <Icon circular inverted color='violet' name='copyright' size='big' />} 
+                            
                 <Item.Content>
                     <Item.Header as={Link} to={`/activities/${activity.id}`}>
                     {activity.title}

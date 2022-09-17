@@ -17,92 +17,83 @@ namespace Persistence
                 new Activity
                 {
                     Title = "Past Activity 1",
-                    Date = DateTime.Now.AddMonths(-2),
+                    Start = DateTime.Now.AddMonths(-2),
+                    End = DateTime.Now.AddMonths(-2).AddHours(2),
                     Description = "Activity 2 months ago",
-                    Category = "drinks",
-                    City = "London",
-                    Venue = "Pub",
+                    Category = "CSL Calendar",
                 },
                 new Activity
                 {
                     Title = "Past Activity 2",
-                    Date = DateTime.Now.AddMonths(-1),
+                    Start = DateTime.Now.AddMonths(-1),
+                    End = DateTime.Now.AddMonths(-1).AddHours(2),
                     Description = "Activity 1 month ago",
-                    Category = "culture",
-                    City = "Paris",
-                    Venue = "Louvre",
+                    Category = "CSL Calendar",
                 },
                 new Activity
                 {
                     Title = "Future Activity 1",
-                    Date = DateTime.Now.AddMonths(1),
+                    Start = DateTime.Now.AddMonths(1),
+                    End = DateTime.Now.AddMonths(1).AddHours(2),
                     Description = "Activity 1 month in future",
-                    Category = "culture",
-                    City = "London",
-                    Venue = "Natural History Museum",
+                    Category = "CSL Calendar",
                 },
                 new Activity
                 {
                     Title = "Future Activity 2",
-                    Date = DateTime.Now.AddMonths(2),
+                    Start = DateTime.Now.AddMonths(2),
+                    End = DateTime.Now.AddMonths(2).AddHours(2),
                     Description = "Activity 2 months in future",
-                    Category = "music",
-                    City = "London",
-                    Venue = "O2 Arena",
+                    Category = "CSL Calendar",
                 },
                 new Activity
                 {
                     Title = "Future Activity 3",
-                    Date = DateTime.Now.AddMonths(3),
+                    Start = DateTime.Now.AddMonths(3),
+                    End = DateTime.Now.AddMonths(3).AddHours(2),
                     Description = "Activity 3 months in future",
-                    Category = "drinks",
-                    City = "London",
-                    Venue = "Another pub",
+                    Category = "CSL Calendar",
                 },
                 new Activity
                 {
                     Title = "Future Activity 4",
-                    Date = DateTime.Now.AddMonths(4),
+                    Start = DateTime.Now.AddMonths(4),
+                    End = DateTime.Now.AddMonths(4).AddHours(2),
                     Description = "Activity 4 months in future",
-                    Category = "drinks",
-                    City = "London",
-                    Venue = "Yet another pub",
+                    Category = "CSL Calendar",
                 },
                 new Activity
                 {
                     Title = "Future Activity 5",
-                    Date = DateTime.Now.AddMonths(5),
+                    Start = DateTime.Now.AddMonths(5),
+                    End = DateTime.Now.AddMonths(5).AddHours(2),
                     Description = "Activity 5 months in future",
-                    Category = "drinks",
-                    City = "London",
-                    Venue = "Just another pub",
+                   Category = "CSL Calendar",
                 },
                 new Activity
                 {
                     Title = "Future Activity 6",
-                    Date = DateTime.Now.AddMonths(6),
+                    Start = DateTime.Now.AddMonths(6),
+                    End = DateTime.Now.AddMonths(6).AddHours(2),
                     Description = "Activity 6 months in future",
-                    Category = "music",
-                    City = "London",
-                    Venue = "Roundhouse Camden",
+                   Category = "CSL Calendar",
                 },
                 new Activity
                 {
                     Title = "Future Activity 7",
-                    Date = DateTime.Now.AddMonths(7),
-                    Description = "Activity 2 months ago",
-                    Category = "travel",
-                    City = "London",
-                    Venue = "Somewhere on the Thames",
+                    Start = DateTime.Now.AddMonths(7),
+                    End = DateTime.Now.AddMonths(7).AddHours(2),
+                    Description = "Activity 7 months in future",
+                   Category = "CSL Calendar",
                 },
                 new Activity
                 {
                     Title = "Future Activity 8",
-                    Date = DateTime.Now.AddMonths(8),
+                    Start = DateTime.Now.AddMonths(8),
+                     End = DateTime.Now.AddMonths(8).AddHours(2),
                     Description = "Activity 8 months in future",
-                    Category = "film",
-                    City = "London",
-                    Venue = "Cinema",
+                    Category = "film"
+                   
                 }
             };
 
