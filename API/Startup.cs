@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using MediatR;
 using API.Extensions;
 using API.MiddleWare;
+using System.Text.Json.Serialization;
 
 namespace API
 {
@@ -33,7 +34,11 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.WriteIndented = true;
+            });
             services.AddApplicationServices(_config);
 
 

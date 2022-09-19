@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { history } from '../..';
 import { store } from '../stores/store';
 import { Activity } from '../models/activity';
+import { Category } from '../models/category';
 
 axios.defaults.baseURL = 'https://localhost:7285/api';
 
@@ -94,8 +95,13 @@ const Activities = {
     delete: (id: string) =>  axiosRequest.del<void>(`/activities/${id}`)
 }
 
+const Categories = {
+    list: () => axiosRequest.get<Category[]>('/categories'),
+}
+
 const agent = {
     Activities,
+    Categories,
     GraphEvents,
     IsSignedIn
 }

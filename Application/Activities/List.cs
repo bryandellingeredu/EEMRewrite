@@ -23,7 +23,13 @@ namespace Application.Activities
             public async Task<Result<List<Activity>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activities = await _context.Activities
+                   .Include(c => c.Category)
                   .ToListAsync(cancellationToken);
+
+                foreach (var activity in activities)
+                {
+                    activity.Category.Activities = null;
+                }
 
                 return Result<List<Activity>>.Success(activities);
             }

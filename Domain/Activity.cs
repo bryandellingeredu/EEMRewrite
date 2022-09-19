@@ -11,8 +11,10 @@ namespace Domain
         public string Title { get; set; }
         public DateTime Start {get; set;}
         public DateTime End { get; set; }
-        public string Category {get; set;}
         public string Description {get; set;}
+
+        public Guid CategoryId { get; set; }
+        public Category Category { get; set; }
 
     }
 }

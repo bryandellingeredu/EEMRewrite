@@ -5,9 +5,9 @@ import { Activity } from "../models/activity";
 import { CalendarEvent } from "../models/calendarEvent"
 import { GraphBody } from "../models/graphBody";
 import { GraphActivityDate } from "../models/graphActivityDate";
-import { GraphEmailAddress } from "../models/graphEmailAddress";
-import { SubCalendarOptions } from "../common/options/subCalendarOptions"
 import { format } from "date-fns";
+import { store } from "./store";
+import { Category } from "../models/category";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -36,17 +36,20 @@ export default class ActivityStore {
     )
   }
 
+
   loadActivites = async () => {
+    const categoryStore = store.categoryStore;
     if (!this.activityRegistry.size || this.reloadActivities) {
       this.setLoadingInitial(true);
       if (agent.IsSignedIn()) {
         try {
           const graphResponse: GraphEvent[] = await agent.GraphEvents.list();
           const axiosResponse : Activity[] = await agent.Activities.list();
+          const categories : Category[] = await categoryStore.loadCategories();
           runInAction(() => {
             graphResponse.forEach(graphEvent => {
               const activity: Activity = this.convertGraphEventToActivity(
-                graphEvent, "Academic Calendar");
+                graphEvent, categories.find(x => x.name === "Academic Calendar")!);
               this.activityRegistry.set(activity.id, activity);
             })
             axiosResponse.forEach(response => {
@@ -66,7 +69,7 @@ export default class ActivityStore {
     }
   }
 
-  loadActivity = async (id: string) => {
+  loadActivity = async (id: string, categoryId: string) => {
     let activity = this.getActivity(id);
     if (activity) {
       this.selectedActivity = activity;
@@ -75,13 +78,28 @@ export default class ActivityStore {
       this.loadingInitial = true; 
       this.setReloadActivities(true);  
       try {
-      activity = this.convertGraphEventToActivity(
-        await agent.GraphEvents.details(id), "Academic Calendar");
+      const categoryStore = store.categoryStore;
+      const categories : Category[] = await categoryStore.loadCategories();
+      const category = categories.find(x => x.id === categoryId)!;
+      if(category.name === "Academic Calendar"){
+        activity = this.convertGraphEventToActivity(
+          await agent.GraphEvents.details(id), category);
+          this.activityRegistry.set(activity.id, activity);
+          runInAction(() => {
+            this.setLoadingInitial(false);
+            this.selectedActivity = activity;
+        })
+      } else {
+        activity = await agent.Activities.details(id);
+        activity.start = new Date(activity.start);
+        activity.end = new Date(activity.end);
         this.activityRegistry.set(activity.id, activity);
         runInAction(() => {
           this.setLoadingInitial(false);
           this.selectedActivity = activity;
       })
+      }
+     
       return activity;
       } catch (error) {
         console.log(error)
@@ -124,7 +142,6 @@ export default class ActivityStore {
     try {
       const response = await agent.GraphEvents.create(graphEvent);
       activity.id = response.id;
-      activity.category = 'Academic Calendar';
       runInAction(() => {
         this.activityRegistry.set(activity.id, activity);
         this.selectedActivity = activity;
@@ -164,12 +181,14 @@ export default class ActivityStore {
     }
   }
 
-  convertGraphEventToActivity(graphEvent: GraphEvent, category: string): Activity {
+  convertGraphEventToActivity(graphEvent: GraphEvent, category: Category): Activity {
+    const categories = store.categoryStore.categories;
     const activity: Activity = {
       id: graphEvent.id,
       title: graphEvent.subject,
       description: graphEvent.bodyPreview,
       category,
+      categoryId: category.id,
       start: new Date(graphEvent.start.dateTime),
       end: new Date(graphEvent.end.dateTime)
     }
@@ -205,7 +224,8 @@ export default class ActivityStore {
         start: activity.start,
         end: activity.end,
         allDay: false,
-        id: activity.id
+        id: activity.id,
+        categoryId: activity.categoryId
       });
     });
   }

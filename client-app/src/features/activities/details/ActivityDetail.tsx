@@ -13,11 +13,11 @@ export default observer (function ActivityDetails() {
     const{activityStore} = useStore();
     const {selectedActivity: activity, loadActivity, loadingInitial} = activityStore
     const {id} = useParams<{id: string}>();
-    const {email} = useParams<{email: string}>();
+    const {categoryId} = useParams<{categoryId: string}>();
 
     useEffect(() => {
       if(id){
-        activityStore.loadActivity(id);
+        activityStore.loadActivity(id, categoryId);
       } 
     },[id, loadActivity])
 

@@ -9,18 +9,18 @@ import * as Yup from 'yup';
 import MyTextInput from "../../../app/common/form/MyTextInput";
 import MyTextArea from "../../../app/common/form/MyTextArea";
 import MySelectInput from "../../../app/common/form/MySelectInput";
-import { SubCalendarOptions } from "../../../app/common/options/subCalendarOptions";
 import MyDateInput from "../../../app/common/form/MyDateInput";
 import { ActivityFormValues } from "../../../app/models/activity";
 
 export default observer(function ActivityForm(){
 
         const history = useHistory();
-        const {activityStore} = useStore();
+        const {activityStore, categoryStore} = useStore();
         const {createGraphEvent, updateGraphEvent,
-           loadActivity, loadingInitial, selectedActivity} = activityStore
-        
+           loadActivity, loadingInitial } = activityStore;
+        const {categoryOptions} = categoryStore;
         const {id} = useParams<{id: string}>();
+        const {categoryId} = useParams<{categoryId: string}>();
         
         const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
 
@@ -32,7 +32,7 @@ export default observer(function ActivityForm(){
         })
       
         useEffect(() => {
-          if (id) loadActivity(id).then(response => setActivity(new ActivityFormValues(response)))
+          if (id) loadActivity(id, categoryId).then(response => setActivity(new ActivityFormValues(response)))
       }, [id, loadActivity]);
 
     function handleFormSubmit(activity: ActivityFormValues) {
@@ -65,7 +65,7 @@ export default observer(function ActivityForm(){
                 <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
                 <MyTextInput name='title' placeholder='title' label='*Title' />              
                 <MyTextArea rows={3} placeholder='Description' name='description' label='Description'/>
-                <MySelectInput options={SubCalendarOptions} placeholder='Sub Calendar' name='category' label='*Sub Calendar'/>
+                <MySelectInput options={categoryOptions} placeholder='Sub Calendar' name='categoryId' label='*Sub Calendar'/>
                 <MyDateInput
                         timeIntervals={15}
                         placeholderText='Start Date / Time'

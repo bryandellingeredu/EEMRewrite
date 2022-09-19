@@ -25,7 +25,7 @@ export default observer (function ActivityDetailedHeader({activity}: Props) {
     return (
         <Segment.Group>
             <Segment basic attached='top' style={{padding: '0'}}>
-                <Image src={`/assets/categoryImages/${activity.category}.jpg`} fluid style={activityImageStyle}/>
+                <Image src={`/assets/categoryImages/${activity.category.name}.jpg`} fluid style={activityImageStyle}/>
                 <Segment style={activityImageTextStyle} basic>
                     <Item.Group>
                         <Item>
@@ -41,7 +41,7 @@ export default observer (function ActivityDetailedHeader({activity}: Props) {
           
                                 </p>
                                 <p>
-                                    Category <strong>{activity.category}</strong>
+                                    <strong>{activity.category.name}</strong>
                                 </p>
                             </Item.Content>
                         </Item>
@@ -51,7 +51,7 @@ export default observer (function ActivityDetailedHeader({activity}: Props) {
             <Segment clearing attached='bottom'>
                 <Button color='teal'>Join Activity</Button>
                 <Button>Cancel attendance</Button>
-                <Button color='orange' floated='right'  as={Link} to={`/manage/${activity.id}`}>
+                <Button color='orange' floated='right'  as={Link} to={`/manage/${activity.id}/${activity.categoryId}`}>
                     Manage Event
                 </Button>
             </Segment>

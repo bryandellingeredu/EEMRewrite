@@ -26,8 +26,8 @@ function App() {
               <Switch>
                 <Route exact path='/activities' component={ActivityDashboard}/>
                 <Route exact path='/calendar' component={CalendarDashboard}/>
-                <Route path='/activities/:id/' component={ActivityDetails} sensitive/>
-                <Route key={location.key} exact path={['/createActivity', '/manage/:id']} component={ActivityForm}/>
+                <Route path='/activities/:id/:categoryId' component={ActivityDetails} sensitive/>
+                <Route key={location.key} exact path={['/createActivity', '/manage/:id/:categoryId']} component={ActivityForm}/>
                 <Route path='/server-error' component={ServerError} />
                 <Route component={NotFound}/>
               </Switch>            

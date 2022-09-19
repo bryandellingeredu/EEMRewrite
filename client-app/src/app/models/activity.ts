@@ -1,10 +1,13 @@
+import { Category } from "./category";
+
 export interface Activity{
     id: string,
     title: string,
     description: string,
-    category: string,
+    categoryId: string,
+    category: Category,
     start: Date,
-    end: Date
+    end: Date,
 }
 
 export class Activity implements Activity{
@@ -16,10 +19,12 @@ export class Activity implements Activity{
 export class ActivityFormValues{
     id?: string = undefined;
     title: string = '';
-    category: string = '';
+    categoryId: string = '';
+    category: Category = {id: '', name: ''}
     description: string = '';
     start: Date  = new Date();
     end: Date = new Date();
+
 
 
     constructor(activity?: ActivityFormValues){
@@ -27,7 +32,8 @@ export class ActivityFormValues{
         debugger;
         this.id = activity.id;
         this.title = activity.title;
-        this.category = activity.category;
+        this.categoryId = activity.categoryId
+        this.category = activity.category
         this.description = activity.description;
         this.start = activity.start;
         this.end = activity.end;

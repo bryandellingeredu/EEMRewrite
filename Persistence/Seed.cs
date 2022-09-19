@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
@@ -12,6 +14,34 @@ namespace Persistence
         {
             if (context.Activities.Any()) return;
 
+            var categories = new List<Category>
+            {
+                new Category{Name = "Academic Calendar"},
+                new Category{Name = "ASEP Calendar"},
+                new Category{Name = "Chapel"},
+                new Category{Name = "Command Group Calendar"},
+                new Category{Name = "Complemenary Events"},
+                new Category{Name = "Community Relations"},
+                new Category{Name = "CSL Calendar"},
+                new Category{Name = "Garrison Calendar"},
+                new Category{Name = "General Interest"},
+                new Category{Name = "Holiday Calendar"},
+                new Category{Name = "PKSOI Calendar"},
+                new Category{Name = "Social Events And Ceremonies"},
+                new Category{Name = "SSI And USAWC Press Calendar"},
+                new Category{Name = "SSL Calendar"},
+                new Category{Name = "Training And Misc Events"},
+                new Category{Name = "USAHEC Calendar"},
+                new Category{Name = "USAHEC Facilities Usage Calendar"},
+                new Category{Name = "Visits And Tours"},
+                new Category{Name = "Weekly Pocket Calendar"},
+            };
+
+            await context.Categories.AddRangeAsync(categories);
+            await context.SaveChangesAsync();
+
+            Guid cslCategoryId = categories.First(x => x.Name == "CSL Calendar").Id;
+
             var activities = new List<Activity>
             {
                 new Activity
@@ -20,7 +50,7 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(-2),
                     End = DateTime.Now.AddMonths(-2).AddHours(2),
                     Description = "Activity 2 months ago",
-                    Category = "CSL Calendar",
+                    CategoryId = cslCategoryId,
                 },
                 new Activity
                 {
@@ -28,7 +58,7 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(-1),
                     End = DateTime.Now.AddMonths(-1).AddHours(2),
                     Description = "Activity 1 month ago",
-                    Category = "CSL Calendar",
+                    CategoryId = cslCategoryId,
                 },
                 new Activity
                 {
@@ -36,7 +66,7 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(1),
                     End = DateTime.Now.AddMonths(1).AddHours(2),
                     Description = "Activity 1 month in future",
-                    Category = "CSL Calendar",
+                    CategoryId = cslCategoryId,
                 },
                 new Activity
                 {
@@ -44,7 +74,7 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(2),
                     End = DateTime.Now.AddMonths(2).AddHours(2),
                     Description = "Activity 2 months in future",
-                    Category = "CSL Calendar",
+                    CategoryId = cslCategoryId,
                 },
                 new Activity
                 {
@@ -52,7 +82,7 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(3),
                     End = DateTime.Now.AddMonths(3).AddHours(2),
                     Description = "Activity 3 months in future",
-                    Category = "CSL Calendar",
+                    CategoryId = cslCategoryId,
                 },
                 new Activity
                 {
@@ -60,7 +90,7 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(4),
                     End = DateTime.Now.AddMonths(4).AddHours(2),
                     Description = "Activity 4 months in future",
-                    Category = "CSL Calendar",
+                    CategoryId = cslCategoryId,
                 },
                 new Activity
                 {
@@ -68,7 +98,7 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(5),
                     End = DateTime.Now.AddMonths(5).AddHours(2),
                     Description = "Activity 5 months in future",
-                   Category = "CSL Calendar",
+                    CategoryId = cslCategoryId,
                 },
                 new Activity
                 {
@@ -76,7 +106,7 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(6),
                     End = DateTime.Now.AddMonths(6).AddHours(2),
                     Description = "Activity 6 months in future",
-                   Category = "CSL Calendar",
+                    CategoryId = cslCategoryId,
                 },
                 new Activity
                 {
@@ -84,7 +114,7 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(7),
                     End = DateTime.Now.AddMonths(7).AddHours(2),
                     Description = "Activity 7 months in future",
-                   Category = "CSL Calendar",
+                    CategoryId = cslCategoryId,
                 },
                 new Activity
                 {
@@ -92,8 +122,8 @@ namespace Persistence
                     Start = DateTime.Now.AddMonths(8),
                      End = DateTime.Now.AddMonths(8).AddHours(2),
                     Description = "Activity 8 months in future",
-                    Category = "film"
-                   
+                    CategoryId = cslCategoryId,
+
                 }
             };
 

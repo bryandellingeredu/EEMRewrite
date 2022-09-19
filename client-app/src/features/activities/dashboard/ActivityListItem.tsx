@@ -26,16 +26,16 @@ export default function ActivityListItem({activity}:Props){
         <Segment>
           <Item.Group>
             <Item>
-              {activity.category === 'Academic Calendar' &&
+              {activity.category.name === 'Academic Calendar' &&
               <Icon circular inverted color='teal' name='graduation cap' size='big' />} 
-              {activity.category === 'CSL Calendar' && 
+              {activity.category.name === 'CSL Calendar' && 
                 <Icon circular inverted color='violet' name='copyright' size='big' />} 
                             
                 <Item.Content>
-                    <Item.Header as={Link} to={`/activities/${activity.id}`}>
+                    <Item.Header as={Link} to={`/activities/${activity.id}/${activity.categoryId}`}>
                     {activity.title}
                     </Item.Header> 
-                    <Item.Description> {activity.category}
+                    <Item.Description> {activity.category.name}
                     </Item.Description>                 
                 </Item.Content>
             </Item>
@@ -57,7 +57,7 @@ export default function ActivityListItem({activity}:Props){
             <span>{activity.description}</span>
         </Segment>
         <Segment clearing>
-        {activity.category === 'Academic Calendar' && 
+        {activity.category.name === 'Academic Calendar' && 
         <Button
                     name={activity.id}
                     onClick={(e) =>handleAcademicCalendarDelete(e, activity.id)}
@@ -65,7 +65,7 @@ export default function ActivityListItem({activity}:Props){
                     content='Delete'
                     color='red'
             loading={loading && target === activity.id}/> }
-            <Button as={Link} to={`/activities/${activity.id}`}
+            <Button as={Link} to={`/activities/${activity.id}/${activity.categoryId}`}
                  floated='right' content='View' color='blue'/>
 
       </Segment>
