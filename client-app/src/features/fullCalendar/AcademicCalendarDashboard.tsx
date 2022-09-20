@@ -4,6 +4,8 @@ import { Providers, ProviderState } from '@microsoft/mgt';
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
 import AcademicCalendar from "./AcademicCalendar";
+import { Message } from "semantic-ui-react";
+import { Login } from "@microsoft/mgt-react";
 
 function useIsSignedIn(): [boolean] {
     const [isSignedIn, setIsSignedIn] = useState(false);
@@ -43,6 +45,17 @@ export default observer(function AcademicCalendarDashboard(){
               }
               {isSignedIn && !loadingInitial &&          
        <AcademicCalendar/>
+     }
+     {!isSignedIn && !loadingInitial && !academicEvents.length &&
+     <>
+         <Message size='massive'
+         warning
+         header='You Must Sign Into EDU'
+         content='To view the academic calendar you must have an edu account,
+         you must be a member of the academic calendar group,
+        and you must sign in to your edu account.'/>
+        <Login/> 
+       </>
      }
     </>
     )

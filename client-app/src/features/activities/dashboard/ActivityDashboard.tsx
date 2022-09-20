@@ -5,31 +5,12 @@ import { useStore } from "../../../app/stores/store";
 import ActivityList from "./ActivityList";
 import { useState, useEffect } from 'react';
 import { Providers, ProviderState } from '@microsoft/mgt';
-
-function useIsSignedIn(): [boolean] {
-    const [isSignedIn, setIsSignedIn] = useState(false);
-    useEffect(() => {
-      const updateState = () => {
-        const provider = Providers.globalProvider;
-        setIsSignedIn(provider && provider.state === ProviderState.SignedIn);
-      };
-  
-      Providers.onProviderUpdated(updateState);
-      updateState();
-  
-      return () => {
-        Providers.removeProviderUpdatedListener(updateState);
-      }
-    }, []);
-    return [isSignedIn];
-  }
-
   
 export default observer(function ActivityDashboard(){
     const {activityStore} = useStore();
     const{loadingInitial, cslEvents, academicEvents} = activityStore
     const providerStateChanged = () => activityStore.loadActivites();
-    const [isSignedIn] = useIsSignedIn();
+   // const [isSignedIn] = useIsSignedIn();
 
   
   useEffect(() => {
@@ -39,10 +20,10 @@ export default observer(function ActivityDashboard(){
   Providers.onProviderUpdated(providerStateChanged);
     return(
           <>
-              {isSignedIn && loadingInitial
+              {loadingInitial
                  &&<LoadingComponent content = 'Loading App'/>
               }
-              {isSignedIn && !loadingInitial &&          
+              {!loadingInitial &&          
         <Grid>
             <Grid.Column width='10'>
                <ActivityList />

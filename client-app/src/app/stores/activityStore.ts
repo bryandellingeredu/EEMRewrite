@@ -15,10 +15,30 @@ export default class ActivityStore {
   loadingInitial = false;
   loading = false;
   reloadActivities = false;
-  events: CalendarEvent[] = []
+  
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  get activities() {
+    return Array.from(this.activityRegistry.values()).sort((a, b) =>
+      a.start!.getTime() - b.start!.getTime());
+  }
+
+  get events () {
+   const events: CalendarEvent[] = [];
+   this.activities.forEach(activity => {
+    events.push({
+      title: activity.title,
+      start: activity.start,
+      end: activity.end,
+      allDay: false,
+      id: activity.id,
+      categoryId: activity.categoryId
+    });
+  });
+    return events;
   }
 
   get academicEvents() {
@@ -37,10 +57,7 @@ export default class ActivityStore {
     return this.events.filter(x => x.categoryId === cslCalendarCategory?.id)
   }
 
-  get activities() {
-    return Array.from(this.activityRegistry.values()).sort((a, b) =>
-      a.start!.getTime() - b.start!.getTime());
-  }
+ 
   get groupedActivities() {
     return Object.entries(
       this.activities.reduce((activities, activity) => {
@@ -75,7 +92,7 @@ export default class ActivityStore {
             })
           })
         }
-        this.populateEventsForFullCalendar();
+       // this.populateEventsForFullCalendar();
         this.setLoadingInitial(false);
         this.setReloadActivities(false);
       } catch (error) {
@@ -133,7 +150,6 @@ export default class ActivityStore {
   }
 
   updateGraphEvent = async (activity: Activity) => {
-    debugger;
     const graphEvent: GraphEvent = this.convertActivityToGraphEvent(activity)
     try {
       await agent.GraphEvents.update(graphEvent);
@@ -245,18 +261,5 @@ export default class ActivityStore {
 
   setReloadActivities = (state: boolean) => this.reloadActivities = state;
 
-  populateEventsForFullCalendar = () => {
-    this.events = [];
-    this.activities.forEach(activity => {
-      this.events.push({
-        title: activity.title,
-        start: activity.start,
-        end: activity.end,
-        allDay: false,
-        id: activity.id,
-        categoryId: activity.categoryId
-      });
-    });
   }
 
-}
