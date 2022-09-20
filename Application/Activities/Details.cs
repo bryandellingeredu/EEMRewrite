@@ -30,9 +30,6 @@ namespace Application.Activities
             {
                 var activity = await _context.Activities.Include(c => c.Category)
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
-
-                activity.Category.Activities = null;
-
                 return Result<Activity>.Success(activity);
             }
         }

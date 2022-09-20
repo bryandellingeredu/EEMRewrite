@@ -7,15 +7,16 @@ import HomePage from '../../features/home/HomePage';
 import {  Route, Switch, useLocation } from 'react-router-dom';
 import ActivityForm from '../../features/activities/form/ActivityForm';
 import ActivityDetails from '../../features/activities/details/ActivityDetail';
-import Calendar from '../../features/fullCalendar/Calendar';
 import CalendarDashboard from '../../features/fullCalendar/CalendarDashboard';
 import NotFound from '../../features/errors/NotFound';
 import ServerError from '../../features/errors/ServerError';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const location = useLocation();
   return (
     <>
+        <ToastContainer position='bottom-right' hideProgressBar />
          <Route exact path='/' component={HomePage}/>
          <Route
           path={'/(.+)'}

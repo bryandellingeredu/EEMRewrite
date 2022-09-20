@@ -3,6 +3,7 @@ using FluentValidation;
 using MediatR;
 using Persistence;
 using Application.Core;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,16 +31,19 @@ namespace Application.Activities
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context )
+            public Handler(DataContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                _context.Activities.Add(request.Activity);
-
+                Activity activity = new Activity();
+                _mapper.Map(request.Activity, activity);
+                _context.Activities.Add(activity);
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return Result<Unit>.Failure("Failed to Create Activity");
                 return Result<Unit>.Success(Unit.Value);

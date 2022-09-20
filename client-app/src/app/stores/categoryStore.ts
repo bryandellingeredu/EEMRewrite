@@ -1,7 +1,6 @@
 import { Category } from "../models/category";
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable} from "mobx";
 import agent from "../api/agent";
-import { OptionStyles } from "@fluentui/web-components";
 
 export default class CategoryStore {
     categoryRegistry = new Map<string, Category>();

@@ -12,9 +12,8 @@ import { Category } from "../models/category";
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
   selectedActivity: Activity | undefined = undefined;
-  editMode = false;
-  loading = false;
   loadingInitial = false;
+  loading = false;
   reloadActivities = false;
   events: CalendarEvent[] = []
 
@@ -118,26 +117,20 @@ export default class ActivityStore {
   }
 
   updateGraphEvent = async (activity: Activity) => {
-    this.loading = true;
+    debugger;
     const graphEvent: GraphEvent = this.convertActivityToGraphEvent(activity)
     try {
       await agent.GraphEvents.update(graphEvent);
       runInAction(() => {
         this.activityRegistry.set(activity.id, activity);
         this.selectedActivity = activity;
-        this.editMode = false;
-        this.loading = false;
       })
     } catch (error) {
       console.log(error);
-      runInAction(() => {
-        this.loading = false;
-      })
     }
   }
 
   createGraphEvent = async (activity: Activity) => {
-    this.loading = true;
     const graphEvent: GraphEvent = this.convertActivityToGraphEvent(activity);
     try {
       const response = await agent.GraphEvents.create(graphEvent);
@@ -145,18 +138,41 @@ export default class ActivityStore {
       runInAction(() => {
         this.activityRegistry.set(activity.id, activity);
         this.selectedActivity = activity;
-        this.editMode = false;
-        this.loading = false;
       });
       return activity;
     }
     catch (error) {
       console.log(error);
-      runInAction(() => {
-        this.loading = false;
-      })
     }
   }
+
+  createActivity = async (activity: Activity) => {
+    try {
+      await agent.Activities.create(activity);
+      this.setActivity(activity);
+      runInAction(() => {
+        this.selectedActivity = activity;
+      })
+    } catch(error){
+      console.log(error);
+    }
+  }
+
+  updateActivity = async (activity: Activity) => {
+    debugger;
+    try {
+        await agent.Activities.update(activity, activity.id);
+        runInAction(() => {
+            if (activity.id) {
+                let updatedActivity = {...this.getActivity(activity.id), ...activity}
+                this.activityRegistry.set(activity.id, updatedActivity as Activity);
+                this.selectedActivity = updatedActivity as Activity;
+            } 
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
   convertDateToGraph = (date: Date): string => {
@@ -182,7 +198,6 @@ export default class ActivityStore {
   }
 
   convertGraphEventToActivity(graphEvent: GraphEvent, category: Category): Activity {
-    const categories = store.categoryStore.categories;
     const activity: Activity = {
       id: graphEvent.id,
       title: graphEvent.subject,
@@ -206,9 +221,7 @@ export default class ActivityStore {
     }
     catch (error) {
       console.log(error);
-      runInAction(() => {
-        this.loading = false;
-      })
+      this.loading = false;
     }
   }
 

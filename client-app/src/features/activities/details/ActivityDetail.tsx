@@ -6,7 +6,7 @@ import {useEffect} from "react";
 import { observer } from "mobx-react-lite";
 import ActivityDetailedHeader from "./ActivityDetailedHeader";
 import ActivityDetailedInfo from "./ActivityDetailedInfo";
-import ActivityDetailedSideBar from "./ActivityDetailedSideBar";
+//import ActivityDetailedSideBar from "./ActivityDetailedSideBar";
 
 export default observer (function ActivityDetails() {
 
@@ -19,7 +19,7 @@ export default observer (function ActivityDetails() {
       if(id){
         activityStore.loadActivity(id, categoryId);
       } 
-    },[id, loadActivity])
+    },[id, categoryId, loadActivity, activityStore])
 
     if (loadingInitial || !activity) return <LoadingComponent/>;
 

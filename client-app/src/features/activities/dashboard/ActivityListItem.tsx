@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button, Container, Icon, Item,  Label,  Segment, SegmentGroup } from "semantic-ui-react";
+import { Button,  Icon, Item,  Segment, SegmentGroup } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
 import { Activity } from "../../../app/models/activity";

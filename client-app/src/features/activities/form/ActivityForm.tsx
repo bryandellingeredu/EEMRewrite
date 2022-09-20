@@ -11,14 +11,15 @@ import MyTextArea from "../../../app/common/form/MyTextArea";
 import MySelectInput from "../../../app/common/form/MySelectInput";
 import MyDateInput from "../../../app/common/form/MyDateInput";
 import { ActivityFormValues } from "../../../app/models/activity";
+import { v4 as uuid } from 'uuid';
 
 export default observer(function ActivityForm(){
 
         const history = useHistory();
         const {activityStore, categoryStore} = useStore();
-        const {createGraphEvent, updateGraphEvent,
+        const {createGraphEvent, updateGraphEvent, createActivity, updateActivity,
            loadActivity, loadingInitial } = activityStore;
-        const {categoryOptions} = categoryStore;
+        const {categoryOptions, categories, loadCategories} = categoryStore;
         const {id} = useParams<{id: string}>();
         const {categoryId} = useParams<{categoryId: string}>();
         
@@ -26,28 +27,37 @@ export default observer(function ActivityForm(){
 
           const validationSchema = Yup.object({
           title: Yup.string().required('The title is required'),
-          category: Yup.string().required(),
+          categoryId: Yup.string().required('Please choose a sub calendar'),
           start: Yup.string().required().nullable(),
           end: Yup.string().required().nullable(),
         })
       
         useEffect(() => {
-          if (id) loadActivity(id, categoryId).then(response => setActivity(new ActivityFormValues(response)))
-      }, [id, loadActivity]);
+          id 
+          ? loadActivity(id, categoryId).then(response => setActivity(new ActivityFormValues(response)))
+          : loadCategories()
+      }, [id, categoryId, loadActivity, loadCategories, categoryStore.loadingInitial]);
 
     function handleFormSubmit(activity: ActivityFormValues) {
+      debugger;
+        const category = categories.find(x => x.id === activity.categoryId)!
+        activity.category = category;
         if (!activity.id) {
             let newActivity = {
                 ...activity,
-                id: ''
+                id: category.name === 'Academic Calendar' ? '' : uuid()
             };
-            createGraphEvent(newActivity).then(() => history.push(`/activities/${newActivity.id}`))
+            category.name === 'Academic Calendar' 
+            ? createGraphEvent(newActivity).then(() => history.push(`/activities/${newActivity.id}/${category.id}`))
+            : createActivity(newActivity).then(() => history.push(`/activities/${newActivity.id}/${category.id}`))
         } else {
-          updateGraphEvent({...activity, id: activity!.id}).then(() => history.push(`/activities/${activity.id}`))
+          category.name === 'Academic Calendar'
+          ? updateGraphEvent({...activity, id: activity!.id}).then(() => history.push(`/activities/${activity.id}/${category.id}`))
+          : updateActivity({...activity, id: activity!.id}).then(() => history.push(`/activities/${activity.id}/${category.id}`))
         }
     }
 
-   if(loadingInitial){
+   if(loadingInitial || categoryStore.loadingInitial){
       return (
       <LoadingComponent content='Loading calendar event...'/>
       )

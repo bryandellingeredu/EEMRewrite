@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Application.Core;
+using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Persistence;
@@ -29,6 +31,7 @@ namespace API.Extensions
             });
 
             services.AddMediatR(typeof(Application.GraphUsers.List.Handler).Assembly);
+            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
             return services;
         }
