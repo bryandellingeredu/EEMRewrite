@@ -7,10 +7,11 @@ import HomePage from '../../features/home/HomePage';
 import {  Route, Switch, useLocation } from 'react-router-dom';
 import ActivityForm from '../../features/activities/form/ActivityForm';
 import ActivityDetails from '../../features/activities/details/ActivityDetail';
-import CalendarDashboard from '../../features/fullCalendar/CalendarDashboard';
+import AcademicCalendarDashboard from '../../features/fullCalendar/AcademicCalendarDashboard';
 import NotFound from '../../features/errors/NotFound';
 import ServerError from '../../features/errors/ServerError';
 import { ToastContainer } from 'react-toastify';
+import CSLCalendar from '../../features/fullCalendar/CSLCalendar';
 
 function App() {
   const location = useLocation();
@@ -26,7 +27,8 @@ function App() {
             <Container style={{marginTop: '7em'}}>  
               <Switch>
                 <Route exact path='/activities' component={ActivityDashboard}/>
-                <Route exact path='/calendar' component={CalendarDashboard}/>
+                <Route exact path='/academiccalendar' component={AcademicCalendarDashboard}/>
+                <Route exact path='/cslcalendar' component={CSLCalendar}/>
                 <Route path='/activities/:id/:categoryId' component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={['/createActivity', '/manage/:id/:categoryId']} component={ActivityForm}/>
                 <Route path='/server-error' component={ServerError} />

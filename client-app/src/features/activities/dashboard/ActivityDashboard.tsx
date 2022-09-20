@@ -27,13 +27,13 @@ function useIsSignedIn(): [boolean] {
   
 export default observer(function ActivityDashboard(){
     const {activityStore} = useStore();
-    const{loadingInitial} = activityStore
+    const{loadingInitial, cslEvents, academicEvents} = activityStore
     const providerStateChanged = () => activityStore.loadActivites();
     const [isSignedIn] = useIsSignedIn();
 
   
   useEffect(() => {
-    activityStore.loadActivites()
+    if(!cslEvents.length || !academicEvents.length) activityStore.loadActivites()
     }, [activityStore])
 
   Providers.onProviderUpdated(providerStateChanged);

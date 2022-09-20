@@ -21,6 +21,22 @@ export default class ActivityStore {
     makeAutoObservable(this);
   }
 
+  get academicEvents() {
+    const categoryStore = store.categoryStore;
+    const { categories } = categoryStore;
+    const academicCalendarCategory = categories.find(
+      x => x.name === 'Academic Calendar');
+    return this.events.filter(x => x.categoryId === academicCalendarCategory?.id)
+  }
+
+  get cslEvents() {
+    const categoryStore = store.categoryStore;
+    const { categories } = categoryStore;
+    const cslCalendarCategory = categories.find(
+      x => x.name === 'CSL Calendar');
+    return this.events.filter(x => x.categoryId === cslCalendarCategory?.id)
+  }
+
   get activities() {
     return Array.from(this.activityRegistry.values()).sort((a, b) =>
       a.start!.getTime() - b.start!.getTime());
@@ -38,34 +54,34 @@ export default class ActivityStore {
 
   loadActivites = async () => {
     const categoryStore = store.categoryStore;
-    if (!this.activityRegistry.size || this.reloadActivities) {
       this.setLoadingInitial(true);
-      if (agent.IsSignedIn()) {
-        try {
+      try { 
+        const categories: Category[] = await categoryStore.loadCategories();  
+        const axiosResponse: Activity[] = await agent.Activities.list();
+        runInAction(() => {
+          axiosResponse.forEach(response => {
+            response.start = new Date(response.start);
+            response.end = new Date(response.end);
+            this.activityRegistry.set(response.id, response);
+          })
+        })
+        if (agent.IsSignedIn()) {
           const graphResponse: GraphEvent[] = await agent.GraphEvents.list();
-          const axiosResponse : Activity[] = await agent.Activities.list();
-          const categories : Category[] = await categoryStore.loadCategories();
           runInAction(() => {
             graphResponse.forEach(graphEvent => {
               const activity: Activity = this.convertGraphEventToActivity(
                 graphEvent, categories.find(x => x.name === "Academic Calendar")!);
               this.activityRegistry.set(activity.id, activity);
             })
-            axiosResponse.forEach(response => {
-              response.start = new Date(response.start);
-              response.end = new Date(response.end);
-              this.activityRegistry.set(response.id, response);
-            })
           })
-          this.populateEventsForFullCalendar();
-          this.setLoadingInitial(false);
-          this.setReloadActivities(false);
-        } catch (error) {
-          console.log(error);
-          this.setLoadingInitial(false);
         }
+        this.populateEventsForFullCalendar();
+        this.setLoadingInitial(false);
+        this.setReloadActivities(false);
+      } catch (error) {
+        console.log(error);
+        this.setLoadingInitial(false);
       }
-    }
   }
 
   loadActivity = async (id: string, categoryId: string) => {
@@ -73,33 +89,33 @@ export default class ActivityStore {
     if (activity) {
       this.selectedActivity = activity;
       return activity;
-    } else { 
-      this.loadingInitial = true; 
-      this.setReloadActivities(true);  
+    } else {
+      this.loadingInitial = true;
+      this.setReloadActivities(true);
       try {
-      const categoryStore = store.categoryStore;
-      const categories : Category[] = await categoryStore.loadCategories();
-      const category = categories.find(x => x.id === categoryId)!;
-      if(category.name === "Academic Calendar"){
-        activity = this.convertGraphEventToActivity(
-          await agent.GraphEvents.details(id), category);
+        const categoryStore = store.categoryStore;
+        const categories: Category[] = await categoryStore.loadCategories();
+        const category = categories.find(x => x.id === categoryId)!;
+        if (category.name === "Academic Calendar") {
+          activity = this.convertGraphEventToActivity(
+            await agent.GraphEvents.details(id), category);
           this.activityRegistry.set(activity.id, activity);
           runInAction(() => {
             this.setLoadingInitial(false);
             this.selectedActivity = activity;
-        })
-      } else {
-        activity = await agent.Activities.details(id);
-        activity.start = new Date(activity.start);
-        activity.end = new Date(activity.end);
-        this.activityRegistry.set(activity.id, activity);
-        runInAction(() => {
-          this.setLoadingInitial(false);
-          this.selectedActivity = activity;
-      })
-      }
-     
-      return activity;
+          })
+        } else {
+          activity = await agent.Activities.details(id);
+          activity.start = new Date(activity.start);
+          activity.end = new Date(activity.end);
+          this.activityRegistry.set(activity.id, activity);
+          runInAction(() => {
+            this.setLoadingInitial(false);
+            this.selectedActivity = activity;
+          })
+        }
+
+        return activity;
       } catch (error) {
         console.log(error)
         this.setLoadingInitial(false);
@@ -153,7 +169,7 @@ export default class ActivityStore {
       runInAction(() => {
         this.selectedActivity = activity;
       })
-    } catch(error){
+    } catch (error) {
       console.log(error);
     }
   }
@@ -161,18 +177,18 @@ export default class ActivityStore {
   updateActivity = async (activity: Activity) => {
     debugger;
     try {
-        await agent.Activities.update(activity, activity.id);
-        runInAction(() => {
-            if (activity.id) {
-                let updatedActivity = {...this.getActivity(activity.id), ...activity}
-                this.activityRegistry.set(activity.id, updatedActivity as Activity);
-                this.selectedActivity = updatedActivity as Activity;
-            } 
-        })
+      await agent.Activities.update(activity, activity.id);
+      runInAction(() => {
+        if (activity.id) {
+          let updatedActivity = { ...this.getActivity(activity.id), ...activity }
+          this.activityRegistry.set(activity.id, updatedActivity as Activity);
+          this.selectedActivity = updatedActivity as Activity;
+        }
+      })
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-}
+  }
 
 
   convertDateToGraph = (date: Date): string => {
@@ -226,7 +242,7 @@ export default class ActivityStore {
   }
 
   setLoadingInitial = (state: boolean) => this.loadingInitial = state;
-  
+
   setReloadActivities = (state: boolean) => this.reloadActivities = state;
 
   populateEventsForFullCalendar = () => {

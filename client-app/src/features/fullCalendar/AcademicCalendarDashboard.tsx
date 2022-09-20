@@ -1,9 +1,9 @@
 import { observer } from "mobx-react-lite";
 import { useState, useEffect } from 'react';
 import { Providers, ProviderState } from '@microsoft/mgt';
-import Calendar from "./Calendar";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
+import AcademicCalendar from "./AcademicCalendar";
 
 function useIsSignedIn(): [boolean] {
     const [isSignedIn, setIsSignedIn] = useState(false);
@@ -24,15 +24,15 @@ function useIsSignedIn(): [boolean] {
   }
 
   
-export default observer(function ActivityDashboard(){
+export default observer(function AcademicCalendarDashboard(){
     const {activityStore} = useStore();
-    const{loadingInitial} = activityStore
+    const{loadingInitial, academicEvents} = activityStore
     const providerStateChanged = () => activityStore.loadActivites();
     const [isSignedIn] = useIsSignedIn();
 
   
   useEffect(() => {
-    activityStore.loadActivites()
+    if(!academicEvents.length) activityStore.loadActivites()
     }, [activityStore])
 
   Providers.onProviderUpdated(providerStateChanged);
@@ -42,7 +42,7 @@ export default observer(function ActivityDashboard(){
                  &&<LoadingComponent content = 'Loading App'/>
               }
               {isSignedIn && !loadingInitial &&          
-       <Calendar/>
+       <AcademicCalendar/>
      }
     </>
     )

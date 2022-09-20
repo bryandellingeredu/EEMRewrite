@@ -7,9 +7,9 @@ import {useCallback} from "react";
 import { useHistory  } from "react-router-dom";
 import "@fullcalendar/daygrid/main.css";
 
-export default observer( function Calendar(){
+export default observer( function AcademicCalendar(){
     const {activityStore, categoryStore} = useStore();
-    const {events, activities} = activityStore;
+    const {academicEvents, activities} = activityStore;
     const {categories} = categoryStore;
     const history = useHistory();
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
@@ -27,7 +27,7 @@ export default observer( function Calendar(){
           right: "dayGridMonth,timeGridWeek,timeGridDay"
         }}
         plugins={[dayGridPlugin, timeGridPlugin]}
-        events={events}
+        events={academicEvents}
         eventClick={handleEventClick}
       />
     )
