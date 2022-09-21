@@ -41,11 +41,32 @@ export default function ActivityListItem({activity}:Props){
             </Item>
           </Item.Group>
         </Segment>
+        {!activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') !== format(activity.end, 'MMMM d, yyyy') &&
         <Segment>
                 <Icon name='clock'/>
                 {format(activity.start, 'MMMM d, yyyy h:mm aa')} - 
                 {format(activity.end, 'MMMM d, yyyy h:mm aa')}
-                </Segment>
+      </Segment>
+       }
+      {!activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') === format(activity.end, 'MMMM d, yyyy') &&
+        <Segment>
+                <Icon name='clock'/>
+                {format(activity.start, 'MMMM d, yyyy h:mm aa')} - 
+                {format(activity.end, 'h:mm aa')}
+      </Segment>
+       }
+      {activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') === format(activity.end, 'MMMM d, yyyy') &&
+        <Segment>
+                <Icon name='clock'/>
+                {format(activity.start, 'MMMM d, yyyy')}
+      </Segment>
+       }
+      {activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') !== format(activity.end, 'MMMM d, yyyy') &&
+        <Segment>
+                <Icon name='clock'/>
+                {format(activity.start, 'MMMM d, yyyy')} - {format(activity.end, 'MMMM d, yyyy')}
+      </Segment>
+       }
                 <Segment>
              <Icon name='marker' style={{marginLeft: '10'}}/> Unites States Army War College
              </Segment>

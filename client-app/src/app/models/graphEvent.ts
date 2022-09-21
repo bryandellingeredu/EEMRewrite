@@ -14,4 +14,5 @@ export interface GraphEvent{
     location?: GraphLocation
     emailAddress?: GraphEmailAddress
     body: GraphBody
+    isAllDay: boolean
 }

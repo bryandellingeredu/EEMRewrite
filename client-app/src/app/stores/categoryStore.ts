@@ -1,5 +1,5 @@
 import { Category } from "../models/category";
-import { makeAutoObservable} from "mobx";
+import { makeAutoObservable, runInAction} from "mobx";
 import agent from "../api/agent";
 
 export default class CategoryStore {
@@ -29,9 +29,11 @@ constructor() {
         this.setLoadingInitial(true); 
         try{
             const axiosResponse : Category[] = await agent.Categories.list();
+            runInAction(() => {
             axiosResponse.forEach(response => {
                 this.categoryRegistry.set(response.id, response);
-              })            
+              })   
+            })          
         } catch (error) {
           console.log(error);
          

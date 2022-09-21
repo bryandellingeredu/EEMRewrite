@@ -4,18 +4,23 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { useStore } from "../../../app/stores/store";
 import ActivityList from "./ActivityList";
 import { useState, useEffect } from 'react';
-import { Providers, ProviderState } from '@microsoft/mgt';
+import { Providers } from '@microsoft/mgt';
+import ActivityFilters from "./ActivityFilters";
   
 export default observer(function ActivityDashboard(){
     const {activityStore} = useStore();
     const{loadingInitial, cslEvents, academicEvents} = activityStore
     const providerStateChanged = () => activityStore.loadActivites();
    // const [isSignedIn] = useIsSignedIn();
+   const [filterDate, setFilterDate] = useState<Date>(new Date());
 
+   function handleSetFilterDate(date: Date){
+    setFilterDate(date);
+   }
   
   useEffect(() => {
     if(!cslEvents.length || !academicEvents.length) activityStore.loadActivites()
-    }, [activityStore])
+    }, [activityStore, academicEvents.length, cslEvents.length])
 
   Providers.onProviderUpdated(providerStateChanged);
     return(
@@ -26,10 +31,10 @@ export default observer(function ActivityDashboard(){
               {!loadingInitial &&          
         <Grid>
             <Grid.Column width='10'>
-               <ActivityList />
+               <ActivityList filterDate = {filterDate}/>
             </Grid.Column>
             <Grid.Column width='6'>
-            <h2>Filters</h2>
+            <ActivityFilters setFilterDate = {handleSetFilterDate}/>
             </Grid.Column>
         </Grid>
      }

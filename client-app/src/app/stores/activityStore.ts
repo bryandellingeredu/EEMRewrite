@@ -85,6 +85,11 @@ export default class ActivityStore {
   return result;
   }
 
+  subtractMinutes  = (dt: Date, minutes: number) : Date => {
+    dt.setMinutes( dt.getMinutes() - minutes );
+    return dt
+  }
+
 
   loadActivites = async () => {
     const categoryStore = store.categoryStore;
@@ -224,25 +229,34 @@ export default class ActivityStore {
   }
 
 
-  convertDateToGraph = (date: Date): string => {
+  convertDateToGraph = (date: Date, isAllDay: boolean): string => {
     const isoStringDate = date.toISOString().split('T')[0];
     const hour = ("0" + date.getHours()).slice(-2);
     const minute = ("0" + date.getMinutes()).slice(-2);
-    const convertedDate = `${isoStringDate}T${hour}:${minute}:00.0000000`
+    const convertedDate = isAllDay 
+    ? `${isoStringDate}T00:00:00.0000000`
+    : `${isoStringDate}T${hour}:${minute}:00.0000000`
     return convertedDate;
   }
 
   convertActivityToGraphEvent(activity: Activity): GraphEvent {
     const body: GraphBody = { contentType: 'Html', content: activity.description }
-    const start: GraphActivityDate = { dateTime: this.convertDateToGraph(activity.start), timeZone: 'UTC' }
-    const end: GraphActivityDate = { dateTime: this.convertDateToGraph(activity.end), timeZone: 'UTC' }
+    const start: GraphActivityDate = { 
+      dateTime: this.convertDateToGraph(activity.start, activity.allDayEvent),
+      timeZone: 'UTC' }
+    const end: GraphActivityDate = {
+       dateTime: this.convertDateToGraph(
+        activity.allDayEvent? this.addDays(activity.end,1) : activity.end,
+        activity.allDayEvent),
+       timeZone: 'UTC' }
     return {
       id: activity.id || '',
       subject: activity.title,
       bodyPreview: activity.description,
       body,
       start,
-      end
+      end,
+      isAllDay: activity.allDayEvent
     }
   }
 
@@ -254,8 +268,8 @@ export default class ActivityStore {
       category,
       categoryId: category.id,
       start: new Date(graphEvent.start.dateTime),
-      end: new Date(graphEvent.end.dateTime),
-      allDayEvent: false
+      end: graphEvent.isAllDay ? this.subtractMinutes(new Date(graphEvent.end.dateTime),1) : new Date(graphEvent.end.dateTime),
+      allDayEvent: graphEvent.isAllDay
     }
     return activity;
   }
