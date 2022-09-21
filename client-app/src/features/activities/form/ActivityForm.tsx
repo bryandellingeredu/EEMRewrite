@@ -12,6 +12,8 @@ import MySelectInput from "../../../app/common/form/MySelectInput";
 import MyDateInput from "../../../app/common/form/MyDateInput";
 import { ActivityFormValues } from "../../../app/models/activity";
 import { v4 as uuid } from 'uuid';
+import MyCheckBox from "../../../app/common/form/MyCheckBox";
+import { isPropsEqual } from "@fullcalendar/react";
 
 export default observer(function ActivityForm(){
 
@@ -71,11 +73,13 @@ export default observer(function ActivityForm(){
            initialValues={activity}
            onSubmit={values => handleFormSubmit(values)}>
 
-            {({ handleSubmit, isValid, isSubmitting, dirty }) => (
+            {({ handleSubmit, isValid, isSubmitting, dirty, values }) => (
                 <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
                 <MyTextInput name='title' placeholder='title' label='*Title' />              
                 <MyTextArea rows={3} placeholder='Description' name='description' label='Description'/>
                 <MySelectInput options={categoryOptions} placeholder='Sub Calendar' name='categoryId' label='*Sub Calendar'/>
+                <MyCheckBox name='allDayEvent' label='All Day Event' />
+                {!values.allDayEvent && 
                 <MyDateInput
                         timeIntervals={15}
                         placeholderText='Start Date / Time'
@@ -84,14 +88,32 @@ export default observer(function ActivityForm(){
                         timeCaption='time'
                         dateFormat='MMMM d, yyyy h:mm aa'
                         title='*Start'  />
+                }
+               {values.allDayEvent && 
+                <MyDateInput
+                        placeholderText='Start Date'
+                        name='start'
+                        dateFormat='MMMM d, yyyy'
+                        title='*Start'  />
+                }
+                    {!values.allDayEvent && 
                 <MyDateInput
                         timeIntervals={15}
-                        placeholderText='Start Date / Time'
+                        placeholderText='End Date / Time'
                         name='end'
                         showTimeSelect
                         timeCaption='time'
-                        dateFormat='MMMM d, yyyy h:mm aa' 
-                        title ='*End' />
+                        dateFormat='MMMM d, yyyy h:mm aa'
+                        title='*End'  />
+                }
+               {values.allDayEvent && 
+                <MyDateInput
+                        placeholderText='End Date'
+                        name='end'
+                        dateFormat='MMMM d, yyyy'
+                        title='*End'  />
+                }
+               
                 <Button
                 disabled ={isSubmitting || !isValid || !dirty}
                  loading={isSubmitting} floated='right' positive type='submit' content='Submit'/>

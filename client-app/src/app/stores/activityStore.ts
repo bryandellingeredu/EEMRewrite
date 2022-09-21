@@ -28,16 +28,27 @@ export default class ActivityStore {
 
   get events () {
    const events: CalendarEvent[] = [];
-   this.activities.forEach(activity => {
+  /* events.push(	{
+  id: '1',
+  title: 'Long Event',
+   start: '2022-09-07',
+   end: '2022-09-10',
+   categoryId: '65fb3e98-6877-464d-9c6b-13b00588c35a',
+  allDay: true}) */
+  this.activities.forEach(activity => {
     events.push({
       title: activity.title,
-      start: activity.start,
-      end: activity.end,
-      allDay: false,
+      start: activity.allDayEvent
+       ? format(activity.start, 'yyyy-MM-dd')
+       : activity.start,
+      end: activity.allDayEvent
+       ? format(this.addDays(activity.end,1), 'yyyy-MM-dd')
+       : activity.end,
+      allDay: activity.allDayEvent,
       id: activity.id,
       categoryId: activity.categoryId
     });
-  });
+  }); 
     return events;
   }
 
@@ -66,6 +77,12 @@ export default class ActivityStore {
         return activities;
       }, {} as { [key: string]: Activity[] })
     )
+  }
+
+  addDays = (date : Date, days: number) => {
+    var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
   }
 
 
@@ -237,7 +254,8 @@ export default class ActivityStore {
       category,
       categoryId: category.id,
       start: new Date(graphEvent.start.dateTime),
-      end: new Date(graphEvent.end.dateTime)
+      end: new Date(graphEvent.end.dateTime),
+      allDayEvent: false
     }
     return activity;
   }

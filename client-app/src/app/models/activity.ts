@@ -8,6 +8,7 @@ export interface Activity{
     category: Category,
     start: Date,
     end: Date,
+    allDayEvent: boolean
 }
 
 export class Activity implements Activity{
@@ -24,12 +25,12 @@ export class ActivityFormValues{
     description: string = '';
     start: Date  = new Date();
     end: Date = new Date();
+    allDayEvent: boolean = false;
 
 
 
     constructor(activity?: ActivityFormValues){
        if(activity){
-        debugger;
         this.id = activity.id;
         this.title = activity.title;
         this.categoryId = activity.categoryId
@@ -37,6 +38,7 @@ export class ActivityFormValues{
         this.description = activity.description;
         this.start = activity.start;
         this.end = activity.end;
+        this.allDayEvent = activity.allDayEvent;
        } 
     }
 }

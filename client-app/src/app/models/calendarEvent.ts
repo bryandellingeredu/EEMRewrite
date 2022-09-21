@@ -2,7 +2,7 @@ export interface CalendarEvent{
     id: string
     categoryId: string
     title: string
-    start: Date
-    end: Date
+    start: Date | string
+    end: Date | string
     allDay: boolean
 }
