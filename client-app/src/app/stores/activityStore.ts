@@ -69,6 +69,15 @@ export default class ActivityStore {
     return this.events.filter(x => x.categoryId === cslCalendarCategory?.id)
   }
 
+  get asepEvents() {
+    const categoryStore = store.categoryStore;
+    const { categories } = categoryStore;
+    const asepCalendarCategory = categories.find(
+      x => x.name === 'ASEP Calendar');
+    return this.events.filter(x => x.categoryId === asepCalendarCategory?.id)
+  }
+
+
  
   get groupedActivities() {
     return Object.entries(

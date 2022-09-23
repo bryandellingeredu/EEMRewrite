@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
-import { Button,  Icon, Item,  Segment, SegmentGroup } from "semantic-ui-react";
+import { Button,  Icon, Item,  Label,  Segment, SegmentGroup } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
 import { Activity } from "../../../app/models/activity";
 import { format } from "date-fns";
+import { faChurch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-regular-svg-icons";
+
 
 
 interface Props{
@@ -30,6 +34,16 @@ export default function ActivityListItem({activity}:Props){
               <Icon circular inverted color='teal' name='graduation cap' size='big' />} 
               {activity.category.name === 'CSL Calendar' && 
                 <Icon circular inverted color='violet' name='copyright' size='big' />} 
+               {activity.category.name === 'ASEP Calendar' && 
+                <Icon circular inverted color='grey' name='adn' size='big' />} 
+              {activity.category.name === 'Chapel' && 
+           
+
+                <Label circular color='pink' >
+               <FontAwesomeIcon icon={faChurch}
+                size='3x' />
+               </Label>
+               }
                             
                 <Item.Content>
                     <Item.Header as={Link} to={`/activities/${activity.id}/${activity.categoryId}`}>

@@ -3,6 +3,8 @@ import { observer } from "mobx-react-lite";
 import { Fragment } from "react";
 import { Header} from "semantic-ui-react"
 import { useStore } from "../../../app/stores/store";
+import { faChurch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ActivityListItem from "./ActivityListItem";
 
 interface Props {
