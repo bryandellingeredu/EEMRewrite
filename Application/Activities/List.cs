@@ -24,11 +24,17 @@ namespace Application.Activities
             {
                 var activities = await _context.Activities
                    .Include(c => c.Category)
+                   .Include(c => c.Organization)
                   .ToListAsync(cancellationToken);
 
                 foreach (var activity in activities)
                 {
                     activity.Category.Activities = null;
+                    if (activity.Organization != null)
+                    {
+                        activity.Organization.Activities = null;
+                    }
+                    
                 }
 
                 return Result<List<Activity>>.Success(activities);

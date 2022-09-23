@@ -8,6 +8,7 @@ import { GraphActivityDate } from "../models/graphActivityDate";
 import { format } from "date-fns";
 import { store } from "./store";
 import { Category } from "../models/category";
+import { GraphLocation } from "../models/graphLocation";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -249,6 +250,9 @@ export default class ActivityStore {
         activity.allDayEvent? this.addDays(activity.end,1) : activity.end,
         activity.allDayEvent),
        timeZone: 'UTC' }
+    const location : GraphLocation ={
+      displayName: activity.primaryLocation
+    }
     return {
       id: activity.id || '',
       subject: activity.title,
@@ -256,7 +260,8 @@ export default class ActivityStore {
       body,
       start,
       end,
-      isAllDay: activity.allDayEvent
+      isAllDay: activity.allDayEvent,
+      location
     }
   }
 
@@ -267,9 +272,14 @@ export default class ActivityStore {
       description: graphEvent.bodyPreview,
       category,
       categoryId: category.id,
+      organization: null,
+      organizationId: null,
+      actionOfficer: '',
+      actionOfficerPhone: '',
       start: new Date(graphEvent.start.dateTime),
       end: graphEvent.isAllDay ? this.subtractMinutes(new Date(graphEvent.end.dateTime),1) : new Date(graphEvent.end.dateTime),
-      allDayEvent: graphEvent.isAllDay
+      allDayEvent: graphEvent.isAllDay,
+      primaryLocation: graphEvent.location?.displayName || ''
     }
     return activity;
   }

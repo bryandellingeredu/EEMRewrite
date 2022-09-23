@@ -63,6 +63,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                                 <p>
                                     <strong>{activity.category.name}</strong>
                                 </p>
+                                
                             </Item.Content>
                         </Item>
                     </Item.Group>

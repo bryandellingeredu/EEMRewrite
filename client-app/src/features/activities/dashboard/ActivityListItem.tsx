@@ -67,16 +67,29 @@ export default function ActivityListItem({activity}:Props){
                 {format(activity.start, 'MMMM d, yyyy')} - {format(activity.end, 'MMMM d, yyyy')}
       </Segment>
        }
-                <Segment>
-             <Icon name='marker' style={{marginLeft: '10'}}/> Unites States Army War College
-             </Segment>
-    
-        <Segment secondary>
-          attendees go here
-        </Segment>
+       {activity.primaryLocation && 
+          <Segment>
+           <Icon name='marker' style={{marginLeft: '10'}}/>
+          {activity.primaryLocation}
+       </Segment>
+       }
+       { activity.category.name !== "Academic Calendar" && activity.organization && 
+       <>
+      <Segment>       
+          <Icon name='boxes' style={{marginLeft: '10'}}/>
+            Lead Org:  {activity.organization?.name}
+      </Segment>
+        <Segment>       
+        <Icon name='user' style={{marginLeft: '10'}}/>
+          Action Officer:  {activity.actionOfficer} {activity.actionOfficerPhone}
+    </Segment>
+    </>
+       }
+     { activity.description && 
         <Segment clearing>
             <span>{activity.description}</span>
         </Segment>
+      }
         <Segment clearing>
         {activity.category.name === 'Academic Calendar' && 
         <Button

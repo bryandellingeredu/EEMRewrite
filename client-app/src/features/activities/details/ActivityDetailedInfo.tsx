@@ -10,6 +10,7 @@ interface Props {
 export default observer(function ActivityDetailedInfo({ activity }: Props) {
     return (
         <Segment.Group>
+            { activity.description &&
             <Segment attached='top'>
                 <Grid>
                     <Grid.Column width={1}>
@@ -20,6 +21,7 @@ export default observer(function ActivityDetailedInfo({ activity }: Props) {
                     </Grid.Column>
                 </Grid>
             </Segment>
+      }
             <Segment attached>
                 <Grid verticalAlign='middle'>
                     <Grid.Column width={1}>
@@ -54,16 +56,52 @@ export default observer(function ActivityDetailedInfo({ activity }: Props) {
                     </Grid.Column>
                 </Grid>
             </Segment>
+            { activity.primaryLocation &&
             <Segment attached>
                 <Grid verticalAlign='middle'>
                     <Grid.Column width={1}>
                         <Icon name='marker' size='large' color='teal' />
                     </Grid.Column>
                     <Grid.Column width={11}>
-                        <span>Collins Hall, Army War College</span>
+                        <span>{activity.primaryLocation}</span>
                     </Grid.Column>
                 </Grid>
             </Segment>
+}
+            { activity.category.name != "Academic Calendar" && activity.organization &&
+            <>
+            <Segment attached>
+                <Grid verticalAlign='middle'>
+                    <Grid.Column width={1}>
+                        <Icon name='boxes' size='large' color='teal' />
+                    </Grid.Column>
+                    <Grid.Column width={11}>
+                        <span>Lead Org: {activity.organization?.name}</span>
+                    </Grid.Column>
+                </Grid>
+            </Segment>
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='user' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                     <span>Activity Officer: {activity.actionOfficer}</span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+         <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='phone' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                     <span>Activity Officer Duty Phone: {activity.actionOfficerPhone}</span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+         </>
+          }
         </Segment.Group>
     )
 })

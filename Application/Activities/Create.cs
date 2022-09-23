@@ -41,12 +41,14 @@ namespace Application.Activities
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                Activity activity = new Activity();
-                _mapper.Map(request.Activity, activity);
-                _context.Activities.Add(activity);
-                var result = await _context.SaveChangesAsync() > 0;
-                if (!result) return Result<Unit>.Failure("Failed to Create Activity");
-                return Result<Unit>.Success(Unit.Value);
+       
+                    Activity activity = new Activity();
+                    _mapper.Map(request.Activity, activity);
+                    _context.Activities.Add(activity);
+                    var result = await _context.SaveChangesAsync() > 0;
+                    if (!result) return Result<Unit>.Failure("Failed to Create Activity");
+                    return Result<Unit>.Success(Unit.Value);
+               
             }
         }
     }

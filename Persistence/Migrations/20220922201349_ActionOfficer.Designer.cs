@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,10 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220922201349_ActionOfficer")]
+    partial class ActionOfficer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
@@ -24,9 +26,6 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ActionOfficer")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ActionOfficerPhone")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("AllDayEvent")
@@ -42,9 +41,6 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("OrganizationId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PrimaryLocation")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Start")
@@ -74,20 +70,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Domain.Location", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("Domain.Organization", b =>

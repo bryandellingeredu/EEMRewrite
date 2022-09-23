@@ -6,6 +6,8 @@ import { history } from '../..';
 import { store } from '../stores/store';
 import { Activity } from '../models/activity';
 import { Category } from '../models/category';
+import { Organization } from '../models/organization';
+import { Location } from '../models/location';
 
 axios.defaults.baseURL = 'https://localhost:7285/api';
 
@@ -100,9 +102,19 @@ const Categories = {
     list: () => axiosRequest.get<Category[]>('/categories'),
 }
 
+const Organizations = {
+    list: () => axiosRequest.get<Organization[]>('/organizations'),
+}
+
+const Locations = {
+    list: () => axiosRequest.get<Location[]>('/locations'),
+}
+
 const agent = {
     Activities,
     Categories,
+    Organizations,
+    Locations,
     GraphEvents,
     IsSignedIn
 }

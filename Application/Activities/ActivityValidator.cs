@@ -15,6 +15,8 @@ namespace Application.Activities
             RuleFor(x => x.Title).NotEmpty();
             RuleFor(x => x.Category).NotEmpty();
             RuleFor(x => x.Start).NotEmpty();
+            RuleFor(x => x.ActionOfficer).NotEmpty();
+            RuleFor(x => x.ActionOfficerPhone).NotEmpty();
             RuleFor(x => x.End).NotEmpty().GreaterThan(r => r.Start)
         .WithMessage("start date must be before end date");
         }

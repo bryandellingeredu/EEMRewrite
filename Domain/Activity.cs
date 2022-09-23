@@ -13,9 +13,15 @@ namespace Domain
         public DateTime Start {get; set;}
         public DateTime End { get; set; }
         public string Description {get; set;}
+        public string ActionOfficer { get; set; }
+        public string ActionOfficerPhone { get; set; }
+        public string PrimaryLocation { get; set; }
 
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
+
+        public Guid? OrganizationId { get; set; }
+        public Organization Organization { get; set; }
 
     }
 }

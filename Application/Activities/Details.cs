@@ -28,8 +28,15 @@ namespace Application.Activities
 
             public async Task<Result<Activity>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.Include(c => c.Category)
+                var activity = await _context.Activities.Include(c => c.Category).Include(o => o.Organization)
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
+
+                if (activity.Organization != null)
+                {
+                    activity.Organization.Activities = null;
+                }
+                activity.Category.Activities = null;    
+
                 return Result<Activity>.Success(activity);
             }
         }
