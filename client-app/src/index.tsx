@@ -14,10 +14,12 @@ import 'react-calendar/dist/Calendar.css';
 
 export const history = createBrowserHistory();
 
-const p2fb ={
+
+/*const p2fb ={
   clientId: "bd7c447b-e640-4a8a-99b9-f31769b9ab66",
   tenantId: "0b23030e-3028-4f52-a8f1-a9898322c7fe"
-};
+};*/
+
 
 const hossRob = {
   clientId: "7d102e0f-20f7-4883-84b7-c49b17645db0",

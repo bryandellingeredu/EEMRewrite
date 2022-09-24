@@ -5,7 +5,9 @@ import { useState, SyntheticEvent } from "react";
 import { Activity } from "../../../app/models/activity";
 import { format } from "date-fns";
 import { faChurch } from "@fortawesome/free-solid-svg-icons";
+import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
 
 
@@ -30,16 +32,26 @@ export default function ActivityListItem({activity}:Props){
         <Segment>
           <Item.Group>
             <Item>
+
               {activity.category.name === 'Academic Calendar' &&
-              <Icon circular inverted color='teal' name='graduation cap' size='big' />} 
+              <Label color='teal'>
+                     <FontAwesomeIcon icon={faGraduationCap} size='3x' />
+              </Label>
+             }
+
               {activity.category.name === 'CSL Calendar' && 
-                <Icon circular inverted color='violet' name='copyright' size='big' />} 
+                  <Label color='violet'>
+                  <h1>CSL</h1>
+           </Label>} 
                {activity.category.name === 'ASEP Calendar' && 
-                <Icon circular inverted color='grey' name='adn' size='big' />} 
+                 <Label color='grey'>
+                 <h1>ASP</h1>
+                </Label>
+               } 
               {activity.category.name === 'Chapel' && 
            
 
-                <Label circular color='pink' >
+                <Label color='pink' >
                <FontAwesomeIcon icon={faChurch}
                 size='3x' />
                </Label>

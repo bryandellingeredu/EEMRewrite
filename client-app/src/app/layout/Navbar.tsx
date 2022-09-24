@@ -17,9 +17,10 @@ export default function Navbar(){
              <Menu.Item as={NavLink} to='/activities' name='Activities' />
              <Dropdown item text="Calendars">
               <Dropdown.Menu>
-                <Dropdown.Item text = 'Academic Calendar' as={Link} to='/academiccalendar'/>
-                <Dropdown.Item text = 'ASEP Calendar' as={Link} to='/asepcalendar'/>
-                <Dropdown.Item text = 'CSL Calendar' as={Link} to='/cslcalendar'/>   
+                <Dropdown.Item text = 'Academic' as={Link} to='/academiccalendar'/>
+                <Dropdown.Item text = 'ASEP' as={Link} to='/genericcalendar/asep'/>
+                <Dropdown.Item text = 'CSL' as={Link} to='/genericcalendar/csl'/>
+                <Dropdown.Item text = 'Chapel' as={Link} to='/genericcalendar/chapel'/>    
               </Dropdown.Menu>
              </Dropdown>
              <Menu.Item>

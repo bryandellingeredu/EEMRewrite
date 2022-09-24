@@ -11,8 +11,7 @@ import AcademicCalendarDashboard from '../../features/fullCalendar/AcademicCalen
 import NotFound from '../../features/errors/NotFound';
 import ServerError from '../../features/errors/ServerError';
 import { ToastContainer } from 'react-toastify';
-import CSLCalendar from '../../features/fullCalendar/CSLCalendar';
-import ASEPCalendar from '../../features/fullCalendar/ASEPCalendar';
+import GenericCalendar from '../../features/fullCalendar/GenericCalendar';
 
 function App() {
   const location = useLocation();
@@ -29,8 +28,7 @@ function App() {
               <Switch>
                 <Route exact path='/activities' component={ActivityDashboard}/>
                 <Route exact path='/academiccalendar' component={AcademicCalendarDashboard}/>
-                <Route exact path='/cslcalendar' component={CSLCalendar}/>
-                <Route exact path='/asepcalendar' component={ASEPCalendar}/>
+                <Route exact path='/genericcalendar/:id' component={GenericCalendar}/>
                 <Route path='/activities/:id/:categoryId' component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={['/createActivity', '/manage/:id/:categoryId']} component={ActivityForm}/>
                 <Route path='/server-error' component={ServerError} />

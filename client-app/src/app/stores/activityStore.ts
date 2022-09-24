@@ -77,8 +77,14 @@ export default class ActivityStore {
     return this.events.filter(x => x.categoryId === asepCalendarCategory?.id)
   }
 
+  get chapelEvents() {
+    const categoryStore = store.categoryStore;
+    const { categories } = categoryStore;
+    const chapelCalendarCategory = categories.find(
+      x => x.name === 'Chapel');
+    return this.events.filter(x => x.categoryId === chapelCalendarCategory?.id)
+  }
 
- 
   get groupedActivities() {
     return Object.entries(
       this.activities.reduce((activities, activity) => {
