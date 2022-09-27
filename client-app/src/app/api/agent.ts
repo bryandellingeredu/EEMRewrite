@@ -8,6 +8,7 @@ import { Activity } from '../models/activity';
 import { Category } from '../models/category';
 import { Organization } from '../models/organization';
 import { Location } from '../models/location';
+import { GraphRoom } from '../models/graphRoom';
 
 axios.defaults.baseURL = 'https://localhost:7285/api';
 
@@ -110,12 +111,17 @@ const Locations = {
     list: () => axiosRequest.get<Location[]>('/locations'),
 }
 
+const GraphRooms = {
+    list: () => axiosRequest.get<GraphRoom[]>('/graphrooms'),
+}
+
 const agent = {
     Activities,
     Categories,
     Organizations,
     Locations,
     GraphEvents,
+    GraphRooms,
     IsSignedIn
 }
 

@@ -83,9 +83,9 @@
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
                 throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
-            var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
-            var placesRequest = new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
-            return placesRequest;
+               var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
+               var placesRequest = new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
+              return placesRequest;
         }
 
         public static Task<User> GetUserAsync(string email)
