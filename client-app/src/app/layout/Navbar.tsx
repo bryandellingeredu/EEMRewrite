@@ -14,8 +14,18 @@ export default function Navbar(){
                  EEM
                
              </Menu.Item>
-             <Menu.Item as={NavLink} to='/activities' name='Activities' />
-             <Dropdown item text="Calendars">
+             <Menu.Item>
+                <Button as={NavLink} to='/createActivity'
+                  positive content='New Department Event'
+                 />
+             </Menu.Item>
+             <Menu.Item>
+                <Button as={NavLink} to='/rooms'
+                  secondary content='Reserve a Room'
+                 />
+             </Menu.Item>
+             <Menu.Item as={NavLink} to='/activities' name="Today's Schedule" />
+             <Dropdown item text="Department Calendars">
               <Dropdown.Menu>
                 <Dropdown.Item text = 'Academic' as={Link} to='/academiccalendar'/>
                 <Dropdown.Item text = 'ASEP' as={Link} to='/genericcalendar/asep'/>
@@ -23,12 +33,6 @@ export default function Navbar(){
                 <Dropdown.Item text = 'Chapel' as={Link} to='/genericcalendar/chapel'/>    
               </Dropdown.Menu>
              </Dropdown>
-             <Menu.Item as={NavLink} to='/rooms' name='Rooms' />
-             <Menu.Item>
-                <Button as={NavLink} to='/createActivity'
-                  positive content='New Calendar Event'
-                 />
-             </Menu.Item>
              <Menu.Item position="right">
                 <Login/>
              </Menu.Item>            

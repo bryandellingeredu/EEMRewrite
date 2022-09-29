@@ -9,6 +9,8 @@ import { Category } from '../models/category';
 import { Organization } from '../models/organization';
 import { Location } from '../models/location';
 import { GraphRoom } from '../models/graphRoom';
+import { GraphScheduleResponse } from '../models/graphScheduleResponse';
+import { GraphScheduleRequest } from '../models/graphScheduleRequest';
 
 axios.defaults.baseURL = 'https://localhost:7285/api';
 
@@ -115,6 +117,10 @@ const GraphRooms = {
     list: () => axiosRequest.get<GraphRoom[]>('/graphrooms'),
 }
 
+const GraphSchedules = {
+    list: (graphScheduleRequest : GraphScheduleRequest) => axiosRequest.post<GraphScheduleResponse[]>('/graphschedule', graphScheduleRequest)
+}
+
 const agent = {
     Activities,
     Categories,
@@ -122,6 +128,7 @@ const agent = {
     Locations,
     GraphEvents,
     GraphRooms,
+    GraphSchedules,
     IsSignedIn
 }
 

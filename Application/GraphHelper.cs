@@ -1,5 +1,6 @@
 ﻿namespace Application
 {
+    using Application.GraphSchedules;
     using Azure.Identity;
     using Microsoft.Graph;
     public class GraphHelper
@@ -109,5 +110,20 @@
                     .Request()
                     .AddAsync(@event);
         }
+
+        public static Task<ICalendarGetScheduleCollectionPage> GetScheduleAsync(ScheduleRequestDTO scheduleRequestDTO)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            return _appClient.Users[scheduleRequestDTO.Schedules[0]].Calendar
+             .GetSchedule(scheduleRequestDTO.Schedules, scheduleRequestDTO.EndTime, scheduleRequestDTO.StartTime, scheduleRequestDTO.AvailabilityViewInterval)
+             .Request()
+             .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
+             .PostAsync();
+        }
+
+    
     }
 }

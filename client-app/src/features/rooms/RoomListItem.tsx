@@ -1,15 +1,21 @@
 import { observer } from "mobx-react-lite";
 import { Button, Card, Divider, Grid, Header, Icon, Label, Segment } from "semantic-ui-react";
 import { GraphRoom } from "../../app/models/graphRoom";
+import RoomAvailability from "./RoomAvailability";
 
 
 interface Props{
     room: GraphRoom
+    showAvailabilityIndicatorList: string[]
+    addIdToShowAvailabilityIndicatorList: (id: string) => void
 }
 
-export default observer (function RoomListItem({room} : Props) {
+export default observer (function RoomListItem(
+  {room, showAvailabilityIndicatorList, addIdToShowAvailabilityIndicatorList } : Props) {
+   
+
     return (
-            <Card key={room.id}>
+            <Card>
             <Card.Content>
             <Label as='a' color='green' ribbon='right'>
               Capacity: {room.capacity}
@@ -19,6 +25,24 @@ export default observer (function RoomListItem({room} : Props) {
                 {room.address.street} {room.address.city} 
               </Card.Meta>
               <Card.Description>
+              <Card.Content extra>
+        
+                <Button basic color='orange'
+                fluid
+                 content = 'Check Availability and Reserve Room'
+                 onClick={() => addIdToShowAvailabilityIndicatorList(room.id)}/>
+          
+            </Card.Content>
+            { showAvailabilityIndicatorList.includes(room.id) && 
+              <Card.Content extra>
+                 <RoomAvailability room={room}/>
+              </Card.Content>
+           }
+               <Divider horizontal>
+              <Header as='h5'>
+                Room Information
+              </Header>
+            </Divider>
               <Segment.Group>
             { room.phone && room.phone !== "N/A" &&
             <Segment >
@@ -97,7 +121,7 @@ export default observer (function RoomListItem({room} : Props) {
         { room.tags.length > 0 &&
          <>
         <Divider horizontal>
-      <Header as='h3'>
+      <Header as='h5'>
         Amenities
       </Header>
     </Divider>
@@ -108,21 +132,9 @@ export default observer (function RoomListItem({room} : Props) {
     ))}
      </>
     }
-
-       
         </Card.Description>
             </Card.Content>
-            <Card.Content extra>
-              <div className='ui two buttons'>
-                <Button basic color='orange'>
-                  Check Availability
-                </Button>
-                <Button basic color='green'>
-                  Reserve
-                </Button>
-              </div>
-            </Card.Content>
-     
+           
           </Card>         
 
      )})
