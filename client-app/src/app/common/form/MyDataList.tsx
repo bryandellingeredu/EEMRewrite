@@ -9,7 +9,7 @@ interface Props{
     dataListId: string;
 }
 
-export default function MyTextInput(props: Props){
+export default function MyDataList(props: Props){
     const [field, meta] = useField(props.name);
 
     return(

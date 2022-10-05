@@ -11,6 +11,7 @@ import { Location } from '../models/location';
 import { GraphRoom } from '../models/graphRoom';
 import { GraphScheduleResponse } from '../models/graphScheduleResponse';
 import { GraphScheduleRequest } from '../models/graphScheduleRequest';
+import { NonDepartmentRoomReservationRequest } from '../models/nonDepartmentRoomReservationRequest';
 
 axios.defaults.baseURL = 'https://localhost:7285/api';
 
@@ -73,9 +74,10 @@ const IsSignedIn = () => Providers.globalProvider.state === ProviderState.Signed
 
 const graphRequests = {
     get: (url: string) => getGraphClient().api(url).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
+    getSingle: (url: string) => getGraphClient().api(url).get().then(graphResponseBody),
     update: (url: string, body:{}) => getGraphClient().api(url).update(body),
     create: (url: string, body:{}) => getGraphClient().api(url).create(body).then(graphResponseBody),
-    delete: (url: string) => getGraphClient().api(url).delete()
+    delete: (url: string) => getGraphClient().api(url).delete(),
 }
 
 const axiosRequest = {
@@ -93,12 +95,19 @@ const GraphEvents = {
     details: (id: string) => graphRequests.get(`${academicCalendarURL}/${id}`)
     }
 
+ const GraphUser = {
+    details: () => graphRequests.getSingle('https://graph.microsoft.com/v1.0/me')
+ }
+
 const Activities = {
     list: () => axiosRequest.get<Activity[]>('/activities'),
     details: (id: string) => axiosRequest.get<Activity>(`/activities/${id}`),
     create: (activity: Activity) => axiosRequest.post<void>('/activities', activity),
     update: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/${id}`, activity),
-    delete: (id: string) =>  axiosRequest.del<void>(`/activities/${id}`)
+    delete: (id: string) =>  axiosRequest.del<void>(`/activities/${id}`),
+    reserveNonDepartmentRoom: (
+        room: NonDepartmentRoomReservationRequest) => axiosRequest.post<string>(
+            '/activities/reserveNonDepartmentRoom', room )
 }
 
 const Categories = {
@@ -129,6 +138,7 @@ const agent = {
     GraphEvents,
     GraphRooms,
     GraphSchedules,
+    GraphUser,
     IsSignedIn
 }
 

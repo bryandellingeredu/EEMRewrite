@@ -6,3 +6,4 @@ export interface GraphScheduleResponse{
     scheduleId: string
     scheduleItems: GraphScheduleItem[]
 }
+

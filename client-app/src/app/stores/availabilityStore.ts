@@ -1,8 +1,9 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
 import agent from "../api/agent";
-import { store } from "./store";
+import { store} from "./store";
 import { GraphScheduleRequest } from "../models/graphScheduleRequest";
 import { GraphScheduleResponse } from "../models/graphScheduleResponse";
+
 
 export default class AvailabilityStore {
     loadingInitial = false; 
@@ -11,9 +12,11 @@ export default class AvailabilityStore {
         makeAutoObservable(this);
       }
     
-    loadSchedule = async (email: string, start: Date, end: Date)  => {
+    loadSchedule = async ( start: Date, end: Date, email?: string,)  => {
+        debugger;
         this.setLoadingInitial(true);
-        const graphScheduleRequest : GraphScheduleRequest = this.getGraphScheduleRequest(email, start, end);
+        const emails = await this.getEmails(email);
+        const graphScheduleRequest : GraphScheduleRequest = this.getGraphScheduleRequest(start, end, emails );
         try{
             const axiosResponse : GraphScheduleResponse[] = await agent.GraphSchedules.list(graphScheduleRequest);  
             return axiosResponse;
@@ -26,11 +29,31 @@ export default class AvailabilityStore {
         }
     }
 
+    getEmails = async(email: string | undefined)  => { 
+        debugger;   
+        const graphRoomStore = store.graphRoomStore;
+        const {loadGraphRooms} = graphRoomStore;
+        const emails: string[] = [];
+        if(email){
+            return [email];
+        } else{
+            try{       
+              const rooms = await loadGraphRooms();
+              rooms.forEach(room => emails.push(room.emailAddress));
+            } catch(error){
+                console.log(error); 
+            } finally{
+                return emails
+            }
+        }
+    }
+
     setLoadingInitial = (state: boolean) => this.loadingInitial = state;
 
-    getGraphScheduleRequest = (email: string, start: Date, end: Date) : GraphScheduleRequest => {
+    getGraphScheduleRequest = ( start: Date, end: Date, emails: string[]) => {
+        debugger;
         const request = {
-            Schedules : [email],
+            Schedules: emails,
             StartTime : {
                dateTime: store.commonStore.convertDateToGraph(start, false),
                timeZone: "Eastern Standard Time"
@@ -43,4 +66,6 @@ export default class AvailabilityStore {
         }
         return request;
     }
+
+
 }

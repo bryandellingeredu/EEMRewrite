@@ -9,6 +9,8 @@ import { format } from "date-fns";
 import { store } from "./store";
 import { Category } from "../models/category";
 import { GraphLocation } from "../models/graphLocation";
+import NonDepartmentRoomReservation from "../../features/rooms/NonDepartmentRoomReservation";
+import { NonDepartmentRoomReservationRequest } from "../models/nonDepartmentRoomReservationRequest";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -216,6 +218,14 @@ export default class ActivityStore {
     }
   }
 
+  createNonDepartmentRoomReservation = async  ( nonDepartmentRoomReservation: NonDepartmentRoomReservationRequest ) =>{
+    try{
+      await agent.Activities.reserveNonDepartmentRoom(nonDepartmentRoomReservation);
+    }catch (error) {
+      console.log(error);
+    }
+  }
+
   createActivity = async (activity: Activity) => {
     try {
       await agent.Activities.create(activity);
@@ -286,7 +296,14 @@ export default class ActivityStore {
       start: new Date(graphEvent.start.dateTime),
       end: graphEvent.isAllDay ? this.subtractMinutes(new Date(graphEvent.end.dateTime),1) : new Date(graphEvent.end.dateTime),
       allDayEvent: graphEvent.isAllDay,
-      primaryLocation: graphEvent.location?.displayName || ''
+      primaryLocation: graphEvent.location?.displayName || '',
+      roomEmails: [],
+      startDateAsString: graphEvent.start.dateTime,
+      endDateAsString: graphEvent.end.dateTime,
+      coordinatorEmail: graphEvent.organizer?.emailAddress.address || '',
+      coordinatorFirstName: '',
+      coordinatorLastName: '',
+      coordinatorName: graphEvent.organizer?.emailAddress.name || ''
     }
     return activity;
   }

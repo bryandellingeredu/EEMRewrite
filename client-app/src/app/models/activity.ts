@@ -1,5 +1,12 @@
+
+import { store } from "../stores/store";
 import { Category } from "./category";
 import { Organization } from "./organization";
+
+
+const commonStore = store.commonStore;
+const {roundToNearest15} = commonStore;
+const tommorow = new Date();
 
 export interface Activity{
     id: string,
@@ -14,7 +21,14 @@ export interface Activity{
     allDayEvent: boolean,
     actionOfficer: string,
     actionOfficerPhone: string,
-    primaryLocation: string
+    primaryLocation: string,
+    roomEmails: string[],
+    startDateAsString : string,
+    endDateAsString: string,
+    coordinatorEmail: string,
+    coordinatorFirstName: string,
+    coordinatorLastName: string,
+    coordinatorName: string,
 }
 
 export class Activity implements Activity{
@@ -31,12 +45,19 @@ export class ActivityFormValues{
     category: Category = {id: '', name: ''}
     organization: Organization | null =  null;
     description: string = '';
-    start: Date  = new Date();
-    end: Date = new Date();
+    start: Date  = roundToNearest15(new Date());
+    end: Date = roundToNearest15(new Date(tommorow.setDate(new Date().getDate() + 1)));
     allDayEvent: boolean = false;
     actionOfficer: string = '';
     actionOfficerPhone: string = '';
     primaryLocation: string = '';
+    roomEmails: string[] = [];
+    startDateAsString : string = '';
+    endDateAsString: string = '';
+    coordinatorEmail: string = '';
+    coordinatorFirstName: string = ''
+    coordinatorLastName: string = ''
+    coordinatorName: string = '';
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -53,6 +74,13 @@ export class ActivityFormValues{
         this.actionOfficer = activity.actionOfficer;
         this.actionOfficerPhone = activity.actionOfficerPhone;
         this.primaryLocation = activity.primaryLocation;
+        this.roomEmails = activity.roomEmails;
+        this.startDateAsString = activity.startDateAsString;
+        this.endDateAsString = activity.endDateAsString;
+        this.coordinatorEmail = activity.coordinatorEmail;
+        this.coordinatorFirstName = activity.coordinatorFirstName;
+        this.coordinatorLastName = activity.coordinatorLastName;
+        this.coordinatorName = activity.coordinatorLastName;
        } 
     }
 }

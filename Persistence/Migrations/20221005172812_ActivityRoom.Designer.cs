@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,10 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221005172812_ActivityRoom")]
+    partial class ActivityRoom
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
@@ -35,19 +37,10 @@ namespace Persistence.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CoordinatorEmail")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CoordinatorName")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("End")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EventLookup")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("OrganizationId")
@@ -69,28 +62,6 @@ namespace Persistence.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.ToTable("Activities");
-                });
-
-            modelBuilder.Entity("Domain.ActivityRoom", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("ActivityId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActivityId");
-
-                    b.ToTable("ActivityRooms");
                 });
 
             modelBuilder.Entity("Domain.Category", b =>
@@ -150,20 +121,6 @@ namespace Persistence.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Organization");
-                });
-
-            modelBuilder.Entity("Domain.ActivityRoom", b =>
-                {
-                    b.HasOne("Domain.Activity", null)
-                        .WithMany("ActivityRooms")
-                        .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Activity", b =>
-                {
-                    b.Navigation("ActivityRooms");
                 });
 
             modelBuilder.Entity("Domain.Category", b =>

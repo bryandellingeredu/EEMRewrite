@@ -13,6 +13,7 @@ import ServerError from '../../features/errors/ServerError';
 import { ToastContainer } from 'react-toastify';
 import GenericCalendar from '../../features/fullCalendar/GenericCalendar';
 import RoomDashboard from '../../features/rooms/RoomDashboard';
+import NonDepartmentRoomReservation from '../../features/rooms/NonDepartmentRoomReservation';
 
 function App() {
   const location = useLocation();
@@ -31,6 +32,7 @@ function App() {
                 <Route exact path='/academiccalendar' component={AcademicCalendarDashboard}/>
                 <Route exact path='/genericcalendar/:id' component={GenericCalendar}/>
                 <Route exact path='/rooms' component={RoomDashboard}/>
+                <Route exact path='/reserveNonDepartmentRoom' component={NonDepartmentRoomReservation}/>
                 <Route path='/activities/:id/:categoryId' component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={['/createActivity', '/manage/:id/:categoryId']} component={ActivityForm}/>
                 <Route path='/server-error' component={ServerError} />

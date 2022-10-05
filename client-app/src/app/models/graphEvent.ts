@@ -3,6 +3,7 @@ import { GraphAttendee } from "./graphAttendee"
 import { GraphBody } from "./graphBody"
 import { GraphEmailAddress } from "./graphEmailAddress"
 import { GraphLocation } from "./graphLocation"
+import { GraphOrganizer } from "./graphOrganizer"
 
 export interface GraphEvent{
     id: string
@@ -15,4 +16,5 @@ export interface GraphEvent{
     emailAddress?: GraphEmailAddress
     body: GraphBody
     isAllDay: boolean
+    organizer?: GraphOrganizer
 }

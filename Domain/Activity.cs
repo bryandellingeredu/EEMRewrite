@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,13 +16,38 @@ namespace Domain
         public string Description {get; set;}
         public string ActionOfficer { get; set; }
         public string ActionOfficerPhone { get; set; }
+
         public string PrimaryLocation { get; set; }
+
+        [NotMapped]
+        public string[] RoomEmails { get; set; }
+
+
+        [NotMapped]
+        public string StartDateAsString { get; set; }
+
+        [NotMapped]
+        public string EndDateAsString { get; set; }
+
+        public string CoordinatorEmail { get; set; }
+
+        public string CoordinatorName { get; set; }
+
+        public string EventLookup { get; set; }
+
+        [NotMapped]
+        public string CoordinatorFirstName { get; set; }
+
+        [NotMapped]
+        public string CoordinatorLastName { get; set; }
 
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
 
         public Guid? OrganizationId { get; set; }
         public Organization Organization { get; set; }
+
+        public IEnumerable<ActivityRoom> ActivityRooms { get; set; }
 
     }
 }

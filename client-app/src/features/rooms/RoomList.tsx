@@ -4,8 +4,6 @@ import { useStore } from "../../app/stores/store";
 import RoomListItem from "./RoomListItem";
 import { useState } from 'react';
 
-
-
 export default observer (function RoomList() {
 const[showAvailabilityIndicatorList, setShowAvailabilityIndicatorList] = useState<string[]>([]);
 const {graphRoomStore} = useStore();

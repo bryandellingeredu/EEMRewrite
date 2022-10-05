@@ -12,5 +12,6 @@ namespace Persistence
         public DbSet<Category> Categories { get; set; }
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<ActivityRoom> ActivityRooms { get; set; }
     }
 }

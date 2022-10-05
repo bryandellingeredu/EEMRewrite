@@ -50,10 +50,6 @@ namespace API.Controllers
         public async Task<IActionResult> GetGraphEvent(string email, string id) =>
             HandleResult(await Mediator.Send(new Application.GraphEvents.Details.Query { Email = email, Id = id }));
 
-        [HttpPost]
-        public async Task<IActionResult> CreateActivity(Event e) =>
-          HandleResult(await Mediator.Send(new Create.Command { Event = e }));
-
     }
 }
 

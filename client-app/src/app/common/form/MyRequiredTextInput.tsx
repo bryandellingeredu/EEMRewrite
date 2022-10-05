@@ -1,5 +1,5 @@
 import { useField } from "formik";
-import { Form,  Label } from "semantic-ui-react";
+import { Form, Input, Label } from "semantic-ui-react";
 
 interface Props{
     placeholder: string;
@@ -8,7 +8,7 @@ interface Props{
     type?: string;
 }
 
-export default function MyTextInput(props: Props){
+export default function MyRequiredTextInput(props: Props){
     const [field, meta] = useField(props.name);
 
     return(
@@ -16,7 +16,10 @@ export default function MyTextInput(props: Props){
         <label>
             {props.label}
         </label>
-        <input {...field} {...props}/>
+        <Input {...field} {...props}
+          label={{ icon: 'asterisk' }}
+          labelPosition='left corner'
+        />
         {meta.touched && meta.error ? (
             <Label basic color='red'>
                 {meta.error}
