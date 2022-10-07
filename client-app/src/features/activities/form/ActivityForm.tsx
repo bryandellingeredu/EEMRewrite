@@ -62,15 +62,16 @@ export default observer(function ActivityForm() {
 
   const validationSchema = Yup.object({
     title: Yup.string().required('The title is required'),
+    categoryId: Yup.string().required('Category is required, choose other if you are just reserving a room'),
     start: Yup.string().required().nullable(),
     end: Yup.string().required().nullable(),
     actionOfficer: Yup.string().when("categoryId", {
       is: categories.find(x => x.name === "Academic Calendar")?.id,
-      otherwise: Yup.string().required()
+      otherwise: Yup.string().required("Action Officer is Required") || categories.find(x => x.name === "Other")?.id
     }),
     actionOfficerPhone: Yup.string().when("categoryId", {
-      is: categories.find(x => x.name === "Academic Calendar")?.id,
-      otherwise: Yup.string().required()
+      is: categories.find(x => x.name === "Academic Calendar")?.id || categories.find(x => x.name === "Other")?.id ,
+      otherwise: Yup.string().required("Action Officer is Required")
     })
   })
 
@@ -78,6 +79,10 @@ export default observer(function ActivityForm() {
     if (id) {
       loadActivity(id, categoryId).then((response) => {
         setActivity(new ActivityFormValues(response));
+        if (response?.activityRooms && response.activityRooms.length > 0){
+          setRoomRequired(true);
+          setRoomEmails(response.activityRooms.map(x => x.email));
+        } 
       });
       loadOrganizations();
       loadLocations();
@@ -95,8 +100,7 @@ export default observer(function ActivityForm() {
     loadingInitial,]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
-    debugger;
-    activity.roomEmails = roomEmails
+    activity.roomEmails = roomRequired ? roomEmails : [];
     activity.startDateAsString = commonStore.convertDateToGraph(activity.start, activity.allDayEvent);
     activity.endDateAsString = commonStore.convertDateToGraph(activity.end, activity.allDayEvent);
     activity.coordinatorEmail = isSignedIn &&  graphUser ? graphUser.mail : '';
@@ -142,7 +146,7 @@ export default observer(function ActivityForm() {
         initialValues={activity}
         onSubmit={values => handleFormSubmit(values)}>
 
-        {({ handleSubmit, isValid, isSubmitting, dirty, values }) => (
+        {({ handleSubmit, isValid, isSubmitting, dirty, values, setFieldValue }) => (
 
           <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
             <MyTextInput name='title' placeholder='Title' label='Title*' />
@@ -227,6 +231,7 @@ export default observer(function ActivityForm() {
                 <MyTextInput name='actionOfficerPhone' placeholder='Action Officer Duty Phone' label='*Action Officer Duty Phone' />
               </>
             }
+            <span>IsValid: {isValid ? 'true' : 'false'}</span>
             <Button
               disabled={isSubmitting || !isValid || !dirty}
               loading={isSubmitting} floated='right' positive type='submit' content='Submit' />

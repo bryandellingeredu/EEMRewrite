@@ -13,7 +13,6 @@ export default class AvailabilityStore {
       }
     
     loadSchedule = async ( start: Date, end: Date, email?: string,)  => {
-        debugger;
         this.setLoadingInitial(true);
         const emails = await this.getEmails(email);
         const graphScheduleRequest : GraphScheduleRequest = this.getGraphScheduleRequest(start, end, emails );
@@ -30,7 +29,6 @@ export default class AvailabilityStore {
     }
 
     getEmails = async(email: string | undefined)  => { 
-        debugger;   
         const graphRoomStore = store.graphRoomStore;
         const {loadGraphRooms} = graphRoomStore;
         const emails: string[] = [];
@@ -51,7 +49,6 @@ export default class AvailabilityStore {
     setLoadingInitial = (state: boolean) => this.loadingInitial = state;
 
     getGraphScheduleRequest = ( start: Date, end: Date, emails: string[]) => {
-        debugger;
         const request = {
             Schedules: emails,
             StartTime : {

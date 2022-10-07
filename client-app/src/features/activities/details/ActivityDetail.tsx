@@ -6,6 +6,7 @@ import {useEffect} from "react";
 import { observer } from "mobx-react-lite";
 import ActivityDetailedHeader from "./ActivityDetailedHeader";
 import ActivityDetailedInfo from "./ActivityDetailedInfo";
+import ActivityDetailedSideBar from "./ActivityDetailedSideBar";
 //import ActivityDetailedSideBar from "./ActivityDetailedSideBar";
 
 export default observer (function ActivityDetails() {
@@ -30,7 +31,7 @@ export default observer (function ActivityDetails() {
             <ActivityDetailedInfo activity={activity}/>
          </Grid.Column>
          <Grid.Column width={6}>
-         {/* <ActivityDetailedSideBar attendees={null}/> */}
+         { <ActivityDetailedSideBar activity={activity}/> }
          </Grid.Column>
       </Grid>
     )

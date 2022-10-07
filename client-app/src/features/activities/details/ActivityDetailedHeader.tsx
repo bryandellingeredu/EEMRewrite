@@ -30,6 +30,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                     <Item.Group>
                         <Item>
                             <Item.Content>
+                                <>
                                 <Header
                                     size='huge'
                                     content={activity.title}
@@ -60,10 +61,13 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                                         {format(activity.start, 'MMMM d, yyyy')} - {format(activity.end, 'MMMM d, yyyy')}
                                     </p>
                                 }
+                                {activity.activityRooms.map(room => (
+                                       <p key={room.id}>{room.name}</p>
+                                ))}                                    
                                 <p>
                                     <strong>{activity.category.name}</strong>
                                 </p>
-                                
+                                </>
                             </Item.Content>
                         </Item>
                     </Item.Group>

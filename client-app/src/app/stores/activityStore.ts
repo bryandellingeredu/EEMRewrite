@@ -218,18 +218,15 @@ export default class ActivityStore {
     }
   }
 
-  createNonDepartmentRoomReservation = async  ( nonDepartmentRoomReservation: NonDepartmentRoomReservationRequest ) =>{
-    try{
-      await agent.Activities.reserveNonDepartmentRoom(nonDepartmentRoomReservation);
-    }catch (error) {
-      console.log(error);
-    }
-  }
-
   createActivity = async (activity: Activity) => {
     try {
       await agent.Activities.create(activity);
-      this.setActivity(activity);
+      const newActivity  = await this.loadActivity(activity.id, activity.category.id )
+      runInAction(() => {
+      if(newActivity){
+        this.setActivity(newActivity );
+      }
+      })
       runInAction(() => {
         this.selectedActivity = activity;
       })
@@ -239,14 +236,14 @@ export default class ActivityStore {
   }
 
   updateActivity = async (activity: Activity) => {
-    debugger;
     try {
       await agent.Activities.update(activity, activity.id);
+      this.activityRegistry.delete(activity.id);
+      const newActivity  = await this.loadActivity(activity.id, activity.category.id )
       runInAction(() => {
-        if (activity.id) {
-          let updatedActivity = { ...this.getActivity(activity.id), ...activity }
-          this.activityRegistry.set(activity.id, updatedActivity as Activity);
-          this.selectedActivity = updatedActivity as Activity;
+        if (newActivity && newActivity.id) {
+          this.activityRegistry.set(newActivity.id, newActivity as Activity);
+          this.selectedActivity = newActivity as Activity;
         }
       })
     } catch (error) {
@@ -303,7 +300,8 @@ export default class ActivityStore {
       coordinatorEmail: graphEvent.organizer?.emailAddress.address || '',
       coordinatorFirstName: '',
       coordinatorLastName: '',
-      coordinatorName: graphEvent.organizer?.emailAddress.name || ''
+      coordinatorName: graphEvent.organizer?.emailAddress.name || '',
+      activityRooms: []
     }
     return activity;
   }

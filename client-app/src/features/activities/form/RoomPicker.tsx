@@ -32,17 +32,8 @@ interface Option{
         const values = selectedOptions.map((item: Option) => item.value);
         setRoomEmails(values);
       }
-
-      const getValue = () => {
-        if (roomOptions) {
-            roomOptions.filter(option => roomEmails.indexOf(option.value) >= 0)
-        } else {
-          return [];
-        }
-      };
     
     useEffect(() => {
-        debugger;
         const diff = Math.abs(+end - +start);
         var minutes = Math.floor((diff/1000)/60);
         if(minutes >= 15){
@@ -53,7 +44,8 @@ interface Option{
             response.forEach( room =>  o.push(
               {label: graphRooms.find(x => x.emailAddress ===  room.scheduleId)?.displayName || room.scheduleId,
                value: room.scheduleId,
-              isDisabled: room.scheduleItems.length > 0}));
+              isDisabled: room.scheduleItems.length > 0
+            }));
              setRoomOptions(o);
           })       
         }
@@ -69,7 +61,9 @@ interface Option{
         <label>Room/s</label>
         <Select
         name = 'roomEmails'
-        value={getValue()}
+        value={roomOptions.filter(function(option) {
+          return roomEmails.includes(option.value);
+        })}
         onChange={(e) => onChange(e)}
         onBlur={() => setDirty(true)}
         placeholder= 'select rooms (you may select more than one)'

@@ -2,11 +2,12 @@
 import { store } from "../stores/store";
 import { Category } from "./category";
 import { Organization } from "./organization";
+import { ActivityRoom } from "./activityRoom"
 
 
 const commonStore = store.commonStore;
 const {roundToNearest15} = commonStore;
-const tommorow = new Date();
+const now = new Date();
 
 export interface Activity{
     id: string,
@@ -29,6 +30,7 @@ export interface Activity{
     coordinatorFirstName: string,
     coordinatorLastName: string,
     coordinatorName: string,
+    activityRooms: ActivityRoom[] | []
 }
 
 export class Activity implements Activity{
@@ -45,8 +47,8 @@ export class ActivityFormValues{
     category: Category = {id: '', name: ''}
     organization: Organization | null =  null;
     description: string = '';
-    start: Date  = roundToNearest15(new Date());
-    end: Date = roundToNearest15(new Date(tommorow.setDate(new Date().getDate() + 1)));
+    start: Date = roundToNearest15(new Date(now.setTime(now.getTime() + 1 * 60 * 60 * 1000)));
+    end: Date = roundToNearest15(new Date(now.setTime(now.getTime() + 1 * 60 * 60 * 1000)));
     allDayEvent: boolean = false;
     actionOfficer: string = '';
     actionOfficerPhone: string = '';
@@ -58,6 +60,7 @@ export class ActivityFormValues{
     coordinatorFirstName: string = ''
     coordinatorLastName: string = ''
     coordinatorName: string = '';
+    activityRooms: ActivityRoom[] | [] = [];
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -81,6 +84,7 @@ export class ActivityFormValues{
         this.coordinatorFirstName = activity.coordinatorFirstName;
         this.coordinatorLastName = activity.coordinatorLastName;
         this.coordinatorName = activity.coordinatorLastName;
+        this.activityRooms = activity.activityRooms;
        } 
     }
 }

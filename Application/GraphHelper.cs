@@ -194,5 +194,17 @@
             return result;
 
         }
+
+        public static async Task DeleteEvent(string eventLookup, string coordinatorEmail)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            await _appClient.Users[coordinatorEmail].Events[eventLookup]
+                 .Request()
+                 .DeleteAsync();
+
+        }
     }
 }

@@ -23,7 +23,7 @@ export default function MyDataList(props: Props){
         list={props.dataListId} />
         <datalist id={props.dataListId}>
         {props.options.map(option => (
-               <option value={option}>{option}</option>
+               <option key={option} value={option}>{option}</option>
                 ))}  
         </datalist>
         {meta.touched && meta.error ? (

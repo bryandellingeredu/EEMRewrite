@@ -26,6 +26,7 @@ namespace Persistence
                 new Category{Name = "Garrison Calendar"},
                 new Category{Name = "General Interest"},
                 new Category{Name = "Holiday Calendar"},
+                new Category{Name = "Other"},
                 new Category{Name = "PKSOI Calendar"},
                 new Category{Name = "Social Events And Ceremonies"},
                 new Category{Name = "SSI And USAWC Press Calendar"},
