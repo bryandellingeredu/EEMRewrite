@@ -4,6 +4,8 @@
     using Application.GraphSchedules;
     using Azure.Identity;
     using Microsoft.Graph;
+    using Persistence.Migrations;
+
     public class GraphHelper
     {
         private static Settings _settings;
@@ -131,38 +133,41 @@
             var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
             var placesRequest = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
 
-            List<Attendee> attendees = new List<Attendee>()
-            {
-                 new Attendee
-                            {
-                                EmailAddress = new EmailAddress
-                                {
-                                    Address = graphEventDTO.RequesterEmail,
-                                    Name = graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName,
-                                },
-                                Type = AttendeeType.Required
-                            },
-            };
+            List<Attendee> attendees = new List<Attendee>();
 
-            foreach (var roomEmail in graphEventDTO.RoomEmails)
-            {
-                attendees.Add(
-                     new Attendee
-                     {
-                         EmailAddress = new EmailAddress
+              attendees.Add(
+              new Attendee
+              {
+                  EmailAddress = new EmailAddress
+                  {
+                      Address = graphEventDTO.RequesterEmail,
+                      Name = graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName,
+                  },
+                  Type = AttendeeType.Required
+              });
+
+
+                foreach (var roomEmail in graphEventDTO.RoomEmails)
+                {
+                    attendees.Add(
+                         new Attendee
                          {
-                             Address = roomEmail,
-                             Name = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == roomEmail).FirstOrDefault().DisplayName
-                         },
-                         Type = AttendeeType.Optional
-                     }
-                    );
-            }
+                             EmailAddress = new EmailAddress
+                             {
+                                 Address = roomEmail,
+                                 Name = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == roomEmail).FirstOrDefault().DisplayName
+                             },
+                             Type = AttendeeType.Optional
+                         }
+                        );
+                   }
+
 
 
             var @event = new Event
             {
                 Subject = graphEventDTO.EventTitle,
+                IsAllDay = graphEventDTO.IsAllDay,
                 Body = new ItemBody
                 {
                     ContentType = BodyType.Html,
@@ -178,15 +183,21 @@
                     DateTime = graphEventDTO.End,
                     TimeZone = "Eastern Standard Time"
                 },
-                Location = new Location
-                {
-                    DisplayName = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == graphEventDTO.RoomEmails[0]).FirstOrDefault().DisplayName
-                },
-            
                 Attendees = attendees
-                  
+
             };
 
+            if (graphEventDTO.RoomEmails.Any()) { 
+
+                Location location = new Location
+                {
+                    DisplayName = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == graphEventDTO.RoomEmails[0]).FirstOrDefault().DisplayName
+                };
+
+                    @event.Location = location;
+            }
+
+        
             var result =  await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events
                 .Request()
                 .AddAsync(@event);

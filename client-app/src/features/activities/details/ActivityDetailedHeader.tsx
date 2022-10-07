@@ -61,7 +61,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                                         {format(activity.start, 'MMMM d, yyyy')} - {format(activity.end, 'MMMM d, yyyy')}
                                     </p>
                                 }
-                                {activity.activityRooms.map(room => (
+                                { activity.activityRooms && activity.activityRooms.map(room => (
                                        <p key={room.id}>{room.name}</p>
                                 ))}                                    
                                 <p>

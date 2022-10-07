@@ -10,5 +10,6 @@
         public string RequesterFirstName { get; set; }
         public string RequesterLastName { get; set; }
         public string RequesterEmail { get; set; }
+        public bool IsAllDay { get; set; }
     }
 }

@@ -56,8 +56,8 @@ export default observer (function NonDepartmentRoomReservation() {
           Non Department Room Reservation
           <Header.Subheader>
            Reserving {displayName} For {commonStore.formatDate(
-                commonStore.convertDateToGraph(startDate, false),
-                commonStore.convertDateToGraph(endDate, false))}
+                commonStore.convertDateToGraph(startDate, false, false),
+                commonStore.convertDateToGraph(endDate, false, true))}
         </Header.Subheader>
         </Header>
         <Formik enableReinitialize

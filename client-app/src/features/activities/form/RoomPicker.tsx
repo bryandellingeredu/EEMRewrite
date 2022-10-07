@@ -36,7 +36,7 @@ interface Option{
     useEffect(() => {
         const diff = Math.abs(+end - +start);
         var minutes = Math.floor((diff/1000)/60);
-        if(minutes >= 15){
+        if(minutes >= 15 && start < end){
         loadSchedule(start, end).then(response =>{
           if(response){
           let o : Option[] = [];

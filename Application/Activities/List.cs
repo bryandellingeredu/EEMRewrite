@@ -25,7 +25,6 @@ namespace Application.Activities
                 var activities = await _context.Activities
                    .Include(c => c.Category)
                    .Include(o => o.Organization)
-                   .Include(a => a.ActivityRooms)
                   .ToListAsync(cancellationToken);
 
                 foreach (var activity in activities)

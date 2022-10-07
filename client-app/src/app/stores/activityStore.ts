@@ -45,7 +45,7 @@ export default class ActivityStore {
        ? format(activity.start, 'yyyy-MM-dd')
        : activity.start,
       end: activity.allDayEvent
-       ? format(this.addDays(activity.end,1), 'yyyy-MM-dd')
+       ? format(activity.end, 'yyyy-MM-dd')
        : activity.end,
       allDay: activity.allDayEvent,
       id: activity.id,
@@ -97,11 +97,6 @@ export default class ActivityStore {
     )
   }
 
-  addDays = (date : Date, days: number) => {
-    var result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-  }
 
   subtractMinutes  = (dt: Date, minutes: number) : Date => {
     dt.setMinutes( dt.getMinutes() - minutes );
@@ -142,11 +137,6 @@ export default class ActivityStore {
   }
 
   loadActivity = async (id: string, categoryId: string) => {
-    let activity = this.getActivity(id);
-    if (activity) {
-      this.selectedActivity = activity;
-      return activity;
-    } else {
       this.loadingInitial = true;
       this.setReloadActivities(true);
       try {
@@ -154,15 +144,16 @@ export default class ActivityStore {
         const categories: Category[] = await categoryStore.loadCategories();
         const category = categories.find(x => x.id === categoryId)!;
         if (category.name === "Academic Calendar") {
-          activity = this.convertGraphEventToActivity(
+        const  activity = this.convertGraphEventToActivity(
             await agent.GraphEvents.details(id), category);
           this.activityRegistry.set(activity.id, activity);
           runInAction(() => {
             this.setLoadingInitial(false);
             this.selectedActivity = activity;
           })
+          return activity;
         } else {
-          activity = await agent.Activities.details(id);
+          const activity = await agent.Activities.details(id);
           activity.start = new Date(activity.start);
           activity.end = new Date(activity.end);
           this.activityRegistry.set(activity.id, activity);
@@ -170,20 +161,14 @@ export default class ActivityStore {
             this.setLoadingInitial(false);
             this.selectedActivity = activity;
           })
+          return activity;
         }
-
-        return activity;
       } catch (error) {
         console.log(error)
         this.setLoadingInitial(false);
-      }
-    }
+      }  
   }
 
-
-  private getActivity = (id: string) => {
-    return this.activityRegistry.get(id);
-  }
 
   private setActivity = (activity: Activity) => {
     this.activityRegistry.set(activity.id, activity);
@@ -237,6 +222,7 @@ export default class ActivityStore {
 
   updateActivity = async (activity: Activity) => {
     try {
+      debugger;
       await agent.Activities.update(activity, activity.id);
       this.activityRegistry.delete(activity.id);
       const newActivity  = await this.loadActivity(activity.id, activity.category.id )
@@ -257,12 +243,10 @@ export default class ActivityStore {
   convertActivityToGraphEvent(activity: Activity): GraphEvent {
     const body: GraphBody = { contentType: 'Html', content: activity.description }
     const start: GraphActivityDate = { 
-      dateTime: store.commonStore.convertDateToGraph(activity.start, activity.allDayEvent),
+      dateTime: store.commonStore.convertDateToGraph(activity.end, activity.allDayEvent, false),
       timeZone: 'UTC' }
     const end: GraphActivityDate = {
-       dateTime: store.commonStore.convertDateToGraph(
-        activity.allDayEvent? this.addDays(activity.end,1) : activity.end,
-        activity.allDayEvent),
+       dateTime: store.commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true),
        timeZone: 'UTC' }
     const location : GraphLocation ={
       displayName: activity.primaryLocation
@@ -301,7 +285,8 @@ export default class ActivityStore {
       coordinatorFirstName: '',
       coordinatorLastName: '',
       coordinatorName: graphEvent.organizer?.emailAddress.name || '',
-      activityRooms: []
+      activityRooms: [],
+      eventLookup: graphEvent.id,
     }
     return activity;
   }

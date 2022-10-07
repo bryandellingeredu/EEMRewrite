@@ -45,8 +45,13 @@ namespace Application.Activities
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                    if (request.Activity.CoordinatorEmail != null)
+                //begin if the user is signed into edu (coordinator email is populated) create an outlook event
+
+                try
+                {                   
+                if (! string.IsNullOrEmpty(request.Activity.CoordinatorEmail))
                     {
+                     //create outlook event
                        GraphEventDTO graphEventDTO = new GraphEventDTO
                        {
                            EventTitle = request.Activity.Title,
@@ -56,33 +61,18 @@ namespace Application.Activities
                            RoomEmails = request.Activity.RoomEmails,
                            RequesterEmail = request.Activity.CoordinatorEmail,
                            RequesterFirstName = request.Activity.CoordinatorFirstName,
-                           RequesterLastName = request.Activity.CoordinatorLastName                         
+                           RequesterLastName = request.Activity.CoordinatorLastName,
+                           IsAllDay = request.Activity.AllDayEvent
                        };
 
                     Settings s = new Settings();
                     var settings = s.LoadSettings(_config);
                     GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
-                    Event evt = await GraphHelper.CreateEvent(graphEventDTO);
-
-                    var allrooms = await GraphHelper.GetRoomsAsync();
-                    var filteredRooms = allrooms.Where(x => graphEventDTO.RoomEmails.Contains( x.AdditionalData["emailAddress"].ToString()));
-                    List<ActivityRoom> activityRooms = new List<ActivityRoom>();
-                    foreach (var room in filteredRooms)
-                    {
-                        activityRooms.Add(new ActivityRoom
-                        {
-                            Email = room.AdditionalData["emailAddress"].ToString(),
-                            Name = room.DisplayName
-                        });
-                    }               
+                    Event evt = await GraphHelper.CreateEvent(graphEventDTO);              
 
                     Activity activity = new Activity();
                     _mapper.Map(request.Activity, activity);
                     activity.EventLookup = evt.Id;
-                    if (activityRooms.Any())
-                    {
-                        activity.ActivityRooms = activityRooms;
-                    }
                     _context.Activities.Add(activity);
                     var result = await _context.SaveChangesAsync() > 0;
                     if (!result) return Result<Unit>.Failure("Failed to Create Activity");
@@ -90,6 +80,7 @@ namespace Application.Activities
 
                 }
                 else
+                // user is not logged onto edu so do not make an outlook event
                 {
                     Activity activity = new Activity();
                     _mapper.Map(request.Activity, activity);
@@ -98,10 +89,12 @@ namespace Application.Activities
                     if (!result) return Result<Unit>.Failure("Failed to Create Activity");
                     return Result<Unit>.Success(Unit.Value);
                 }
+                }
+                catch (Exception e)
+                {
 
-
-                   
-               
+                    throw;
+                }
             }
         }
     }

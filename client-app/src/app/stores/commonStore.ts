@@ -13,7 +13,10 @@ export default class CommonStore{
         this.error = error;
     }
 
-    convertDateToGraph = (date: Date, isAllDay: boolean): string => {
+    convertDateToGraph = (date: Date, isAllDay: boolean, isEndDt: boolean): string => {
+        if(isEndDt && isAllDay){
+            date = this.addDays(date,1);
+        }
         const isoStringDate = date.toISOString().split('T')[0];
         const hour = ("0" + date.getHours()).slice(-2);
         const minute = ("0" + date.getMinutes()).slice(-2);
@@ -21,6 +24,11 @@ export default class CommonStore{
         ? `${isoStringDate}T00:00:00.0000000`
         : `${isoStringDate}T${hour}:${minute}:00.0000000`
         return convertedDate;
+      }
+
+      addDays = (date: Date, num: number): Date =>{
+        const newDate = new Date(date);
+        return new Date(newDate.setDate(newDate.getDate() + num));
       }
 
       roundToNearest15 = (date: Date): Date => {

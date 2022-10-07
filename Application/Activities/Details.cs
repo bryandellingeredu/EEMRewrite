@@ -36,7 +36,6 @@ namespace Application.Activities
                 var activity = await _context.Activities
                     .Include(c => c.Category)
                     .Include(o => o.Organization)
-                    .Include(a => a.ActivityRooms)
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
 
                 if (activity.Organization != null)
@@ -65,7 +64,6 @@ namespace Application.Activities
                         newActivityRooms.Add(new ActivityRoom
                         {
                           Id = index++,
-                          ActivityId = activity.Id,
                           Name = getName(item, allrooms),
                           Email = item.EmailAddress.Address
                         });

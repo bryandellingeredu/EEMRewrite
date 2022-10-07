@@ -94,15 +94,13 @@ export default observer(function ActivityForm() {
     if(isSignedIn){
       loadUser();
     }
-  }, [id, categoryId,
-    loadActivity, loadCategories, loadOrganizations, loadLocations, loadUser,
-    categoryStore.loadingInitial, organizationStore.loadingInitial, locationStore.loadingInitial,
-    loadingInitial,]);
+  }, [isSignedIn]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
+    debugger;
     activity.roomEmails = roomRequired ? roomEmails : [];
-    activity.startDateAsString = commonStore.convertDateToGraph(activity.start, activity.allDayEvent);
-    activity.endDateAsString = commonStore.convertDateToGraph(activity.end, activity.allDayEvent);
+    activity.startDateAsString = commonStore.convertDateToGraph(activity.start, activity.allDayEvent, false);
+    activity.endDateAsString = commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true);
     activity.coordinatorEmail = isSignedIn &&  graphUser ? graphUser.mail : '';
     activity.coordinatorName = isSignedIn &&  graphUser ? graphUser.displayName : '';
     activity.coordinatorFirstName = isSignedIn &&  graphUser ? graphUser.givenName : '';

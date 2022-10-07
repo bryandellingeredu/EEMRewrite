@@ -52,11 +52,11 @@ export default class AvailabilityStore {
         const request = {
             Schedules: emails,
             StartTime : {
-               dateTime: store.commonStore.convertDateToGraph(start, false),
+               dateTime: store.commonStore.convertDateToGraph(start, false, false),
                timeZone: "Eastern Standard Time"
             },
             EndTime : {
-                dateTime: store.commonStore.convertDateToGraph(end, false),
+                dateTime: store.commonStore.convertDateToGraph(end, false, true),
                 timeZone: "Eastern Standard Time"
              },
              availabilityViewInterval: "15"

@@ -1,5 +1,4 @@
-﻿
-using Domain;
+﻿using Domain;
 using FluentValidation;
 using MediatR;
 using Persistence;
@@ -16,7 +15,11 @@ namespace Application.Activities
     {
         public class Command : IRequest<Result<Unit>>
         {
-            public Activity Activity { get; set; }
+            public Activity Activity
+            {
+                get;
+                set;
+            }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -42,16 +45,12 @@ namespace Application.Activities
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                try
-                {
 
-              
                 //delete any old graph events we will make new ones
                 if (
-                    !string.IsNullOrEmpty(request.Activity.EventLookup)
-                    &&
-                    !string.IsNullOrEmpty(request.Activity.CoordinatorEmail)
-                    )
+                  !string.IsNullOrEmpty(request.Activity.EventLookup) &&
+                  !string.IsNullOrEmpty(request.Activity.CoordinatorEmail)
+                )
                 {
                     Settings s = new Settings();
                     var settings = s.LoadSettings(_config);
@@ -59,16 +58,9 @@ namespace Application.Activities
                     await GraphHelper.DeleteEvent(request.Activity.EventLookup, request.Activity.CoordinatorEmail);
                 }
 
-                //delete the old activity rooms we will make new ones
-                var oldActivityRooms = await _context.ActivityRooms.Where(x => x.ActivityId == request.Activity.Id).ToListAsync();
-                    _context.RemoveRange(oldActivityRooms);
-                    await _context.SaveChangesAsync();
-              /*
-         
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
                 if (activity == null) return null;
                 _mapper.Map(request.Activity, activity);
-                activity.ActivityRooms = null;
                 activity.Category = null;
                 activity.EventLookup = null;
 
@@ -84,7 +76,8 @@ namespace Application.Activities
                         RoomEmails = request.Activity.RoomEmails,
                         RequesterEmail = request.Activity.CoordinatorEmail,
                         RequesterFirstName = request.Activity.CoordinatorFirstName,
-                        RequesterLastName = request.Activity.CoordinatorLastName
+                        RequesterLastName = request.Activity.CoordinatorLastName,
+                        IsAllDay = request.Activity.AllDayEvent
                     };
 
                     Settings s = new Settings();
@@ -92,42 +85,15 @@ namespace Application.Activities
                     GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                     Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                     activity.EventLookup = evt.Id;
-
-                    //create new activity rooms
-                    var allrooms = await GraphHelper.GetRoomsAsync();
-
-                    var filteredRooms = allrooms.Where(x => graphEventDTO.RoomEmails
-                    .Contains(x.AdditionalData["emailAddress"].ToString()));
-
-                    List<ActivityRoom> newActivityRooms = new List<ActivityRoom>();
-                    foreach (var room in filteredRooms)
-                    {
-                        newActivityRooms.Add(new ActivityRoom
-                        {
-                            Email = room.AdditionalData["emailAddress"].ToString(),
-                            Name = room.DisplayName
-                        });
-                    }
-                    if (newActivityRooms.Any())
-                    {
-                        activity.ActivityRooms = newActivityRooms;
-                    }
                 }
-             
+
                 var result = await _context.SaveChangesAsync() > 0;
-                if (!result) return Result<Unit>.Failure("Failed to Update Activity");*/
+                if (!result) return Result<Unit>.Failure("Failed to Update Activity");
                 return Result<Unit>.Success(Unit.Value);
-                }
-                catch (Exception e)
-                {
-
-                    throw;
-                }
             }
 
         }
 
-        //ddd
-
     }
+
 }
