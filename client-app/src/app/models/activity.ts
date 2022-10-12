@@ -3,6 +3,7 @@ import { store } from "../stores/store";
 import { Category } from "./category";
 import { Organization } from "./organization";
 import { ActivityRoom } from "./activityRoom"
+import { RecurrenceOptions } from "./recurrenceOptions";
 
 
 const commonStore = store.commonStore;
@@ -30,7 +31,9 @@ export interface Activity{
     coordinatorLastName: string,
     coordinatorName: string,
     eventLookup: string,
-    activityRooms: ActivityRoom[] | []
+    activityRooms: ActivityRoom[] | [],
+    recurrence: boolean,
+    recurrenceOptions: RecurrenceOptions | null
 }
 
 export class Activity implements Activity{
@@ -62,6 +65,8 @@ export class ActivityFormValues{
     coordinatorName: string = '';
     activityRooms: ActivityRoom[] | [] = [];
     eventLookup: string = '';
+    recurrence: boolean = false;
+    recurrenceOptions: RecurrenceOptions | null = null;
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -87,6 +92,8 @@ export class ActivityFormValues{
         this.coordinatorName = activity.coordinatorLastName;
         this.activityRooms = activity.activityRooms;
         this.eventLookup = activity.eventLookup;
+        this.recurrence = activity.recurrence;
+        this.recurrenceOptions = activity.recurrenceOptions;
        } 
     }
 }

@@ -9,8 +9,6 @@ import { format } from "date-fns";
 import { store } from "./store";
 import { Category } from "../models/category";
 import { GraphLocation } from "../models/graphLocation";
-import NonDepartmentRoomReservation from "../../features/rooms/NonDepartmentRoomReservation";
-import { NonDepartmentRoomReservationRequest } from "../models/nonDepartmentRoomReservationRequest";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -287,6 +285,8 @@ export default class ActivityStore {
       coordinatorName: graphEvent.organizer?.emailAddress.name || '',
       activityRooms: [],
       eventLookup: graphEvent.id,
+      recurrence: false,
+      recurrenceOptions: null
     }
     return activity;
   }

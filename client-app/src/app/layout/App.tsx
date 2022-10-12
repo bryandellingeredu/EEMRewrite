@@ -14,12 +14,14 @@ import { ToastContainer } from 'react-toastify';
 import GenericCalendar from '../../features/fullCalendar/GenericCalendar';
 import RoomDashboard from '../../features/rooms/RoomDashboard';
 import NonDepartmentRoomReservation from '../../features/rooms/NonDepartmentRoomReservation';
+import ModalContainer from '../common/modals/ModalContainer';
 
 function App() {
   const location = useLocation();
   return (
     <>
         <ToastContainer position='bottom-right' hideProgressBar />
+        <ModalContainer />
          <Route exact path='/' component={HomePage}/>
          <Route
           path={'/(.+)'}

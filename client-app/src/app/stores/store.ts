@@ -7,16 +7,18 @@ import LocationStore from "./locationStore";
 import GraphRoomStore from "./graphRoomStore";
 import AvailabilityStore from "./availabilityStore";
 import GraphUserStore from "./graphUserStore";
+import ModalStore from "./modalStore";
 
 interface Store{
     activityStore: ActivityStore
     commonStore: CommonStore
-    categoryStore: CategoryStore,
-    organizationStore: OrganizationStore,
-    locationStore: LocationStore,
-    graphRoomStore: GraphRoomStore,
-    availabilityStore: AvailabilityStore,
+    categoryStore: CategoryStore
+    organizationStore: OrganizationStore
+    locationStore: LocationStore
+    graphRoomStore: GraphRoomStore
+    availabilityStore: AvailabilityStore
     graphUserStore: GraphUserStore
+    modalStore: ModalStore
 }
 
 export const store: Store = {
@@ -28,6 +30,7 @@ export const store: Store = {
     graphRoomStore: new GraphRoomStore(),
     availabilityStore: new AvailabilityStore(),
     graphUserStore: new GraphUserStore(), 
+    modalStore: new ModalStore(),
 }
 
 export const StoreContext = createContext(store);

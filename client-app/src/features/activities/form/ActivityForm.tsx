@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useState, useEffect } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { Button, Grid, Header, Segment } from "semantic-ui-react";
+import { Button, Grid, Header, Icon, Segment, Form as semanticForm } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { Formik, Form } from "formik";
@@ -20,6 +20,8 @@ import MyTextInput from "../../../app/common/form/MyTextInput";
 import { v4 as uuid } from 'uuid';
 import { Providers, ProviderState } from '@microsoft/mgt';
 import { Login } from "@microsoft/mgt-react";
+import RecurrenceInformation from "./RecurrenceInformation";
+import { RecurrenceOptions, RecurrenceOptionsFormValues } from "../../../app/models/recurrenceOptions";
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -42,7 +44,8 @@ function useIsSignedIn(): [boolean] {
 export default observer(function ActivityForm() {
   const [isSignedIn] = useIsSignedIn();
   const history = useHistory();
-  const { activityStore, categoryStore, organizationStore, locationStore, commonStore, graphUserStore } = useStore();
+  const { activityStore, categoryStore, organizationStore,
+         locationStore, commonStore, graphUserStore, modalStore } = useStore();
   const { createGraphEvent, updateGraphEvent, createActivity, updateActivity,
     loadActivity, loadingInitial } = activityStore;
   const { categoryOptions, categories, loadCategories } = categoryStore;
@@ -52,6 +55,8 @@ export default observer(function ActivityForm() {
   const { id } = useParams<{ id: string }>();
   const { categoryId } = useParams<{ categoryId: string }>();
   const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
+  const [recurrenceOptions, setRecurrenceOptions] = useState<RecurrenceOptions>(new RecurrenceOptionsFormValues())
+  const [recurrence, setRecurrence] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
   const [roomEmails, setRoomEmails] = useState<string[]>([]);
   const handleSetRoomRequired = () => setRoomRequired(!roomRequired);
@@ -60,10 +65,21 @@ export default observer(function ActivityForm() {
     setRoomEmails(roomEmails);
   }
 
+  const handleSetRecurrenceOptions = (recurrenceOptions: RecurrenceOptions) =>{
+    setRecurrenceOptions(recurrenceOptions);
+  }
+
+  const handleSetRecurrence = (recurrence: boolean) => {
+    setRecurrence(recurrence);
+  }
+
   const validationSchema = Yup.object({
     title: Yup.string().required('The title is required'),
     categoryId: Yup.string().required('Category is required, choose other if you are just reserving a room'),
-    start: Yup.string().required().nullable(),
+    start: Yup.string().required().nullable()
+    .test('startBeforeEnd', 'Start must be before End', function(){
+      return (this.parent.start < this.parent.end)
+    }),
     end: Yup.string().required().nullable(),
     actionOfficer: Yup.string().when("categoryId", {
       is: categories.find(x => x.name === "Academic Calendar")?.id,
@@ -83,6 +99,9 @@ export default observer(function ActivityForm() {
           setRoomRequired(true);
           setRoomEmails(response.activityRooms.map(x => x.email));
         } 
+        if (response?.recurrence && response?.recurrenceOptions){
+          setRecurrenceOptions(response.recurrenceOptions);
+        }
       });
       loadOrganizations();
       loadLocations();
@@ -97,7 +116,6 @@ export default observer(function ActivityForm() {
   }, [isSignedIn]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
-    debugger;
     activity.roomEmails = roomRequired ? roomEmails : [];
     activity.startDateAsString = commonStore.convertDateToGraph(activity.start, activity.allDayEvent, false);
     activity.endDateAsString = commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true);
@@ -185,6 +203,20 @@ export default observer(function ActivityForm() {
                 dateFormat='MMMM d, yyyy'
                 title='*End' />
             }
+            <semanticForm.Field>
+              <label>Does Event Repeat?</label>
+            <Button icon labelPosition="left"            
+              onClick={() => modalStore.openModal(
+              <RecurrenceInformation
+               recurrenceOptions = {recurrenceOptions}
+               setRecurrenceOptions = {handleSetRecurrenceOptions}
+               setRecurrence = {handleSetRecurrence} />)}
+               >
+                Repeating Event
+                {!recurrence && <Icon name='square outline' />}
+                {recurrence && <Icon name = 'check square outline' />}
+            </Button>
+            </semanticForm.Field>
             <LocationRadioButtons roomRequired={roomRequired} setRoomRequired={handleSetRoomRequired} />
             {!roomRequired &&
               <MyDataList name='primaryLocation'

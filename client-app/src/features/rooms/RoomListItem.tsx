@@ -21,9 +21,11 @@ export default observer (function RoomListItem(
               Capacity: {room.capacity}
             </Label>
               <Card.Header style={{marginTop: '5px'}}>{room.displayName}</Card.Header>
+              {room.address &&
               <Card.Meta>
                 {room.address.street} {room.address.city} 
               </Card.Meta>
+              }
               <Card.Description>
               <Card.Content extra>
         
