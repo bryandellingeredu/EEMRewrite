@@ -12,9 +12,9 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context)
         {
-            if (context.Activities.Any()) return;
 
-            var categories = new List<Category>
+            if (!context.Categories.Any()){
+                var categories = new List<Category>
             {
                 new Category{Name = "Academic Calendar"},
                 new Category{Name = "ASEP Calendar"},
@@ -37,8 +37,13 @@ namespace Persistence
                 new Category{Name = "Visits And Tours"},
                 new Category{Name = "Weekly Pocket Calendar"},
             };
+                await context.Categories.AddRangeAsync(categories);
+                await context.SaveChangesAsync();
+            }
 
-            var organizations = new List<Organization>
+            if (!context.Organizations.Any())
+            {
+                var organizations = new List<Organization>
             {
                 new Organization {Name = "AHEC"},
                 new Organization {Name = "ASEP"},
@@ -61,8 +66,13 @@ namespace Persistence
                 new Organization {Name = "PA/LL"},
 
             };
+                await context.Organizations.AddRangeAsync(organizations);
+                await context.SaveChangesAsync();
+            }
 
-            var locations = new List<Location>
+            if (!context.Locations.Any())
+            {
+                var locations = new List<Location>
             {
                   new Location {Name = "ACOM"},
                   new Location {Name = "Anne Ely Hall"},
@@ -114,13 +124,13 @@ namespace Persistence
                   new Location {Name = "Youth Services"},
                   new Location {Name = "Washington DC"},
             };
+                await context.Locations.AddRangeAsync(locations);
+                await context.SaveChangesAsync();
+            }        
 
-            await context.Categories.AddRangeAsync(categories);
-            await context.Organizations.AddRangeAsync(organizations);
-            await context.Locations.AddRangeAsync(locations);
-            await context.SaveChangesAsync();
+            if (!context.Activities.Any()) { 
 
-            Guid cslCategoryId = categories.First(x => x.Name == "CSL Calendar").Id;
+            Guid cslCategoryId = context.Categories.First(x => x.Name == "CSL Calendar").Id;
 
             var activities = new List<Activity>
             {
@@ -132,7 +142,7 @@ namespace Persistence
                     Description = "LTG Jarrad Visit - Will be in suite 3018 SIPR access",
                     CategoryId = cslCategoryId,
                     AllDayEvent = true,
-                    OrganizationId = organizations.First(x => x.Name == "CSL").Id,
+                    OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
                     ActionOfficer = "Tania Beecher",
                     ActionOfficerPhone = "245 -3258",
                     PrimaryLocation = "Main Entrance"
@@ -146,7 +156,7 @@ namespace Persistence
                     Description = "Golf Course Outing POC CJ 245145",
                     CategoryId = cslCategoryId,
                     AllDayEvent = false,
-                    OrganizationId = organizations.First(x => x.Name == "CSL").Id,
+                    OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
                     ActionOfficer = "Tania Beecher",
                     ActionOfficerPhone = "245 -3258",
                     PrimaryLocation = "CB Golf Course"
@@ -159,7 +169,7 @@ namespace Persistence
                     Description = "Labor Day DONSA/Training Holiday",
                     CategoryId = cslCategoryId,
                     AllDayEvent = true,
-                    OrganizationId = organizations.First(x => x.Name == "CSL").Id,
+                    OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
                     ActionOfficer = "Duetsch",
                     ActionOfficerPhone = "4611"
                 },
@@ -183,7 +193,7 @@ namespace Persistence
                     Description = "Labor Day Federal Holiday",
                     CategoryId = cslCategoryId,
                     AllDayEvent = true,
-                    OrganizationId = organizations.First(x => x.Name == "CSL").Id,
+                    OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
                     ActionOfficer = "Mr. Wade",
                     ActionOfficerPhone = "245-3258",
                     PrimaryLocation = "CSL"
@@ -196,7 +206,7 @@ namespace Persistence
                     Description = "Director's Meeting",
                     CategoryId = cslCategoryId,
                     AllDayEvent = false,
-                    OrganizationId = organizations.First(x => x.Name == "CSL").Id,
+                    OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
                     ActionOfficer = "Hill / Mcalister",
                     ActionOfficerPhone = "4534 / 4412"
                 },
@@ -208,7 +218,7 @@ namespace Persistence
                     Description = "Plan Power Outage Conditions Check",
                     CategoryId = cslCategoryId,
                     AllDayEvent = false,
-                    OrganizationId = organizations.First(x => x.Name == "CSL").Id,
+                    OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
                     ActionOfficer = "Duetsch",
                     ActionOfficerPhone = "-4611",
                     PrimaryLocation = "Collins Hall"
@@ -221,7 +231,7 @@ namespace Persistence
                     Description = "Plan Power Outage Conditions Check",
                     CategoryId = cslCategoryId,
                     AllDayEvent = false,
-                    OrganizationId = organizations.First(x => x.Name == "SSL").Id,
+                    OrganizationId = context.Organizations.First(x => x.Name == "SSL").Id,
                     ActionOfficer = "Monique Banks",
                     ActionOfficerPhone = "717-245-3488"
                 },
@@ -233,7 +243,7 @@ namespace Persistence
                     Description = "DTRA SR LDR Conference Set-up",
                     CategoryId = cslCategoryId,
                     AllDayEvent = true,
-                    OrganizationId = organizations.First(x => x.Name == "CSL").Id,
+                    OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
                     ActionOfficer = "Duetsch",
                     ActionOfficerPhone = "-4611 / 3258"
                 },
@@ -245,7 +255,7 @@ namespace Persistence
                     Description = "Discussion with USAREUR-AF team ahead of Junary 2023 TASC",
                     CategoryId = cslCategoryId,
                     AllDayEvent = false,
-                    OrganizationId = organizations.First(x => x.Name == "SSL").Id,
+                    OrganizationId = context.Organizations.First(x => x.Name == "SSL").Id,
                     ActionOfficer = "Mark Haseman",
                     ActionOfficerPhone = "961-2266"
 
@@ -256,4 +266,5 @@ namespace Persistence
             await context.SaveChangesAsync();
         }
     }
+  }
 }
