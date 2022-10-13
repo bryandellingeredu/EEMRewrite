@@ -4,7 +4,6 @@
     using Application.GraphSchedules;
     using Azure.Identity;
     using Microsoft.Graph;
-    using Persistence.Migrations;
 
     public class GraphHelper
     {

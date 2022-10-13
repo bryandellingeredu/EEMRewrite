@@ -13,7 +13,7 @@ import { GraphScheduleResponse } from '../models/graphScheduleResponse';
 import { GraphScheduleRequest } from '../models/graphScheduleRequest';
 import { NonDepartmentRoomReservationRequest } from '../models/nonDepartmentRoomReservationRequest';
 
-axios.defaults.baseURL = 'https://localhost:7285/api';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
 axios.interceptors.response.use(async response => {
    return response;

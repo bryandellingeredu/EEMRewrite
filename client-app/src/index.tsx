@@ -30,7 +30,7 @@ const hossRob = {
 Providers.globalProvider = new Msal2Provider({
   clientId: hossRob.clientId,
   authority: `https://login.microsoftonline.com/${hossRob.tenantId}`,
-  redirectUri: "http://localhost:3000/",
+  redirectUri: process.env.REACT_APP_REDIRECT_URI,
   scopes: ['calendars.read',
             'Calendars.ReadWrite',
             'Group.ReadWrite.All',
