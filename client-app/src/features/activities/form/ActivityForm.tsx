@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { Button, Grid, Header, Icon, Segment, Form as semanticForm } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { Formik, Form } from "formik";
+import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from 'yup';
 import MyTextArea from "../../../app/common/form/MyTextArea";
 import MySelectInput from "../../../app/common/form/MySelectInput";
@@ -72,6 +72,8 @@ export default observer(function ActivityForm() {
   const handleSetRecurrence = (recurrence: boolean) => {
     setRecurrence(recurrence);
   }
+
+ 
 
   const validationSchema = Yup.object({
     title: Yup.string().required('The title is required'),
@@ -154,6 +156,17 @@ export default observer(function ActivityForm() {
     )
   }
 
+  const FormObserver: React.FC = () => {
+    const { values, setFieldValue } = useFormikContext();
+    const v  = values as ActivityFormValues;
+    useEffect(() => {
+      if (v.end < v.start){
+        setFieldValue('end', new Date(v.start.getTime() + 30 * 60000));
+      }
+    }, [values, setFieldValue]);
+    return null;
+  };
+
   return (
     <Segment clearing>
       <Header content={activity.id ? 'Update ' : 'Create New '} Calendar Event sub color='teal' />
@@ -162,9 +175,11 @@ export default observer(function ActivityForm() {
         initialValues={activity}
         onSubmit={values => handleFormSubmit(values)}>
 
-        {({ handleSubmit, isValid, isSubmitting, dirty, values, setFieldValue }) => (
+        {({ handleSubmit, isValid, isSubmitting, dirty, values }) => (
+         
 
           <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
+          <FormObserver />
             <MyTextInput name='title' placeholder='Title' label='Title*' />
             <MyTextArea rows={3} placeholder='Description' name='description' label='Description' />
             <MySelectInput options={categoryOptions} placeholder='Sub Calendar' name='categoryId' label='*Sub Calendar' />
@@ -194,14 +209,16 @@ export default observer(function ActivityForm() {
                 showTimeSelect
                 timeCaption='time'
                 dateFormat='MMMM d, yyyy h:mm aa'
-                title='*End' />
+                title='*End'
+                minDate={values.start} />
             }
             {values.allDayEvent &&
               <MyDateInput
                 placeholderText='End Date'
                 name='end'
                 dateFormat='MMMM d, yyyy'
-                title='*End' />
+                title='*End' 
+                minDate={values.start}/>
             }
             <semanticForm.Field>
               <label>Does Event Repeat?</label>
