@@ -36,6 +36,7 @@ namespace Application.Activities
                 var activity = await _context.Activities
                     .Include(c => c.Category)
                     .Include(o => o.Organization)
+                    .Include(r => r.Recurrence)
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
 
                 if (activity.Organization != null)
@@ -43,6 +44,11 @@ namespace Application.Activities
                     activity.Organization.Activities = null;
                 }
                 activity.Category.Activities = null;
+
+                if (activity.Recurrence != null)
+                {
+                    activity.Recurrence.Activities = null;
+                }
 
                 if (!string.IsNullOrEmpty(activity.EventLookup) && !string.IsNullOrEmpty(activity.CoordinatorEmail))
                 {

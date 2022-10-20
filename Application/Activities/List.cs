@@ -25,6 +25,7 @@ namespace Application.Activities
                 var activities = await _context.Activities
                    .Include(c => c.Category)
                    .Include(o => o.Organization)
+                   .Include(r => r.Recurrence)
                   .ToListAsync(cancellationToken);
 
                 foreach (var activity in activities)
@@ -34,7 +35,12 @@ namespace Application.Activities
                     {
                         activity.Organization.Activities = null;
                     }
-                    
+
+                    if (activity.Recurrence != null)
+                    {
+                        activity.Recurrence.Activities = null;
+                    }
+
                 }
 
                 return Result<List<Activity>>.Success(activities);

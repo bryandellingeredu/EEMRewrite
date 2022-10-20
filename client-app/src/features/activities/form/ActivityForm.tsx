@@ -21,7 +21,7 @@ import { v4 as uuid } from 'uuid';
 import { Providers, ProviderState } from '@microsoft/mgt';
 import { Login } from "@microsoft/mgt-react";
 import RecurrenceInformation from "./RecurrenceInformation";
-import { RecurrenceOptions, RecurrenceOptionsFormValues } from "../../../app/models/recurrenceOptions";
+import { Recurrence, RecurrenceFormValues } from "../../../app/models/recurrence";
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -55,8 +55,8 @@ export default observer(function ActivityForm() {
   const { id } = useParams<{ id: string }>();
   const { categoryId } = useParams<{ categoryId: string }>();
   const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
-  const [recurrenceOptions, setRecurrenceOptions] = useState<RecurrenceOptions>(new RecurrenceOptionsFormValues())
-  const [recurrence, setRecurrence] = useState<boolean>(false);
+  const [recurrence, setRecurrence] = useState<Recurrence>(new RecurrenceFormValues())
+  const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
   const [roomEmails, setRoomEmails] = useState<string[]>([]);
   const handleSetRoomRequired = () => setRoomRequired(!roomRequired);
@@ -65,12 +65,12 @@ export default observer(function ActivityForm() {
     setRoomEmails(roomEmails);
   }
 
-  const handleSetRecurrenceOptions = (recurrenceOptions: RecurrenceOptions) =>{
-    setRecurrenceOptions(recurrenceOptions);
+  const handleSetRecurrence = (recurrence: Recurrence) =>{
+    setRecurrence(recurrence);
   }
 
-  const handleSetRecurrence = (recurrence: boolean) => {
-    setRecurrence(recurrence);
+  const handleSetRecurrenceInd = (recurrenceInd: boolean) => {
+    setRecurrenceInd(recurrenceInd);
   }
 
  
@@ -101,8 +101,9 @@ export default observer(function ActivityForm() {
           setRoomRequired(true);
           setRoomEmails(response.activityRooms.map(x => x.email));
         } 
-        if (response?.recurrence && response?.recurrenceOptions){
-          setRecurrenceOptions(response.recurrenceOptions);
+        if (response?.recurrenceInd && response?.recurrence){
+          setRecurrence(response.recurrence);
+          setRecurrenceInd(true);
         }
       });
       loadOrganizations();
@@ -118,6 +119,8 @@ export default observer(function ActivityForm() {
   }, [isSignedIn]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
+    activity.recurrenceInd = recurrenceInd;
+    activity.recurrence = recurrence;
     activity.roomEmails = roomRequired ? roomEmails : [];
     activity.startDateAsString = commonStore.convertDateToGraph(activity.start, activity.allDayEvent, false);
     activity.endDateAsString = commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true);
@@ -225,13 +228,14 @@ export default observer(function ActivityForm() {
             <Button icon labelPosition="left"            
               onClick={() => modalStore.openModal(
               <RecurrenceInformation
-               recurrenceOptions = {recurrenceOptions}
-               setRecurrenceOptions = {handleSetRecurrenceOptions}
+               recurrence = {recurrence}
+               start = {values.start}
+               setRecurrenceInd = {handleSetRecurrenceInd}
                setRecurrence = {handleSetRecurrence} />)}
                >
                 Repeating Event
-                {!recurrence && <Icon name='square outline' />}
-                {recurrence && <Icon name = 'check square outline' />}
+                {!recurrenceInd && <Icon name='square outline' />}
+                {recurrenceInd && <Icon name = 'check square outline' />}
             </Button>
             </semanticForm.Field>
             <LocationRadioButtons roomRequired={roomRequired} setRoomRequired={handleSetRoomRequired} />

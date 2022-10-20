@@ -204,6 +204,7 @@ export default class ActivityStore {
   createActivity = async (activity: Activity) => {
     try {
       await agent.Activities.create(activity);
+      const loadEvents = await this.loadActivites();
       const newActivity  = await this.loadActivity(activity.id, activity.category.id )
       runInAction(() => {
       if(newActivity){
@@ -285,8 +286,8 @@ export default class ActivityStore {
       coordinatorName: graphEvent.organizer?.emailAddress.name || '',
       activityRooms: [],
       eventLookup: graphEvent.id,
-      recurrence: false,
-      recurrenceOptions: null
+      recurrenceInd: false,
+      recurrence: null
     }
     return activity;
   }

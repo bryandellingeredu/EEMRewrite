@@ -50,5 +50,9 @@ namespace Domain
         [NotMapped]
         public IEnumerable<ActivityRoom> ActivityRooms { get; set; }
 
+        public bool RecurrenceInd { get; set; }
+        public Guid? RecurrenceId { get; set; }
+        public Recurrence Recurrence { get; set; }
+
     }
 }

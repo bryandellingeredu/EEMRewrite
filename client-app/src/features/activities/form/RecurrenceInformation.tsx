@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { Divider, Grid, Header, Form as SemanticForm, Button, Step, Icon, Label, Message} from "semantic-ui-react";
-import { RecurrenceOptions, RecurrenceOptionsFormValues } from "../../../app/models/recurrenceOptions";
+import { Recurrence, RecurrenceFormValues } from "../../../app/models/recurrence";
 import { Formik, Form, yupToFormErrors } from "formik";
 import MySemanticRadioButton from "../../../app/common/form/MySemanticRadioButton";
 import MySemanticCheckBox from "../../../app/common/form/MySemanticCheckbox";
@@ -12,22 +12,23 @@ import MySelectInput from "../../../app/common/form/MySelectInput";
 import { format } from "date-fns";
 
 interface Props{
-    recurrenceOptions: RecurrenceOptions
-    setRecurrenceOptions: (recurrenceOptions: RecurrenceOptions) => void
-    setRecurrence: (recurrence: boolean) => void
+    recurrence: Recurrence
+    start: Date
+    setRecurrence: (recurrence: Recurrence) => void
+    setRecurrenceInd: (recurrenceInd: boolean) => void
   }
 
 
-export default observer(function RecurrenceInformation({recurrenceOptions, setRecurrenceOptions, setRecurrence }: Props) {
+export default observer(function RecurrenceInformation({recurrence, setRecurrence, setRecurrenceInd, start }: Props) {
 
   const {modalStore} = useStore();
   const [active, setActive] = useState<string>('step1');
   const [step1Complete, setStep1Complete] = useState<boolean>(false);
   const [step2Complete, setStep2Complete] = useState<boolean>(false);
   const [step3Complete, setStep3Complete] = useState<boolean>(false);
-  const [weeklyRepeatType, setWeeklyRepeatType] = useState<string>(recurrenceOptions.weeklyRepeatType);
-  const [monthlyRepeatType, setMonthlyRepeatType] = useState<string>(recurrenceOptions.monthlyRepeatType);
-  const [monthlyDayType, setMonthlyDayType] = useState<string>(recurrenceOptions.monthlyDayType);
+  const [weeklyRepeatType, setWeeklyRepeatType] = useState<string>(recurrence.weeklyRepeatType);
+  const [monthlyRepeatType, setMonthlyRepeatType] = useState<string>(recurrence.monthlyRepeatType);
+  const [monthlyDayType, setMonthlyDayType] = useState<string>(recurrence.monthlyDayType);
   
 
   const handleStep1Click = () => {
@@ -49,13 +50,13 @@ export default observer(function RecurrenceInformation({recurrenceOptions, setRe
     setStep3Complete(true);
   }
 
-    function handleFormSubmit(recurrenceOptions: RecurrenceOptionsFormValues) {
-      recurrenceOptions.weeklyRepeatType = weeklyRepeatType;
-      recurrenceOptions.monthlyRepeatType = monthlyRepeatType;
-      recurrenceOptions.monthlyDayType = monthlyDayType;
-      console.log(recurrenceOptions);
-      setRecurrenceOptions(recurrenceOptions);
-      setRecurrence(true);
+    function handleFormSubmit(recurrence: RecurrenceFormValues) {
+      recurrence.weeklyRepeatType = weeklyRepeatType;
+      recurrence.monthlyRepeatType = monthlyRepeatType;
+      recurrence.monthlyDayType = monthlyDayType;
+      console.log(recurrence);
+      setRecurrence(recurrence);
+      setRecurrenceInd(true);
       modalStore.closeModal();      
     }
     let numOfDays = 10;
@@ -109,7 +110,7 @@ export default observer(function RecurrenceInformation({recurrenceOptions, setRe
 
 
       <Formik enableReinitialize
-        initialValues={recurrenceOptions}
+        initialValues={{...recurrence, intervalStart: start}}
         onSubmit={values => handleFormSubmit(values)}>       
         {({ handleSubmit, isSubmitting, values,  dirty }) => (
                <Form className='ui form' onSubmit={handleSubmit} autoComplete='off' style={{paddingBottom: '20px'}}>
@@ -248,7 +249,7 @@ export default observer(function RecurrenceInformation({recurrenceOptions, setRe
             <Grid.Column width={8}>
               {weeklyRepeatType === 'number' && 
                   <MySelectInput
-                    placeholder="Choose the number of times this event will occur"
+                    placeholder="Choose the number of times this series will occurr"
                   
                      options =   {
                         Array(52).fill(null).map((value, index) => 
@@ -434,7 +435,7 @@ export default observer(function RecurrenceInformation({recurrenceOptions, setRe
     info
     header='Review your choices then save'
     content={`this event will repeat daily starting on ${format(values.intervalStart, 'MMMM d, yyyy')} and will repeat for  ${values.daysRepeating} days 
-    ${values.includeWeekends? 'including' : 'not including '} weekends.
+    ${values.weekendsIncluded === 'yes' ? 'including' : 'not including '} weekends.
     ` } 
   />
 }
@@ -446,7 +447,7 @@ export default observer(function RecurrenceInformation({recurrenceOptions, setRe
     ${values.weekInterval === '1' ? 'every week' : values.weekInterval === '2' ? 'every other week' : 'every third week' }
     on  ${values.sunday ? 'Sunday' : ''} ${values.monday ? 'Monday' : ''}  ${values.tuesday ? 'Tuesday' : ''}  ${values.wednesday ? 'Wednesday' : ''}
     ${values.thursday ? 'Thursday' : ''} ${values.friday ? 'Friday' : ''} ${values.saturday ? 'Saturday' : ''}.
-     ${weeklyRepeatType === 'number' ? 'This event will repeat' : 'ending on'} 
+     ${weeklyRepeatType === 'number' ? 'This series will repeat' : 'ending on'} 
      ${weeklyRepeatType === 'number' ? values.weeksRepeating : format(values.intervalEnd, 'MMMM d, yyyy')}
      ${weeklyRepeatType === 'number' ? 'time/s' : ''}
     ` } 

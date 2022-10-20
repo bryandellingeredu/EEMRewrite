@@ -30,7 +30,9 @@ export default function Navbar(){
                 <Dropdown.Item text = 'Chapel' as={Link} to='/genericcalendar/chapel'/>    
               </Dropdown.Menu>
              </Dropdown>
-             <Menu.Item as={NavLink} to='rooms' name="rooms" />
+             <Menu.Item as={NavLink} to='/rooms'>
+              Rooms
+             </Menu.Item>
              <Menu.Item position="right">
                 <Login/>
              </Menu.Item>            
