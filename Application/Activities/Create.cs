@@ -11,6 +11,9 @@ using Activity = Domain.Activity;
 using Azure.Core;
 using System.Globalization;
 using Microsoft.Graph.ExternalConnectors;
+using DayOfWeek = System.DayOfWeek;
+using Persistence.Migrations;
+using Recurrence = Domain.Recurrence;
 
 namespace Application.Activities
 {
@@ -214,7 +217,51 @@ namespace Application.Activities
                         }
                         break;
                     default:
-                        break;
+                        d = recurrence.IntervalStart;
+                        index = 0;
+                        int currentMonth = 0;
+                        if (recurrence.MonthlyRepeatType == "number")
+                        {
+                            int monthsRepeating = Int32.Parse(recurrence.MonthsRepeating);
+                            if (recurrence.MonthlyDayType == "number")
+                            {
+                                var dayOfWeek = recurrence.WeekdayOfMonth == "0" ? System.DayOfWeek.Sunday
+                                    : recurrence.WeekdayOfMonth == "1" ? System.DayOfWeek.Monday
+                                    : recurrence.WeekdayOfMonth == "2" ? System.DayOfWeek.Tuesday
+                                    : recurrence.WeekdayOfMonth == "3" ? System.DayOfWeek.Wednesday
+                                    : recurrence.WeekdayOfMonth == "4" ? System.DayOfWeek.Thursday
+                                    : recurrence.WeekdayOfMonth == "5" ? System.DayOfWeek.Friday
+                                    : System.DayOfWeek.Saturday;
+
+
+                                while (index < monthsRepeating)
+                                {
+                                    if(
+                                        d.Date >= recurrence.IntervalStart.Date &&
+                                        (d.Date.Month == currentMonth || currentMonth == 0) &&
+                                        Enum.GetName(dayOfWeek) == Enum.GetName(d.DayOfWeek)  &&
+                                        recurrence.WeekOfMonth == GetWeekOfMonth(d, dayOfWeek)
+                                        )
+                                        
+                                    {
+                                        allDates.Add(new DateTime(d.Year, d.Month, d.Day));
+                                        index++;
+                                        if (currentMonth == 0)
+                                        {
+                                            currentMonth = d.Month;
+                                        }
+                                        currentMonth++;
+                                        if (currentMonth > 12)
+                                        {
+                                            currentMonth = 1;
+                                        }
+                                    }
+                                    d = d.AddDays(1);
+
+                                }
+                            }
+                        }
+                            break;
                 }
                 int i = 0;
                 foreach (var day in allDates)
@@ -242,6 +289,21 @@ namespace Application.Activities
                 }
                 return activities;
             }
+
+            private string GetWeekOfMonth(DateTime date, DayOfWeek dayOfWeek)
+            {
+                date = date.Date;
+                DateTime firstMonthDay = new DateTime(date.Year, date.Month, 1);
+                DateTime firstMonthWeekday = firstMonthDay.AddDays((dayOfWeek + 7 - firstMonthDay.DayOfWeek) % 7);
+                if (firstMonthWeekday > date)
+                {
+                    firstMonthDay = firstMonthDay.AddMonths(-1);
+                    firstMonthWeekday = firstMonthDay.AddDays((dayOfWeek + 7 - firstMonthDay.DayOfWeek) % 7);
+                }
+                return ((date - firstMonthWeekday).Days / 7 + 1).ToString();
+            }
+
+          
         }
     }
 }
