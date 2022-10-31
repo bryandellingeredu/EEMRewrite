@@ -21,7 +21,7 @@ interface Props{
 
 export default observer(function RecurrenceInformation({recurrence, setRecurrence, setRecurrenceInd, start }: Props) {
 
-  const {modalStore} = useStore();
+  const {modalStore, activityStore} = useStore();
   const [active, setActive] = useState<string>('step1');
   const [step1Complete, setStep1Complete] = useState<boolean>(false);
   const [step2Complete, setStep2Complete] = useState<boolean>(false);

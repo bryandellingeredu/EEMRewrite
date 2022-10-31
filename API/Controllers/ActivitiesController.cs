@@ -17,6 +17,10 @@ namespace API.Controllers
         public async Task<IActionResult> CreateActivity(Activity activity) =>
           HandleResult(await Mediator.Send(new Create.Command { Activity = activity }));
 
+        [HttpPost("listPossibleByRecurrence")] 
+        public async Task<IActionResult> ListPossibleByRecurrence(Recurrence recurrence) =>
+            HandleResult(await Mediator.Send(new ListPossibleByRecurrence.Command { Recurrence = recurrence }));
+
         [HttpPut("{id}")]
         public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {

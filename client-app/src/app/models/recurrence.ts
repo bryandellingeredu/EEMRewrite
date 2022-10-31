@@ -26,6 +26,8 @@ export interface Recurrence{
     weeklyRepeatType: string
     monthlyRepeatType: string
     monthlyDayType: string
+    activityStart? : Date
+    activityEnd?: Date
 }
 
 export class Recurrence implements Recurrence{

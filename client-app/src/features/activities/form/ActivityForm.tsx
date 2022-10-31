@@ -271,7 +271,9 @@ export default observer(function ActivityForm() {
                     start={values.start}
                     end={values.end}
                     setRoomEmails={handleSetRoomEmails}
-                    roomEmails={roomEmails} />
+                    roomEmails={roomEmails}
+                    recurrenceInd={recurrenceInd}
+                    recurrence={recurrence} />
                 }
               </Segment>
             }

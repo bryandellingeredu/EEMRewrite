@@ -12,6 +12,7 @@ import { GraphRoom } from '../models/graphRoom';
 import { GraphScheduleResponse } from '../models/graphScheduleResponse';
 import { GraphScheduleRequest } from '../models/graphScheduleRequest';
 import { NonDepartmentRoomReservationRequest } from '../models/nonDepartmentRoomReservationRequest';
+import { Recurrence } from '../models/recurrence';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -107,7 +108,8 @@ const Activities = {
     delete: (id: string) =>  axiosRequest.del<void>(`/activities/${id}`),
     reserveNonDepartmentRoom: (
         room: NonDepartmentRoomReservationRequest) => axiosRequest.post<string>(
-            '/activities/reserveNonDepartmentRoom', room )
+            '/activities/reserveNonDepartmentRoom', room ),
+    listPossibleByRecurrence: (recurrence: Recurrence) => axiosRequest.post<Activity[]>('/activities/listPossibleByRecurrence', recurrence)
 }
 
 const Categories = {

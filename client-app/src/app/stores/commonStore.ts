@@ -58,4 +58,5 @@ export default class CommonStore{
         }
       
     }
+
 }

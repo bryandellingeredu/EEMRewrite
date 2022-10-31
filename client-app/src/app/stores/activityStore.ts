@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { store } from "./store";
 import { Category } from "../models/category";
 import { GraphLocation } from "../models/graphLocation";
+import { Recurrence } from "../models/recurrence";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();

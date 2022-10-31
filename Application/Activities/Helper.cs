@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using Domain;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace Application.Activities
 
 
 
-        public static List<Activity> GetActivitiesFromRecurrence(Recurrence recurrence, Activity activity)
+        public static List<Activity> GetActivitiesFromRecurrence(Recurrence recurrence, Activity activity = null)
         {
             List<Activity> activities = new List<Activity>();
             List<DateTime> allDates = new List<DateTime>();
@@ -213,7 +214,15 @@ namespace Application.Activities
             foreach (var day in allDates)
             {
                 Activity a = new Activity();
-                _mapper.Map(activity, a);
+                if (activity != null)
+                {
+                    _mapper.Map(activity, a);
+                }
+                else
+                {
+                    a.Start = recurrence.ActivityStart.Value;
+                    a.End = recurrence.ActivityEnd.Value;
+                }
                 if (i > 0)
                 {
                     a.Id = new Guid();

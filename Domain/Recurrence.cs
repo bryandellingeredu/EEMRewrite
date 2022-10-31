@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,9 @@ namespace Domain
         public string MonthlyRepeatType { get; set; }
         public string MonthlyDayType { get; set; }
         public IEnumerable<Activity> Activities { get; set; }
-
+        [NotMapped]
+        public DateTime? ActivityStart { get; set; }
+        [NotMapped]
+        public DateTime? ActivityEnd { get; set; }
     }
 }
