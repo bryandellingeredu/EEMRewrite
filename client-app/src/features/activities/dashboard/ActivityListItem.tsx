@@ -33,19 +33,7 @@ export default function ActivityListItem({activity}:Props){
            
         <Segment>
           <Item.Group>
-          {activity.recurrenceInd && activity.recurrence &&
-         <>
-          <Button floated='right' icon color='black'
-           onClick={() => modalStore.openModal(
-            <RecurrenceMessageWrapper
-             recurrence = {activity.recurrence!}
-             title = {activity.title}
-            />)}
-          >
-          <FontAwesomeIcon icon={faRepeat}  />
-         </Button>
-         </>
-         }
+        
             <Item>
               {activity.category.name === 'Academic Calendar' &&
               <Label color='teal'>
@@ -131,14 +119,20 @@ export default function ActivityListItem({activity}:Props){
         </Segment>
       }
         <Segment clearing>
-        {activity.category.name === 'Academic Calendar' && 
-        <Button
-                    name={activity.id}
-                    onClick={(e) =>handleAcademicCalendarDelete(e, activity.id)}
-                    floated='right'
-                    content='Delete'
-                    color='red'
-            loading={loading && target === activity.id}/> }
+        {activity.recurrenceInd && activity.recurrence &&
+         <>
+          <Button  icon color='blue'
+           onClick={() => modalStore.openModal(
+            <RecurrenceMessageWrapper
+             recurrence = {activity.recurrence!}
+             title = {activity.title}
+            />)}
+          >
+          <FontAwesomeIcon icon={faRepeat} style={{paddingRight: '5px'}} />
+          Repeating Event
+         </Button>
+         </>
+         }
             <Button as={Link} to={`/activities/${activity.id}/${activity.categoryId}`}
                  floated='right' content='View' color='blue'/>
 

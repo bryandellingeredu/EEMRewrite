@@ -85,7 +85,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
             </Segment>
             <Segment clearing attached='bottom'>
             {activity.recurrenceInd && activity.recurrence &&
-      
+      <>
       <Button  icon color='teal' 
        onClick={() => modalStore.openModal(
         <RecurrenceMessageWrapper
@@ -97,12 +97,18 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
       <FontAwesomeIcon icon={faRepeat} style={{paddingRight: '5px'}} />
        Repeating Event
      </Button>
+
+<Button color='purple' floated='right' as={Link} to={`/manage/${activity.id}/${activity.categoryId}/true`}>
+Update Series
+</Button>
+</>
    
      }
-
+   { activity.category.name !== 'Academic Calendar' && 
                 <Button color='orange' floated='right' as={Link} to={`/manage/${activity.id}/${activity.categoryId}`}>
                     Update Event
                 </Button>
+    }
             </Segment>
         </Segment.Group>
     )

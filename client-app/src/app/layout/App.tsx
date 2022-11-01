@@ -36,7 +36,7 @@ function App() {
                 <Route exact path='/rooms' component={RoomDashboard}/>
                 <Route exact path='/reserveNonDepartmentRoom' component={NonDepartmentRoomReservation}/>
                 <Route path='/activities/:id/:categoryId' component={ActivityDetails} sensitive/>
-                <Route key={location.key} exact path={['/createActivity', '/manage/:id/:categoryId']} component={ActivityForm}/>
+                <Route key={location.key} exact path={['/createActivity', '/manage/:id/:categoryId', '/manage/:id/:categoryId/:manageSeries']} component={ActivityForm}/>
                 <Route path='/server-error' component={ServerError} />
                 <Route component={NotFound}/>
               </Switch>            

@@ -53,6 +53,7 @@ export default observer(function ActivityForm() {
   const { locationOptions, loadLocations } = locationStore;
   const { organizationOptions, organizations, loadOrganizations } = organizationStore;
   const { id } = useParams<{ id: string }>();
+  const { manageSeries } = useParams<{ manageSeries: string }>();
   const { categoryId } = useParams<{ categoryId: string }>();
   const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
   const [recurrence, setRecurrence] = useState<Recurrence>(new RecurrenceFormValues())
@@ -185,7 +186,7 @@ export default observer(function ActivityForm() {
           <FormObserver />
             <MyTextInput name='title' placeholder='Title' label='Title*' />
             <MyTextArea rows={3} placeholder='Description' name='description' label='Description' />
-            <MySelectInput options={categoryOptions} placeholder='Sub Calendar' name='categoryId' label='*Sub Calendar' />
+            <MySelectInput options={categoryOptions.filter((x: any) => x.text !== 'Academic Calendar')} placeholder='Sub Calendar' name='categoryId' label='*Sub Calendar' />
             <MyCheckBox name='allDayEvent' label='All Day Event' />
             {!values.allDayEvent &&
               <MyDateInput
@@ -223,6 +224,7 @@ export default observer(function ActivityForm() {
                 title='*End' 
                 minDate={values.start}/>
             }
+            {(!id || (manageSeries && manageSeries === 'true')) && 
             <semanticForm.Field>
               <label>Does Event Repeat?</label>
             <Button icon labelPosition="left"            
@@ -238,6 +240,7 @@ export default observer(function ActivityForm() {
                 {recurrenceInd && <Icon name = 'check square outline' />}
             </Button>
             </semanticForm.Field>
+           }
             <LocationRadioButtons roomRequired={roomRequired} setRoomRequired={handleSetRoomRequired} />
             {!roomRequired &&
               <MyDataList name='primaryLocation'
