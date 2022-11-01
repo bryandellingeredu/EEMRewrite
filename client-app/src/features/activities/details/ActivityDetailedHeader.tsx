@@ -3,6 +3,10 @@ import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
 import { Button, Header, Item, Segment, Image } from 'semantic-ui-react'
 import { Activity } from '../../../app/models/activity';
+import RecurrenceMessageWrapper from '../recurrenceMessage/RecurrenceMessageWrapper';
+import { useStore } from "../../../app/stores/store";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 
 const activityImageStyle = {
     filter: 'brightness(30%)'
@@ -22,12 +26,18 @@ interface Props {
 }
 
 export default observer(function ActivityDetailedHeader({ activity }: Props) {
+    const {modalStore} = useStore();
     return (
         <Segment.Group>
             <Segment basic attached='top' style={{ padding: '0' }}>
+                
                 <Image src={`/assets/categoryImages/${activity.category.name}.jpg`} fluid style={activityImageStyle} />
+                
                 <Segment style={activityImageTextStyle} basic>
+                    
+             
                     <Item.Group>
+  
                         <Item>
                             <Item.Content>
                                 <>
@@ -74,10 +84,24 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                 </Segment>
             </Segment>
             <Segment clearing attached='bottom'>
-                <Button color='teal'>Join Activity</Button>
-                <Button>Cancel attendance</Button>
+            {activity.recurrenceInd && activity.recurrence &&
+      
+      <Button  icon color='teal' 
+       onClick={() => modalStore.openModal(
+        <RecurrenceMessageWrapper
+         recurrence = {activity.recurrence!}
+         title = {activity.title}
+        />)}
+      >
+    
+      <FontAwesomeIcon icon={faRepeat} style={{paddingRight: '5px'}} />
+       Repeating Event
+     </Button>
+   
+     }
+
                 <Button color='orange' floated='right' as={Link} to={`/manage/${activity.id}/${activity.categoryId}`}>
-                    Manage Event
+                    Update Event
                 </Button>
             </Segment>
         </Segment.Group>

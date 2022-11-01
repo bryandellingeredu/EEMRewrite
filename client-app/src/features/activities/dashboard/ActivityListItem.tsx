@@ -5,8 +5,10 @@ import { useState, SyntheticEvent } from "react";
 import { Activity } from "../../../app/models/activity";
 import { format } from "date-fns";
 import { faChurch } from "@fortawesome/free-solid-svg-icons";
+import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import RecurrenceMessageWrapper from "../recurrenceMessage/RecurrenceMessageWrapper";
 
 
 
@@ -17,7 +19,7 @@ interface Props{
 
 export default function ActivityListItem({activity}:Props){
 
-    const {activityStore} = useStore();
+    const {activityStore, modalStore} = useStore();
     const {deleteGraphEvent, loading} = activityStore;
     const [target, setTarget] = useState('');
 
@@ -28,10 +30,23 @@ export default function ActivityListItem({activity}:Props){
 
     return (
       <SegmentGroup>
+           
         <Segment>
           <Item.Group>
+          {activity.recurrenceInd && activity.recurrence &&
+         <>
+          <Button floated='right' icon color='black'
+           onClick={() => modalStore.openModal(
+            <RecurrenceMessageWrapper
+             recurrence = {activity.recurrence!}
+             title = {activity.title}
+            />)}
+          >
+          <FontAwesomeIcon icon={faRepeat}  />
+         </Button>
+         </>
+         }
             <Item>
-
               {activity.category.name === 'Academic Calendar' &&
               <Label color='teal'>
                      <FontAwesomeIcon icon={faGraduationCap} size='3x' />
