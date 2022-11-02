@@ -10,9 +10,6 @@ import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RecurrenceMessageWrapper from "../recurrenceMessage/RecurrenceMessageWrapper";
 
-
-
-
 interface Props{
     activity: Activity
 }

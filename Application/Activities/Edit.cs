@@ -63,6 +63,8 @@ namespace Application.Activities
                 _mapper.Map(request.Activity, activity);
                 activity.Category = null;
                 activity.EventLookup = null;
+                activity.RecurrenceId = null;
+                activity.RecurrenceInd = false;
 
                 //create new graph event
                 if (request.Activity.CoordinatorEmail != null)
@@ -89,6 +91,7 @@ namespace Application.Activities
 
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return Result<Unit>.Failure("Failed to Update Activity");
+
                 return Result<Unit>.Success(Unit.Value);
             }
 

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useState, useEffect, FormEvent } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { Button, Grid, Header, Icon, Segment, Form as semanticForm } from "semantic-ui-react";
+import { Button, Grid, Header, Icon, Segment, Form as SemanticForm, Popup, } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { Formik, Form, useFormikContext } from "formik";
@@ -22,6 +22,7 @@ import { Providers, ProviderState } from '@microsoft/mgt';
 import { Login } from "@microsoft/mgt-react";
 import RecurrenceInformation from "./RecurrenceInformation";
 import { Recurrence, RecurrenceFormValues } from "../../../app/models/recurrence";
+import { format } from "date-fns";
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -60,6 +61,7 @@ export default observer(function ActivityForm() {
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
   const [roomEmails, setRoomEmails] = useState<string[]>([]);
+  const [originalRoomEmails, setOriginalRoomEmails] = useState<string[]>([]);
   const handleSetRoomRequired = () => setRoomRequired(!roomRequired);
 
   const handleSetRoomEmails = (roomEmails: string[]) => {
@@ -101,6 +103,7 @@ export default observer(function ActivityForm() {
         if (response?.activityRooms && response.activityRooms.length > 0){
           setRoomRequired(true);
           setRoomEmails(response.activityRooms.map(x => x.email));
+          setOriginalRoomEmails(response.activityRooms.map(x => x.email));
         } 
         if (response?.recurrenceInd && response?.recurrence){
           setRecurrence(response.recurrence);
@@ -187,8 +190,47 @@ export default observer(function ActivityForm() {
             <MyTextInput name='title' placeholder='Title' label='Title*' />
             <MyTextArea rows={3} placeholder='Description' name='description' label='Description' />
             <MySelectInput options={categoryOptions.filter((x: any) => x.text !== 'Academic Calendar')} placeholder='Sub Calendar' name='categoryId' label='*Sub Calendar' />
-            <MyCheckBox name='allDayEvent' label='All Day Event' />
-            {!values.allDayEvent &&
+            <MyCheckBox name='allDayEvent' label='All Day Event'
+             disabled = {id && originalRoomEmails && originalRoomEmails.length ? true : false}
+             />
+     
+          { (id  && originalRoomEmails && originalRoomEmails.length > 0)  && 
+          <>
+            <Popup
+    trigger={
+  <SemanticForm.Field>
+      <label>*Start</label>
+      <input   name='start' 
+        value= {values.allDayEvent ? format(values.start, 'MMMM d, yyyy') : format(values.start, 'MMMM d, yyyy h:mm aa')} 
+        disabled/>
+    </SemanticForm.Field>
+     }>
+        <Popup.Header>Why can't I change the start date?</Popup.Header>
+    <Popup.Content>
+      This event has a current room reservation.  To change the start date you must first cancel the room reservation. To do this 
+      choose "no room required" and save your work.  you will then be able to change the start date and reserve a room.
+    </Popup.Content>
+     </Popup>
+
+<Popup
+trigger={
+<SemanticForm.Field>
+  <label>*End</label>
+  <input   name='end' 
+    value= {values.allDayEvent ? format(values.end, 'MMMM d, yyyy') : format(values.end, 'MMMM d, yyyy h:mm aa')} 
+    disabled/>
+</SemanticForm.Field>
+ }>
+    <Popup.Header>Why can't I change the end date?</Popup.Header>
+<Popup.Content>
+  This event has a current room reservation.  To change the end date you must first cancel the room reservation. To do this 
+  choose "no room required" and save your work.  you will then be able to change the end date and reserve a room.
+</Popup.Content>
+ </Popup>
+ </>
+   }
+            
+            {!values.allDayEvent && !( id && originalRoomEmails && originalRoomEmails.length) && 
               <MyDateInput
                 timeIntervals={15}
                 placeholderText='Start Date / Time'
@@ -196,16 +238,17 @@ export default observer(function ActivityForm() {
                 showTimeSelect
                 timeCaption='time'
                 dateFormat='MMMM d, yyyy h:mm aa'
-                title='*Start' />
+                title='*Start'   />
             }
-            {values.allDayEvent &&
+            {values.allDayEvent && !( id && originalRoomEmails && originalRoomEmails.length) &&
               <MyDateInput
                 placeholderText='Start Date'
                 name='start'
                 dateFormat='MMMM d, yyyy'
-                title='*Start' />
+                title='*Start'
+                disabled = {id && originalRoomEmails && originalRoomEmails.length ? true : false} />
             }
-            {!values.allDayEvent &&
+            {!values.allDayEvent && !( id && originalRoomEmails && originalRoomEmails.length) &&
               <MyDateInput
                 timeIntervals={15}
                 placeholderText='End Date / Time'
@@ -214,18 +257,43 @@ export default observer(function ActivityForm() {
                 timeCaption='time'
                 dateFormat='MMMM d, yyyy h:mm aa'
                 title='*End'
-                minDate={values.start} />
+                minDate={values.start}
+                disabled = {id && originalRoomEmails && originalRoomEmails.length ? true : false} />
             }
-            {values.allDayEvent &&
+            {values.allDayEvent && !( id && originalRoomEmails && originalRoomEmails.length) &&
               <MyDateInput
                 placeholderText='End Date'
                 name='end'
                 dateFormat='MMMM d, yyyy'
                 title='*End' 
-                minDate={values.start}/>
+                minDate={values.start}
+                disabled = {id && originalRoomEmails && originalRoomEmails.length ? true : false} />
             }
             {(!id || (manageSeries && manageSeries === 'true')) && 
-            <semanticForm.Field>
+     <>
+     { (id  && originalRoomEmails && originalRoomEmails.length > 0)  && 
+<Popup
+trigger={
+  <SemanticForm.Field>
+       <label>Does Event Repeat?</label>
+       <Button icon labelPosition="left" disabled >
+       Repeating Event
+       {!recurrenceInd && <Icon name='square outline' />}
+      {recurrenceInd && <Icon name = 'check square outline' />}
+        </Button>   
+  </SemanticForm.Field>
+ }>
+    <Popup.Header>Why can't I change how this series repeats?</Popup.Header>
+<Popup.Content>
+  This series has current room reservations.  To change the series you must first cancel the room reservation. To do this 
+  choose "no room required" and save your work.  you will then be able to set the series and reserve a room.
+</Popup.Content>
+ </Popup>
+}
+
+{ !(id  && originalRoomEmails && originalRoomEmails.length > 0)  && 
+
+            <SemanticForm.Field>
               <label>Does Event Repeat?</label>
             <Button icon labelPosition="left"            
               onClick={() => modalStore.openModal(
@@ -239,7 +307,9 @@ export default observer(function ActivityForm() {
                 {!recurrenceInd && <Icon name='square outline' />}
                 {recurrenceInd && <Icon name = 'check square outline' />}
             </Button>
-            </semanticForm.Field>
+            </SemanticForm.Field>
+          }
+            </>
            }
             <LocationRadioButtons roomRequired={roomRequired} setRoomRequired={handleSetRoomRequired} />
             {!roomRequired &&
@@ -287,9 +357,8 @@ export default observer(function ActivityForm() {
                 <MyTextInput name='actionOfficerPhone' placeholder='Action Officer Duty Phone' label='*Action Officer Duty Phone' />
               </>
             }
-            <span>IsValid: {isValid ? 'true' : 'false'}</span>
             <Button
-              disabled={isSubmitting || !isValid || !dirty}
+              disabled={isSubmitting || !isValid }
               loading={isSubmitting} floated='right' positive type='submit' content='Submit' />
             <Button as={Link} to='/activities' floated='right' type='button' content='Cancel'
             />

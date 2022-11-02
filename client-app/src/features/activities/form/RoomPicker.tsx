@@ -32,7 +32,7 @@ export default observer(function RoomPicker({
   recurrenceInd,
 }: Props) {
   const animatedComponents = makeAnimated();
-  const { availabilityStore, graphRoomStore, commonStore } = useStore();
+  const { availabilityStore, graphRoomStore } = useStore();
   const { loadingInitial, loadSchedule } = availabilityStore;
   const { loadGraphRooms } = graphRoomStore;
   const [roomOptions, setRoomOptions] = useState<Option[]>([

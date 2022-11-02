@@ -4,6 +4,7 @@ import { Form } from "semantic-ui-react";
 interface Props{
     name: string;
     label?: string;
+    disabled?: boolean
 }
 
 export default function MyCheckBox(props: Props){
@@ -14,7 +15,7 @@ export default function MyCheckBox(props: Props){
         <label>
             {props.label}
         </label>
-        <input {...field}  type="checkbox" checked={field.value}/>
+        <input {...field}  type="checkbox" checked={field.value} disabled={props.disabled}/>
       </Form.Field>
     )
 }
