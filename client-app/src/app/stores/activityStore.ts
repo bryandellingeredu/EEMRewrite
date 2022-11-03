@@ -109,6 +109,7 @@ export default class ActivityStore {
       try { 
         const categories: Category[] = await categoryStore.loadCategories();  
         const axiosResponse: Activity[] = await agent.Activities.list();
+        this.activityRegistry.clear();
         runInAction(() => {
           axiosResponse.forEach(response => {
             response.start = new Date(response.start);
@@ -204,6 +205,7 @@ export default class ActivityStore {
 
   createActivity = async (activity: Activity) => {
     try {
+      debugger;
       await agent.Activities.create(activity);
       const loadEvents = await this.loadActivites();
       const newActivity  = await this.loadActivity(activity.id, activity.category.id )
@@ -220,9 +222,10 @@ export default class ActivityStore {
     }
   }
 
-  updateActivity = async (activity: Activity) => {
+  updateActivity = async (activity: Activity, manageSeries: string) => {
+    if(!manageSeries || manageSeries === 'false')
+    {
     try {
-      debugger;
       await agent.Activities.update(activity, activity.id);
       this.activityRegistry.delete(activity.id);
       const newActivity  = await this.loadActivity(activity.id, activity.category.id )
@@ -235,7 +238,24 @@ export default class ActivityStore {
     } catch (error) {
       console.log(error);
     }
+  } else {
+    try{
+      await agent.Activities.updateSeries(activity, activity.id);
+      const loadEvents = await this.loadActivites();
+      const updatedActivity  = await this.loadActivity(activity.id, activity.category.id )
+      runInAction(() => {
+        if(updatedActivity){
+          this.setActivity(updatedActivity );
+        }
+        })
+        runInAction(() => {
+          this.selectedActivity = updatedActivity;
+        })
+    } catch (error) {
+      console.log(error);
+    }
   }
+}
 
 
   
@@ -288,6 +308,7 @@ export default class ActivityStore {
       activityRooms: [],
       eventLookup: graphEvent.id,
       recurrenceInd: false,
+      recurrenceId: '',
       recurrence: null
     }
     return activity;

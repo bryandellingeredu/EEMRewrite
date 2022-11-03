@@ -33,6 +33,7 @@ export interface Activity{
     eventLookup: string,
     activityRooms: ActivityRoom[] | [],
     recurrenceInd: boolean,
+    recurrenceId: string | null,
     recurrence: Recurrence | null
 }
 
@@ -66,6 +67,7 @@ export class ActivityFormValues{
     activityRooms: ActivityRoom[] | [] = [];
     eventLookup: string = '';
     recurrenceInd: boolean = false;
+    recurrenceId: string | null = null;
     recurrence: Recurrence | null = null;
 
     constructor(activity?: ActivityFormValues){
@@ -93,6 +95,7 @@ export class ActivityFormValues{
         this.activityRooms = activity.activityRooms;
         this.eventLookup = activity.eventLookup;
         this.recurrenceInd = activity.recurrenceInd;
+        this.recurrenceId = activity.recurrenceId;
         this.recurrence = activity.recurrence;
        } 
     }

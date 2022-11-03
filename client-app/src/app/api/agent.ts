@@ -105,6 +105,7 @@ const Activities = {
     details: (id: string) => axiosRequest.get<Activity>(`/activities/${id}`),
     create: (activity: Activity) => axiosRequest.post<void>('/activities', activity),
     update: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/${id}`, activity),
+    updateSeries: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/updateSeries/${id}`, activity),
     delete: (id: string) =>  axiosRequest.del<void>(`/activities/${id}`),
     reserveNonDepartmentRoom: (
         room: NonDepartmentRoomReservationRequest) => axiosRequest.post<string>(

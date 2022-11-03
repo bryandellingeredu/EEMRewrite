@@ -70,6 +70,7 @@ export default observer(function RecurrenceInformation({
   };
 
   function handleFormSubmit(recurrence: RecurrenceFormValues) {
+    debugger;
     recurrence.weeklyRepeatType = weeklyRepeatType;
     recurrence.monthlyRepeatType = monthlyRepeatType;
     recurrence.monthlyDayType = monthlyDayType;
