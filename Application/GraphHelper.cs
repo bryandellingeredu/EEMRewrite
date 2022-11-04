@@ -18,6 +18,8 @@
         private static ClientSecretCredential _clientSecretCredential;
         private static GraphServiceClient _appClient;
 
+        public static string GetEEMServiceAccount() => _settings.ServiceAccount;
+
         private static void EnsureGraphForAppOnlyAuth()
         {
             _ = _settings ??

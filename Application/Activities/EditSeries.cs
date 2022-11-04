@@ -55,6 +55,19 @@ namespace Application.Activities
                     var settings = s.LoadSettings(_config);
                     GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
 
+                 if (
+                  string.IsNullOrEmpty(request.Activity.CoordinatorEmail) &&
+                  (
+                  request.Activity.RoomEmails.Any() ||
+                  !string.IsNullOrEmpty(request.Activity.EventLookup)
+                  )
+                 )
+                    {
+                        request.Activity.CoordinatorEmail = GraphHelper.GetEEMServiceAccount();
+                        request.Activity.CoordinatorFirstName = "EEMServiceAccount";
+                        request.Activity.CoordinatorLastName = "EEMServiceAccount";
+                    }
+
                     //delete the old activities and the recurrence we will make new ones
                     foreach (var item in activitiesToBeDeleted)
                     {

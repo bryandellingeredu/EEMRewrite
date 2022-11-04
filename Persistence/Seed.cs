@@ -12,6 +12,94 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context)
         {
+            if (!context.ActivityRoomOwners.Any())
+            {
+                var activityRoomOwners = new List<ActivityRoomOwner>
+                {
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Recurring Event Room",
+                        RoomEmail = "recurring@hossrob.onmicrosoft.com"
+                    },
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Reserved Room",
+                        RoomEmail = "ReservedRoom@hossrob.onmicrosoft.com"
+                    },
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Bldg 650, Collins Hall, G6 Conf Rm, Rm B086",
+                        RoomEmail = "Bldg650CollinsHallG6ConfRmRmB086@hossrob.onmicrosoft.com"
+                    },
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Bldg 122, Root Hall, Otto Chaney Rm, Rm B216 (VTC)",
+                        RoomEmail = "Bldg122RootHallOttoChaneyRmB216@hossrob.onmicrosoft.com"
+                    },
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Bldg 122, Root Hall, Brian Moore Rm, C-129, DMSPO",
+                        RoomEmail = "Bldg122RootHallBrianMooreRmC-129DMSPO@hossrob.onmicrosoft.com"
+                    },
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Bldg 650, Collins Hall, 18th Inf Conf Room (VTC)",
+                        RoomEmail = "Bldg650CollinsHall18thInfConfRoom@hossrob.onmicrosoft.com"
+                    },
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Test Room 3",
+                        RoomEmail = "TestRoom3@hossrob.onmicrosoft.com"
+                    },
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Test Room 1",
+                        RoomEmail = "TestRoom1@hossrob.onmicrosoft.com"
+                    },
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Conference Room1",
+                        RoomEmail = "ConferenceRoom1@hossrob.onmicrosoft.com"
+                    },
+                    new ActivityRoomOwner
+                    {
+                        FirstName = "Clark",
+                        LastName = "Kent",
+                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
+                        RoomName = "Room 2",
+                        RoomEmail = "Room2@hossrob.onmicrosoft.com"
+                    },
+                };
+                await context.ActivityRoomOwners.AddRangeAsync(activityRoomOwners);
+                await context.SaveChangesAsync();
+            }
 
             if (!context.Categories.Any()){
                 var categories = new List<Category>

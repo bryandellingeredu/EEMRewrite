@@ -9,6 +9,7 @@ namespace Application
         public string TenantId { get; set; }
         public string AuthTenant { get; set; }
         public string[] GraphUserScopes { get; set; }
+        public string ServiceAccount { get; set; }
 
 
         public Settings LoadSettings(IConfiguration config)

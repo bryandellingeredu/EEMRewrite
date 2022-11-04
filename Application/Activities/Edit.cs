@@ -45,6 +45,22 @@ namespace Application.Activities
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
+                Settings s = new Settings();
+                var settings = s.LoadSettings(_config);
+                GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
+
+                if (
+                     string.IsNullOrEmpty(request.Activity.CoordinatorEmail) &&
+                     (
+                     request.Activity.RoomEmails.Any() ||
+                     !string.IsNullOrEmpty(request.Activity.EventLookup)
+                     )
+                    )
+                {
+                    request.Activity.CoordinatorEmail = GraphHelper.GetEEMServiceAccount();
+                    request.Activity.CoordinatorFirstName = "EEMServiceAccount";
+                    request.Activity.CoordinatorLastName = "EEMServiceAccount";
+                }
 
                 //delete any old graph events we will make new ones
                 if (
@@ -52,9 +68,6 @@ namespace Application.Activities
                   !string.IsNullOrEmpty(request.Activity.CoordinatorEmail)
                 )
                 {
-                    Settings s = new Settings();
-                    var settings = s.LoadSettings(_config);
-                    GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                     await GraphHelper.DeleteEvent(request.Activity.EventLookup, request.Activity.CoordinatorEmail);
                 }
 
@@ -66,9 +79,13 @@ namespace Application.Activities
                 activity.RecurrenceId = null;
                 activity.RecurrenceInd = false;
 
+      
+
                 //create new graph event
-                if (request.Activity.CoordinatorEmail != null)
-                {
+                if (
+                          !string.IsNullOrEmpty(request.Activity.CoordinatorEmail)
+                   )
+                  {
                     GraphEventDTO graphEventDTO = new GraphEventDTO
                     {
                         EventTitle = request.Activity.Title,
@@ -81,10 +98,6 @@ namespace Application.Activities
                         RequesterLastName = request.Activity.CoordinatorLastName,
                         IsAllDay = request.Activity.AllDayEvent
                     };
-
-                    Settings s = new Settings();
-                    var settings = s.LoadSettings(_config);
-                    GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                     Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                     activity.EventLookup = evt.Id;
                 }

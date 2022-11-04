@@ -85,6 +85,13 @@ namespace Application.Activities
                             a.RecurrenceId = request.Activity.Recurrence.Id;
                         }
 
+                        if (string.IsNullOrEmpty(a.CoordinatorEmail) && a.RoomEmails.Any())
+                        {
+                            a.CoordinatorEmail = GraphHelper.GetEEMServiceAccount();
+                            a.CoordinatorFirstName = "EEMServiceAccount";
+                            a.CoordinatorLastName = "EEMServiceAccount";
+                        }
+
                         if (!string.IsNullOrEmpty(a.CoordinatorEmail))
                         {
                             //create outlook event

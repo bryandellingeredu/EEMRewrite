@@ -48,7 +48,7 @@ export default class CommonStore{
         const starthour = startdt.getHours().toString().padStart(2,'0');
         const endhour = enddt.getHours().toString().padStart(2,'0');
         const startminute = startdt.getMinutes().toString().padStart(2,'0');
-        const endminute = startdt.getMinutes().toString().padStart(2,'0');
+        const endminute = enddt.getMinutes().toString().padStart(2,'0');
         const startFormattedDay = `${startmonth} ${startday}`;
         const endFormattedDay = `${endmonth} ${endday}`;
         if(startFormattedDay === endFormattedDay){

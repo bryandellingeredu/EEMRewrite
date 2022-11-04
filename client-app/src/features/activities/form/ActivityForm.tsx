@@ -471,22 +471,7 @@ export default observer(function ActivityForm() {
                     color="purple"
                   />
                   <span style={{ color: "purple" }}>Book a Room</span>
-                </Header>
-                {!isSignedIn && (
-                  <Segment>
-                    <Grid>
-                      <Grid.Column width={5}>
-                        <Login />
-                      </Grid.Column>
-                      <Grid.Column width={11}>
-                        <div style={{ marginTop: "15px" }}>
-                          to your edu account to reserve this room
-                        </div>
-                      </Grid.Column>
-                    </Grid>
-                  </Segment>
-                )}
-                {isSignedIn && (
+                </Header>          
                   <RoomPicker
                     start={values.start}
                     end={values.end}
@@ -495,7 +480,6 @@ export default observer(function ActivityForm() {
                     recurrenceInd={recurrenceInd}
                     recurrence={recurrence}
                   />
-                )}
               </Segment>
             )}
             {values.categoryId &&
