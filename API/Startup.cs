@@ -40,6 +40,7 @@ namespace API
                 options.JsonSerializerOptions.WriteIndented = true;
             });
             services.AddApplicationServices(_config);
+            services.AddIdentityServices(_config);
 
 
         }

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
@@ -12,6 +13,7 @@ namespace Persistence
     {
         public static async Task SeedData(DataContext context)
         {
+
             if (!context.ActivityRoomOwners.Any())
             {
                 var activityRoomOwners = new List<ActivityRoomOwner>
