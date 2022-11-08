@@ -1,4 +1,5 @@
 ﻿using Application.GraphSchedules;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers

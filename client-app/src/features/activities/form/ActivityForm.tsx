@@ -3,7 +3,6 @@ import { useState, useEffect, FormEvent } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import {
   Button,
-  Grid,
   Header,
   Icon,
   Segment,
@@ -27,7 +26,6 @@ import RoomPicker from "./RoomPicker";
 import MyTextInput from "../../../app/common/form/MyTextInput";
 import { v4 as uuid } from "uuid";
 import { Providers, ProviderState } from "@microsoft/mgt";
-import { Login } from "@microsoft/mgt-react";
 import RecurrenceInformation from "./RecurrenceInformation";
 import {
   Recurrence,
@@ -435,7 +433,7 @@ export default observer(function ActivityForm() {
                             start={values.start}
                             setRecurrenceInd={handleSetRecurrenceInd}
                             setRecurrence={handleSetRecurrence}
-                          />
+                          />, 'large'
                         )
                       }
                     >

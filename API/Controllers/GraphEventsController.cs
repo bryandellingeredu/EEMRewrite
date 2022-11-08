@@ -1,4 +1,5 @@
 ﻿using Application.GraphEvents;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
 using System.Net.Mail;

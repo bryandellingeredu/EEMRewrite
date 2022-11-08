@@ -8,6 +8,7 @@ import GraphRoomStore from "./graphRoomStore";
 import AvailabilityStore from "./availabilityStore";
 import GraphUserStore from "./graphUserStore";
 import ModalStore from "./modalStore";
+import UserStore from "./userStore";
 
 interface Store{
     activityStore: ActivityStore
@@ -19,6 +20,7 @@ interface Store{
     availabilityStore: AvailabilityStore
     graphUserStore: GraphUserStore
     modalStore: ModalStore
+    userStore: UserStore
 }
 
 export const store: Store = {
@@ -31,6 +33,7 @@ export const store: Store = {
     availabilityStore: new AvailabilityStore(),
     graphUserStore: new GraphUserStore(), 
     modalStore: new ModalStore(),
+    userStore: new UserStore(),
 }
 
 export const StoreContext = createContext(store);

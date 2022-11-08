@@ -13,8 +13,15 @@ import { GraphScheduleResponse } from '../models/graphScheduleResponse';
 import { GraphScheduleRequest } from '../models/graphScheduleRequest';
 import { NonDepartmentRoomReservationRequest } from '../models/nonDepartmentRoomReservationRequest';
 import { Recurrence } from '../models/recurrence';
+import { User, UserFormValues } from '../models/user';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
+
+axios.interceptors.request.use(config => {
+    const token = store.commonStore.token;
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+})
 
 axios.interceptors.response.use(async response => {
    return response;
@@ -133,8 +140,15 @@ const GraphSchedules = {
     list: (graphScheduleRequest : GraphScheduleRequest) => axiosRequest.post<GraphScheduleResponse[]>('/graphschedule', graphScheduleRequest)
 }
 
+const Account = {
+    current: () => axiosRequest.get<User>('/account'),
+    login: (user: UserFormValues) => axiosRequest.post<User>('/account/login', user),
+    register: (user: UserFormValues) => axiosRequest.post<User>('/account/register', user)
+}
+
 const agent = {
     Activities,
+    Account,
     Categories,
     Organizations,
     Locations,

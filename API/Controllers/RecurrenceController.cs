@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Application.Recurrences;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
     public class RecurrenceController : BaseApiController
     {
-
-    [HttpGet]
+        [HttpGet]
     public async Task<IActionResult> GetRecurrences() => HandleResult(await Mediator.Send(new List.Query()));
 
     [HttpGet("{Id}")]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
 using Application.GraphUsers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {

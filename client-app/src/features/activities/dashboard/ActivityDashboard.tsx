@@ -25,7 +25,7 @@ export default observer(function ActivityDashboard(){
     return(
           <>
               {loadingInitial
-                 &&<LoadingComponent content = 'Loading App'/>
+                 &&<LoadingComponent content = 'Loading Events'/>
               }
               {!loadingInitial &&          
         <Grid>
