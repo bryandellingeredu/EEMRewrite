@@ -10,6 +10,8 @@ using Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
+using Domain;
 
 namespace API
 {
@@ -24,7 +26,8 @@ namespace API
             {
                 var context = services.GetRequiredService<DataContext>();
                 await context.Database.MigrateAsync();
-                await Seed.SeedData(context);
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                await Seed.SeedData(context, userManager);
             }
             catch (System.Exception ex)
             {

@@ -17,6 +17,9 @@ using MediatR;
 using API.Extensions;
 using API.MiddleWare;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using FluentValidation.AspNetCore;
 
 namespace API
 {
@@ -34,11 +37,19 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers().AddJsonOptions(options =>
+            services.AddControllers(opt => {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            })
+                 .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.WriteIndented = true;
-            });
+            })
+           .AddFluentValidation(config =>
+               {
+                   config.RegisterValidatorsFromAssemblyContaining<Application.Activities.Create>();
+               });
             services.AddApplicationServices(_config);
             services.AddIdentityServices(_config);
 
@@ -63,6 +74,7 @@ namespace API
 
 
             app.UseCors("CorsPolicy");
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
