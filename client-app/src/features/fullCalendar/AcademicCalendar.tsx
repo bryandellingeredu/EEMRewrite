@@ -17,7 +17,7 @@ export default observer( function AcademicCalendar(){
       const activity = activities.find(x => x.id === clickInfo.event.id);
       const category = categories.find(x => x.id === activity?.categoryId);
       history.push(`/activities/${clickInfo.event.id}/${category?.id}`);
-    }, [activities, categories, history]);
+    }, []);
 
      return(
       <>

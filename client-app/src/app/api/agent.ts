@@ -14,6 +14,7 @@ import { GraphScheduleRequest } from '../models/graphScheduleRequest';
 import { NonDepartmentRoomReservationRequest } from '../models/nonDepartmentRoomReservationRequest';
 import { Recurrence } from '../models/recurrence';
 import { User, UserFormValues } from '../models/user';
+import { requestJson } from '@fullcalendar/react';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -26,7 +27,7 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(async response => {
    return response;
 }, (error: AxiosError) => {
-    const{data, status} = error.response!;
+    const{data, status, headers} = error.response!;
     switch (status){
         case 400: 
         debugger;
@@ -44,7 +45,12 @@ axios.interceptors.response.use(async response => {
        }
         break;
         case 401:
-        toast.error('unauthorised');
+            if(status === 401 && headers['www-authenticate']
+            .startsWith('Bearer error="invalid_token"')){
+                store.userStore.logout();
+                //toast.error('Session expired - please login again');
+            }
+       
         break;
         case 404:
         history.push('/not-found')
@@ -144,7 +150,8 @@ const Account = {
     current: () => axiosRequest.get<User>('/account'),
     login: (user: UserFormValues) => axiosRequest.post<User>('/account/login', user),
     register: (user: UserFormValues) => axiosRequest.post<User>('/account/register', user),
-    signInGraphUser: (user: UserFormValues) => axiosRequest.post<User>('/account/signInGraphUser', user)
+    signInGraphUser: (user: UserFormValues) => axiosRequest.post<User>('/account/signInGraphUser', user),
+    refreshToken: () => axiosRequest.post<User>('/account/refreshToken',{})
 }
 
 const agent = {

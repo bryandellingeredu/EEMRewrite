@@ -6,5 +6,6 @@ namespace Domain
     {
         public string DisplayName { get; set; }
         public string Bio { get; set; }
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

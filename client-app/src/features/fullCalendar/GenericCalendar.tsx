@@ -32,7 +32,7 @@ export default observer(function GenericCalendar() {
     if (id === 'csl' && !cslEvents.length) activityStore.loadActivites().then(() => setEvents(cslEvents));
     if (id === 'asep' && !asepEvents.length) activityStore.loadActivites().then(() => setEvents(asepEvents));
     if (id === 'chapel' && !chapelEvents.length) activityStore.loadActivites().then(() => setEvents(chapelEvents));
-  }, [activityStore, id, cslEvents, asepEvents, chapelEvents]);
+  }, []);
 
   return (
     <>
