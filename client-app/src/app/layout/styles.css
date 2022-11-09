@@ -44,3 +44,20 @@ body{
   width: 100%;
 }
 
+mgt-login {
+  --font-size: 14px;
+  --font-weight: 600;
+  --weight: '100%';
+  --height: '100%';
+  --margin: 0;
+  --padding: 12px 20px;
+  --button-color: white;
+  --button-color--hover: black;
+  --button-background-color: #004080;
+  --button-background-color--hover: white;
+  --popup-background-color: rgba(131, 180, 228, 0.864);
+  --popup-command-font-size: 12px;
+  --popup-color: #201f1e;
+}
+
+

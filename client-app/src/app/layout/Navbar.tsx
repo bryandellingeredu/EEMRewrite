@@ -5,9 +5,31 @@ import { observer } from "mobx-react-lite";
 import { Link, NavLink } from "react-router-dom";
 import { Button, Container, Dropdown, Image, Menu } from "semantic-ui-react";
 import { useStore } from "../stores/store";
+import { useState, useEffect} from "react";
+import { Providers, ProviderState } from "@microsoft/mgt";
+
+function useIsSignedIn(): [boolean] {
+   const [isSignedIn, setIsSignedIn] = useState(false);
+   useEffect(() => {
+     const updateState = () => {
+       const provider = Providers.globalProvider;
+       setIsSignedIn(provider && provider.state === ProviderState.SignedIn);
+     };
+ 
+     Providers.onProviderUpdated(updateState);
+     updateState();
+ 
+     return () => {
+       Providers.removeProviderUpdatedListener(updateState);
+     };
+   }, []);
+   return [isSignedIn];
+ }
 
 export default observer(function Navbar(){
-   const {userStore: {user, logout}} = useStore()
+   const {userStore: {user, logout}} = useStore();
+   const [isSignedIn] = useIsSignedIn();
+
     return(
         <Menu  fixed='top' inverted color='teal'>
            <Container>
@@ -36,6 +58,7 @@ export default observer(function Navbar(){
              <Menu.Item as={NavLink} to='/rooms'>
               Rooms
              </Menu.Item>
+             {!isSignedIn && 
              <Menu.Item position="right">
                  <Image src={user?.image || '/assets/user.png'} avatar spaced='right'/>
                  <Dropdown pointing='top left' text={user?.displayName}>
@@ -44,10 +67,12 @@ export default observer(function Navbar(){
                     <Dropdown.Item onClick={logout} text='Logout' icon='power'/>
                     </Dropdown.Menu>
                  </Dropdown>
-             </Menu.Item>
+             </Menu.Item>}
+             {isSignedIn &&
              <Menu.Item position="right">
-                <Login/>
-             </Menu.Item>            
+                <Login logoutInitiated={logout}/>
+             </Menu.Item>  
+             }          
            </Container>
         </Menu>
     )

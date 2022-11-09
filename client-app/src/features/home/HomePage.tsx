@@ -1,13 +1,28 @@
 
+import { Login } from "@microsoft/mgt-react";
 import { observer } from "mobx-react-lite";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Container, Header, Segment, Image, Button } from "semantic-ui-react";
+import { Container, Header, Segment, Image, Button, Divider } from "semantic-ui-react";
+import LoadingComponent from "../../app/layout/LoadingComponent";
+import { GraphUser } from "../../app/models/graphUser";
 import { useStore } from "../../app/stores/store";
 import LoginForm from "../users/LoginForm";
 import RegisterForm from "../users/RegisterForm";
 
 export default observer(function HomePage(){
-    const {userStore, modalStore} = useStore();
+    const {userStore, modalStore, graphUserStore} = useStore();
+    const {loadUser} = graphUserStore;
+    const {signInGraphUser} = userStore;
+    const [loading, setLoading] = useState<boolean>(false);
+    const loginCompleted = () => {
+        setLoading(true);
+        loadUser().then((graphUser) => {
+          if(graphUser){
+            signInGraphUser(graphUser);
+          }
+        });
+      };
     return(
         <Segment inverted textAlign='center' vertical className='masthead'>
     <Container text>
@@ -24,6 +39,17 @@ export default observer(function HomePage(){
            
     ) : (
         <>
+          <Divider inverted />
+        <Header as ='h4' inverted content = 'Sign in with your edu account '/>
+        {loading && <LoadingComponent content="logging in..." /> }
+        {!loading &&
+        <Login
+           loginCompleted={loginCompleted}
+           loginInitiated={() => setLoading(true)}
+         />}
+        <Divider inverted />
+        <Header as ='h4' inverted content = 'Or if you do not have an edu account login with an email and password'/>
+        <Divider inverted />
         <Button onClick={() => {modalStore.openModal(<LoginForm />, 'tiny')}} size='huge' inverted>
         Login
     </Button>

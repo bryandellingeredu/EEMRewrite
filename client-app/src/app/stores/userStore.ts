@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { history } from "../..";
 import agent from "../api/agent";
+import { GraphUser } from "../models/graphUser";
 import { User, UserFormValues } from "../models/user";
 import { store } from "./store";
 
@@ -54,5 +55,22 @@ export default class UserStore {
         } catch (error){
             throw error;
         }
+    }
+
+    signInGraphUser = async(graphUser: GraphUser) => {
+      try{
+        const creds: UserFormValues = {
+            password: `${graphUser.id}aA`,
+            email: graphUser.mail,
+            displayName: graphUser.displayName || graphUser.mail,
+            userName: graphUser.mail
+        }
+        const user = await agent.Account.signInGraphUser(creds);
+        store.commonStore.setToken(user.token);
+        runInAction(() =>  this.user = user)
+        history.push('/activities');
+      } catch(error){
+        throw error;
+      }
     }
 }

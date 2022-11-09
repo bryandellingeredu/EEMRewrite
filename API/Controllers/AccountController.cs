@@ -28,6 +28,50 @@ namespace API.Controllers
             _tokenService = tokenService;
         }
 
+        [HttpPost("signInGraphUser")]
+        public async Task<ActionResult<UserDto>> Login(RegisterDto Dto)
+        {
+            var user = await _userManager.FindByEmailAsync(Dto.Email);
+            if (user == null)
+            {
+                if (await _userManager.Users.AnyAsync(x => x.Email == Dto.Email))
+                {
+                    ModelState.AddModelError("email", "Email taken");
+                    return ValidationProblem();
+                }
+                if (await _userManager.Users.AnyAsync(x => x.UserName == Dto.UserName))
+                {
+                    ModelState.AddModelError("userName", "User name taken");
+                    return ValidationProblem();
+                }
+
+                user = new AppUser
+                {
+                    DisplayName = Dto.DisplayName,
+                    Email = Dto.Email,
+                    UserName = Dto.UserName
+
+                };
+
+                var result = await _userManager.CreateAsync(user, Dto.Password);
+                if (result.Succeeded)
+                {
+                    return CreateUserObject(user);
+                }
+                return BadRequest("problem registering user");
+            }
+            else
+            {
+                var result = await _signInManager.CheckPasswordSignInAsync(user, Dto.Password, false);
+                if (result.Succeeded)
+                {
+                    return CreateUserObject(user);
+                }
+                return Unauthorized();
+            }
+
+        }
+
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {

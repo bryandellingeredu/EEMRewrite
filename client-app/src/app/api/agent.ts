@@ -143,7 +143,8 @@ const GraphSchedules = {
 const Account = {
     current: () => axiosRequest.get<User>('/account'),
     login: (user: UserFormValues) => axiosRequest.post<User>('/account/login', user),
-    register: (user: UserFormValues) => axiosRequest.post<User>('/account/register', user)
+    register: (user: UserFormValues) => axiosRequest.post<User>('/account/register', user),
+    signInGraphUser: (user: UserFormValues) => axiosRequest.post<User>('/account/signInGraphUser', user)
 }
 
 const agent = {
