@@ -27,7 +27,7 @@ function useIsSignedIn(): [boolean] {
  }
 
 export default observer(function Navbar(){
-   const {userStore: {user, logout}} = useStore();
+   const {userStore: {user, logout, isLoggedIn}} = useStore();
    const [isSignedIn] = useIsSignedIn();
 
     return(
@@ -38,6 +38,8 @@ export default observer(function Navbar(){
                  EEM
                
              </Menu.Item>
+             {isLoggedIn &&
+             <>
              <Menu.Item>
                 <Button as={NavLink} to='/createActivity'
                   positive content='New EEM Event'
@@ -72,7 +74,9 @@ export default observer(function Navbar(){
              <Menu.Item position="right">
                 <Login logoutInitiated={logout}/>
              </Menu.Item>  
-             }          
+             }     
+             </>
+           }
            </Container>
         </Menu>
     )

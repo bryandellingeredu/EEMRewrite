@@ -10,7 +10,7 @@
         private static Settings _settings;
 
         public static void InitializeGraph(Settings settings,
-    Func<DeviceCodeInfo, CancellationToken, Task> deviceCodePrompt)
+          Func<DeviceCodeInfo, CancellationToken, Task> deviceCodePrompt)
         {
             _settings = settings;
         }
@@ -23,18 +23,20 @@
         private static void EnsureGraphForAppOnlyAuth()
         {
             _ = _settings ??
-                throw new System.NullReferenceException("Settings cannot be null");
+              throw new System.NullReferenceException("Settings cannot be null");
 
             if (_clientSecretCredential == null)
             {
                 _clientSecretCredential = new ClientSecretCredential(
-                    _settings.TenantId, _settings.ClientId, _settings.ClientSecret);
+                  _settings.TenantId, _settings.ClientId, _settings.ClientSecret);
             }
 
             if (_appClient == null)
             {
                 _appClient = new GraphServiceClient(_clientSecretCredential,
-                    new[] { "https://graph.microsoft.com/.default" });
+                  new[] {
+            "https://graph.microsoft.com/.default"
+                  });
             }
         }
 
@@ -42,22 +44,21 @@
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
-                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             return _appClient.Users
-                .Request()
-                .Select(u => new
-                {
-                    // Only request specific properties
-                    u.DisplayName,
-                    u.Id,
-                    u.Mail
-                })
-                // Get at most 25 results
-                .Top(25)
-                // Sort by display name
-                .OrderBy("DisplayName")
-                .GetAsync();
+              .Request()
+              .Select(u => new {
+                  // Only request specific properties
+                  u.DisplayName,
+                  u.Id,
+                  u.Mail
+              })
+              // Get at most 25 results
+              .Top(25)
+              // Sort by display name
+              .OrderBy("DisplayName")
+              .GetAsync();
         }
 
         public static Task<IUserEventsCollectionPage> GetEventsAsync(string email)
@@ -65,70 +66,68 @@
 
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
-                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             return _appClient.Users[email].Events
-            .Request()
-            .GetAsync();
+              .Request()
+              .GetAsync();
         }
         public static Task<Event> GetEventAsync(string email, string id)
         {
 
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
-                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             return _appClient.Users[email].Events[id]
-            .Request()
-            .GetAsync();
+              .Request()
+              .GetAsync();
         }
 
         public static Task<IGraphServicePlacesCollectionPage> GetRoomsAsync()
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
-                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
-               var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
-               var placesRequest = new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
-              return placesRequest;
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+            var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
+            var placesRequest = new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
+            return placesRequest;
         }
 
         public static Task<User> GetUserAsync(string email)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
-                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             return _appClient.Users[email]
-            .Request()
-            .GetAsync();
+              .Request()
+              .GetAsync();
         }
-
-    
 
         public static Task<ICalendarGetScheduleCollectionPage> GetScheduleAsync(ScheduleRequestDTO scheduleRequestDTO)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
-                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             return _appClient.Users[scheduleRequestDTO.Schedules[0]].Calendar
-             .GetSchedule(scheduleRequestDTO.Schedules, scheduleRequestDTO.EndTime, scheduleRequestDTO.StartTime, scheduleRequestDTO.AvailabilityViewInterval)
-             .Request()
-             .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
-             .PostAsync();
+              .GetSchedule(scheduleRequestDTO.Schedules, scheduleRequestDTO.EndTime, scheduleRequestDTO.StartTime, scheduleRequestDTO.AvailabilityViewInterval)
+              .Request()
+              .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
+              .PostAsync();
         }
 
         public static async Task<Event> CreateEvent(GraphEventDTO graphEventDTO)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
-                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             // get the id of the calendar
             var calendar = await _appClient.Users[graphEventDTO.RequesterEmail].Calendar
-                .Request()
-                .GetAsync();
+              .Request()
+              .GetAsync();
 
             // get the rooms
             var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
@@ -136,7 +135,7 @@
 
             List<Attendee> attendees = new List<Attendee>();
 
-              attendees.Add(
+            attendees.Add(
               new Attendee
               {
                   EmailAddress = new EmailAddress
@@ -147,23 +146,20 @@
                   Type = AttendeeType.Required
               });
 
-
-                foreach (var roomEmail in graphEventDTO.RoomEmails)
-                {
-                    attendees.Add(
-                         new Attendee
-                         {
-                             EmailAddress = new EmailAddress
-                             {
-                                 Address = roomEmail,
-                                 Name = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == roomEmail).FirstOrDefault().DisplayName
-                             },
-                             Type = AttendeeType.Optional
-                         }
-                        );
-                   }
-
-
+            foreach (var roomEmail in graphEventDTO.RoomEmails)
+            {
+                attendees.Add(
+                  new Attendee
+                  {
+                      EmailAddress = new EmailAddress
+                      {
+                          Address = roomEmail,
+                          Name = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == roomEmail).FirstOrDefault().DisplayName
+                      },
+                      Type = AttendeeType.Optional
+                  }
+                );
+            }
 
             var @event = new Event
             {
@@ -188,20 +184,20 @@
 
             };
 
-            if (graphEventDTO.RoomEmails.Any()) { 
+            if (graphEventDTO.RoomEmails.Any())
+            {
 
                 Location location = new Location
                 {
                     DisplayName = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == graphEventDTO.RoomEmails[0]).FirstOrDefault().DisplayName
                 };
 
-                    @event.Location = location;
+                @event.Location = location;
             }
 
-        
-            var result =  await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events
-                .Request()
-                .AddAsync(@event);
+            var result = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events
+              .Request()
+              .AddAsync(@event);
 
             return result;
 
@@ -211,11 +207,43 @@
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
-                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             await _appClient.Users[coordinatorEmail].Events[eventLookup]
-                 .Request()
-                 .DeleteAsync();
+              .Request()
+              .DeleteAsync();
+
+        }
+
+        public static async Task SendEmail(string email, string subject, string body)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            var message = new Message
+            {
+                Subject = subject,
+                Body = new ItemBody
+                {
+                    ContentType = BodyType.Html,
+                    Content = body
+                },
+                ToRecipients = new List<Recipient>() {
+            new Recipient {
+              EmailAddress = new EmailAddress {
+                Address = email
+              }
+            }
+          }
+         };
+
+            var saveToSentItems = false;
+
+            await _appClient.Users[_settings.ServiceAccount]
+                .SendMail(message, saveToSentItems)
+                .Request()
+                .PostAsync();
 
         }
     }

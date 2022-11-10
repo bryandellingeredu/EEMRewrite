@@ -19,6 +19,8 @@ import LoginForm from '../../features/users/LoginForm';
 import { useStore } from '../stores/store';
 import { useEffect } from 'react';
 import LoadingComponent from './LoadingComponent';
+import RegisterSuccess from '../../features/users/RegisterSuccess';
+import ConfirmEmail from '../../features/users/ConfirmEmail';
 
 function App() {
   const location = useLocation();
@@ -54,7 +56,8 @@ function App() {
                 <Route path='/activities/:id/:categoryId' component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={['/createActivity', '/manage/:id/:categoryId', '/manage/:id/:categoryId/:manageSeries']} component={ActivityForm}/>
                 <Route path='/server-error' component={ServerError} />
-                <Route path='/login' component={LoginForm} />
+                <Route path='/account/registerSuccess' component={RegisterSuccess} />
+                <Route path='/account/verifyEmail' component={ConfirmEmail} />
                 <Route component={NotFound}/>
               </Switch>            
             </Container>
