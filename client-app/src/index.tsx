@@ -23,22 +23,22 @@ export const history = createBrowserHistory();
 
 
  //production
-/* const hossRob = {
+ const hossRob = {
   clientId: "7d102e0f-20f7-4883-84b7-c49b17645db0",
   tenantId: "44f5f615-327a-4d5a-86d5-c9251297d7e4"
-}*/
+}
 
 //development
-const hossRob = {
+/*const hossRob = {
   clientId: "158b1fe2-2fd7-4e97-9785-ed91a49a7baf",
   tenantId: "44f5f615-327a-4d5a-86d5-c9251297d7e4"
-}
+}*/
 
 Providers.globalProvider = new Msal2Provider({
   clientId: hossRob.clientId,
   authority: `https://login.microsoftonline.com/${hossRob.tenantId}`,
-  //redirectUri: process.env.REACT_APP_REDIRECT_URI,
-  redirectUri: 'http://localhost:3000/',
+  redirectUri: process.env.REACT_APP_REDIRECT_URI,
+  //redirectUri: 'http://localhost:3000/',
   scopes: ['calendars.read',
             'Calendars.ReadWrite',
             'Group.ReadWrite.All',
