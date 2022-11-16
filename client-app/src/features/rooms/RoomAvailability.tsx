@@ -7,7 +7,6 @@ import { useStore } from "../../app/stores/store";
 import { GraphScheduleResponse} from "../../app/models/graphScheduleResponse";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import RoomAvailabilityDetails from "./RoomAvailabilityDetails";
-import RoomReservationButtons from "./RoomReservationButtons";
 
 interface Props{
     room: GraphRoom
@@ -125,7 +124,6 @@ export default observer (function RoomAvailability({room}: Props){
                   />
              ))  
         }
-         <RoomReservationButtons room={room} startDate={startDate} endDate={endDate}/>
      </Form>
      }
      </>

@@ -84,8 +84,15 @@ namespace API.Controllers
                 {
                     await SetRefreshToken(user);
                     return CreateUserObject(user);
+                } else
+                {
+                    string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    await _userManager.ResetPasswordAsync(user, token, Dto.Password);
+                    await SetRefreshToken(user);
+                    return CreateUserObject(user);
+
                 }
-                return Unauthorized();
+                
             }
 
         }

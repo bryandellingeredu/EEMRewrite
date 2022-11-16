@@ -9,7 +9,7 @@ namespace API.Controllers
 {
     public class GraphEventsController : BaseApiController
     {
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAllGraphEvents()
         {

@@ -14,7 +14,6 @@ import { GraphScheduleRequest } from '../models/graphScheduleRequest';
 import { NonDepartmentRoomReservationRequest } from '../models/nonDepartmentRoomReservationRequest';
 import { Recurrence } from '../models/recurrence';
 import { User, UserFormValues } from '../models/user';
-import { requestJson } from '@fullcalendar/react';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
