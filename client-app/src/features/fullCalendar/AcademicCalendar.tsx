@@ -28,6 +28,7 @@ export default observer( function AcademicCalendar(){
       </Header>
     </Divider>
         <FullCalendar
+         displayEventEnd
         initialView="dayGridMonth"
         headerToolbar={{
           left: "prev,next",

@@ -61,6 +61,7 @@ export default class ActivityStore {
     return this.events.filter(x => x.categoryId === academicCalendarCategory?.id)
   }
 
+
   get cslEvents() {
     const categoryStore = store.categoryStore;
     const { categories } = categoryStore;
@@ -101,6 +102,18 @@ export default class ActivityStore {
     return dt
   }
 
+
+  getActivityIdByRoom = async(title: string, startStr: string, endStr: string)  =>{
+    try{
+      const activity: Activity = await agent.Activities.getByRoom(title, startStr, endStr)
+      if(activity && activity.id !== "00000000-0000-0000-0000-000000000000"){
+      this.setActivity(activity);
+      return activity;
+      }
+    }catch(error){
+      console.log(error);
+    }
+  }
 
   loadActivites = async () => {
     const categoryStore = store.categoryStore;

@@ -4,7 +4,6 @@ using Domain;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
-using Persistence.Migrations;
 
 namespace Application.Recurrences
 {

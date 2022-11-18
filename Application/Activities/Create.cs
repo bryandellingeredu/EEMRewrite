@@ -6,13 +6,7 @@ using Application.Core;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
-using System.Diagnostics;
 using Activity = Domain.Activity;
-using Azure.Core;
-using System.Globalization;
-using Microsoft.Graph.ExternalConnectors;
-using DayOfWeek = System.DayOfWeek;
-using Persistence.Migrations;
 using Recurrence = Domain.Recurrence;
 
 namespace Application.Activities

@@ -1,21 +1,25 @@
 import { observer } from "mobx-react-lite";
-import { useParams } from "react-router-dom";
 import { Divider, Header } from "semantic-ui-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPeopleRoof } from "@fortawesome/free-solid-svg-icons";
 import { useStore } from "../../app/stores/store";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { GraphRoom } from "../../app/models/graphRoom";
 import FullCalendar, { EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid"
+import { useHistory, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 export default observer(function RoomCalendar() {
     const { id } = useParams<{ id: string }>();
-    const {graphRoomStore} = useStore();
+    const {graphRoomStore, activityStore, categoryStore} = useStore();
     const{loadingInitial, graphRooms, loadGraphRooms} = graphRoomStore;
+    const { categories } = categoryStore;
+    const{ getActivityIdByRoom } = activityStore;
+    const history = useHistory();
     const[graphRoom, setGraphRoom] = useState<GraphRoom>({
         address: {
             city: '',
@@ -40,6 +44,26 @@ displayDeviceName: '',
 isWheelChairAccessible: ''
     });
 
+    const handleEventClick = useCallback((clickInfo: EventClickArg) => {
+      console.log(clickInfo);
+      getActivityIdByRoom( clickInfo.event.title, clickInfo.event.startStr, clickInfo.event.endStr).then((activity) => {
+        if(!activity || activity.id === '00000000-0000-0000-0000-000000000000' ){
+          toast.info(`Event ${clickInfo.event.title} is reserved in outlook only, there is no eem information`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
+        } else {
+          const category = categories.find(x => x.id === activity.categoryId);
+          history.push(`/activities/${activity.id}/${category?.id}`);
+        }
+      });
+    }, [categories, history]);
     
   useEffect(() => {
     if(!graphRooms.length){
@@ -71,6 +95,7 @@ isWheelChairAccessible: ''
       </Divider>
 
       <FullCalendar
+            displayEventEnd
             initialView="dayGridMonth"
             headerToolbar={{
               left: "prev,next",
@@ -78,6 +103,7 @@ isWheelChairAccessible: ''
               right: "dayGridMonth,timeGridWeek,timeGridDay"
             }}
             plugins={[dayGridPlugin, timeGridPlugin]}
+            eventClick={handleEventClick}
             events={`${process.env.REACT_APP_API_URL}/roomEvents/${id}`}
           />
       </>

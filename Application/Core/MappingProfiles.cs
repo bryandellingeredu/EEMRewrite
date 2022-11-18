@@ -15,10 +15,10 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<Activity, Activity>()
-              //  .ForMember(x => x.Start,
-              //    opt => opt.MapFrom(src => TimeZone.CurrentTimeZone.ToLocalTime(src.Start)))
-               // .ForMember(x => x.End,
-              //    opt => opt.MapFrom(src => TimeZone.CurrentTimeZone.ToLocalTime(src.End)))
+                .ForMember(x => x.Start,
+                 opt => opt.MapFrom(src => TimeZone.CurrentTimeZone.ToLocalTime(src.Start)))
+               .ForMember(x => x.End,
+                  opt => opt.MapFrom(src => TimeZone.CurrentTimeZone.ToLocalTime(src.End)))
                 .ForMember(x => x.Category, opt => opt.MapFrom<Category>(_ => null))
                 .ForMember(x => x.Recurrence, opt => opt.MapFrom<Recurrence>(_ => null))
                 .ForMember(x => x.Organization, opt => opt.MapFrom<Domain.Organization>(_ => null));

@@ -121,7 +121,8 @@ const Activities = {
     reserveNonDepartmentRoom: (
         room: NonDepartmentRoomReservationRequest) => axiosRequest.post<string>(
             '/activities/reserveNonDepartmentRoom', room ),
-    listPossibleByRecurrence: (recurrence: Recurrence) => axiosRequest.post<Activity[]>('/activities/listPossibleByRecurrence', recurrence)
+    listPossibleByRecurrence: (recurrence: Recurrence) => axiosRequest.post<Activity[]>('/activities/listPossibleByRecurrence', recurrence),
+    getByRoom: (title: string, start: string, end: string) => axiosRequest.get<Activity>(`/activities/getByRoom/${title}/${start}/${end}`)
 }
 
 const Categories = {

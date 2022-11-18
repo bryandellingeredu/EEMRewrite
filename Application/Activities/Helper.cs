@@ -229,10 +229,10 @@ namespace Application.Activities
                 }
                 var start = new DateTime(day.Year, day.Month, day.Day, a.Start.Hour, a.Start.Minute, 0);
                 var end = new DateTime(day.Year, day.Month, day.Day, a.End.Hour, a.End.Minute, 0);
-                var easternStart = TimeZone.CurrentTimeZone.ToLocalTime(start);
-                var easternEnd = TimeZone.CurrentTimeZone.ToLocalTime(end);
-                var startDateAsString = easternStart.ToString("o", CultureInfo.InvariantCulture);
-                var endDateAsString = easternEnd.ToString("o", CultureInfo.InvariantCulture);
+               // var easternStart = TimeZone.CurrentTimeZone.ToLocalTime(start);
+              // var easternEnd = TimeZone.CurrentTimeZone.ToLocalTime(end);
+                var startDateAsString = start.ToString("o", CultureInfo.InvariantCulture);
+                var endDateAsString = end.ToString("o", CultureInfo.InvariantCulture);
                 a.Start = start;
                 a.End = end;
                 a.StartDateAsString = startDateAsString;
