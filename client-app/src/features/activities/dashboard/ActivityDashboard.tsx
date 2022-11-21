@@ -9,7 +9,7 @@ import ActivityFilters from "./ActivityFilters";
   
 export default observer(function ActivityDashboard(){
     const {activityStore} = useStore();
-    const{loadingInitial, cslEvents, academicEvents} = activityStore
+    const{loadingInitial, academicEvents} = activityStore
     const providerStateChanged = () => activityStore.loadActivites();
    const [filterDate, setFilterDate] = useState<Date>(new Date());
 
@@ -18,7 +18,7 @@ export default observer(function ActivityDashboard(){
    }
   
   useEffect(() => {
-    if(!cslEvents.length || !academicEvents.length) activityStore.loadActivites()
+      activityStore.loadActivites()
     }, [])
 
   Providers.onProviderUpdated(providerStateChanged);

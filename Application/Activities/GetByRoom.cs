@@ -40,25 +40,9 @@ namespace Application.Activities
                     {
                         activity = activities.First();
                     } else
-                    {
-                        var startArray = request.Start.Split('T');
-                        var endArray = request.End.Split('T');
-                        var startDateArray = startArray[0].Split('-');
-                        var endDateArray = endArray[0].Split('-');
-                        var startTimeArray = startArray[1].Split(':');
-                        var endTimeArray = endArray[1].Split(':');
-                        int startYear = Int32.Parse(startDateArray[0]);
-                        int endYear = Int32.Parse(endDateArray[0]);
-                        int startMonth = Int32.Parse(startDateArray[1]);
-                        int endMonth = Int32.Parse(endDateArray[1]);
-                        int startDay = Int32.Parse(startDateArray[2]);
-                        int endDay = Int32.Parse(endDateArray[2]);
-                        int startHour = Int32.Parse(startTimeArray[0]);
-                        int endHour = Int32.Parse(endTimeArray[0]);
-                        int startMinute = Int32.Parse(startTimeArray[1]);
-                        int endMinute = Int32.Parse(endTimeArray[1]);
-                        DateTime start = new DateTime(startYear, startMonth, startDay, startHour, startMinute, 0);
-                        DateTime end = new DateTime(endYear, endMonth, endDay, endHour, endMinute, 0);
+                    {       
+                        DateTime start = Helper.GetDateTimeFromRequest(request.Start);
+                        DateTime end = Helper.GetDateTimeFromRequest(request.End);
                         activities = activities.Where(x => DateTime.Compare(x.Start, start) == 0).ToList();
                         if (activities.Count == 1)
                         {

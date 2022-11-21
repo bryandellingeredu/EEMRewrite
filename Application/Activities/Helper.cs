@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure;
+using Azure.Core;
 using Domain;
 using System;
 using System.Collections.Generic;
@@ -257,5 +258,35 @@ namespace Application.Activities
             return result;
         }
 
+        public static DateTime GetDateTimeFromRequest(string dateAsString)
+        {
+            var myArray = dateAsString.Split('T');
+            var dateArray = myArray[0].Split('-');
+            var timeArray = myArray[1].Split(':');
+            int year = Int32.Parse(dateArray[0]);     
+            int month = Int32.Parse(dateArray[1]);
+            int day = Int32.Parse(dateArray[2]);
+            int hour = Int32.Parse(timeArray[0]);
+            int minute = Int32.Parse(timeArray[1]);
+            DateTime dateTime = new DateTime(year, month, day, hour, minute, 0);
+            return dateTime;
+        }
+
+        public static string GetStringFromDateTime(DateTime dateTime, bool allDayEvent)
+        {
+            string year = dateTime.Year.ToString();
+            string month = dateTime.Month.ToString().PadLeft(2, '0');
+            string day = dateTime.Day.ToString().PadLeft(2, '0');
+            if (!allDayEvent)
+            {
+                string hour = dateTime.Hour.ToString().PadLeft(2, '0');
+                string minute = dateTime.Minute.ToString().PadLeft(2, '0');
+                return ($"{year}-{month}-{day}T{hour}:{minute}:00");
+            }
+            else
+            {
+                return ($"{year}-{month}-{day}");
+            }
+        }
     }
 }

@@ -17,7 +17,6 @@ namespace Persistence
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Recurrence> Recurrences { get; set; }
-        public DbSet<ActivityRoomOwner> ActivityRoomOwners { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

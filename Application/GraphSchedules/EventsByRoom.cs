@@ -80,7 +80,9 @@ namespace Application.GraphSchedules
                                 Start = scheduleItem.Start.DateTime,
                                 End = scheduleItem.End.DateTime,
                                 Title = scheduleItem.Subject,
-                                Color = scheduleItem.Status == FreeBusyStatus.Busy ? "Green" : "GoldenRod"
+                                Color = scheduleItem.Status == FreeBusyStatus.Busy ? "Green" : "GoldenRod",
+                                AllDay = scheduleItem.Start.DateTime.Split('T')[1] == "00:00:00.0000000" &&
+                                         scheduleItem.End.DateTime.Split('T')[1] == "00:00:00.0000000" ? true : false
                             };
                             fullCalendarEventDTOs.Add(fullCalendarEventDto);
                         }

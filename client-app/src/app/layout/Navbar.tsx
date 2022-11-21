@@ -34,12 +34,14 @@ export default observer(function Navbar() {
   const {
     userStore: { user, logout, isLoggedIn },
     graphRoomStore: { loadingInitial, graphRooms, loadGraphRooms },
+    categoryStore: {categories, loadCategories}
   } = useStore();
   const [isSignedIn] = useIsSignedIn();
 
   useEffect(() => {
     if (!graphRooms.length) loadGraphRooms();
-  }, [loadGraphRooms, graphRooms.length]);
+    if (!categories.length) loadCategories();
+  }, [loadGraphRooms, graphRooms.length, categories.length]);
 
   return (
     <Menu fixed="top" inverted color="teal">
@@ -63,49 +65,32 @@ export default observer(function Navbar() {
             <Menu.Item as={NavLink} to="/activities">
               Today's Events
             </Menu.Item>
-
-
-
-              <Dropdown item text="Department Calendars">
+              <Dropdown item text="Department Calendars" scrolling >
                 <Dropdown.Menu>
                   <Dropdown.Item
                     text="Academic"
                     as={Link}
                     to="/academiccalendar"
                   />
-                  <Dropdown.Item
-                    text="ASEP"
-                    as={Link}
-                    to="/genericcalendar/asep"
-                  />
-                  <Dropdown.Item
-                    text="CSL"
-                    as={Link}
-                    to="/genericcalendar/csl"
-                  />
-                  <Dropdown.Item
-                    text="Chapel"
-                    as={Link}
-                    to="/genericcalendar/chapel"
-                  />
+                  {categories.filter(x => x.routeName).map((category) => (
+                    <Dropdown.Item key={category.id}
+                     text={category.name}   as={Link} 
+                    to={`/genericcalendar/${category.routeName}`}  />
+                  ))}
                 </Dropdown.Menu>
               </Dropdown>
 
-              <Dropdown item text="Room Calendars">
+              <Dropdown item text="Room Calendars" scrolling >
                 <Dropdown.Menu>
                   {loadingInitial && <Dropdown.Item text="Loading Rooms..." />}
                   {graphRooms.map((room) => (
                     <Dropdown.Item key={room.id} text={room.displayName}   as={Link}   to={`/roomcalendar/${room.id}`}  />
                   ))}
                 </Dropdown.Menu>
-              </Dropdown>
-
-              
+              </Dropdown>             
             <Menu.Item as={NavLink} to="/rooms">
               Rooms
             </Menu.Item>
-
-
             {!isSignedIn && (
               <Menu.Item position="right">
                 <Image

@@ -62,29 +62,6 @@ export default class ActivityStore {
   }
 
 
-  get cslEvents() {
-    const categoryStore = store.categoryStore;
-    const { categories } = categoryStore;
-    const cslCalendarCategory = categories.find(
-      x => x.name === 'CSL Calendar');
-    return this.events.filter(x => x.categoryId === cslCalendarCategory?.id)
-  }
-
-  get asepEvents() {
-    const categoryStore = store.categoryStore;
-    const { categories } = categoryStore;
-    const asepCalendarCategory = categories.find(
-      x => x.name === 'ASEP Calendar');
-    return this.events.filter(x => x.categoryId === asepCalendarCategory?.id)
-  }
-
-  get chapelEvents() {
-    const categoryStore = store.categoryStore;
-    const { categories } = categoryStore;
-    const chapelCalendarCategory = categories.find(
-      x => x.name === 'Chapel');
-    return this.events.filter(x => x.categoryId === chapelCalendarCategory?.id)
-  }
 
   get groupedActivities() {
     return Object.entries(

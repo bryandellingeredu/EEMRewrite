@@ -23,18 +23,6 @@ namespace Persistence
                         UserName = "bob",
                         Email = "bob@test.com"
                     },
-                    new AppUser
-                    {
-                        DisplayName = "Jane",
-                        UserName = "jane",
-                        Email = "jane@test.com"
-                    },
-                    new AppUser
-                    {
-                        DisplayName = "Tom",
-                        UserName = "tom",
-                        Email = "tom@test.com"
-                    },
                 };
 
                 foreach (var user in users)
@@ -44,118 +32,30 @@ namespace Persistence
 
             }
 
-                if (!context.ActivityRoomOwners.Any())
-            {
-                var activityRoomOwners = new List<ActivityRoomOwner>
-                {
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Recurring Event Room",
-                        RoomEmail = "recurring@hossrob.onmicrosoft.com"
-                    },
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Reserved Room",
-                        RoomEmail = "ReservedRoom@hossrob.onmicrosoft.com"
-                    },
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Bldg 650, Collins Hall, G6 Conf Rm, Rm B086",
-                        RoomEmail = "Bldg650CollinsHallG6ConfRmRmB086@hossrob.onmicrosoft.com"
-                    },
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Bldg 122, Root Hall, Otto Chaney Rm, Rm B216 (VTC)",
-                        RoomEmail = "Bldg122RootHallOttoChaneyRmB216@hossrob.onmicrosoft.com"
-                    },
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Bldg 122, Root Hall, Brian Moore Rm, C-129, DMSPO",
-                        RoomEmail = "Bldg122RootHallBrianMooreRmC-129DMSPO@hossrob.onmicrosoft.com"
-                    },
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Bldg 650, Collins Hall, 18th Inf Conf Room (VTC)",
-                        RoomEmail = "Bldg650CollinsHall18thInfConfRoom@hossrob.onmicrosoft.com"
-                    },
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Test Room 3",
-                        RoomEmail = "TestRoom3@hossrob.onmicrosoft.com"
-                    },
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Test Room 1",
-                        RoomEmail = "TestRoom1@hossrob.onmicrosoft.com"
-                    },
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Conference Room1",
-                        RoomEmail = "ConferenceRoom1@hossrob.onmicrosoft.com"
-                    },
-                    new ActivityRoomOwner
-                    {
-                        FirstName = "Clark",
-                        LastName = "Kent",
-                        OwnerEmail = "clarkkent@hossrob.onmicrosoft.com",
-                        RoomName = "Room 2",
-                        RoomEmail = "Room2@hossrob.onmicrosoft.com"
-                    },
-                };
-                await context.ActivityRoomOwners.AddRangeAsync(activityRoomOwners);
-                await context.SaveChangesAsync();
-            }
 
             if (!context.Categories.Any()){
                 var categories = new List<Category>
             {
                 new Category{Name = "Academic Calendar"},
-                new Category{Name = "ASEP Calendar"},
-                new Category{Name = "Chapel"},
-                new Category{Name = "Command Group Calendar"},
-                new Category{Name = "Complemenary Events"},
-                new Category{Name = "Community Relations"},
-                new Category{Name = "CSL Calendar"},
-                new Category{Name = "Garrison Calendar"},
-                new Category{Name = "General Interest"},
-                new Category{Name = "Holiday Calendar"},
-                new Category{Name = "Other"},
-                new Category{Name = "PKSOI Calendar"},
-                new Category{Name = "Social Events And Ceremonies"},
-                new Category{Name = "SSI And USAWC Press Calendar"},
-                new Category{Name = "SSL Calendar"},
-                new Category{Name = "Training And Misc Events"},
-                new Category{Name = "USAHEC Calendar"},
-                new Category{Name = "USAHEC Facilities Usage Calendar"},
-                new Category{Name = "Visits And Tours"},
-                new Category{Name = "Weekly Pocket Calendar"},
+                new Category{Name = "ASEP Calendar", RouteName = "asep"},
+                new Category{Name = "Chapel", RouteName = "chapel"},
+                new Category{Name = "Command Group Calendar", RouteName = "commandGroup"},
+                new Category{Name = "Complemenary Events", RouteName = "complementary" },
+                new Category{Name = "Community Relations", RouteName = "community" },
+                new Category{Name = "CSL Calendar", RouteName = "csl" },
+                new Category{Name = "Garrison Calendar", RouteName = "garrison" },
+                new Category{Name = "General Interest", RouteName = "generalInterest"},
+                new Category{Name = "Holiday Calendar", RouteName = "holiday" },
+                new Category{Name = "Other", RouteName = "other" },
+                new Category{Name = "PKSOI Calendar", RouteName = "pksoi"},
+                new Category{Name = "Social Events And Ceremonies", RouteName = "socialEventsAndCeremonies"},
+                new Category{Name = "SSI And USAWC Press Calendar", RouteName = "ssiAndUsawcPress"},
+                new Category{Name = "SSL Calendar", RouteName = "ssl"},
+                new Category{Name = "Training And Misc Events", RouteName = "trainingAndMiscEvents"},
+                new Category{Name = "USAHEC Calendar", RouteName = "usahec"},
+                new Category{Name = "USAHEC Facilities Usage Calendar", RouteName = "usahecFacilitiesUsage"},
+                new Category{Name = "Visits And Tours", RouteName = "visitsAndTours"},
+                new Category{Name = "Weekly Pocket Calendar", RouteName = "weeklyPocket"},
             };
                 await context.Categories.AddRangeAsync(categories);
                 await context.SaveChangesAsync();

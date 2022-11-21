@@ -48,7 +48,7 @@ export class ActivityFormValues{
     title: string = '';
     categoryId: string = '';
     organizationId: string | null = null;
-    category: Category = {id: '', name: ''}
+    category: Category = {id: '', name: '', routeName: ''}
     organization: Organization | null =  null;
     description: string = '';
     start: Date = roundToNearest15(new Date(new Date().setTime(new Date().getTime() + 1 * 60 * 60 * 1000)));
