@@ -12,6 +12,16 @@ namespace API.Controllers
         public async Task<IActionResult> GetActivities() =>
          HandleResult(await Mediator.Send(new List.Query()));
 
+        [HttpGet("getByDay/{day}")]
+        public async Task<IActionResult> GetActivities(string day)
+        {
+            DateTime utcDateTime = DateTime.Parse(day, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            DateTime estDateTime = TimeZone.CurrentTimeZone.ToLocalTime(utcDateTime);
+            var result = await Mediator.Send(new ListByDay.Query { Day = estDateTime });
+            return HandleResult(result);
+        }
+     
+
         [HttpGet("{id}")]
         public async Task<ActionResult> GetActivity(Guid id) =>
          HandleResult(await Mediator.Send(new Details.Query { Id = id }));

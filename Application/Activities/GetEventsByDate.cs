@@ -46,12 +46,13 @@ namespace Application.Activities
 
                 foreach (var activity in activities)
                 {
+                    DateTime endDateForCalendar = activity.AllDayEvent ? activity.End.AddDays(1) : activity.End;
                     FullCalendarEventDTO fullCalendarEventDTO = new FullCalendarEventDTO
                     {
                         Id = activity.Id.ToString(),
                         Title = activity.Title,
                         Start = Helper.GetStringFromDateTime(activity.Start, activity.AllDayEvent),
-                        End = Helper.GetStringFromDateTime(activity.End, activity.AllDayEvent),
+                        End = Helper.GetStringFromDateTime(endDateForCalendar, activity.AllDayEvent),
                         Color = "blue",
                         AllDay = activity.AllDayEvent,
                         CategoryId = category.Id.ToString()

@@ -16,6 +16,7 @@ export default class ActivityStore {
   loadingInitial = false;
   loading = false;
   reloadActivities = false;
+  day = new Date();
   
 
   constructor() {
@@ -92,12 +93,15 @@ export default class ActivityStore {
     }
   }
 
-  loadActivites = async () => {
+  loadActivites = async (day? : Date) => {
+    if (typeof day !== 'undefined') {
+      this.day = day;
+  }
     const categoryStore = store.categoryStore;
       this.setLoadingInitial(true);
       try { 
         const categories: Category[] = await categoryStore.loadCategories();  
-        const axiosResponse: Activity[] = await agent.Activities.list();
+        const axiosResponse: Activity[] = await agent.Activities.list(this.day);
         this.activityRegistry.clear();
         runInAction(() => {
           axiosResponse.forEach(response => {
