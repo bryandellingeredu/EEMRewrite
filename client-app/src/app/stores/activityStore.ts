@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { store } from "./store";
 import { Category } from "../models/category";
 import { GraphLocation } from "../models/graphLocation";
+import { string } from "yup";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -42,10 +43,10 @@ export default class ActivityStore {
       title: activity.title,
       start: activity.allDayEvent
        ? format(activity.start, 'yyyy-MM-dd')
-       : activity.start,
+       : `${format(activity.start, 'yyyy-MM-dd')}`,
       end: activity.allDayEvent
        ? format(activity.end, 'yyyy-MM-dd')
-       : activity.end,
+       : `${format(activity.end, 'yyyy-MM-dd')}`,
       allDay: activity.allDayEvent,
       id: activity.id,
       categoryId: activity.categoryId
@@ -90,6 +91,38 @@ export default class ActivityStore {
       }
     }catch(error){
       console.log(error);
+    }
+  }
+
+  getAcademicCalendarEvents = async (start: string, end: string) => {
+    const startArray = start.split('T');
+    const endArray = end.split('T');
+    const startForGraph = `${startArray[0]}T00:00:00Z`;
+    const endForGraph = `${endArray[0]}T00:00:00Z`;
+    if (agent.IsSignedIn()) {
+     try{
+      const events: CalendarEvent[] = [];
+      const categoryStore = store.categoryStore;
+      const categories: Category[] = await categoryStore.loadCategories();  
+      const graphResponse: GraphEvent[] = await agent.GraphEvents.listForCalendar(startForGraph, endForGraph);
+      runInAction (() => {
+        graphResponse.forEach(graphEvent => {
+          const activity: Activity = this.convertGraphEventToActivity(
+            graphEvent, categories.find(x => x.name === "Academic Calendar")!);
+            events.push({
+              title: activity.title,
+              start: store.commonStore.convertDateToGraph(activity.start, activity.allDayEvent, false),
+              end: store.commonStore.convertDateToGraph(activity.start, activity.allDayEvent, true),
+              allDay: activity.allDayEvent,
+              id: activity.id,
+              categoryId: activity.categoryId
+            });
+        })
+      })
+      return events;
+     }  catch (error) {
+      console.log(error);
+    }
     }
   }
 
