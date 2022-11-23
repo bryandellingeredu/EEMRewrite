@@ -1,4 +1,5 @@
 import { makeAutoObservable, reaction } from "mobx";
+import { date } from "yup";
 import { ServerError } from "../models/serverError";
 
 
@@ -45,6 +46,12 @@ export default class CommonStore{
         : `${isoStringDate}T${hour}:${minute}:00.0000000`
         return convertedDate;
       }
+
+      convertUTCtoEST = (dt: Date) : Date => {
+        const minutes: number = dt.getTimezoneOffset()
+        const convertedDate : Date = new Date(dt.setMinutes(dt.getMinutes() - minutes));
+        return convertedDate;
+     }
 
       addDays = (date: Date, num: number): Date =>{
         const newDate = new Date(date);

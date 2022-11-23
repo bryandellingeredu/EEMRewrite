@@ -111,8 +111,8 @@ export default class ActivityStore {
             graphEvent, categories.find(x => x.name === "Academic Calendar")!);
             events.push({
               title: activity.title,
-              start: store.commonStore.convertDateToGraph(activity.start, activity.allDayEvent, false),
-              end: store.commonStore.convertDateToGraph(activity.start, activity.allDayEvent, true),
+              start: activity.start,
+              end: activity.end,
               allDay: activity.allDayEvent,
               id: activity.id,
               categoryId: activity.categoryId
@@ -144,7 +144,9 @@ export default class ActivityStore {
           })
         })
         if (agent.IsSignedIn()) {
-          const graphResponse: GraphEvent[] = await agent.GraphEvents.list();
+          const start = store.commonStore.convertDateToGraph(store.commonStore.addDays(this.day, -10), true, false);
+          const end = store.commonStore.convertDateToGraph(store.commonStore.addDays(this.day, 10), true, true);
+          const graphResponse: GraphEvent[] = await agent.GraphEvents.listForCalendar(start, end);
           runInAction(() => {
             graphResponse.forEach(graphEvent => {
               const activity: Activity = this.convertGraphEventToActivity(
@@ -153,7 +155,6 @@ export default class ActivityStore {
             })
           })
         }
-       // this.populateEventsForFullCalendar();
         this.setLoadingInitial(false);
         this.setReloadActivities(false);
       } catch (error) {
@@ -231,7 +232,6 @@ export default class ActivityStore {
 
   createActivity = async (activity: Activity) => {
     try {
-      debugger;
       await agent.Activities.create(activity);
       const loadEvents = await this.loadActivites();
       const newActivity  = await this.loadActivity(activity.id, activity.category.id )
@@ -320,8 +320,12 @@ export default class ActivityStore {
       organizationId: null,
       actionOfficer: '',
       actionOfficerPhone: '',
-      start: new Date(graphEvent.start.dateTime),
-      end: graphEvent.isAllDay ? this.subtractMinutes(new Date(graphEvent.end.dateTime),1) : new Date(graphEvent.end.dateTime),
+      start: graphEvent.isAllDay ? 
+      store.commonStore.addDays(store.commonStore.convertUTCtoEST(new Date(graphEvent.start.dateTime)),1) :
+      store.commonStore.convertUTCtoEST(new Date(graphEvent.start.dateTime)),
+      end: graphEvent.isAllDay ? 
+      store.commonStore.addDays(store.commonStore.convertUTCtoEST(new Date(graphEvent.end.dateTime)),1) :
+      store.commonStore.convertUTCtoEST(new Date(graphEvent.end.dateTime)),
       allDayEvent: graphEvent.isAllDay,
       primaryLocation: graphEvent.location?.displayName || '',
       roomEmails: [],

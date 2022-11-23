@@ -87,7 +87,7 @@ const IsSignedIn = () => Providers.globalProvider.state === ProviderState.Signed
 
 const graphRequests = {
     get: (url: string) => getGraphClient().api(url).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
-    getForCalendar: (url: string, start: string, end: string) => getGraphClient().api(url).filter(`start/dateTime ge \'${start}\' and end/dateTime lt \'${end}\'`).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
+    getForCalendar: (url: string, start: string, end: string) => getGraphClient().api(url).filter(`start/dateTime ge \'${start}\' and end/dateTime le \'${end}\'`).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
     getSingle: (url: string) => getGraphClient().api(url).get().then(graphResponseBody),
     update: (url: string, body:{}) => getGraphClient().api(url).update(body),
     create: (url: string, body:{}) => getGraphClient().api(url).create(body).then(graphResponseBody),
