@@ -5,13 +5,15 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../app/stores/store";
 import "@fullcalendar/daygrid/main.css";
 import { Divider, Header, Icon } from "semantic-ui-react";
-import { useState } from 'react';
-import LoadingComponent from "../../app/layout/LoadingComponent";
+import { useState, useCallback, useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 
 export default observer( function AcademicCalendar(){
-    const {activityStore} = useStore();
+    const {activityStore, categoryStore} = useStore();
+    const { categories, loadingInitial } = categoryStore;
     const {getAcademicCalendarEvents} = activityStore;
     const [loading, setLoading] = useState<boolean>(false);
+    const history = useHistory();
 
     const getEvents = (info : any, successCallback: any) =>{
      getAcademicCalendarEvents(info.startStr, info.endStr).then((events) =>{
@@ -19,6 +21,14 @@ export default observer( function AcademicCalendar(){
       })
      }
 
+     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
+      const category = categories.find(x => x.name === 'Academic Calendar');
+      history.push(`/activities/${clickInfo.event.id}/${category?.id}`);
+    }, [ categories, history]);
+
+    useEffect(() => {
+      if(!categories.length) categoryStore.loadCategories();
+     }, [categories.length])
 
      return(
       <>
@@ -38,6 +48,7 @@ export default observer( function AcademicCalendar(){
         }}
         plugins={[dayGridPlugin, timeGridPlugin]}
         events={(info, successCallback) => getEvents(info, successCallback)}
+        eventClick={handleEventClick}
       />
       </>
     )

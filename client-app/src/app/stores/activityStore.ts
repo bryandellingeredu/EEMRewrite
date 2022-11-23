@@ -16,7 +16,6 @@ export default class ActivityStore {
   selectedActivity: Activity | undefined = undefined;
   loadingInitial = false;
   loading = false;
-  reloadActivities = false;
   day = new Date();
   
 
@@ -29,40 +28,6 @@ export default class ActivityStore {
       a.start!.getTime() - b.start!.getTime());
   }
 
-  get events () {
-   const events: CalendarEvent[] = [];
-  /* events.push(	{
-  id: '1',
-  title: 'Long Event',
-   start: '2022-09-07',
-   end: '2022-09-10',
-   categoryId: '65fb3e98-6877-464d-9c6b-13b00588c35a',
-  allDay: true}) */
-  this.activities.forEach(activity => {
-    events.push({
-      title: activity.title,
-      start: activity.allDayEvent
-       ? format(activity.start, 'yyyy-MM-dd')
-       : `${format(activity.start, 'yyyy-MM-dd')}`,
-      end: activity.allDayEvent
-       ? format(activity.end, 'yyyy-MM-dd')
-       : `${format(activity.end, 'yyyy-MM-dd')}`,
-      allDay: activity.allDayEvent,
-      id: activity.id,
-      categoryId: activity.categoryId
-    });
-  }); 
-    return events;
-  }
-
-  get academicEvents() {
-    const categoryStore = store.categoryStore;
-    const { categories } = categoryStore;
-    const academicCalendarCategory = categories.find(
-      x => x.name === 'Academic Calendar');
-    return this.events.filter(x => x.categoryId === academicCalendarCategory?.id)
-  }
-
 
 
   get groupedActivities() {
@@ -73,12 +38,6 @@ export default class ActivityStore {
         return activities;
       }, {} as { [key: string]: Activity[] })
     )
-  }
-
-
-  subtractMinutes  = (dt: Date, minutes: number) : Date => {
-    dt.setMinutes( dt.getMinutes() - minutes );
-    return dt
   }
 
 
@@ -128,6 +87,7 @@ export default class ActivityStore {
 
   loadActivites = async (day? : Date) => {
     if (typeof day !== 'undefined') {
+      debugger;
       this.day = day;
   }
     const categoryStore = store.categoryStore;
@@ -156,7 +116,6 @@ export default class ActivityStore {
           })
         }
         this.setLoadingInitial(false);
-        this.setReloadActivities(false);
       } catch (error) {
         console.log(error);
         this.setLoadingInitial(false);
@@ -165,7 +124,6 @@ export default class ActivityStore {
 
   loadActivity = async (id: string, categoryId: string) => {
       this.loadingInitial = true;
-      this.setReloadActivities(true);
       try {
         const categoryStore = store.categoryStore;
         const categories: Category[] = await categoryStore.loadCategories();
@@ -360,8 +318,6 @@ export default class ActivityStore {
   }
 
   setLoadingInitial = (state: boolean) => this.loadingInitial = state;
-
-  setReloadActivities = (state: boolean) => this.reloadActivities = state;
 
   }
 
