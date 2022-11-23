@@ -5,14 +5,13 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../../app/stores/store";
 import "@fullcalendar/daygrid/main.css";
 import { Divider, Header, Icon } from "semantic-ui-react";
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 
 export default observer( function AcademicCalendar(){
     const {activityStore, categoryStore} = useStore();
-    const { categories, loadingInitial } = categoryStore;
+    const { categories } = categoryStore;
     const {getAcademicCalendarEvents} = activityStore;
-    const [loading, setLoading] = useState<boolean>(false);
     const history = useHistory();
 
     const getEvents = (info : any, successCallback: any) =>{
@@ -28,7 +27,7 @@ export default observer( function AcademicCalendar(){
 
     useEffect(() => {
       if(!categories.length) categoryStore.loadCategories();
-     }, [categories.length])
+     }, [categories.length, categoryStore])
 
      return(
       <>

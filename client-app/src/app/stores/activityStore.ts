@@ -9,7 +9,6 @@ import { format } from "date-fns";
 import { store } from "./store";
 import { Category } from "../models/category";
 import { GraphLocation } from "../models/graphLocation";
-import { string } from "yup";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -191,7 +190,7 @@ export default class ActivityStore {
   createActivity = async (activity: Activity) => {
     try {
       await agent.Activities.create(activity);
-      const loadEvents = await this.loadActivites();
+      await this.loadActivites();
       const newActivity  = await this.loadActivity(activity.id, activity.category.id )
       runInAction(() => {
       if(newActivity){
@@ -225,7 +224,7 @@ export default class ActivityStore {
   } else {
     try{
       await agent.Activities.updateSeries(activity, activity.id);
-      const loadEvents = await this.loadActivites();
+      await this.loadActivites();
       const updatedActivity  = await this.loadActivity(activity.id, activity.category.id )
       runInAction(() => {
         if(updatedActivity){
