@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 using Activity = Domain.Activity;
 using Recurrence = Domain.Recurrence;
+using Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Activities
 {
@@ -35,12 +37,14 @@ namespace Application.Activities
             private readonly DataContext _context;
             private readonly IMapper _mapper;
             private readonly IConfiguration _config;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper, IConfiguration config)
+            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -49,6 +53,7 @@ namespace Application.Activities
 
                 try
                 {
+                    var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
                     Helper.InitHelper(_mapper);
                     List<Activity> activities = new List<Activity>();
 
