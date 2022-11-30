@@ -57,7 +57,7 @@ export default function ActivityListItem({activity}:Props){
                }
                             
                 <Item.Content>
-                    <Item.Header as={Link} to={`/activities/${activity.id}/${activity.categoryId}`}>
+                    <Item.Header as={Link} to={`${process.env.PUBLIC_URL}/activities/${activity.id}/${activity.categoryId}`}>
                     {activity.title}
                     </Item.Header> 
                     <Item.Description> {activity.category.name}
@@ -130,7 +130,7 @@ export default function ActivityListItem({activity}:Props){
          </Button>
          </>
          }
-            <Button as={Link} to={`/activities/${activity.id}/${activity.categoryId}`}
+            <Button as={Link} to={`${process.env.PUBLIC_URL}/activities/${activity.id}/${activity.categoryId}`}
                  floated='right' content='View' color='blue'/>
 
       </Segment>

@@ -60,7 +60,7 @@ isWheelChairAccessible: ''
             });
         } else {
           const category = categories.find(x => x.id === activity.categoryId);
-          history.push(`/activities/${activity.id}/${category?.id}`);
+          history.push(`${process.env.PUBLIC_URL}/activities/${activity.id}/${category?.id}`);
         }
       });
     }, [categories, history]);

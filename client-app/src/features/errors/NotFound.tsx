@@ -9,7 +9,7 @@ export default function NotFound(){
               Oops - we've looked every and could not find this.
            </Header>
            <Segment.Inline>
-            <Button as={Link} to='/activities' primary>
+            <Button as={Link} to={`${process.env.PUBLIC_URL}/activities`} primary>
                 Return to Events Page
             </Button>
            </Segment.Inline>

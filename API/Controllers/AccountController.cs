@@ -5,11 +5,14 @@ using Application.Emails;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using static Application.Emails.Email;
 
@@ -163,6 +166,27 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("getCac")]
+        public IActionResult getCac()
+        {
+            var result = Request.HttpContext.Connection.ClientCertificate;
+            CacInfo cacInfo = new CacInfo();
+            if (cacInfo != null)
+            {
+                cacInfo.FriendlyName = result.FriendlyName;
+                cacInfo.Subject = result.Subject;
+                cacInfo.Issuer = result.Issuer;
+                var subjectArray = cacInfo.Subject.Split(',');
+                var cnArray = subjectArray[0].Split('.');
+                cacInfo.DodIdNumber = cnArray[^1];
+                cacInfo.CerticateAsString = result.ToString();
+            }         
+            return Ok(cacInfo);
+        }
+
+       
+
+        [AllowAnonymous]
         [HttpGet("resendEmailConfirmationLink")]
         public async Task<IActionResult> ResendEmailConfirmationLink(string email)
         {
@@ -230,6 +254,15 @@ namespace API.Controllers
                 Token = _tokenService.CreateToken(user),
                 UserName = user.UserName
             };
+        }
+
+        private class CacInfo
+        {
+            public string FriendlyName { get; set; }
+            public string Subject { get; set; }
+            public string Issuer { get; set; }
+            public string CerticateAsString { get; set; }
+            public string DodIdNumber { get; set; }
         }
     }
 }

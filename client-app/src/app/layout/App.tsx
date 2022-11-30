@@ -4,7 +4,7 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 import { observer } from 'mobx-react-lite';
 import { Container } from 'semantic-ui-react';
 import HomePage from '../../features/home/HomePage';
-import {  Route, Switch, useLocation } from 'react-router-dom';
+import {  Route, Router, Switch, useLocation } from 'react-router-dom';
 import ActivityForm from '../../features/activities/form/ActivityForm';
 import ActivityDetails from '../../features/activities/details/ActivityDetail';
 import AcademicCalendarDashboard from '../../features/fullCalendar/AcademicCalendarDashboard';
@@ -35,35 +35,42 @@ function App() {
 
   if(!commonStore.appLoaded) return <LoadingComponent content = 'Loading app...'/>
 
+
+
   return (
     <>
         <ToastContainer position='bottom-right' hideProgressBar />
         <ModalContainer />
-         <Route exact path='/' component={HomePage}/>
+         <Route exact path={`${process.env.PUBLIC_URL}/`} component={HomePage}/>
          <Route
-          path={'/(.+)'}
+          path={`${process.env.PUBLIC_URL}/(.+)`}
           render={() =>(
             <>
              <Navbar /> 
             <Container style={{marginTop: '7em'}}>  
               <Switch>
-                <Route exact path='/activities' component={ActivityDashboard}/>
-                <Route exact path='/academiccalendar' component={AcademicCalendarDashboard}/>
-                <Route exact path='/genericcalendar/:id' component={GenericCalendar}/>
-                <Route key={location.key} exact path='/roomcalendar/:id' component={RoomCalendar}/>
-                <Route exact path='/rooms' component={RoomDashboard}/>
-                <Route path='/activities/:id/:categoryId' component={ActivityDetails} sensitive/>
-                <Route key={location.key} exact path={['/createActivity', '/manage/:id/:categoryId', '/manage/:id/:categoryId/:manageSeries']} component={ActivityForm}/>
-                <Route path='/server-error' component={ServerError} />
-                <Route path='/account/registerSuccess' component={RegisterSuccess} />
-                <Route path='/account/verifyEmail' component={ConfirmEmail} />
+                <Route exact path={`${process.env.PUBLIC_URL}/activities`} component={ActivityDashboard}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/academiccalendar`} component={AcademicCalendarDashboard}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/genericcalendar/:id`} component={GenericCalendar}/>
+                <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/roomcalendar/:id`} component={RoomCalendar}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/rooms`} component={RoomDashboard}/>
+                <Route path={`${process.env.PUBLIC_URL}/activities/:id/:categoryId`} component={ActivityDetails} sensitive/>
+                <Route key={location.key} exact path={[`${process.env.PUBLIC_URL}/createActivity`, `${process.env.PUBLIC_URL}/manage/:id/:categoryId`, `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries`]} component={ActivityForm}/>
+                <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
+                <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />
+                <Route path={`${process.env.PUBLIC_URL}/account/verifyEmail`} component={ConfirmEmail} />
                 <Route component={NotFound}/>
-              </Switch>            
+              </Switch>    
+         
             </Container>
+         
            </>
+             
           )}        
          />
+            
     </>
+   
   );
 }
 

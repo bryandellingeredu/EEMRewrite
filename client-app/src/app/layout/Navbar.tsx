@@ -46,8 +46,8 @@ export default observer(function Navbar() {
   return (
     <Menu fixed="top" inverted color="teal">
       <Container>
-        <Menu.Item as={NavLink} to="/" exact header>
-          <img src="/assets/logo.png" alt="logo" style={{ marginRight: 10 }} />
+        <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/`} header>
+          <img src={`${process.env.PUBLIC_URL}/assets/logo.png`} alt="logo" style={{ marginRight: 10 }} />
           EEM
         </Menu.Item>
         {isLoggedIn && (
@@ -56,13 +56,13 @@ export default observer(function Navbar() {
             <Menu.Item>
               <Button
                 as={NavLink}
-                to="/createActivity"
+                to={`${process.env.PUBLIC_URL}/createActivity`}
                 positive
                 content="New EEM Event"
               />
             </Menu.Item>
 
-            <Menu.Item as={NavLink} to="/activities">
+            <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/activities`}>
               Today's Events
             </Menu.Item>
               <Dropdown item text="Department Calendars" scrolling >
@@ -70,12 +70,12 @@ export default observer(function Navbar() {
                   <Dropdown.Item
                     text="Academic"
                     as={Link}
-                    to="/academiccalendar"
+                    to={`${process.env.PUBLIC_URL}/academiccalendar`}
                   />
                   {categories.filter(x => x.routeName).map((category) => (
                     <Dropdown.Item key={category.id}
                      text={category.name}   as={Link} 
-                    to={`/genericcalendar/${category.routeName}`}  />
+                    to={`${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}  />
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
@@ -84,17 +84,17 @@ export default observer(function Navbar() {
                 <Dropdown.Menu>
                   {loadingInitial && <Dropdown.Item text="Loading Rooms..." />}
                   {graphRooms.map((room) => (
-                    <Dropdown.Item key={room.id} text={room.displayName}   as={Link}   to={`/roomcalendar/${room.id}`}  />
+                    <Dropdown.Item key={room.id} text={room.displayName}   as={Link}   to={`${process.env.PUBLIC_URL}/roomcalendar/${room.id}`}  />
                   ))}
                 </Dropdown.Menu>
               </Dropdown>             
-            <Menu.Item as={NavLink} to="/rooms">
+            <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
               Rooms
             </Menu.Item>
             {!isSignedIn && (
               <Menu.Item position="right">
                 <Image
-                  src={user?.image || "/assets/user.png"}
+                  src={user?.image || `${process.env.PUBLIC_URL}/assets/user.png`}
                   avatar
                   spaced="right"
                 />
@@ -102,7 +102,7 @@ export default observer(function Navbar() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       as={Link}
-                      to={`/profile/${user?.userName}`}
+                      to={`${process.env.PUBLIC_URL}/profile/${user?.userName}`}
                       text="My Profile"
                       icon="user"
                     />

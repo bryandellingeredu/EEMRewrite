@@ -14,7 +14,6 @@ import { GraphScheduleRequest } from '../models/graphScheduleRequest';
 import { NonDepartmentRoomReservationRequest } from '../models/nonDepartmentRoomReservationRequest';
 import { Recurrence } from '../models/recurrence';
 import { User, UserFormValues } from '../models/user';
-import { string } from 'yup';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -52,11 +51,11 @@ axios.interceptors.response.use(async response => {
        
         break;
         case 404:
-        history.push('/not-found')
+        history.push(`${process.env.PUBLIC_URL}/not-found`)
         break;
         case 500:
         store.commonStore.setServerError(data);
-        history.push('/server-error');
+        history.push(`${process.env.PUBLIC_URL}/server-error`);
         break;
     }
     return Promise.reject(error);

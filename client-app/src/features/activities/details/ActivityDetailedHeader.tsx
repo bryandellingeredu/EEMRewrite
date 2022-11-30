@@ -31,7 +31,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
         <Segment.Group>
             <Segment basic attached='top' style={{ padding: '0' }}>
                 
-                <Image src={`/assets/categoryImages/${activity.category.name}.jpg`} fluid style={activityImageStyle} />
+                <Image src={`${process.env.PUBLIC_URL}/assets/categoryImages/${activity.category.name}.jpg`} fluid style={activityImageStyle} />
                 
                 <Segment style={activityImageTextStyle} basic>
                     
@@ -98,14 +98,14 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
        Repeating Event
      </Button>
 
-<Button color='purple' floated='right' as={Link} to={`/manage/${activity.id}/${activity.categoryId}/true`}>
+<Button color='purple' floated='right' as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}/true`}>
 Update Series
 </Button>
 </>
    
      }
    { activity.category.name !== 'Academic Calendar' && 
-                <Button color='orange' floated='right' as={Link} to={`/manage/${activity.id}/${activity.categoryId}`}>
+                <Button color='orange' floated='right' as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
                     Update Event
                 </Button>
     }

@@ -23,7 +23,7 @@ export default class UserStore {
             store.commonStore.setToken(user.token);
             this.startRefreshTokenTimer(user)
             runInAction(() =>  this.user = user)
-            history.push('/activities');
+            history.push(`${process.env.PUBLIC_URL}/activities`);
             store.modalStore.closeModal();
             this.user = user;
         } catch (error){
@@ -35,7 +35,7 @@ export default class UserStore {
         store.commonStore.setToken(null);
         window.localStorage.removeItem('jwt');
         this.user = null;
-        history.push('/');
+        history.push(`${process.env.PUBLIC_URL}/`);
     }
 
     getUser = async() => {
@@ -52,7 +52,7 @@ export default class UserStore {
     register = async (creds: UserFormValues) => {
         try {
             await agent.Account.register(creds);
-            history.push(`/account/registerSuccess?email=${creds.email}`);
+            history.push(`${process.env.PUBLIC_URL}/account/registerSuccess?email=${creds.email}`);
             store.modalStore.closeModal();
         } catch (error) {
             throw error;
@@ -71,7 +71,7 @@ export default class UserStore {
         store.commonStore.setToken(user.token);
         this.startRefreshTokenTimer(user);
         runInAction(() =>  this.user = user)
-        history.push('/activities');
+        history.push(`${process.env.PUBLIC_URL}/activities`);
       } catch(error){
         throw error;
       }

@@ -16,7 +16,7 @@ export default observer(function GenericCalendar() {
 
   const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     const category = categories.find(x => x.routeName === id);
-    history.push(`/activities/${clickInfo.event.id}/${category?.id}`);
+    history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${category?.id}`);
   }, [ categories, history]);
 
   useEffect(() => {

@@ -28,17 +28,26 @@ export const history = createBrowserHistory();
   tenantId: "44f5f615-327a-4d5a-86d5-c9251297d7e4"
 }*/
 
-//development
-const hossRob = {
+//cacdevelopment
+/*const hossRob = {
+  clientId: "99419f89-bccd-4ff7-9075-b088d33967ce",
+  tenantId: "44f5f615-327a-4d5a-86d5-c9251297d7e4"
+}*/
+
+//localdevelopment
+/*const hossRob = {
   clientId: "158b1fe2-2fd7-4e97-9785-ed91a49a7baf",
   tenantId: "44f5f615-327a-4d5a-86d5-c9251297d7e4"
-}
+}*/
+
+ // redirectUri: 'http://localhost:3000/',
+ //redirectUri: 'http://localhost/eem/',
+ //redirectUri: 'https://dev13.armywarcollege.army.mil/eem/',
 
 Providers.globalProvider = new Msal2Provider({
-  clientId: hossRob.clientId,
-  authority: `https://login.microsoftonline.com/${hossRob.tenantId}`,
-  //redirectUri: process.env.REACT_APP_REDIRECT_URI,
-  redirectUri: 'http://localhost:3000/',
+  clientId:  process.env.REACT_APP_CLIENT_ID!,
+  authority: `https://login.microsoftonline.com/${process.env.REACT_APP_TENANT_ID}`,
+  redirectUri: process.env.REACT_APP_REDIRECT_URI,
   scopes: ['calendars.read',
             'Calendars.ReadWrite',
             'Group.ReadWrite.All',

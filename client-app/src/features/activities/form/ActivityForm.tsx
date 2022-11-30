@@ -191,18 +191,18 @@ export default observer(function ActivityForm() {
       };
       category.name === "Academic Calendar"
         ? createGraphEvent(newActivity).then(() =>
-            history.push(`/activities/${newActivity.id}/${category.id}`)
+            history.push(`${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`)
           )
         : createActivity(newActivity).then(() =>
-            history.push(`/activities/${newActivity.id}/${category.id}`)
+            history.push(`${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`)
           );
     } else {
       category.name === "Academic Calendar"
         ? updateGraphEvent({ ...activity, id: activity!.id }).then(() =>
-            history.push(`/activities/${activity.id}/${category.id}`)
+            history.push(`${process.env.PUBLIC_URL}/activities/${activity.id}/${category.id}`)
           )
         : updateActivity({ ...activity, id: activity!.id }, manageSeries).then(() =>
-            history.push(`/activities/${activity.id}/${category.id}`)
+            history.push(`${process.env.PUBLIC_URL}/activities/${activity.id}/${category.id}`)
           );
     }
   }
@@ -512,7 +512,7 @@ export default observer(function ActivityForm() {
             />
             <Button
               as={Link}
-              to="/activities"
+              to={`${process.env.PUBLIC_URL}/activities`}
               floated="right"
               type="button"
               content="Cancel"
