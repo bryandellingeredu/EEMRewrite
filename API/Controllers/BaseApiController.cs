@@ -1,7 +1,7 @@
 ﻿using Application.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+
 namespace API.Controllers
 {
     [Route("api/[controller]")]

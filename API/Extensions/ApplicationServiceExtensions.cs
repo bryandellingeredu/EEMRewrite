@@ -81,6 +81,7 @@ namespace API.Extensions
             services.AddMediatR(typeof(Application.GraphUsers.List.Handler).Assembly);
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<ICACAccessor, CACAccessor>();
 
             return services;
         }

@@ -4,11 +4,16 @@ import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
 import { Activity } from "../../../app/models/activity";
 import { format } from "date-fns";
-import { faChurch } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBook, faBookOpenReader, faBuilding, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faO, faPersonRifle, faStar } from "@fortawesome/free-solid-svg-icons";
 import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
+import { faTree } from "@fortawesome/free-solid-svg-icons";
+import { faChampagneGlasses } from "@fortawesome/free-solid-svg-icons";
+import { faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
+import { faHandshake } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RecurrenceMessageWrapper from "../recurrenceMessage/RecurrenceMessageWrapper";
+import { faNewspaper } from "@fortawesome/free-regular-svg-icons";
 
 interface Props{
     activity: Activity
@@ -29,12 +34,94 @@ export default function ActivityListItem({activity}:Props){
       <SegmentGroup>
            
         <Segment>
-          <Item.Group>
-        
+          <Item.Group>       
             <Item>
+            {activity.category.name === 'SSL Calendar' &&
+              <Label color='olive'>
+                     <FontAwesomeIcon icon={faPersonRifle} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'Weekly Pocket Calendar' &&
+              <Label color='yellow'>
+                     <FontAwesomeIcon icon={faCalendar} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'Visits And Tours' &&
+              <Label color='teal'>
+                     <FontAwesomeIcon icon={faBus} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'Training And Misc Events' &&
+              <Label color='red'>
+                     <FontAwesomeIcon icon={faChalkboardTeacher} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'SSI And USAWC Press Calendar' &&
+              <Label color='orange'>
+                     <FontAwesomeIcon icon={faNewspaper} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'PKSOI Calendar' &&
+              <Label color='violet'>
+                     <FontAwesomeIcon icon={faDove} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'Other' &&
+              <Label color='grey'>
+                     <FontAwesomeIcon icon={faO} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'General Interest' &&
+              <Label color='purple'>
+                     <FontAwesomeIcon icon={faBahai} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'USAHEC Facilities Usage Calendar' &&
+              <Label color='black'>
+                     <FontAwesomeIcon icon={faBookOpenReader} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'USAHEC Calendar' &&
+              <Label color='green'>
+                     <FontAwesomeIcon icon={faBook} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'Garrison Calendar' &&
+              <Label color='blue'>
+                     <FontAwesomeIcon icon={faBuilding} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'Complemenary Events' &&
+              <Label color='olive'>
+                     <FontAwesomeIcon icon={faStar} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'Community Relations' &&
+              <Label color='brown'>
+                     <FontAwesomeIcon icon={faHandshake} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'Command Group Calendar' &&
+              <Label color='yellow'>
+                     <FontAwesomeIcon icon={faPersonMilitaryPointing} size='3x' />
+              </Label>
+             }
+
               {activity.category.name === 'Academic Calendar' &&
               <Label color='teal'>
                      <FontAwesomeIcon icon={faGraduationCap} size='3x' />
+              </Label>
+             }
+
+               {activity.category.name === 'Holiday Calendar' &&
+              <Label color='red'>
+                     <FontAwesomeIcon icon={faTree} size='3x' />
+              </Label>
+             }
+
+            {activity.category.name === 'Social Events And Ceremonies' &&
+              <Label color='orange'>
+                     <FontAwesomeIcon icon={faChampagneGlasses} size='3x' />
               </Label>
              }
 

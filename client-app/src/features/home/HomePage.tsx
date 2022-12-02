@@ -6,8 +6,6 @@ import { Link } from "react-router-dom";
 import { Container, Header, Segment, Image, Button, Divider } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
-import LoginForm from "../users/LoginForm";
-import RegisterForm from "../users/RegisterForm";
 
 export default observer(function HomePage(){
     const {userStore, modalStore, graphUserStore} = useStore();
@@ -40,21 +38,29 @@ export default observer(function HomePage(){
         <>
           <Divider inverted />
         <Header as ='h4' inverted content = 'Sign in with your edu account '/>
+
         {loading && <LoadingComponent content="logging in..." /> }
         {!loading &&
         <Login
            loginCompleted={loginCompleted}
            loginInitiated={() => setLoading(true)}
          />}
+         { process.env.REACT_APP_SERVER_TYPE === 'CAC' && 
+         <>
         <Divider inverted />
-        <Header as ='h4' inverted content = 'Or if you do not have an edu account login with an email and password'/>
+        <Header as ='h4' inverted content = 'Or if you do not have an edu account login with your CAC (you must have a compass account to do this)'/>
         <Divider inverted />
-        <Button onClick={() => {modalStore.openModal(<LoginForm />, 'tiny')}} size='huge' inverted>
+        <Button>
+           Sign In With CAC
+        </Button>
+        </>
+    }
+      {/* <Button onClick={() => {modalStore.openModal(<LoginForm />, 'tiny')}} size='huge' inverted>
         Login
     </Button>
        <Button onClick={() => {modalStore.openModal(<RegisterForm/>, 'tiny')}} size='huge' inverted>
        Register
-   </Button>
+        </Button>*/}
    </>
     )}
    
