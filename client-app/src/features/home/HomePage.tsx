@@ -6,11 +6,13 @@ import { Link } from "react-router-dom";
 import { Container, Header, Segment, Image, Button, Divider } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
+import ValidationErrors from "../errors/ValidationErrors";
+
 
 export default observer(function HomePage(){
-    const {userStore, modalStore, graphUserStore} = useStore();
+    const {userStore, graphUserStore} = useStore();
     const {loadUser} = graphUserStore;
-    const {signInGraphUser} = userStore;
+    const {signInGraphUser, signInCacUser, loadingInitial, errors} = userStore;
     const [loading, setLoading] = useState<boolean>(false);
     const loginCompleted = () => {
         setLoading(true);
@@ -50,9 +52,10 @@ export default observer(function HomePage(){
         <Divider inverted />
         <Header as ='h4' inverted content = 'Or if you do not have an edu account login with your CAC (you must have a compass account to do this)'/>
         <Divider inverted />
-        <Button>
+        <Button onClick={signInCacUser} loading = {loadingInitial}>
            Sign In With CAC
         </Button>
+       {errors && errors.length > 0 && <ValidationErrors errors={errors}/>}
         </>
     }
       {/* <Button onClick={() => {modalStore.openModal(<LoginForm />, 'tiny')}} size='huge' inverted>

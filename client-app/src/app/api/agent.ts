@@ -29,13 +29,11 @@ axios.interceptors.response.use(async response => {
     const{data, status, headers} = error.response!;
     switch (status){
         case 400: 
-        debugger;
        if(data.errors){
         const modalStateErrors = [];
         for (const key in data.errors){
             if (data.errors[key]){
                 modalStateErrors.push(data.errors[key])
-
             }
         }
         throw modalStateErrors.flat();
@@ -152,6 +150,7 @@ const Account = {
     login: (user: UserFormValues) => axiosRequest.post<User>('/account/login', user),
     register: (user: UserFormValues) => axiosRequest.post<User>('/account/register', user),
     signInGraphUser: (user: UserFormValues) => axiosRequest.post<User>('/account/signInGraphUser', user),
+    signInCacUser: () => axiosRequest.post<User>('/account/signInCACUser', {}),
     refreshToken: () => axiosRequest.post<User>('/account/refreshToken',{}),
     verifyEmail: (token: string, email: string) => 
                 axiosRequest.post<void>(`/account/verifyEmail?token=${token}&email=${email}`, {}),

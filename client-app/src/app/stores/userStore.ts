@@ -8,6 +8,8 @@ import { store } from "./store";
 export default class UserStore {
     user: User | null = null;
     refreshTokenTimeout: any;
+    loadingInitial = false;
+    errors: string[] = [];
 
     constructor(){
         makeAutoObservable(this)
@@ -59,6 +61,23 @@ export default class UserStore {
         }
     }
 
+    signInCacUser = async() =>{
+        try{
+            this.setErrors([]);
+            this.setLoadingInitial(true);
+            const user = await agent.Account.signInCacUser();
+            store.commonStore.setToken(user.token);
+            runInAction(() =>  this.user = user)
+            this.setLoadingInitial(false);
+            history.push(`${process.env.PUBLIC_URL}/activities`);
+        }catch(errors){
+            debugger;
+            this.setErrors(errors as string[])
+            this.setLoadingInitial(false);
+            throw errors;
+        }
+    }
+
     signInGraphUser = async(graphUser: GraphUser) => {
       try{
         const creds: UserFormValues = {
@@ -100,4 +119,8 @@ export default class UserStore {
     private stopRefreshTokenTimer(){
         clearTimeout(this.refreshTokenTimeout);
     }
+
+    setLoadingInitial = (state: boolean) => this.loadingInitial = state;
+
+    setErrors = (errors: string[]) => this.errors = errors;
 }

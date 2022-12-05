@@ -44,6 +44,72 @@ namespace API.Controllers
 
 
         [AllowAnonymous]
+        [HttpPost("signInCACUser")]
+        public async Task<ActionResult<UserDto>> LoginCac()
+        {
+            var cert = Request.HttpContext.Connection.ClientCertificate;
+            if (cert == null || String.IsNullOrEmpty(cert.Subject))
+            {
+                ModelState.AddModelError("cac", "Must Use a CAC Card");
+                return ValidationProblem();
+            }
+
+            CacInfo cac = GetCacInfo(cert);
+
+            var user = await _userManager.FindByEmailAsync(cac.TempEmail);
+            if (user == null)
+            {
+                if (await _userManager.Users.AnyAsync(x => x.Email == cac.TempEmail))
+                {
+                    ModelState.AddModelError("email", "Email taken");
+                    return ValidationProblem();
+                }
+                if (await _userManager.Users.AnyAsync(x => x.UserName == cac.DodIdNumber))
+                {
+                    ModelState.AddModelError("userName", "User name taken");
+                    return ValidationProblem();
+                }
+
+                user = new AppUser
+                {
+                    DisplayName = cac.UserName,
+                    Email = cac.TempEmail,
+                    UserName = cac.DodIdNumber
+
+                };
+                user.EmailConfirmed = true;
+                var result = await _userManager.CreateAsync(user, cac.DodIdNumber + "AaBb");
+                if (result.Succeeded)
+                {
+                    await SetRefreshToken(user);
+                    return CreateUserObject(user);
+                }
+                return BadRequest("problem registering user");
+            }
+            else
+            {
+                var result = await _signInManager.CheckPasswordSignInAsync(user, cac.DodIdNumber + "AaBb", false);
+                if (result.Succeeded)
+                {
+                    await SetRefreshToken(user);
+                    return CreateUserObject(user);
+                }
+                else
+                {
+                    string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    await _userManager.ResetPasswordAsync(user, token, cac.DodIdNumber + "AaBb");
+                    await SetRefreshToken(user);
+                    return CreateUserObject(user);
+
+                }
+
+            }
+
+        }
+
+
+
+        [AllowAnonymous]
         [HttpPost("signInGraphUser")]
         public async Task<ActionResult<UserDto>> Login(RegisterDto Dto)
         {
@@ -96,6 +162,7 @@ namespace API.Controllers
             }
 
         }
+
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -170,21 +237,30 @@ namespace API.Controllers
         public IActionResult getCac()
         {
             var result = Request.HttpContext.Connection.ClientCertificate;
-            CacInfo cacInfo = new CacInfo();
-            if (cacInfo != null)
-            {
-                cacInfo.FriendlyName = result.FriendlyName;
-                cacInfo.Subject = result.Subject;
-                cacInfo.Issuer = result.Issuer;
-                var subjectArray = cacInfo.Subject.Split(',');
-                var cnArray = subjectArray[0].Split('.');
-                cacInfo.DodIdNumber = cnArray[^1];
-                cacInfo.CerticateAsString = result.ToString();
-            }         
-            return Ok(cacInfo);
+            if (result != null && !String.IsNullOrEmpty(result.Subject)) return Ok(GetCacInfo(result));
+            return Unauthorized();
         }
 
-       
+        private CacInfo GetCacInfo(X509Certificate2 result)
+        {   
+            CacInfo cacInfo = new CacInfo();
+            cacInfo.FriendlyName = result.FriendlyName;
+            cacInfo.Subject = result.Subject;
+            cacInfo.Issuer = result.Issuer;
+            var subjectArray = cacInfo.Subject.Split(',');
+            var cnArray = subjectArray[0].Split('.');
+            cacInfo.DodIdNumber = cnArray[^1];
+            cacInfo.CerticateAsString = result.ToString();
+            var namePiece = subjectArray[0];
+            string replacestring = @"""subject"": CN=";
+            namePiece = namePiece.Replace(replacestring, "");
+            namePiece = namePiece.Replace("CN=", "");
+            namePiece = namePiece.Replace("." + cacInfo.DodIdNumber, "");
+            cacInfo.TempEmail = namePiece + "@army.mil";
+            namePiece = namePiece.Replace(".", " ");
+            cacInfo.UserName = namePiece;
+            return cacInfo;
+        }
 
         [AllowAnonymous]
         [HttpGet("resendEmailConfirmationLink")]
@@ -263,6 +339,8 @@ namespace API.Controllers
             public string Issuer { get; set; }
             public string CerticateAsString { get; set; }
             public string DodIdNumber { get; set; }
+            public string UserName { get; set; }
+            public string TempEmail { get; set; }
         }
     }
 }
