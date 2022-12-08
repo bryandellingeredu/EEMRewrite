@@ -23,3 +23,5 @@ appsettings.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+API/appsettings.Development.json
+API/appsettings.json
