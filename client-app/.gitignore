@@ -25,3 +25,5 @@ yarn-debug.log*
 yarn-error.log*
 API/appsettings.Development.json
 API/appsettings.json
+*.appsettings.Development.json
+*.appsettings.json
