@@ -78,7 +78,8 @@ const axiosResponseBody = <T> (response: AxiosResponse<T>) =>{
     return retval;
 }
 
-const academicCalendarURL = `/groups/${acedemicCalendarId.hossRob}/calendar/events`;
+//const academicCalendarURL = `/groups/${process.env.ACADEMIC_CALENDAR_ID}/calendar/events`;
+const academicCalendarURL = `/groups/17422b10-09fc-42c9-8d98-f0e7c2c97899/calendar/events`;
 const getGraphClient = () => Providers.globalProvider.graph.client;
 const IsSignedIn = () => Providers.globalProvider.state === ProviderState.SignedIn;
 

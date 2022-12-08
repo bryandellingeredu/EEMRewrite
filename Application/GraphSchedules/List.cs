@@ -35,7 +35,13 @@ namespace Application.GraphSchedules
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                 ICalendarGetScheduleCollectionPage result = await GraphHelper.GetScheduleAsync(request.ScheduleRequestDTO);
-                return Result<ICalendarGetScheduleCollectionPage>.Success(result);
+
+                foreach (var item in result.CurrentPage)
+                {
+                    item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free);
+                }
+
+                    return Result<ICalendarGetScheduleCollectionPage>.Success(result);
             }
         }
     }

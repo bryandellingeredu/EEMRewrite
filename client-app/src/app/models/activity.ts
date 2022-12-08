@@ -35,6 +35,11 @@ export interface Activity{
     recurrenceInd: boolean,
     recurrenceId: string | null,
     recurrence: Recurrence | null
+    numberAttending : string
+    roomSetUp : string
+    vtc: boolean
+    roomSetUpInstructions: string
+    phoneNumberForRoom: string
 }
 
 export class Activity implements Activity{
@@ -69,6 +74,11 @@ export class ActivityFormValues{
     recurrenceInd: boolean = false;
     recurrenceId: string | null = null;
     recurrence: Recurrence | null = null;
+    numberAttending : string = '';
+    roomSetUp : string = '';
+    vtc : boolean = false;
+    phoneNumberForRoom: string = '';
+    roomSetUpInstructions: string = '';
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -97,6 +107,11 @@ export class ActivityFormValues{
         this.recurrenceInd = activity.recurrenceInd;
         this.recurrenceId = activity.recurrenceId;
         this.recurrence = activity.recurrence;
+        this.numberAttending = activity.numberAttending;
+        this.roomSetUp = activity.roomSetUp
+        this.vtc = activity.vtc;
+        this.phoneNumberForRoom = activity.phoneNumberForRoom;
+        this.roomSetUpInstructions = activity.roomSetUpInstructions
        } 
     }
 }

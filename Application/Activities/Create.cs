@@ -10,6 +10,7 @@ using Activity = Domain.Activity;
 using Recurrence = Domain.Recurrence;
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Application.DTOs;
 
 namespace Application.Activities
 {
@@ -39,7 +40,8 @@ namespace Application.Activities
             private readonly IConfiguration _config;
             private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor)
+            public Handler(
+                DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor)
             {
                 _context = context;
                 _mapper = mapper;
@@ -83,15 +85,20 @@ namespace Application.Activities
                         {
                             a.RecurrenceId = request.Activity.Recurrence.Id;
                         }
-
-                        if (string.IsNullOrEmpty(a.CoordinatorEmail) && a.RoomEmails.Any())
+                        if (
+                            (
+                             string.IsNullOrEmpty(a.CoordinatorEmail) ||
+                            !a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
+                            )
+                            && a.RoomEmails.Any())
                         {
                             a.CoordinatorEmail = GraphHelper.GetEEMServiceAccount();
                             a.CoordinatorFirstName = "EEMServiceAccount";
                             a.CoordinatorLastName = "EEMServiceAccount";
                         }
 
-                        if (!string.IsNullOrEmpty(a.CoordinatorEmail))
+                        if (!string.IsNullOrEmpty(a.CoordinatorEmail) &&
+                            a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]))
                         {
                             //create outlook event
                             GraphEventDTO graphEventDTO = new GraphEventDTO
@@ -104,17 +111,35 @@ namespace Application.Activities
                                 RequesterEmail = a.CoordinatorEmail,
                                 RequesterFirstName = a.CoordinatorFirstName,
                                 RequesterLastName = a.CoordinatorLastName,
-                                IsAllDay = a.AllDayEvent
+                                IsAllDay = a.AllDayEvent,
+                                UserEmail = user.Email
                             };
                             Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                             a.EventLookup = evt.Id;
+                            if (a.CoordinatorEmail == GraphHelper.GetEEMServiceAccount())
+                            {
+                                a.CoordinatorEmail = user.Email;
+                                a.CoordinatorFirstName = user.DisplayName;
+                                a.CoordinatorLastName = String.Empty;
+                            }
 
                         }
                         else
                         // user is not logged onto edu so do not make an outlook event
                         {
+                            if (string.IsNullOrEmpty(a.CoordinatorEmail) ||
+                                !a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]))
+                            {                          
+                                    a.CoordinatorEmail = user.Email;
+                                    a.CoordinatorFirstName= user.DisplayName;
+                                    a.CoordinatorLastName = String.Empty;
+                            }
+                            a.CreatedBy = user.Email;
+                            a.CreatedAt = DateTime.Now;
                             _context.Activities.Add(a);
                         }
+                        a.CreatedBy = user.Email;
+                        a.CreatedAt = DateTime.Now;
                         _context.Activities.Add(a);
                         var result = await _context.SaveChangesAsync() > 0;
                         if (!result) return Result<Unit>.Failure("Failed to Create Activity");

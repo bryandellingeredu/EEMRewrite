@@ -8,6 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Graph.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using Application.Interfaces;
+using System.Dynamic;
+using Application.DTOs;
 
 namespace Application.Activities
 {
@@ -35,22 +38,28 @@ namespace Application.Activities
             private readonly DataContext _context;
             private readonly IMapper _mapper;
             private readonly IConfiguration _config;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper, IConfiguration config)
+            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
 
                 if (
-                     string.IsNullOrEmpty(request.Activity.CoordinatorEmail) &&
+                     (
+                     string.IsNullOrEmpty(request.Activity.CoordinatorEmail) ||
+                     !request.Activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
+                     ) &&
                      (
                      request.Activity.RoomEmails.Any() ||
                      !string.IsNullOrEmpty(request.Activity.EventLookup)
@@ -73,13 +82,13 @@ namespace Application.Activities
 
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
                 if (activity == null) return null;
+                var createdBy = activity.CreatedBy;
+                var createdAt = activity.CreatedAt;
                 _mapper.Map(request.Activity, activity);
                 activity.Category = null;
                 activity.EventLookup = null;
                 activity.RecurrenceId = null;
                 activity.RecurrenceInd = false;
-
-      
 
                 //create new graph event
                 if (
@@ -96,12 +105,23 @@ namespace Application.Activities
                         RequesterEmail = request.Activity.CoordinatorEmail,
                         RequesterFirstName = request.Activity.CoordinatorFirstName,
                         RequesterLastName = request.Activity.CoordinatorLastName,
-                        IsAllDay = request.Activity.AllDayEvent
+                        IsAllDay = request.Activity.AllDayEvent,
+                        UserEmail = user.Email
                     };
                     Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                     activity.EventLookup = evt.Id;
                 }
-
+                if (activity.CoordinatorEmail == GraphHelper.GetEEMServiceAccount())
+                {
+                
+                    activity.CoordinatorEmail = user.Email;
+                    activity.CoordinatorFirstName = user.DisplayName;
+                    activity.CoordinatorLastName = String.Empty;
+                }
+                activity.LastUpdatedBy = user.Email;
+                activity.LastUpdatedAt = DateTime.Now;
+                activity.CreatedBy = createdBy;
+                activity.CreatedAt = createdAt;
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return Result<Unit>.Failure("Failed to Update Activity");
 

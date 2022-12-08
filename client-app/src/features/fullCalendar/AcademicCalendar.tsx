@@ -4,9 +4,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../app/stores/store";
 import "@fullcalendar/daygrid/main.css";
-import { Divider, Header, Icon } from "semantic-ui-react";
+import { Divider, Header, Icon, Popup } from "semantic-ui-react";
 import { useCallback, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
+import { format } from "date-fns";
 
 export default observer( function AcademicCalendar(){
     const {activityStore, categoryStore} = useStore();
@@ -29,6 +30,24 @@ export default observer( function AcademicCalendar(){
       if(!categories.length) categoryStore.loadCategories();
      }, [categories.length, categoryStore])
 
+     function renderEventContent(info : any) {
+      if(info.view.type === 'dayGridMonth' && !info.event.allDay)
+      {
+     return (
+        <Popup
+         content={info.event.title}
+         header={info.event.allDay ? `${format(info.event.start, 'MM/dd')}` : 
+         `${format(info.event.start, 'h:mm aa')} - ${format(info.event.end, 'h:mm aa')}`}
+         trigger={
+            <Header size='tiny'
+            color={info.event.allDay ? 'yellow': 'blue'}
+             content={`${info.timeText} ${info.event.title}`}
+            style={{overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer'}}
+            />} />
+      )
+    }
+    }
+
      return(
       <>
     <Divider horizontal>
@@ -48,6 +67,7 @@ export default observer( function AcademicCalendar(){
         plugins={[dayGridPlugin, timeGridPlugin]}
         events={(info, successCallback) => getEvents(info, successCallback)}
         eventClick={handleEventClick}
+        eventContent={renderEventContent} 
       />
       </>
     )

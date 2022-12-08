@@ -135,6 +135,8 @@
 
             List<Attendee> attendees = new List<Attendee>();
 
+            bool scheduleUsingServiceAccount = graphEventDTO.RequesterEmail == GetEEMServiceAccount();
+
             attendees.Add(
               new Attendee
               {
@@ -163,7 +165,7 @@
 
             var @event = new Event
             {
-                Subject = graphEventDTO.EventTitle,
+                Subject = scheduleUsingServiceAccount ? $"{graphEventDTO.EventTitle} - Requested by: {graphEventDTO.UserEmail}" : graphEventDTO.EventTitle,
                 IsAllDay = graphEventDTO.IsAllDay,
                 Body = new ItemBody
                 {

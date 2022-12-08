@@ -5,9 +5,10 @@ using Persistence;
 using Application.Core;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Graph.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using Application.Interfaces;
+
 
 namespace Application.Activities
 {
@@ -35,12 +36,14 @@ namespace Application.Activities
             private readonly DataContext _context;
             private readonly IMapper _mapper;
             private readonly IConfiguration _config;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DataContext context, IMapper mapper, IConfiguration config)
+            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -48,6 +51,7 @@ namespace Application.Activities
                 try
                 {
                     Helper.InitHelper(_mapper);
+                    var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
                     var activitiesToBeDeleted = _context.Activities.Where(x => x.RecurrenceId == request.Activity.RecurrenceId);
                     var newActivities = new List<Activity>();
               
@@ -56,7 +60,12 @@ namespace Application.Activities
                     GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
 
                  if (
-                  string.IsNullOrEmpty(request.Activity.CoordinatorEmail) &&
+                   (
+                     string.IsNullOrEmpty(request.Activity.CoordinatorEmail) ||
+                     !request.Activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
+                     )
+
+                  &&
                   (
                   request.Activity.RoomEmails.Any() ||
                   !string.IsNullOrEmpty(request.Activity.EventLookup)
@@ -67,17 +76,20 @@ namespace Application.Activities
                         request.Activity.CoordinatorFirstName = "EEMServiceAccount";
                         request.Activity.CoordinatorLastName = "EEMServiceAccount";
                     }
-
+                    var createdBy = activitiesToBeDeleted.FirstOrDefault().CreatedBy;
+                    var createdAt = activitiesToBeDeleted.FirstOrDefault().CreatedAt;
                     //delete the old activities and the recurrence we will make new ones
                     foreach (var item in activitiesToBeDeleted)
                     {
+
                         if (
                             !string.IsNullOrEmpty(request.Activity.EventLookup) &&
                             !string.IsNullOrEmpty(request.Activity.CoordinatorEmail)
                             )
                         {
                             // delete graph event we will make new ones
-                            await GraphHelper.DeleteEvent(item.EventLookup, item.CoordinatorEmail);
+                            var coordinatorEmail = item.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? item.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
+                            await GraphHelper.DeleteEvent(item.EventLookup, coordinatorEmail);
                         }
                     }
                    
@@ -117,13 +129,26 @@ namespace Application.Activities
                                 RequesterEmail = a.CoordinatorEmail,
                                 RequesterFirstName = a.CoordinatorFirstName,
                                 RequesterLastName = a.CoordinatorLastName,
-                                IsAllDay = a.AllDayEvent
+                                IsAllDay = a.AllDayEvent,
+                                UserEmail = user.Email
                             };
                             Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                             a.EventLookup = evt.Id;
                         }
 
-                        newActivities.Add(a);
+
+                        if (a.CoordinatorEmail == GraphHelper.GetEEMServiceAccount())
+                        {
+                            a.CoordinatorEmail = user.Email;
+                            a.CoordinatorFirstName = user.DisplayName;
+                            a.CoordinatorLastName = String.Empty;
+                        }
+
+                       a.LastUpdatedBy = user.Email;
+                       a.LastUpdatedAt = DateTime.Now;
+                      a.CreatedBy = createdBy;
+                     a.CreatedAt = createdAt;
+                      newActivities.Add(a);
                     }
                     newRecurrence.Activities = newActivities;   
                     _context.Recurrences.Add(newRecurrence);

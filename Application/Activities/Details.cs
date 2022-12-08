@@ -55,7 +55,9 @@ namespace Application.Activities
                     Settings s = new Settings();
                     var settings = s.LoadSettings(_config);
                     GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
-                    var evt = await GraphHelper.GetEventAsync(activity.CoordinatorEmail, activity.EventLookup);
+                    string coordinatorEmail = activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
+                        ? activity.CoordinatorEmail :  GraphHelper.GetEEMServiceAccount();
+                    var evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup);
 
                     var allrooms = await GraphHelper.GetRoomsAsync();
 

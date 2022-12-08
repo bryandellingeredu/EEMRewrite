@@ -47,7 +47,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                      <Icon name='phone' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={11}>
-                     <span>{activity.actionOfficerPhone}</span>
+                     <span>Action Officer Phone: {activity.actionOfficerPhone}</span>
                  </Grid.Column>
              </Grid>
          </Segment>
@@ -92,6 +92,72 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
          </Grid>
      </Segment>
        ))}   
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.numberAttending &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='users' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                 <span>Attendees: {activity.numberAttending}</span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.phoneNumberForRoom &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='phone' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                 <span>Room Requestor: {activity.phoneNumberForRoom}</span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.roomSetUp &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='setting' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                 {activity.roomSetUp}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                 VTC Required
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.roomSetUpInstructions &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='info' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                 {activity.roomSetUpInstructions}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
 </Segment.Group>
     )
 })

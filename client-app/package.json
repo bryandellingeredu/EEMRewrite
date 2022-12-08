@@ -27,11 +27,14 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/react-select": "^5.0.1",
     "axios": "^0.21.0",
+    "bootstrap": "^4.6.0",
     "date-fns": "^2.29.1",
     "formik": "^2.2.6",
     "history": "^4.10.1",
+    "jquery": "^3.6.0",
     "mobx": "^6.6.1",
     "mobx-react-lite": "^3.4.0",
+    "popper.js": "^1.16.1",
     "react": "^18.2.0",
     "react-calendar": "^3.7.0",
     "react-datepicker": "^4.8.0",
@@ -73,6 +76,7 @@
     ]
   },
   "devDependencies": {
+    "@types/bootstrap": "^4.6.2",
     "@types/react-calendar": "^3.5.2",
     "@types/react-datepicker": "^4.4.2",
     "@types/uuid": "^8.3.4",

@@ -8,6 +8,7 @@ import {
   Segment,
   Form as SemanticForm,
   Popup,
+  Divider,
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -156,7 +157,6 @@ export default observer(function ActivityForm() {
   }, [isSignedIn]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
-    debugger;
     activity.recurrenceInd = recurrenceInd;
     activity.recurrence = recurrence;
     activity.roomEmails = roomRequired ? roomEmails : [];
@@ -251,16 +251,9 @@ export default observer(function ActivityForm() {
               rows={3}
               placeholder="Description"
               name="description"
-              label="Description"
+              label="Event Details"
             />
-            <MySelectInput
-              options={categoryOptions.filter(
-                (x: any) => x.text !== "Academic Calendar"
-              )}
-              placeholder="Sub Calendar"
-              name="categoryId"
-              label="*Sub Calendar"
-            />
+           
             <MyCheckBox
               name="allDayEvent"
               label="All Day Event"
@@ -460,7 +453,8 @@ export default observer(function ActivityForm() {
             )}
 
             {roomRequired && (
-              <Segment color="purple">
+              <>
+              <Segment color ="purple">
                 <Header as="h5" textAlign="center">
                   <FontAwesomeIcon
                     icon={faPeopleRoof}
@@ -478,11 +472,44 @@ export default observer(function ActivityForm() {
                     recurrenceInd={recurrenceInd}
                     recurrence={recurrence}
                   />
+                     <MyTextInput
+                name="numberAttending"
+                placeholder="Number Attending"
+                label="Number Attending"
+              />
+              <MyTextInput
+                name="phoneNumberForRoom"
+                placeholder="Phone # of person requesting room"
+                label="Phone Number of Person Requesting Room"
+              />
+              <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'Full Room Config (CCR Only)', value: 'Full Room Config (CCR Only)' },
+                {text: 'Small Circle Config (CCR Only)', value: 'Small Circle Config (CCR Only)' },
+                {text: 'Large U Config (CCR Only)', value: 'Large U Config (CCR Only)' },
+                {text: 'Small U Config (CCR Only)', value: 'Small U Config (CCR Only)' }
+              ]}
+              placeholder="Room Setup"
+              name="roomSetUp"
+              label="Room Setup (For CCR)"
+            />
+            <MyTextArea
+              rows={3}
+              placeholder="Special Instructions"
+              name="roomSetUpInstructions"
+              label="Special Room Setup Instructions"
+            />
+            <MyCheckBox
+              name="vtc"
+              label="VTC (allow 30 minute set up time)"/>
+
+              <hr color='purple'/>
               </Segment>
+             
+              </>
             )}
-            {values.categoryId &&
-              categories.find((x) => x.id === values.categoryId)?.name !==
-                "Academic Calendar" && (
+           
                 <>
                   <MySelectInput
                     options={organizationOptions}
@@ -500,10 +527,17 @@ export default observer(function ActivityForm() {
                     placeholder="Action Officer Duty Phone"
                     label="*Action Officer Duty Phone"
                   />
-                </>
+                   <MySelectInput
+              options={categoryOptions.filter(
+                (x: any) => x.text !== "Academic Calendar"
               )}
+              placeholder="Sub Calendar"
+              name="categoryId"
+              label="*Sub Calendar"
+            />
+                </>
             <Button
-              disabled={isSubmitting || !isValid}
+              disabled={isSubmitting}
               loading={isSubmitting}
               floated="right"
               positive

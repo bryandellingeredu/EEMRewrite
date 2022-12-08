@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Domain;
 using Microsoft.Extensions.Configuration;
+using Azure.Core;
 
 
 namespace Application.Activities
@@ -33,6 +34,12 @@ namespace Application.Activities
                 var activity = new Activity();
 
                 var activities = await _context.Activities.Where(x => x.Title == request.Title).ToListAsync();
+                if (!activities.Any())
+                {
+                    var titleArray = request.Title.Split("- Requested by:");
+                    var title = titleArray[0];
+                    activities = await _context.Activities.Where(x => x.Title == title).ToListAsync();
+                }
 
                 if (activities.Any())
                 {

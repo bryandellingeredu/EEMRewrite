@@ -31,7 +31,7 @@ namespace Domain
 
         public string CoordinatorEmail { get; set; }
 
-        public string CoordinatorName { get; set; }
+        public string CoordinatorDisplayName{ get; set; }
 
         public string EventLookup { get; set; }
 
@@ -53,6 +53,20 @@ namespace Domain
         public bool RecurrenceInd { get; set; }
         public Guid? RecurrenceId { get; set; }
         public Recurrence Recurrence { get; set; }
+
+        public string CreatedBy { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string LastUpdatedBy { get; set; }
+        public DateTime? LastUpdatedAt { get; set; }
+
+        public string NumberAttending { get; set; }
+        public string RoomSetUp { get; set; }
+        public bool VTC { get; set; }
+        public string PhoneNumberForRoom { get; set; }
+        public string RoomSetUpInstructions { get; set; }
+        public bool G5Calendar { get; set; }
+        public string G5Organization { get; set; }
+
 
     }
 }

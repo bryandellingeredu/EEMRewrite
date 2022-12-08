@@ -296,7 +296,12 @@ export default class ActivityStore {
       eventLookup: graphEvent.id,
       recurrenceInd: false,
       recurrenceId: '',
-      recurrence: null
+      recurrence: null,
+      numberAttending: '',
+      roomSetUp: '',
+      vtc: false,
+      phoneNumberForRoom: '',
+      roomSetUpInstructions: ''
     }
     return activity;
   }

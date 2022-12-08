@@ -40,10 +40,16 @@ namespace Persistence.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CoordinatorDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CoordinatorEmail")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CoordinatorName")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -55,8 +61,26 @@ namespace Persistence.Migrations
                     b.Property<string>("EventLookup")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("G5Calendar")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("G5Organization")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NumberAttending")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PhoneNumberForRoom")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrimaryLocation")
                         .HasColumnType("nvarchar(max)");
@@ -67,11 +91,20 @@ namespace Persistence.Migrations
                     b.Property<bool>("RecurrenceInd")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RoomSetUp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomSetUpInstructions")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Start")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("VTC")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

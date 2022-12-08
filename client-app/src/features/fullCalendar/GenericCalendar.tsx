@@ -7,6 +7,8 @@ import timeGridPlugin from "@fullcalendar/timegrid"
 import { useHistory, useParams } from "react-router-dom";
 import { useCallback, useEffect} from "react";
 import GenericCalendarHeader from "./GenericCalendarHeader";
+import {  Header, Popup } from "semantic-ui-react";
+import { format } from 'date-fns';
 
 export default observer(function GenericCalendar() {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +20,27 @@ export default observer(function GenericCalendar() {
     const category = categories.find(x => x.routeName === id);
     history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${category?.id}`);
   }, [ categories, history]);
+
+  function renderEventContent(info : any) {
+    if(info.view.type === 'dayGridMonth' && !info.event.allDay)
+    {
+   return (
+      <Popup
+       content={info.event.title}
+       header={info.event.allDay ? `${format(info.event.start, 'MM/dd')}` : 
+       `${format(info.event.start, 'h:mm aa')} - ${format(info.event.end, 'h:mm aa')}`}
+       trigger={
+          <Header size='tiny'
+          color={info.event.allDay ? 'yellow': 'blue'}
+           content={`${info.timeText} ${info.event.title}`}
+          style={{overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer'}}
+          />} />
+    )
+  }
+  }
+
+
+
 
   useEffect(() => {
    if(!categories.length) categoryStore.loadCategories();
@@ -41,6 +64,7 @@ export default observer(function GenericCalendar() {
             plugins={[dayGridPlugin, timeGridPlugin]}
             events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/${id}`}
             eventClick={handleEventClick}
+            eventContent={renderEventContent}           
           />
         </div>
       }

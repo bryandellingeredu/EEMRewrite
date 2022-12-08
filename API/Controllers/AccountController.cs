@@ -1,18 +1,15 @@
 ﻿using API.DTOs;
 using API.Services;
-using Application.Activities;
+using Application.DTOs;
 using Application.Emails;
+using Application.Interfaces;
 using Domain;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using static Application.Emails.Email;
 
@@ -25,14 +22,17 @@ namespace API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
+        private readonly ICACAccessor _cacAccessor;
 
         public AccountController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            TokenService tokenService)
+            TokenService tokenService,
+            ICACAccessor cacAccessor)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _cacAccessor = cacAccessor; 
         }
 
         [AllowAnonymous]
@@ -47,14 +47,19 @@ namespace API.Controllers
         [HttpPost("signInCACUser")]
         public async Task<ActionResult<UserDto>> LoginCac()
         {
+            bool isLocal = Request.HttpContext.Request.Host.Value.StartsWith("localhost");
             var cert = Request.HttpContext.Connection.ClientCertificate;
             if (cert == null || String.IsNullOrEmpty(cert.Subject))
             {
-                ModelState.AddModelError("cac", "Must Use a CAC Card");
-                return ValidationProblem();
+                if (!isLocal)
+                {
+                    ModelState.AddModelError("cac", "Must Use a CAC Card");
+                    return ValidationProblem();
+                }
+              
             }
 
-            CacInfo cac = GetCacInfo(cert);
+            CACInfoDTO cac = _cacAccessor.GetCacInfo();
 
             var user = await _userManager.FindByEmailAsync(cac.TempEmail);
             if (user == null)
@@ -237,30 +242,11 @@ namespace API.Controllers
         public IActionResult getCac()
         {
             var result = Request.HttpContext.Connection.ClientCertificate;
-            if (result != null && !String.IsNullOrEmpty(result.Subject)) return Ok(GetCacInfo(result));
+            if (result != null && !String.IsNullOrEmpty(result.Subject)) return Ok(_cacAccessor.GetCacInfo());
             return Unauthorized();
         }
 
-        private CacInfo GetCacInfo(X509Certificate2 result)
-        {   
-            CacInfo cacInfo = new CacInfo();
-            cacInfo.FriendlyName = result.FriendlyName;
-            cacInfo.Subject = result.Subject;
-            cacInfo.Issuer = result.Issuer;
-            var subjectArray = cacInfo.Subject.Split(',');
-            var cnArray = subjectArray[0].Split('.');
-            cacInfo.DodIdNumber = cnArray[^1];
-            cacInfo.CerticateAsString = result.ToString();
-            var namePiece = subjectArray[0];
-            string replacestring = @"""subject"": CN=";
-            namePiece = namePiece.Replace(replacestring, "");
-            namePiece = namePiece.Replace("CN=", "");
-            namePiece = namePiece.Replace("." + cacInfo.DodIdNumber, "");
-            cacInfo.TempEmail = namePiece + "@army.mil";
-            namePiece = namePiece.Replace(".", " ");
-            cacInfo.UserName = namePiece;
-            return cacInfo;
-        }
+      
 
         [AllowAnonymous]
         [HttpGet("resendEmailConfirmationLink")]
@@ -332,16 +318,7 @@ namespace API.Controllers
             };
         }
 
-        private class CacInfo
-        {
-            public string FriendlyName { get; set; }
-            public string Subject { get; set; }
-            public string Issuer { get; set; }
-            public string CerticateAsString { get; set; }
-            public string DodIdNumber { get; set; }
-            public string UserName { get; set; }
-            public string TempEmail { get; set; }
-        }
+  
     }
 }
 

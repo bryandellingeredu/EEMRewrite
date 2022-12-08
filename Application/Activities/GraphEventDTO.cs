@@ -1,4 +1,6 @@
-﻿namespace Application.Activities
+﻿using Application.DTOs;
+
+namespace Application.Activities
 {
     public class GraphEventDTO
     {
@@ -11,5 +13,6 @@
         public string RequesterLastName { get; set; }
         public string RequesterEmail { get; set; }
         public bool IsAllDay { get; set; }
+        public string UserEmail { get; set; }
     }
 }
