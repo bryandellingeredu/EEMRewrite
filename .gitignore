@@ -456,3 +456,5 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 API/appsettings.Development.json
 API/appsettings.json
+*.appsettings.Development.json
+*.appsettings.json
