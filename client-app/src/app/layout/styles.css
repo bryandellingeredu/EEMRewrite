@@ -60,4 +60,9 @@ mgt-login {
   --popup-color: #201f1e;
 }
 
+.fc-event-time, .fc-event-title {
+  padding: 0 1px;
+  white-space: normal;
+  font-size: 0.8em;
+  }
 

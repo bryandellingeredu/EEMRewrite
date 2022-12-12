@@ -1,4 +1,4 @@
-import { Form, Radio } from "semantic-ui-react";
+import { Form, Radio, Segment } from "semantic-ui-react";
 
 interface Props{
     roomRequired: boolean
@@ -8,7 +8,7 @@ interface Props{
 export default function LocationRadioButtons({roomRequired, setRoomRequired} : Props) {
     
     return(
-        <>
+       <Segment inverted color='purple'>
     <Form.Field>
         Book a Room
       </Form.Field>
@@ -30,7 +30,7 @@ export default function LocationRadioButtons({roomRequired, setRoomRequired} : P
           onChange={setRoomRequired}
         />
       </Form.Field>
-      </>
+      </Segment>
     )
 
 }

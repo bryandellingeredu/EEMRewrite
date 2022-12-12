@@ -12,6 +12,8 @@ import timeGridPlugin from "@fullcalendar/timegrid"
 import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 
 
 export default observer(function RoomCalendar() {
@@ -65,6 +67,20 @@ isWheelChairAccessible: ''
         }
       });
     }, [categories, history]);
+
+    const handleMouseEnter = (arg : any) =>{
+      tippy(arg.el, {
+        content: `<strong> 
+        ${ 
+          arg.event.allDay ?
+          format(arg.event.start, 'MM/dd') :
+          format(arg.event.start, 'h:mm aa')} - ${format(arg.event.end, 'h:mm aa')
+        }</strong>              
+        <p> <span>${arg.event.title}</span></p>
+        ${arg.event.color === 'Green' ? '(Reservation Approved)' : '(Reservation Pending)'}`,
+        allowHTML: true,
+      });
+  }
 
     function renderEventContent(info : any) {
       if(info.view.type === 'dayGridMonth' && !info.event.allDay)
@@ -123,7 +139,8 @@ isWheelChairAccessible: ''
             plugins={[dayGridPlugin, timeGridPlugin]}
             eventClick={handleEventClick}
             events={`${process.env.REACT_APP_API_URL}/roomEvents/${id}`}
-            eventContent={renderEventContent}  
+            eventMouseEnter={handleMouseEnter}
+            //eventContent={renderEventContent}  
           />
       </>
     )

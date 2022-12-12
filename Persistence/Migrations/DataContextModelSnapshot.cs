@@ -37,8 +37,86 @@ namespace Persistence.Migrations
                     b.Property<bool>("AllDayEvent")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("AmbassadorRequested")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ApprovedByOPS")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AutomationComments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("AutomationCopiers")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AutomationPC")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AutomationProjection")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AutomationTaping")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CSLDirectorateCSL")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CSLDirectorateDSW")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CSLDirectorateDTI")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CSLDirectorateFellows")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CSLDirectorateOPS")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CSLDirectorateSLFG")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CSMRequested")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Catering")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CateringArea18")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CateringArea22")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CateringAreaArdennes")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CateringBreakArea18")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CateringBreakArea22")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CateringComments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("CommandantRequested")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CommunicationComments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CommunicationSupport")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("CommunityEvent")
+                        .HasColumnType("bit");
 
                     b.Property<string>("CoordinatorDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -52,13 +130,34 @@ namespace Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("DTI")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DeanRequested")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DptCmdtRequested")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Education")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("EducationalCategory")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("End")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("EventClearanceLevel")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("EventLookup")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FaxClassification")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("G5Calendar")
@@ -67,11 +166,23 @@ namespace Persistence.Migrations
                     b.Property<string>("G5Organization")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Hyperlink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HyperlinkDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IMC")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastUpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastUpdatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("MFP")
+                        .HasColumnType("bit");
 
                     b.Property<string>("NumberAttending")
                         .HasColumnType("nvarchar(max)");
@@ -79,16 +190,61 @@ namespace Persistence.Migrations
                     b.Property<Guid?>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("OtherComments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PAX")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ParkingPasses")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ParticipationCmdt")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ParticipationDir")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ParticipationForeign")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ParticipationGO")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PhoneNumberForRoom")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrimaryLocation")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("ProvostRequested")
+                        .HasColumnType("bit");
+
                     b.Property<Guid?>("RecurrenceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("RecurrenceInd")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Registration")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RegistrationLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Report")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RoomRequirement1")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RoomRequirement2")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RoomRequirement3")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RoomRequirementBasement")
                         .HasColumnType("bit");
 
                     b.Property<string>("RoomSetUp")
@@ -97,10 +253,31 @@ namespace Persistence.Migrations
                     b.Property<string>("RoomSetUpInstructions")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("SecurityAfterDutyAccess")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("SecurityBadgeIssue")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityComments")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Start")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("SuppliesComments")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Transportation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransportationComments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("VTC")

@@ -36,7 +36,7 @@ namespace Application.Activities
                 var category = await _context.Categories.Where(x => x.RouteName.ToLower() == request.RouteName.ToLower()).FirstOrDefaultAsync();
 
 
-                var activities = await _context.Activities.
+                var activities = await _context.Activities.Include(x => x.Organization).
                     Where(x => DateTime.Compare(start, x.Start) <= 0).
                     Where(x => DateTime.Compare(end, x.End) >= 0).
                     Where(x => x.CategoryId == category.Id)
@@ -55,7 +55,12 @@ namespace Application.Activities
                         End = Helper.GetStringFromDateTime(endDateForCalendar, activity.AllDayEvent),
                         Color = "blue",
                         AllDay = activity.AllDayEvent,
-                        CategoryId = category.Id.ToString()
+                        CategoryId = category.Id.ToString(),
+                        Description = activity.Description,
+                        PrimaryLocation = activity.PrimaryLocation,
+                        LeadOrg = activity.Organization?.Name,
+                        ActionOfficer = activity.ActionOfficer,
+                        ActionOfficerPhone = activity.ActionOfficerPhone
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);
@@ -64,6 +69,7 @@ namespace Application.Activities
 
                 return Result<List<FullCalendarEventDTO>>.Success(fullCalendarEventDTOs);
             }
+
         }
     }
 }

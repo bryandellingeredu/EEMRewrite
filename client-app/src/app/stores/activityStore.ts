@@ -301,7 +301,12 @@ export default class ActivityStore {
       roomSetUp: '',
       vtc: false,
       phoneNumberForRoom: '',
-      roomSetUpInstructions: ''
+      roomSetUpInstructions: '',
+      g5Calendar: false,
+      g5Organization: '',
+      hyperlink: '',
+      hyperlinkDescription: ''
+
     }
     return activity;
   }

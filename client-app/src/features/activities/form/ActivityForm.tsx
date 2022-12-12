@@ -8,7 +8,7 @@ import {
   Segment,
   Form as SemanticForm,
   Popup,
-  Divider,
+  Message,
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -246,7 +246,7 @@ export default observer(function ActivityForm() {
         {({ handleSubmit, isValid, isSubmitting, dirty, values }) => (
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
             <FormObserver />
-            <MyTextInput name="title" placeholder="Title" label="Title*" />
+            <MyTextInput name="title" placeholder="Title" label="*Title" />
             <MyTextArea
               rows={3}
               placeholder="Description"
@@ -330,6 +330,7 @@ export default observer(function ActivityForm() {
                   timeCaption="time"
                   dateFormat="MMMM d, yyyy h:mm aa"
                   title="*Start"
+                  minDate= {new Date()}
                 />
               )}
             {values.allDayEvent &&
@@ -339,6 +340,7 @@ export default observer(function ActivityForm() {
                   name="start"
                   dateFormat="MMMM d, yyyy"
                   title="*Start"
+                  minDate= {new Date()}
                   disabled={
                     id && originalRoomEmails && originalRoomEmails.length
                       ? true
@@ -438,20 +440,74 @@ export default observer(function ActivityForm() {
                 )}
               </>
             )}
+       
+              <MySelectInput
+                    options={organizationOptions}
+                    placeholder="Lead Org"
+                    name="organizationId"
+                    label="*Lead Org"
+                  />
+                  <MyTextInput
+                    name="actionOfficer"
+                    placeholder="Action Officer"
+                    label="*Action Officer"
+                  />
+                  <MyTextInput
+                    name="actionOfficerPhone"
+                    placeholder="Action Officer Duty Phone"
+                    label="*Action Officer Duty Phone"
+                  />
             <LocationRadioButtons
               roomRequired={roomRequired}
               setRoomRequired={handleSetRoomRequired}
             />
-            {!roomRequired && (
+          
+            
+          {!roomRequired && (  
+            <>
               <MyDataList
                 name="primaryLocation"
                 placeholder="Primary Location"
-                label="Primary Location"
+                label="Primary Location (Pick from the list or type your own)"
                 dataListId="locations"
                 options={locationOptions}
               />
-            )}
+<div className= "ui yellow message">
+        <div className="header">
+            Primary Location does not Reserve a Room
+        </div>
+        Primary Location is for the general location of your event only. This field does NOT reserve a room. To reserve a room choose the room required option above.
+    </div> 
+    </>
+          )}
 
+             <MyCheckBox
+              name="g5Calendar"
+              label="G5 Calendar (Check box to add the G5 Long Range Calendar)"/>
+           
+            {values.g5Calendar && 
+                  <MySelectInput
+                  options={[
+                    {text: '', value: ''},
+                    {text: 'OSD', value: 'OSD' },
+                    {text: 'JS', value: 'JS' },
+                    {text: 'ARMY', value: 'ARMY' },
+                    {text: 'FORSCOM', value: 'FORSCOM' },
+                    {text: 'TRADOC', value: 'TRADOC' },
+                    {text: 'USAWC HQ', value: 'USAWC HQ' },
+                    {text: 'SSL', value: 'SSL' },
+                    {text: 'CSL', value: 'CSL' },
+                    {text: 'SSI', value: 'SSI' },
+                    {text: 'PKSOI', value: 'PKSOI' },
+                    {text: 'AHEC', value: 'AHEC' },
+                    {text: 'ASEP', value: 'ASEP' },
+                  ]}
+                  placeholder="Select an Organization"
+                  name="g5Organization"
+                  label="Organization (Select the organization that best describes how this event ties into USAWC long range planning)"
+                />
+            }
+  
             {roomRequired && (
               <>
               <Segment color ="purple">
@@ -509,25 +565,8 @@ export default observer(function ActivityForm() {
              
               </>
             )}
-           
-                <>
-                  <MySelectInput
-                    options={organizationOptions}
-                    placeholder="Lead Org"
-                    name="organizationId"
-                    label="*Lead Org"
-                  />
-                  <MyTextInput
-                    name="actionOfficer"
-                    placeholder="Action Officer"
-                    label="*Action Officer"
-                  />
-                  <MyTextInput
-                    name="actionOfficerPhone"
-                    placeholder="Action Officer Duty Phone"
-                    label="*Action Officer Duty Phone"
-                  />
-                   <MySelectInput
+                     
+           <MySelectInput
               options={categoryOptions.filter(
                 (x: any) => x.text !== "Academic Calendar"
               )}
@@ -535,7 +574,19 @@ export default observer(function ActivityForm() {
               name="categoryId"
               label="*Sub Calendar"
             />
-                </>
+
+             <MyTextInput
+                name="hyperlink"
+                placeholder="https://"
+                label="Public Hyperlink (CBKS online links are not available to the public)"
+              />
+
+             <MyTextInput
+                name="hyperlinkDescription"
+                placeholder="desciption for the link"
+                label="Public Hyperlink Description"
+              />
+               
             <Button
               disabled={isSubmitting}
               loading={isSubmitting}

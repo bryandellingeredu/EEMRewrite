@@ -79,7 +79,7 @@ namespace Application.GraphSchedules
                                 Id = Guid.NewGuid().ToString(),
                                 Start = scheduleItem.Start.DateTime,
                                 End = scheduleItem.End.DateTime,
-                                Title = scheduleItem.Subject,
+                                Title = scheduleItem.Subject.Split("- Requested by: ")[0],
                                 Color = scheduleItem.Status == FreeBusyStatus.Busy ? "Green" : "GoldenRod",
                                 AllDay = scheduleItem.Start.DateTime.Split('T')[1] == "00:00:00.0000000" &&
                                          scheduleItem.End.DateTime.Split('T')[1] == "00:00:00.0000000" ? true : false

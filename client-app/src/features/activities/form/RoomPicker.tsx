@@ -52,6 +52,7 @@ export default observer(function RoomPicker({
   };
 
   useEffect(() => {
+    console.log('loading rooms')
     const diff = Math.abs(+end - +start);
     var minutes = Math.floor(diff / 1000 / 60);
     if (minutes >= 15 && start < end) {

@@ -1,6 +1,5 @@
 
-import { Segment, List, Label, Item, Image, Icon, Grid } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Segment, Icon, Grid } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity'
 
@@ -157,6 +156,49 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
              </Grid>
          </Segment>
  }
+
+{activity.g5Calendar &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='calendar' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                 Added to the G5 Calendar
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.g5Calendar && activity.g5Organization &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='building' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                 G5 Related Organization: {activity.g5Organization}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.hyperlink &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='linkify' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                 <a target="_blank" rel="noreferrer" href={activity.hyperlink}>
+                   {activity.hyperlinkDescription || activity.hyperlink}
+                </a>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+ 
 
 </Segment.Group>
     )

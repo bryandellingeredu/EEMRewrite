@@ -21,6 +21,7 @@ export default observer( function AcademicCalendar(){
       })
      }
 
+
      const handleEventClick = useCallback((clickInfo: EventClickArg) => {
       const category = categories.find(x => x.name === 'Academic Calendar');
       history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${category?.id}`);

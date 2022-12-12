@@ -40,6 +40,10 @@ export interface Activity{
     vtc: boolean
     roomSetUpInstructions: string
     phoneNumberForRoom: string
+    g5Calendar: boolean
+    g5Organization: string
+    hyperlink : string
+    hyperlinkDescription : string
 }
 
 export class Activity implements Activity{
@@ -79,6 +83,10 @@ export class ActivityFormValues{
     vtc : boolean = false;
     phoneNumberForRoom: string = '';
     roomSetUpInstructions: string = '';
+    g5Calendar: boolean = false;
+    g5Organization: string = ''
+    hyperlink : string = '';
+    hyperlinkDescription : string = '';
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -112,6 +120,10 @@ export class ActivityFormValues{
         this.vtc = activity.vtc;
         this.phoneNumberForRoom = activity.phoneNumberForRoom;
         this.roomSetUpInstructions = activity.roomSetUpInstructions
+        this.g5Calendar = activity.g5Calendar
+        this.g5Organization = activity.g5Organization
+        this.hyperlink = activity.hyperlink
+        this.hyperlinkDescription  = activity.hyperlinkDescription
        } 
     }
 }

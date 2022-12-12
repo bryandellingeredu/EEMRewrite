@@ -15,6 +15,10 @@ namespace Application.GraphSchedules
         public string CategoryId { get; set; }
         public string Color { get; set; }
         public bool AllDay { get; set; }
-
+        public string Description { get; set; }
+        public string PrimaryLocation { get; set; }
+        public string LeadOrg { get; set; }
+        public string ActionOfficer { get; set; }
+        public string ActionOfficerPhone { get; set; }
     }
 }
