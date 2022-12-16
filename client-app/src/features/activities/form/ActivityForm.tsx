@@ -9,6 +9,8 @@ import {
   Form as SemanticForm,
   Popup,
   Message,
+  Grid,
+  Divider,
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -33,6 +35,9 @@ import {
   RecurrenceFormValues,
 } from "../../../app/models/recurrence";
 import { format } from "date-fns";
+import MySemanticCheckBox from "../../../app/common/form/MySemanticCheckbox";
+import MySemanticRadioButton from "../../../app/common/form/MySemanticRadioButton";
+import ScrollToFieldError from "../../../app/common/form/ScrollToFieldError";
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -105,6 +110,12 @@ export default observer(function ActivityForm() {
   };
 
   const validationSchema = Yup.object({
+    communityEvent: Yup.boolean(),
+    checkedForOpsec: Yup.boolean()
+                        .when("communityEvent",
+                         {is: true,
+                          then: Yup.boolean().isTrue("Review event details for pii and opsec and check the box ")
+                         }),
     title: Yup.string().required("The title is required"),
     categoryId: Yup.string().required(
       "Category is required, choose other if you are just reserving a room"
@@ -218,7 +229,7 @@ export default observer(function ActivityForm() {
   }
 
   const FormObserver: React.FC = () => {
-    const { values, setFieldValue } = useFormikContext();
+    const { values, setFieldValue, submitCount } = useFormikContext();
     const v = values as ActivityFormValues;
     useEffect(() => {
       if (v.end < v.start) {
@@ -228,10 +239,12 @@ export default observer(function ActivityForm() {
     return null;
   };
 
+  
+
   return (
     <Segment clearing>
       <Header
-        content={activity.id ? "Update " : "Create New "}
+        content={activity.id ? `Update ${activity.title}` : "Add Event"}
         Calendar
         Event
         sub
@@ -246,30 +259,67 @@ export default observer(function ActivityForm() {
         {({ handleSubmit, isValid, isSubmitting, dirty, values }) => (
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
             <FormObserver />
-            <MyTextInput name="title" placeholder="Title" label="*Title" />
+            <ScrollToFieldError />
+            <MyTextInput name="title" placeholder="Title" label="*Title:" />
             <MyTextArea
               rows={3}
               placeholder="Description"
               name="description"
-              label="Event Details"
+              label="Event Details:"
             />
-           
-            <MyCheckBox
-              name="allDayEvent"
-              label="All Day Event"
-              disabled={
+
+<Grid>
+            <Grid.Row>
+            <Grid.Column width={3}>
+                      <strong>
+                      Community Event:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={13}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="communityEvent" label="Check if the event is public and should show on the Community Calendar"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+   <Divider/>
+
+          { values.communityEvent &&
+           <Segment inverted color='red'>
+           <MyCheckBox
+              name="checkedForOpsec"
+              label="You selected Community Event so you must review the event details for OPSEC and PII. check this box when complete"/>
+           </Segment>
+          }
+
+<Grid>
+            <Grid.Row>
+            <Grid.Column width={3}>
+                      <strong>
+                      All Day Event:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={13}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="allDayEvent"
+               label="Check if the event occurs for the entire work day"
+               disabled={
                 id && originalRoomEmails && originalRoomEmails.length
                   ? true
                   : false
-              }
-            />
+              }/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
 
             {id && originalRoomEmails && originalRoomEmails.length > 0 && (
               <>
                 <Popup
                   trigger={
                     <SemanticForm.Field>
-                      <label>*Start</label>
+                      <label>*Start:</label>
                       <input
                         name="start"
                         value={
@@ -296,7 +346,7 @@ export default observer(function ActivityForm() {
                 <Popup
                   trigger={
                     <SemanticForm.Field>
-                      <label>*End</label>
+                      <label>*End:</label>
                       <input
                         name="end"
                         value={
@@ -329,7 +379,7 @@ export default observer(function ActivityForm() {
                   showTimeSelect
                   timeCaption="time"
                   dateFormat="MMMM d, yyyy h:mm aa"
-                  title="*Start"
+                  title="*Start:"
                   minDate= {new Date()}
                 />
               )}
@@ -339,7 +389,7 @@ export default observer(function ActivityForm() {
                   placeholderText="Start Date"
                   name="start"
                   dateFormat="MMMM d, yyyy"
-                  title="*Start"
+                  title="*Start:"
                   minDate= {new Date()}
                   disabled={
                     id && originalRoomEmails && originalRoomEmails.length
@@ -357,7 +407,7 @@ export default observer(function ActivityForm() {
                   showTimeSelect
                   timeCaption="time"
                   dateFormat="MMMM d, yyyy h:mm aa"
-                  title="*End"
+                  title="*End:"
                   minDate={values.start}
                   disabled={
                     id && originalRoomEmails && originalRoomEmails.length
@@ -372,7 +422,7 @@ export default observer(function ActivityForm() {
                   placeholderText="End Date"
                   name="end"
                   dateFormat="MMMM d, yyyy"
-                  title="*End"
+                  title="*End:"
                   minDate={values.start}
                   disabled={
                     id && originalRoomEmails && originalRoomEmails.length
@@ -445,17 +495,17 @@ export default observer(function ActivityForm() {
                     options={organizationOptions}
                     placeholder="Lead Org"
                     name="organizationId"
-                    label="*Lead Org"
+                    label="*Lead Org:"
                   />
                   <MyTextInput
                     name="actionOfficer"
                     placeholder="Action Officer"
-                    label="*Action Officer"
+                    label="*Action Officer:"
                   />
                   <MyTextInput
                     name="actionOfficerPhone"
                     placeholder="Action Officer Duty Phone"
-                    label="*Action Officer Duty Phone"
+                    label="*Action Officer Duty Phone:"
                   />
             <LocationRadioButtons
               roomRequired={roomRequired}
@@ -468,7 +518,7 @@ export default observer(function ActivityForm() {
               <MyDataList
                 name="primaryLocation"
                 placeholder="Primary Location"
-                label="Primary Location (Pick from the list or type your own)"
+                label="Primary Location: (Pick from the list or type your own)"
                 dataListId="locations"
                 options={locationOptions}
               />
@@ -480,10 +530,29 @@ export default observer(function ActivityForm() {
     </div> 
     </>
           )}
-
-             <MyCheckBox
-              name="g5Calendar"
-              label="G5 Calendar (Check box to add the G5 Long Range Calendar)"/>
+       
+      <Grid>
+            <Grid.Row>
+            <Grid.Column width={3}>
+                      <strong>
+                      G5 Calendar:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={13}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="g5Calendar"
+               label="Check to add the G5 Long Range Calendar"
+               disabled={
+                id && originalRoomEmails && originalRoomEmails.length
+                  ? true
+                  : false
+              }/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+        
            
             {values.g5Calendar && 
                   <MySelectInput
@@ -504,7 +573,7 @@ export default observer(function ActivityForm() {
                   ]}
                   placeholder="Select an Organization"
                   name="g5Organization"
-                  label="Organization (Select the organization that best describes how this event ties into USAWC long range planning)"
+                  label="Organization: (Select the organization that best describes how this event ties into USAWC long range planning)"
                 />
             }
   
@@ -531,12 +600,12 @@ export default observer(function ActivityForm() {
                      <MyTextInput
                 name="numberAttending"
                 placeholder="Number Attending"
-                label="Number Attending"
+                label="Number Attending:"
               />
               <MyTextInput
                 name="phoneNumberForRoom"
                 placeholder="Phone # of person requesting room"
-                label="Phone Number of Person Requesting Room"
+                label="Phone Number of Person Requesting Room:"
               />
               <MySelectInput
               options={[
@@ -548,17 +617,17 @@ export default observer(function ActivityForm() {
               ]}
               placeholder="Room Setup"
               name="roomSetUp"
-              label="Room Setup (For CCR)"
+              label="Room Setup: (For CCR)"
             />
             <MyTextArea
               rows={3}
               placeholder="Special Instructions"
               name="roomSetUpInstructions"
-              label="Special Room Setup Instructions"
+              label="Special Room Setup Instructions:"
             />
             <MyCheckBox
               name="vtc"
-              label="VTC (allow 30 minute set up time)"/>
+              label="VTC: (allow 30 minute set up time)"/>
 
               <hr color='purple'/>
               </Segment>
@@ -572,21 +641,129 @@ export default observer(function ActivityForm() {
               )}
               placeholder="Sub Calendar"
               name="categoryId"
-              label="*Sub Calendar"
+              label="*Sub Calendar:"
             />
+            {['ASEP Calendar']
+            .includes(categories
+                      .find((x) => x.id === values.categoryId)?.name || '')
+                       && 
+        <>
+         <Divider/>
+         <Grid>
+            <Grid.Row>
+            <Grid.Column width={1}>
+                      <strong>
+                        IMC:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={15}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="imc" label="Add to Integrated Master Calendar"/>
+            </SemanticForm.Group>
+            <i>For Directorates only (e.g. CSL, PKSOI, SSI, USAG) Copies event from 
+                directorate calendar to IMC. Add event to give CMD Gro up Situational Awareness (SI). External coordination needed.
+              </i>
+            </Grid.Column>
+            </Grid.Row>
+           
+           </Grid>
+           <Divider/>
+           </>
+          }
 
              <MyTextInput
                 name="hyperlink"
                 placeholder="https://"
-                label="Public Hyperlink (CBKS online links are not available to the public)"
+                label="Public Hyperlink: (CBKS online links are not available to the public)"
               />
 
              <MyTextInput
                 name="hyperlinkDescription"
                 placeholder="desciption for the link"
-                label="Public Hyperlink Description"
+                label="Public Hyperlink Description:"
               />
-               
+            <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'Undetermined', value: 'Undetermined' },
+                {text: 'Unclassified', value: 'Unclassified' },
+                {text: 'Secret', value: 'Secret' },
+                {text: 'Top Secret', value: 'Top Secret' },
+                {text: 'TS-SCI', value: 'TS-SCI' },
+              ]}
+              placeholder="Event Clearance Level"
+              name="eventClearanceLevel"
+              label="Event Clearance Level:"
+            />
+
+          <Divider/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={3}>
+                      <strong>
+                      MFP:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={13}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="mfp" label="Only for Military Family Program 'MFP' Personnel"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+
+
+             <Divider/>
+            <Grid>
+            <Grid.Row>
+            <Grid.Column width={3}>
+                      <strong>
+                        Request Presence:
+                      </strong>
+                    </Grid.Column>
+            <Grid.Column width={13}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="commandantRequested" label="Commandant"/>
+              <MySemanticCheckBox name="dptCmdtRequested" label="Dept Cmdt"/>
+              <MySemanticCheckBox name="provostRequested" label="Provost"/>
+              <MySemanticCheckBox name="cofsRequested" label="Cofs"/>
+              <MySemanticCheckBox name="deanRequested" label="Dean"/>
+              <MySemanticCheckBox name="ambassadorRequested" label="Ambassador"/>
+              <MySemanticCheckBox name="cSMRequested" label="CSM"/>
+            </SemanticForm.Group>
+            <i>Request the presence of the leader. (Sends an e-mail invite to the leader's admin assistant.)</i>
+            </Grid.Column>
+            </Grid.Row>
+           </Grid>
+           <Divider/>
+
+           <Grid>
+           <Grid.Row>
+            <Grid.Column width={3}>
+                      <strong>
+                       Reports:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={13}>
+            <MySemanticRadioButton
+                        label="None"
+                        value="none"
+                        name="report"
+                      />
+              <MySemanticRadioButton
+                        label="Hosting Report - BG / Flag Officer or above or Civilian Equiv"
+                        value="Hosting Report"
+                        name="report"
+                      />
+              <MySemanticRadioButton
+                        label="Outsiders Report - Important Visitors, COL or Below, that are meeting with students, staff, or faculty"
+                        value="Outsiders Report"
+                        name="report"
+                      />
+            </Grid.Column>
+           </Grid.Row>
+          </Grid>  
+          <Divider />
             <Button
               disabled={isSubmitting}
               loading={isSubmitting}

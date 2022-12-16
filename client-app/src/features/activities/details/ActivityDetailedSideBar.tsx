@@ -1,5 +1,5 @@
 
-import { Segment, Icon, Grid } from 'semantic-ui-react'
+import { Segment, Icon, Grid, List } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity'
 
@@ -10,88 +10,13 @@ interface Props {
 export default observer(function ActivityDetailedSidebar ({activity}: Props) {
     return (
         <Segment.Group>
-            <Segment
+           {/* <Segment
                 textAlign='center'
                 style={{ border: 'none' }}
                 attached='top'
                 secondary
                 inverted
-                color='teal'/>    
-            
-            { activity.category.name != "Academic Calendar" && activity.organization &&
-            <>
-            <Segment attached>
-                <Grid verticalAlign='middle'>
-                    <Grid.Column width={1}>
-                        <Icon name='boxes' size='large' color='teal' />
-                    </Grid.Column>
-                    <Grid.Column width={11}>
-                        <span>Lead Org: {activity.organization?.name}</span>
-                    </Grid.Column>
-                </Grid>
-            </Segment>
-             <Segment attached>
-             <Grid verticalAlign='middle'>
-                 <Grid.Column width={1}>
-                     <Icon name='user' size='large' color='teal' />
-                 </Grid.Column>
-                 <Grid.Column width={11}>
-                     <span>Activity Officer: {activity.actionOfficer}</span>
-                 </Grid.Column>
-             </Grid>
-         </Segment>
-         <Segment attached>
-             <Grid verticalAlign='middle'>
-                 <Grid.Column width={1}>
-                     <Icon name='phone' size='large' color='teal' />
-                 </Grid.Column>
-                 <Grid.Column width={11}>
-                     <span>Action Officer Phone: {activity.actionOfficerPhone}</span>
-                 </Grid.Column>
-             </Grid>
-         </Segment>
-         </>
-          }
-          {activity.coordinatorName &&
-             <Segment attached>
-             <Grid verticalAlign='middle'>
-                 <Grid.Column width={1}>
-                     <Icon name='user' size='large' color='teal' />
-                 </Grid.Column>
-                 <Grid.Column width={11}>
-                     <span>Coordinator: {activity.coordinatorName}</span>
-                 </Grid.Column>
-             </Grid>
-         </Segment>
-          }
-            {activity.coordinatorEmail &&
-             <Segment attached>
-             <Grid verticalAlign='middle'>
-                 <Grid.Column width={1}>
-                     <Icon name='envelope' size='large' color='teal' />
-                 </Grid.Column>
-                 <Grid.Column width={11}>
-                  <a href={`"mailto: ${activity.coordinatorEmail}"`}>
-                     {activity.coordinatorEmail}
-                     </a>
-                 </Grid.Column>
-             </Grid>
-         </Segment>
-          }
-
-        {activity.activityRooms && activity.activityRooms.map(room => (
-         <Segment attached key={room.id}>
-         <Grid verticalAlign='middle'>
-             <Grid.Column width={1}>
-                 <Icon name='map marker' size='large' color='teal' />
-             </Grid.Column>
-             <Grid.Column width={11}>
-                 {room.name}
-             </Grid.Column>
-         </Grid>
-     </Segment>
-       ))}   
-
+    color='teal'/>   */} 
 {activity.activityRooms && activity.activityRooms.length > 0 && activity.numberAttending &&
              <Segment attached>
              <Grid verticalAlign='middle'>
@@ -198,7 +123,82 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
          </Segment>
  }
 
- 
+{activity.eventClearanceLevel &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='spy' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                   Clearance: {activity.eventClearanceLevel}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.communityEvent &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='globe' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                   Community Event
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ } 
+ {activity.mfp &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='calendar check' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                  Military Family Program
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ } 
+ {(activity.commandantRequested || activity.dptCmdtRequested || activity.provostRequested ||
+   activity.cofsRequested || activity.deanRequested || activity.ambassadorRequested ||
+   activity.cSMRequested) && 
+   <Segment attached>
+   <Grid verticalAlign='middle'>
+       <Grid.Column width={1}>
+           <Icon name='users' size='large' color='teal' />
+       </Grid.Column>
+       <Grid.Column width={8}>
+         Leaders Requested: 
+       </Grid.Column>
+       <Grid.Column width={6}>
+       <List >
+            {activity.commandantRequested && <List.Item>Commandant</List.Item> }
+            {activity.dptCmdtRequested && <List.Item>Dept Cmdt</List.Item> }
+            {activity.provostRequested && <List.Item>Provost</List.Item> }
+            {activity.cofsRequested && <List.Item>Cofs</List.Item> }
+            {activity.deanRequested && <List.Item>Dean</List.Item> }
+            {activity.ambassadorRequested && <List.Item>Ambassador</List.Item> }
+            {activity.cSMRequested && <List.Item>CSM</List.Item> }
+       </List>
+       </Grid.Column>
+   </Grid>
+</Segment>
+   }
+
+
+{activity.report && activity.report !== 'none' &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='file' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={11}>
+                   {activity.report}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ } 
 
 </Segment.Group>
     )

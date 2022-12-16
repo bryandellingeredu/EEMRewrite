@@ -44,6 +44,18 @@ export interface Activity{
     g5Organization: string
     hyperlink : string
     hyperlinkDescription : string
+    eventClearanceLevel : string
+    communityEvent: boolean
+    checkedForOpsec: boolean
+    mfp: boolean
+    commandantRequested: boolean
+    dptCmdtRequested: boolean
+    provostRequested: boolean
+    cofsRequested: boolean
+    deanRequested: boolean
+    ambassadorRequested: boolean
+    cSMRequested: boolean
+    report: string
 }
 
 export class Activity implements Activity{
@@ -87,6 +99,18 @@ export class ActivityFormValues{
     g5Organization: string = ''
     hyperlink : string = '';
     hyperlinkDescription : string = '';
+    eventClearanceLevel : string = '';
+    communityEvent : boolean = false;
+    checkedForOpsec : boolean = false;
+    commandantRequested: boolean = false;
+    dptCmdtRequested: boolean = false;
+    provostRequested: boolean = false;
+    cofsRequested: boolean = false;
+    deanRequested: boolean = false;
+    ambassadorRequested: boolean = false;
+    cSMRequested: boolean = false;
+    mfp: boolean = false;
+    report: string = 'none';
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -124,6 +148,18 @@ export class ActivityFormValues{
         this.g5Organization = activity.g5Organization
         this.hyperlink = activity.hyperlink
         this.hyperlinkDescription  = activity.hyperlinkDescription
+        this.eventClearanceLevel = activity.eventClearanceLevel
+        this.communityEvent = activity.communityEvent
+        this.checkedForOpsec = activity.checkedForOpsec
+        this.commandantRequested = activity.commandantRequested
+        this.dptCmdtRequested = activity.dptCmdtRequested
+        this.provostRequested = activity.provostRequested
+        this.cofsRequested = activity.cofsRequested
+        this.deanRequested = activity.deanRequested
+        this.ambassadorRequested = activity.ambassadorRequested
+        this.cSMRequested = activity.cSMRequested
+        this.mfp = activity.mfp
+        this.report = activity.report
        } 
     }
 }

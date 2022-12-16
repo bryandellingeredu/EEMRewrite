@@ -16,6 +16,7 @@ constructor() {
     a.name > b.name ? 1 : -1);
   }
 
+
   get categoryOptions () {
     const options : any = [];
     this.categories.forEach(category => {

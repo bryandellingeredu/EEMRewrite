@@ -305,8 +305,19 @@ export default class ActivityStore {
       g5Calendar: false,
       g5Organization: '',
       hyperlink: '',
-      hyperlinkDescription: ''
-
+      hyperlinkDescription: '',
+      eventClearanceLevel : '',
+      communityEvent: false,
+      checkedForOpsec: false,
+      commandantRequested: false,
+      dptCmdtRequested: false,
+      provostRequested: false,
+      cofsRequested: false,
+      deanRequested: false,
+      ambassadorRequested:  false,
+      cSMRequested: false,
+      mfp: false,
+      report: 'none'
     }
     return activity;
   }

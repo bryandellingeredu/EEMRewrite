@@ -75,6 +75,7 @@ namespace Domain
         public bool CommandantRequested { get; set; }
         public bool DptCmdtRequested { get; set; }
         public bool ProvostRequested { get; set; }
+         public bool CofsRequested { get; set; }
         public bool DeanRequested { get; set; }
         public bool AmbassadorRequested { get; set; }
         public bool CSMRequested { get; set; }
@@ -127,6 +128,7 @@ namespace Domain
 
         public string OtherComments { get; set; }
         public string ApprovedByOPS { get; set; }
+        public bool CheckedForOpsec {get; set;}
 
     }
 }

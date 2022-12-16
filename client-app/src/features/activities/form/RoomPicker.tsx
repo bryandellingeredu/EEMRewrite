@@ -163,7 +163,7 @@ export default observer(function RoomPicker({
       )}
       {!loadingInitial && !graphRoomStore.loadingInitial && (
         <Form.Field error={dirty && roomEmails.length < 1}>
-          <label>Room/s</label>
+          <label>Room/s:</label>
           <Select
             name="roomEmails"
             value={roomOptions.filter(function (option) {
