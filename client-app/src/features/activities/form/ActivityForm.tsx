@@ -24,7 +24,7 @@ import { ActivityFormValues } from "../../../app/models/activity";
 import MyCheckBox from "../../../app/common/form/MyCheckBox";
 import LocationRadioButtons from "./LocationRadioButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPeopleRoof } from "@fortawesome/free-solid-svg-icons";
+import { faBookOpenReader, faPeopleRoof, faPersonRifle } from "@fortawesome/free-solid-svg-icons";
 import RoomPicker from "./RoomPicker";
 import MyTextInput from "../../../app/common/form/MyTextInput";
 import { v4 as uuid } from "uuid";
@@ -256,7 +256,7 @@ export default observer(function ActivityForm() {
         initialValues={activity}
         onSubmit={(values) => handleFormSubmit(values)}
       >
-        {({ handleSubmit, isValid, isSubmitting, dirty, values }) => (
+        {({ handleSubmit, isValid, isSubmitting, dirty, values, handleChange }) => (
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
             <FormObserver />
             <ScrollToFieldError />
@@ -267,8 +267,7 @@ export default observer(function ActivityForm() {
               name="description"
               label="Event Details:"
             />
-
-<Grid>
+          <Grid>
             <Grid.Row>
             <Grid.Column width={3}>
                       <strong>
@@ -282,7 +281,7 @@ export default observer(function ActivityForm() {
             </Grid.Column>
             </Grid.Row>           
            </Grid>
-   <Divider/>
+        <Divider/> 
 
           { values.communityEvent &&
            <Segment inverted color='red'>
@@ -643,7 +642,554 @@ export default observer(function ActivityForm() {
               name="categoryId"
               label="*Sub Calendar:"
             />
-            {['ASEP Calendar']
+
+{ categories.find((x) => x.id === values.categoryId)?.name === 'Garrison Calendar' &&
+  <Segment color ="orange">
+      <Header as="h5" icon textAlign="center" color="orange">
+      <Icon name='building'  />
+      <Header.Content>Garrison Information</Header.Content>
+      </Header>
+
+      <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'ACS', value: 'ACS' },
+                {text: 'Chapel', value: 'Chapel' },
+                {text: 'Command', value: 'Command' },
+                {text: 'CYC', value: 'CYC' },
+                {text: 'DES', value: 'DES' },
+                {text: 'DHR', value: 'DHR' },
+                {text: 'DPTMS', value: 'DPTMS' },
+                {text: 'Emergency Management (EM)', value: 'Emergency Management (EM)' },
+                {text: 'Holiday', value: 'Holiday' },
+                {text: 'MWR', value: 'MWR' },
+              ]}
+              placeholder="Garrison Category"
+              name="garrisonCategory"
+              label="Garrison Category:"
+            />
+
+<Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Marketing Request:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="marketingRequest"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+      <hr color='#f2711c'/>   
+  </Segment>
+}
+
+
+{ categories.find((x) => x.id === values.categoryId)?.name === 'SSL Calendar' &&
+  <Segment color ="green">
+      <Header as="h5" icon textAlign="center" color="green">
+      <FontAwesomeIcon icon={faPersonRifle} size='2x' style={{marginRight: '10px'}} />
+      <Header.Content>SSL Information</Header.Content>
+      </Header>
+
+      <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'SSL', value: 'SSL' },
+                {text: 'DPMSO', value: 'DPMSO' },
+                {text: 'DCLM', value: 'DCLM' },
+                {text: 'DNSS', value: 'DNSS' },
+                {text: 'DDE', value: 'DDE' },
+              ]}
+              placeholder="SSL"
+              name="sslCategories"
+              label="SSL Categories:"
+            />
+      <hr color='#21ba45'/>   
+  </Segment>
+}
+
+{ categories.find((x) => x.id === values.categoryId)?.name === 'USAHEC Facilities Usage Calendar' &&
+  <Segment color ="pink">
+      <Header as="h5" icon textAlign="center" color="pink">
+      <FontAwesomeIcon icon={faBookOpenReader} size='2x' style={{marginRight: '10px'}} />
+      <Header.Content>USAHEC Facilities Usage Information</Header.Content>
+      </Header>
+
+      <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'Army Heritage Center Foundation', value: 'Army Heritage Center Foundation' },
+                {text: 'Education', value: 'Education' },
+                {text: 'Government', value: 'Government' },
+                {text: 'Holiday', value: 'Holiday' },
+                {text: 'Maintenance', value: 'Maintenance' },
+                {text: 'MHINAF', value: 'MHINAF' },
+                {text: 'Non/Profit', value: 'Non/Profit' },
+                {text: 'Public Event', value: 'Public Event' },
+                {text: 'Scouts', value: 'Scouts' },
+                {text: 'Training', value: 'Training' },
+                {text: 'U.S. Army', value: 'U.S. Army' },
+                {text: 'U.S. Army War College', value: 'U.S. Army College' },
+                {text: 'USAHEC Meeting', value: 'USAHEC Meeting' },
+                {text: 'Veteran', value: 'Veteran' },
+              ]}
+              placeholder="Reservation Type"
+              name="usahecFacilityReservationType"
+              label="Reservation Type:"
+            />
+   
+   <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Copy to USAHEC Calendar:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="copyToUSAHECCalendar"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+            
+      <hr color='#e03997'/>   
+  </Segment>
+}
+
+{ categories.find((x) => x.id === values.categoryId)?.name === 'USAHEC Calendar' &&
+  <Segment color ="purple">
+      <Header as="h5" icon textAlign="center" color="purple">
+      <Icon name='book'  />
+      <Header.Content>USAHEC Information</Header.Content>
+      </Header>
+
+      <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'AHM', value: 'AHM' },
+                {text: 'EDU', value: 'EDU' },
+                {text: 'HSD', value: 'HSD' },
+                {text: 'LIB', value: 'LIB' },
+                {text: 'MHI', value: 'MHI' },
+                {text: 'OPS', value: 'OPS' },
+                {text: 'VES', value: 'VES' },
+              ]}
+              placeholder="USAHEC Directorate"
+              name="usahecDirectorate"
+              label="USAHEC Directorate:"
+            />
+
+<MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'Army Heritage Center Foundation', value: 'Army Heritage Center Foundation' },
+                {text: 'Budget', value: 'Budget' },
+                {text: 'Digitization Project', value: 'Digitization Project' },
+                {text: 'Event/Tour', value: 'Event/Tour' },
+                {text: 'Holiday', value: 'Holiday' },
+                {text: 'Maintenance', value: 'Maintenance' },
+                {text: 'Personnel', value: 'Personnel' },
+                {text: 'Training', value: 'Training' },
+                {text: 'U.S. Army War College', value: 'U.S. Army War College' },
+                {text: 'USAHEC Meeting', value: 'USAHEC Meeting' },
+              ]}
+              placeholder="USAHEC Calendar Category"
+              name="usahecCalendarCategory"
+              label="USAHEC Calendar Category:"
+            />
+
+      <hr color='#a33c8'/>   
+  </Segment>
+}
+
+
+           
+           { categories.find((x) => x.id === values.categoryId)?.name === 'CSL Calendar' &&
+
+            <Segment color ="blue">
+            <Header as="h5" icon textAlign="center" color="blue">
+            <Icon name='copyright'  />
+            <Header.Content>CSL Information</Header.Content>
+            </Header> 
+
+            <MySelectInput
+              options={[
+                {text: 'Info', value: 'Info'},
+                {text: 'Event On-Site', value: 'Event On-Site' },
+                {text: 'Event Off-Site', value: 'Event Off-Site' },
+                {text: 'Set Up', value: 'Set Up' },
+                {text: 'Leave', value: 'Leave' },
+                {text: 'TDY', value: 'TDY' },
+                {text: 'Holiday', value: 'Holiday' },
+                {text: 'VTC', value: 'VTC' },
+                {text: 'Task', value: 'Task' },
+                {text: 'Farewell', value: 'Farewell' },
+                {text: 'Highlight', value: 'Highlight' },
+              ]}
+              placeholder="Type of Event"
+              name="type"
+              label="Type of Event:"
+            />
+
+          <MySelectInput
+              options={[
+                {text: 'Blue', value: 'Blue'},
+                {text: 'Red', value: 'Red' },
+                {text: 'Green', value: 'Green' },
+                {text: 'Purple', value: 'Purple' },
+                {text: 'Orange', value: 'Orange' },
+                {text: 'Brown', value: 'Brown' },
+              ]}
+              placeholder="Color for Event"
+              name="color"
+              label="Event Color:"
+            />
+
+          <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      DTI Supported Exercise:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="dti"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Supports Education and/or Simulation:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="education"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      CSL Directorate:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="cslDirectorateCSL" label="CSL"/>
+              <MySemanticCheckBox name="cslDirectorateDSW" label="DSW"/>
+              <MySemanticCheckBox name="cslDirectorateDTI" label="DTI"/>
+              <MySemanticCheckBox name="cslDirectorateOPS" label="OPS"/>
+              <MySemanticCheckBox name="cslDirectorateSLFG" label="SLFG"/>
+              <MySemanticCheckBox name="cslDirectorateFellows" label="Fellows"/>
+            </SemanticForm.Group>
+            <i>Note: Selecting DSW will copy with the event to the DSW Calendar</i>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <MyTextInput
+                name="pax"
+                placeholder="PAX"
+                label="PAX:"
+              />
+
+          
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Room Requirements:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="roomRequirementBasement" label="Basement"/>
+              <MySemanticCheckBox name="roomRequirement1" label="1st Floor"/>
+              <MySemanticCheckBox name="roomRequirement2" label="2nd Floor"/>
+              <MySemanticCheckBox name="roomRequirement3" label="3rd Floor"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+          
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Participation:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="participationCmdt" label="Cmdt Participation"/>
+              <MySemanticCheckBox name="participationGO" label="GO Participation"/>
+              <MySemanticCheckBox name="participationDir" label="Dir, CSL Participation"/>
+              <MySemanticCheckBox name="participationForeign" label="Foreign National Participation"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Automation/VI Support:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="automationProjection" label="Projection"/>
+              <MySemanticCheckBox name="automationCopiers" label="Copiers"/>
+              <MySemanticCheckBox name="automationPC" label="PC Rqmts"/>
+              <MySemanticCheckBox name="automationVTC" label="VTC (3 day notice)"/>
+              <MySemanticCheckBox name="automationTaping" label="Taping Rqmts"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <MyTextArea
+              rows={3}
+              placeholder="Automation Comments / VI Comments"
+              name="automationComments"
+              label="Automation Comments / VI Comments:"
+            />
+
+          <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'Phone Rqmts', value: 'Phone Rqmts' },
+                {text: 'Fax Rqmts', value: 'Fax Rqmts' },
+              ]}
+              placeholder="Communication Support"
+              name="communicationSupport"
+              label="Communication Support:"
+            />
+
+<MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'Unclass', value: 'Unclass' },
+                {text: 'Classified', value: 'Classified' },
+                {text: 'Both (SECRET and Unclass)', value: 'Both (SECRET and Unclass)' },
+              ]}
+              placeholder="Fax Classification"
+              name="faxClassification"
+              label="FAX Classification:"
+            />
+
+       <MyTextArea
+              rows={3}
+              placeholder="Communication Comments"
+              name="communicationComments"
+              label="Communication Comments:"
+            />
+
+        <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Catering Requirements:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="catering"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Catering Area(s):
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="cateringAreaArdennes" label="Ardennes"/>
+              <MySemanticCheckBox name="cateringArea18" label="18th Break Area"/>
+              <MySemanticCheckBox name="cateringArea22" label="22nd Break Area"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Catering Break Area(s):
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="cateringBreakArea18" label="18th Side Break Area"/>
+              <MySemanticCheckBox name="cateringBreakArea22" label="22nd Side Break Area"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+           
+           <MyTextArea
+              rows={3}
+              placeholder="Catering Comments"
+              name="cateringComments"
+              label="Catering Comments:"
+            />
+
+<MySelectInput
+              options={[
+                {text: 'None', value: ''},
+                {text: 'POV', value: 'POV' },
+                {text: 'Rental Car', value: 'Rental Car' },
+                {text: 'TMP Van', value: 'TMP Van' },
+                {text: 'Buses', value: 'Buses' },
+                {text: 'Aviation', value: 'Aviation' },
+              ]}
+              placeholder="None"
+              name="transportation"
+              label="Transportation:"
+            />
+
+<Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Parking Passes:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="parkingPasses" />
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <MyTextInput
+                name="parkingSpaces"
+                placeholder="0"
+                label="Parking Spaces: (Enter the number of parking spaces)"
+              />
+            
+            <MyTextArea
+              rows={3}
+              placeholder="Transportation Comments"
+              name="transportationComments"
+              label="Transportation Comments:"
+            />
+            
+            <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Security:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <MySemanticCheckBox name="securityBadgeIssue" label="Badge Issue"/>
+            <MySemanticCheckBox name="securityAfterDutyAccess" label="After Duty Access"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <MyTextArea
+              rows={3}
+              placeholder="Security Comments"
+              name="securityComments"
+              label="Security Comments:"
+            />
+
+<Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Registration:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="registration"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <MyTextArea
+              rows={3}
+              placeholder="Registration Location"
+              name="registrationLocation"
+              label="Registration Location:"
+            />
+
+          <MyTextArea
+              rows={3}
+              placeholder="Supplies Comments"
+              name="suppliesComments"
+              label="Supplies Comments:"
+            />
+
+         <MyTextArea
+              rows={3}
+              placeholder="Other Comments"
+              name="otherComments"
+              label="Other Comments:"
+            />
+
+<MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'Pending', value: 'Pending' },
+                {text: 'Approved', value: 'Approved' },
+              ]}
+              placeholder="Pending"
+              name="approvedByOPS"
+              label="Approved by OPS:"
+            />
+
+            <hr color='#9ca4fb'/>         
+            </Segment>
+         }
+
+
+            {['ASEP Calendar', 'Garrison Calendar', 'PKSOI Calendar', 
+            'SSI And USAWC Press Calendar', 'SSL Calendar', 'USAHEC Calendar',
+          'USAHEC Facilities Usage Calendar']
             .includes(categories
                       .find((x) => x.id === values.categoryId)?.name || '')
                        && 
@@ -764,6 +1310,9 @@ export default observer(function ActivityForm() {
            </Grid.Row>
           </Grid>  
           <Divider />
+
+       
+
             <Button
               disabled={isSubmitting}
               loading={isSubmitting}

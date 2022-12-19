@@ -104,6 +104,7 @@ namespace Domain
         public bool AutomationProjection { get; set; }
         public bool AutomationCopiers { get; set; }
         public bool AutomationPC { get; set; }
+        public bool AutomationVTC { get; set; }
         public bool AutomationTaping { get; set; }
         public string AutomationComments { get; set; }
         public string CommunicationSupport { get; set; }
@@ -118,6 +119,7 @@ namespace Domain
         public string CateringComments { get; set; }
         public string Transportation { get; set; }
         public bool ParkingPasses { get; set; }
+        public string ParkingSpaces { get; set; }
         public string TransportationComments { get; set; }
         public bool SecurityBadgeIssue { get; set; }
         public bool SecurityAfterDutyAccess { get; set; }
@@ -129,6 +131,12 @@ namespace Domain
         public string OtherComments { get; set; }
         public string ApprovedByOPS { get; set; }
         public bool CheckedForOpsec {get; set;}
-
+        public string GarrisonCategory {get; set;}
+        public bool MarketingRequest {get; set;}
+        public string SSLCategories {get; set;}
+        public string USAHECDirectorate {get; set;}
+        public string USAHECCalendarCategory {get; set;}
+        public string USAHECFacilityReservationType {get; set;}
+        public bool CopyToUSAHECCalendar {get; set;}
     }
 }

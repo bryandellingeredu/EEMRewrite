@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,10 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221219155202_ParkingSpaces")]
+    partial class ParkingSpaces
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,9 +135,6 @@ namespace Persistence.Migrations
                     b.Property<string>("CoordinatorEmail")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("CopyToUSAHECCalendar")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -178,9 +177,6 @@ namespace Persistence.Migrations
                     b.Property<string>("G5Organization")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GarrisonCategory")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Hyperlink")
                         .HasColumnType("nvarchar(max)");
 
@@ -197,9 +193,6 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("MFP")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("MarketingRequest")
                         .HasColumnType("bit");
 
                     b.Property<string>("NumberAttending")
@@ -274,9 +267,6 @@ namespace Persistence.Migrations
                     b.Property<string>("RoomSetUpInstructions")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SSLCategories")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("SecurityAfterDutyAccess")
                         .HasColumnType("bit");
 
@@ -302,15 +292,6 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("USAHECCalendarCategory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("USAHECDirectorate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("USAHECFacilityReservationType")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("VTC")

@@ -56,6 +56,60 @@ export interface Activity{
     ambassadorRequested: boolean
     cSMRequested: boolean
     report: string
+    type: string
+    color: string
+    dti: boolean
+    education: boolean
+    cslDirectorateCSL:	boolean
+    cslDirectorateDSW:	boolean
+    cslDirectorateDTI:	boolean
+    cslDirectorateOPS:	boolean
+    cslDirectorateSLFG:	boolean
+    cslDirectorateFellows:	boolean
+    pax: string
+    roomRequirementBasement: boolean
+    roomRequirement1:	boolean
+    roomRequirement2:	boolean
+    roomRequirement3:	boolean
+    participationCmdt:	boolean
+    participationGO:	boolean
+    participationDir:	boolean
+    participationForeign: boolean
+    automationProjection:	boolean
+    automationCopiers:	boolean
+    automationPC:	boolean
+    automationVTC:	boolean
+    automationTaping:	boolean
+    automationComments: string
+    communicationSupport: string
+    faxClassification: string
+    communicationComments: string
+    catering : boolean
+    cateringAreaArdennes : boolean
+    cateringArea18: boolean
+    cateringArea22: boolean
+    cateringBreakArea18: boolean
+    cateringBreakArea22: boolean
+    cateringComments: string
+    transportation: string
+    parkingPasses: boolean
+    parkingSpaces: string
+    transportationComments: string
+    securityBadgeIssue: boolean
+    securityAfterDutyAccess: boolean
+    securityComments: string
+    registration: boolean
+    registrationLocation: string
+    suppliesComments: string
+    otherComments: string
+    approvedByOPS: string
+    garrisonCategory: string
+    marketingRequest: boolean
+    sslCategories: string
+    usahecDirectorate: string
+    usahecCalendarCategory: string
+    usahecFacilityReservationType: string
+    copyToUSAHECCalendar: boolean
 }
 
 export class Activity implements Activity{
@@ -111,6 +165,60 @@ export class ActivityFormValues{
     cSMRequested: boolean = false;
     mfp: boolean = false;
     report: string = 'none';
+    type: string = 'Event On-Site'
+    color: string = 'Blue'
+    dti: boolean = false
+    education: boolean = false
+    cslDirectorateCSL:	boolean = true
+    cslDirectorateDSW:	boolean = false
+    cslDirectorateDTI:	boolean = false
+    cslDirectorateOPS:	boolean = false
+    cslDirectorateSLFG:	boolean = false
+    cslDirectorateFellows:	boolean = false
+    pax: string = ''
+    roomRequirementBasement: boolean = false
+    roomRequirement1:	boolean = false
+    roomRequirement2:	boolean = false
+    roomRequirement3:	boolean = false
+    participationCmdt:	boolean = false
+    participationGO:	boolean = false
+    participationDir:	boolean = false
+    participationForeign: boolean = false
+    automationProjection:	boolean = false
+    automationCopiers:	boolean = false
+    automationPC:	boolean = false
+    automationVTC:	boolean = false
+    automationTaping:	boolean = false
+    automationComments: string = ''
+    communicationSupport: string = ''
+    faxClassification: string = ''
+    communicationComments: string = ''
+    catering : boolean = false
+    cateringAreaArdennes : boolean = false
+    cateringArea18: boolean = false
+    cateringArea22: boolean = false
+    cateringBreakArea18: boolean = false
+    cateringBreakArea22: boolean = false
+    cateringComments: string = ''
+    transportation: string = ''
+    parkingPasses: boolean = false
+    parkingSpaces: string = ''
+    transportationComments: string = ''
+    securityBadgeIssue: boolean = false
+    securityAfterDutyAccess: boolean = false
+    securityComments: string = ''
+    registration: boolean = false
+    registrationLocation: string = ''
+    suppliesComments: string = ''
+    otherComments: string = ''
+    approvedByOPS: string = 'Pending'
+    garrisonCategory: string = ''
+    marketingRequest: boolean = false
+    sslCategories: string = 'SSL'
+    usahecDirectorate: string = ''
+    usahecCalendarCategory: string = ''
+    usahecFacilityReservationType: string = ''
+    copyToUSAHECCalendar: boolean = false
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -160,6 +268,59 @@ export class ActivityFormValues{
         this.cSMRequested = activity.cSMRequested
         this.mfp = activity.mfp
         this.report = activity.report
+        this.type = activity.type
+        this.color = activity.color
+        this.dti = activity.dti
+        this.education = activity.education
+        this.cslDirectorateCSL = activity.cslDirectorateCSL
+        this.cslDirectorateDSW = activity.cslDirectorateDSW
+        this.cslDirectorateDTI  = activity.cslDirectorateDTI
+        this.cslDirectorateSLFG  = activity.cslDirectorateSLFG
+        this.cslDirectorateFellows = activity.cslDirectorateFellows
+        this.pax = activity.pax
+        this.roomRequirementBasement = activity.roomRequirementBasement
+        this.roomRequirement1 = activity.roomRequirement1
+        this.roomRequirement2 = activity.roomRequirement2
+        this.roomRequirement3 = activity.roomRequirement3
+        this.participationCmdt = activity.participationCmdt
+        this.participationGO  = activity.participationGO
+        this.participationDir = activity.participationDir
+        this.participationForeign = activity.participationForeign
+        this.automationProjection =	activity.automationProjection
+        this.automationCopiers = activity.automationCopiers
+        this.automationPC = activity.automationPC
+        this.automationVTC = activity.automationVTC
+        this.automationTaping = activity.automationTaping
+        this.automationComments = activity.automationComments
+        this.communicationSupport = activity.communicationSupport
+        this.faxClassification = activity.faxClassification
+        this.communicationComments = activity.communicationComments
+        this.catering = activity.catering
+        this.cateringAreaArdennes = activity.cateringAreaArdennes
+        this.cateringArea18 = activity.cateringArea18
+        this.cateringArea22 = activity.cateringArea22
+        this.cateringBreakArea18 = activity.cateringBreakArea18
+        this.cateringBreakArea22 = activity.cateringBreakArea22
+        this.cateringComments = activity.cateringComments
+        this.transportation = activity.transportation
+        this.parkingPasses = activity.parkingPasses
+        this.parkingSpaces = activity.parkingSpaces
+        this.transportationComments = activity.transportationComments
+        this.securityBadgeIssue = activity.securityBadgeIssue
+        this.securityAfterDutyAccess = activity.securityAfterDutyAccess
+        this.securityComments = activity.securityComments
+        this.registration = activity.registration
+        this.registrationLocation = activity.registrationLocation
+        this.suppliesComments = activity.suppliesComments
+        this.otherComments = activity.otherComments
+        this.approvedByOPS = activity.approvedByOPS
+        this.garrisonCategory = activity.garrisonCategory
+        this.marketingRequest = activity.marketingRequest
+        this.sslCategories = activity.sslCategories
+        this.usahecDirectorate = activity.usahecDirectorate
+        this.usahecCalendarCategory = activity.usahecCalendarCategory
+        this.usahecFacilityReservationType = activity.usahecFacilityReservationType
+        this.copyToUSAHECCalendar = activity.copyToUSAHECCalendar
        } 
     }
 }
