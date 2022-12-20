@@ -110,6 +110,14 @@ export interface Activity{
     usahecCalendarCategory: string
     usahecFacilityReservationType: string
     copyToUSAHECCalendar: boolean
+    pocketCalNonAcademicEvent : boolean
+    pocketCalWeek : string
+    pocketCalLessonNumber : string
+    pocketCalPresenter : string
+    pocketCalPresenterOrg : string
+    pocketCalNotes : string
+    imc: boolean
+    educationalCategory: string
 }
 
 export class Activity implements Activity{
@@ -219,6 +227,14 @@ export class ActivityFormValues{
     usahecCalendarCategory: string = ''
     usahecFacilityReservationType: string = ''
     copyToUSAHECCalendar: boolean = false
+    pocketCalNonAcademicEvent : boolean = false
+    pocketCalWeek : string = ''
+    pocketCalLessonNumber : string = ''
+    pocketCalPresenter : string = ''
+    pocketCalPresenterOrg : string = ''
+    pocketCalNotes : string = ''
+    imc : boolean = false
+    educationalCategory: string = 'Leadership & Readiness'
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -321,6 +337,14 @@ export class ActivityFormValues{
         this.usahecCalendarCategory = activity.usahecCalendarCategory
         this.usahecFacilityReservationType = activity.usahecFacilityReservationType
         this.copyToUSAHECCalendar = activity.copyToUSAHECCalendar
+        this.pocketCalNonAcademicEvent = activity.pocketCalNonAcademicEvent
+        this.pocketCalWeek = activity.pocketCalWeek
+        this.pocketCalLessonNumber = activity.pocketCalLessonNumber
+        this.pocketCalPresenter = activity.pocketCalPresenter
+        this.pocketCalPresenterOrg = activity.pocketCalPresenterOrg
+        this.pocketCalNotes = activity.pocketCalNotes
+        this.imc = activity.imc
+        this.educationalCategory = activity.educationalCategory
        } 
     }
 }

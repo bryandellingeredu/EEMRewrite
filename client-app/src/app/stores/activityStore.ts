@@ -372,6 +372,14 @@ export default class ActivityStore {
       usahecCalendarCategory: '',
       usahecFacilityReservationType: '',
       copyToUSAHECCalendar: false,
+      pocketCalNonAcademicEvent: false,
+    pocketCalWeek: '',
+    pocketCalLessonNumber: '',
+    pocketCalPresenter: '',
+    pocketCalPresenterOrg: '',
+    pocketCalNotes: '',
+    imc: false,
+    educationalCategory: '',
     }
     return activity;
   }

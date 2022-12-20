@@ -138,5 +138,11 @@ namespace Domain
         public string USAHECCalendarCategory {get; set;}
         public string USAHECFacilityReservationType {get; set;}
         public bool CopyToUSAHECCalendar {get; set;}
+        public bool PocketCalNonAcademicEvent {get; set;}
+        public string PocketCalWeek {get; set;}
+        public string PocketCalLessonNumber {get; set;}
+        public string PocketCalPresenter {get; set;}
+        public string PocketCalPresenterOrg {get; set;}
+        public string PocketCalNotes {get; set;}
     }
 }

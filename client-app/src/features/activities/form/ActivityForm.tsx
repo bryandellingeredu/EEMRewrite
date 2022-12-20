@@ -643,6 +643,121 @@ export default observer(function ActivityForm() {
               label="*Sub Calendar:"
             />
 
+{ categories.find((x) => x.id === values.categoryId)?.name === 'Weekly Pocket Calendar' &&
+  <Segment color ="teal">
+      <Header as="h5" icon textAlign="center" color="teal">
+      <Icon name='calendar'  />
+      <Header.Content>Weekly Pocket Calendar Information</Header.Content>
+      </Header>
+
+      <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Pocket Cal Non Academic Event:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="pocketCalNonAcademicEvent"/>
+            </SemanticForm.Group>
+            <i>For Teresa McGuirk Only</i>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+      <MySelectInput
+              options={[
+                {text: 'Pre 0', value: 'Pre 0'},
+                {text: '0', value: '0' },
+                {text: '1', value: '1' },
+                {text: '2', value: '2' },
+                {text: '3', value: '3' },
+                {text: '4', value: '4' },
+                {text: '5', value: '5' },
+                {text: '6', value: '6' },
+                {text: '7', value: '7' },
+                {text: '8', value: '8' },
+                {text: '9', value: '9' },
+                {text: '10', value: '10' },
+                {text: '11', value: '11' },
+                {text: '12', value: '12' },
+                {text: '13', value: '13' },
+                {text: '14', value: '14' },
+                {text: '15', value: '15' },
+                {text: '16', value: '16' },
+                {text: '17', value: '17' },
+                {text: '18', value: '18' },
+                {text: '19', value: '19' },
+                {text: '20', value: '20' },
+                {text: '21', value: '21' },
+                {text: '22', value: '22' },
+                {text: '23', value: '23' },
+                {text: '24', value: '24' },
+                {text: '25', value: '25' },
+                {text: '26', value: '26' },
+                {text: '27', value: '27' },
+                {text: '28', value: '28' },
+                {text: '29', value: '29' },
+                {text: '30', value: '30' },
+                {text: '31', value: '31' },
+                {text: '32', value: '32' },
+                {text: '33', value: '33' },
+                {text: '34', value: '34' },
+                {text: '35', value: '35' },
+                {text: '36', value: '36' },
+                {text: '37', value: '37' },
+                {text: '38', value: '38' },
+                {text: '39', value: '39' },
+                {text: '40', value: '40' },
+                {text: '41', value: '41' },
+                {text: '42', value: '42' },
+                {text: '43', value: '43' },
+                {text: '44', value: '44' },
+                {text: '45', value: '45' },
+                {text: '46', value: '46' },
+                {text: '47', value: '47' },
+                {text: '48', value: '48' },
+                {text: '49', value: '49' },
+                {text: '50', value: '50' },
+              ]}
+              placeholder="Week"
+              name="pocketCalWeek"
+              label="Week:"
+            />
+
+            <MyTextInput
+                name="pocketCalLessonNumber"
+                placeholder="Lesson Number"
+                label="Lesson Number:"
+              />
+
+           <MyTextInput
+                name="pocketCalPresenter"
+                placeholder="Presenter"
+                label="Presenter:"
+              />
+
+             <MyTextInput
+                name="pocketCalPresenterOrg"
+                placeholder="Presenter Org"
+                label="Presenter Org:"
+              />
+
+<MyTextArea
+              rows={3}
+              placeholder="Notes"
+              name="pocketCalNotes"
+              label="Notes:"
+            />
+
+
+      <hr color='#00b5ad'/>   
+  </Segment>
+}
+
+
 { categories.find((x) => x.id === values.categoryId)?.name === 'Garrison Calendar' &&
   <Segment color ="orange">
       <Header as="h5" icon textAlign="center" color="orange">
@@ -1189,7 +1304,7 @@ export default observer(function ActivityForm() {
 
             {['ASEP Calendar', 'Garrison Calendar', 'PKSOI Calendar', 
             'SSI And USAWC Press Calendar', 'SSL Calendar', 'USAHEC Calendar',
-          'USAHEC Facilities Usage Calendar']
+          'USAHEC Facilities Usage Calendar', 'Weekly Pocket Calendar', 'CSL Calendar']
             .includes(categories
                       .find((x) => x.id === values.categoryId)?.name || '')
                        && 
@@ -1258,6 +1373,19 @@ export default observer(function ActivityForm() {
             </Grid.Row>           
            </Grid>
 
+          { values.mfp && <MySelectInput
+              options={[
+                {text: 'No Color', value: ''},
+                {text: 'Leadership & Readiness', value: 'Leadership & Readiness' },
+                {text: 'Personal Finance Management', value: 'Personal Finance Management' },
+                {text: 'Personal Growth and Fitness', value: 'Personal Growth and Fitness' },
+                {text: 'Family Growth & Resiliency', value: 'Family Growth & Resiliency' },
+                {text: 'TS-SCI', value: 'TS-SCI' },
+              ]}
+              placeholder="No Color"
+              name="educationalCategory"
+              label="Educational Category:"
+            /> }
 
              <Divider/>
             <Grid>
