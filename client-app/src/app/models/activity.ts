@@ -118,6 +118,15 @@ export interface Activity{
     pocketCalNotes : string
     imc: boolean
     educationalCategory: string
+    vtcClassification:	string
+    distantTechPhoneNumber:	string
+    requestorPOCContactInfo: string
+    dialInNumber: 	string
+    siteIDDistantEnd:	string
+    gosesInAttendance :	boolean
+    seniorAttendeeNameRank : string
+    additionalVTCInfo :	string
+    vtcStatus :	string
 }
 
 export class Activity implements Activity{
@@ -235,6 +244,15 @@ export class ActivityFormValues{
     pocketCalNotes : string = ''
     imc : boolean = false
     educationalCategory: string = 'Leadership & Readiness'
+    vtcClassification:	string = ''
+    distantTechPhoneNumber:	string = ''
+    requestorPOCContactInfo: string = ''
+    dialInNumber: 	string = ''
+    siteIDDistantEnd:	string = ''
+    gosesInAttendance :	boolean = false
+    seniorAttendeeNameRank : string = ''
+    additionalVTCInfo :	string = ''
+    vtcStatus :	string = ''
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -345,6 +363,15 @@ export class ActivityFormValues{
         this.pocketCalNotes = activity.pocketCalNotes
         this.imc = activity.imc
         this.educationalCategory = activity.educationalCategory
+        this.vtcClassification = activity.vtcClassification
+        this.distantTechPhoneNumber = activity.distantTechPhoneNumber
+        this.requestorPOCContactInfo = activity.requestorPOCContactInfo
+        this.dialInNumber = activity.dialInNumber
+        this.siteIDDistantEnd = activity.siteIDDistantEnd
+        this.gosesInAttendance = activity.gosesInAttendance
+        this.seniorAttendeeNameRank = activity.seniorAttendeeNameRank
+        this.additionalVTCInfo = activity.additionalVTCInfo
+        this.vtcStatus = activity.vtcStatus
        } 
     }
 }

@@ -65,11 +65,161 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                      <Icon name='tv' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
                  VTC Required
+                 </span>
                  </Grid.Column>
              </Grid>
          </Segment>
  }
+
+     {activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc && 
+      activity.vtcClassification &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
+                 VTC Classification: {activity.vtcClassification}
+                 </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc && 
+      activity.distantTechPhoneNumber &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
+                 VTC Distant Tech Phone : {activity.distantTechPhoneNumber}
+                 </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc && 
+      activity.requestorPOCContactInfo &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
+                 VTC Requestor POC : {activity.distantTechPhoneNumber}
+                 </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc && 
+      activity.dialInNumber &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
+                 VTC Dial-In Number : {activity.dialInNumber}
+                 </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc && 
+      activity.siteIDDistantEnd &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
+                 VTC Site-ID Distant End : {activity.siteIDDistantEnd}
+                 </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc && 
+      activity.gosesInAttendance &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
+                 VTC a GO / SES is in attendance
+                 </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc && 
+      activity.seniorAttendeeNameRank &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
+                 VTC Senior Atendee Name/Rank: {activity.seniorAttendeeNameRank}
+                 </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc && 
+      activity.additionalVTCInfo &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={4}>
+                 <span style={{paddingLeft: '5px'}}>
+                 VTC Info:
+                 </span>
+                 </Grid.Column>
+                 <Grid.Column width={10}>
+                 {activity.additionalVTCInfo}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc && 
+      activity.vtcStatus &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='tv' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
+                 VTC Status: {activity.vtcStatus}
+                 </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
 
 {activity.activityRooms && activity.activityRooms.length > 0 && activity.roomSetUpInstructions &&
              <Segment attached>

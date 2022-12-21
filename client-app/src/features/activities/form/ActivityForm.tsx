@@ -628,10 +628,103 @@ export default observer(function ActivityForm() {
               name="vtc"
               label="VTC: (allow 30 minute set up time)"/>
 
+             {
+                values.vtc && 
+                <Segment inverted color='brown'>
+
+            <MySelectInput
+                options={[
+                  {text: 'N/A', value: ''},
+                  {text: 'UNCLASS ISDN', value: 'UNCLASS ISDN' },
+                  {text: 'UNCLASS IP', value: 'UNCLASS IP' },
+                  {text: 'SECRET IP', value: 'SECRET IP' },
+                  {text: 'Audio Call Only', value: 'Audio Call Only' }
+                ]}
+                placeholder="N/A"
+                name="vtcClassification"
+                label="VTC Classification: (If you don't know the VTC type leave this field blank)"
+              />
+
+                <MyTextInput
+                name="distantTechPhoneNumber"
+                placeholder="Distant Tech Phone Number"
+                label="Distant Tech Phone Number:"
+              />              
+                      
+                <MyTextInput
+                name="requestorPOCContactInfo"
+                placeholder="Enter Name, Phone #"
+                label="Requestor POC Contact Info:"
+              />              
+
+
+                <MyTextInput
+                name="dialInNumber"
+                placeholder="Dial-In Number"
+                label="Dial-In Number: (to be entered by VTC Tech if applicable, DO NOT ENTER SIPRNET IP)"
+              />              
+
+
+                <MyTextInput
+                name="siteIDDistantEnd"
+                placeholder="Site-ID Distant End"
+                label="Site-ID Distant End: (to be entered by VTC Tech if applicable, DO NOT ENTER SIPRNET IP)"
+              />              
+
+
+
+                <Grid>
+                <Grid.Row>
+                <Grid.Column width={4}>
+                          <strong>
+                          GO/SES In Attendance:
+                          </strong>
+                </Grid.Column>
+                <Grid.Column width={12}>
+                <SemanticForm.Group inline>
+                  <MySemanticCheckBox name="gosesInAttendance"/>
+                </SemanticForm.Group>
+                <i>Check if a  General Officer(GO) / Senior Executive (SES) is in attendance her or at the distant end</i>
+                </Grid.Column>
+                </Grid.Row>           
+               </Grid>
+               <Divider/> 
+
+
+                <MyTextInput
+                name="seniorAttendeeNameRank"
+                placeholder="Senior Attendee Name/Rank"
+                label="Senior Attendee Name/Rank: (General Officers receive priority)"
+              />              
+              
+
+          <MyTextArea
+              rows={3}
+              placeholder="Additional VTC Info"
+              name="additionalVTCInfo"
+              label="Additional VTC Info: (Display presentation across vtc - MUST attach presentation (e.g. Powerpoint, Word, PDF)"
+            />
+
+           <MySelectInput
+                options={[
+                  {text: '', value: ''},
+                  {text: 'Tentative', value: 'Tentative' },
+                  {text: 'Confirmed', value: 'Confirmed' },
+                  {text: 'Cancelled', value: 'Cancelled' },
+                ]}
+                placeholder="VTC Status"
+                name="vtcStatus"
+                label="VTC Status: (for VTC Coordinators ONLY)"
+              />
+               </Segment>
+             }
+
               <hr color='purple'/>
               </Segment>
              
               </>
+
+
             )}
                      
            <MySelectInput

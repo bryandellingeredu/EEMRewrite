@@ -144,5 +144,14 @@ namespace Domain
         public string PocketCalPresenter {get; set;}
         public string PocketCalPresenterOrg {get; set;}
         public string PocketCalNotes {get; set;}
+        public string VTCClassification {get; set;}
+        public string DistantTechPhoneNumber {get; set;}
+        public string RequestorPOCContactInfo {get; set;}
+        public string DialInNumber {get; set;}
+        public string SiteIDDistantEnd {get; set;}
+        public bool GOSESInAttendance {get; set;}
+        public string SeniorAttendeeNameRank {get; set;}
+         public string AdditionalVTCInfo {get; set;}
+         public string VTCStatus {get; set;}
     }
 }

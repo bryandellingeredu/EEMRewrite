@@ -380,6 +380,15 @@ export default class ActivityStore {
     pocketCalNotes: '',
     imc: false,
     educationalCategory: '',
+    vtcClassification: '',
+    distantTechPhoneNumber:	'',
+    requestorPOCContactInfo: '',
+    dialInNumber: '',
+    siteIDDistantEnd:	'',
+    gosesInAttendance :	false,
+    seniorAttendeeNameRank : '',
+    additionalVTCInfo :	'',
+    vtcStatus : '',
     }
     return activity;
   }
