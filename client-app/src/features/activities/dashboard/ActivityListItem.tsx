@@ -185,6 +185,12 @@ export default function ActivityListItem({activity}:Props){
           {activity.primaryLocation}
        </Segment>
        }
+       {activity.activityRooms && activity.activityRooms.length > 0 && 
+         <Segment>
+         <Icon name='marker' style={{marginLeft: '10'}}/>
+          {activity.activityRooms.map(x => x.name).join(', ')}
+     </Segment>
+       }
        { activity.category.name !== "Academic Calendar" && activity.organization && 
        <>
       <Segment>       

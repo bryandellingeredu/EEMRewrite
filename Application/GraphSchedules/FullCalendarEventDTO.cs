@@ -20,5 +20,7 @@ namespace Application.GraphSchedules
         public string LeadOrg { get; set; }
         public string ActionOfficer { get; set; }
         public string ActionOfficerPhone { get; set; }
+        public string CoordinatorEmail { get;  set; }
+        public string EventLookup { get;  set; }
     }
 }

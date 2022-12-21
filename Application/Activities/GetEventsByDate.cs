@@ -60,7 +60,9 @@ namespace Application.Activities
                         PrimaryLocation = activity.PrimaryLocation,
                         LeadOrg = activity.Organization?.Name,
                         ActionOfficer = activity.ActionOfficer,
-                        ActionOfficerPhone = activity.ActionOfficerPhone
+                        ActionOfficerPhone = activity.ActionOfficerPhone,
+                        EventLookup = activity.EventLookup,
+                        CoordinatorEmail = activity.CoordinatorEmail
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);

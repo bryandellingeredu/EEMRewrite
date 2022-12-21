@@ -494,7 +494,7 @@ export default observer(function ActivityForm() {
                     options={organizationOptions}
                     placeholder="Lead Org"
                     name="organizationId"
-                    label="*Lead Org:"
+                    label="Lead Org:"
                   />
                   <MyTextInput
                     name="actionOfficer"

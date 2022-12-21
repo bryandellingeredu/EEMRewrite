@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Activities;
 using Microsoft.AspNetCore.Authorization;
 using List = Application.Activities.List;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Routing;
 
 namespace API.Controllers
 {
@@ -60,6 +62,12 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Activity>> DeleteActivity(Guid id) =>
           HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+
+        [HttpGet("GetRoomNames/{eventLookup}/{coordinatorEmail}")]
+        public async Task<ActionResult> GetRoomNames(string eventLookup, string coordinatorEmail) =>
+            HandleResult(await Mediator.Send(
+                new GetRoomNames.Query { EventLookup = eventLookup, CoordinatorEmail = coordinatorEmail }));
+        
 
         [AllowAnonymous]
         [HttpGet("GetEventsByDate/{routeName}")]
