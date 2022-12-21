@@ -458,3 +458,5 @@ API/appsettings.Development.json
 API/appsettings.json
 *.appsettings.Development.json
 *.appsettings.json
+wwwroot/
+*.wwwroot/
