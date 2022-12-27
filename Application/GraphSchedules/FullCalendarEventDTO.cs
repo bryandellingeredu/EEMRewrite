@@ -22,5 +22,6 @@ namespace Application.GraphSchedules
         public string ActionOfficerPhone { get; set; }
         public string CoordinatorEmail { get;  set; }
         public string EventLookup { get;  set; }
+        public string CategoryName { get; set; }
     }
 }

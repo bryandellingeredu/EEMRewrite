@@ -47,5 +47,15 @@ constructor() {
     }
   }
 
+  getAcademicCalendarCategory = async() => {
+    try{
+       const categories = await this.loadCategories();
+       const academicCategory = categories.find(x => x.name === 'Academic Calendar');
+       return academicCategory;
+    } catch(error){
+      console.log(error);
+    }
+  }
+
   setLoadingInitial = (state: boolean) => this.loadingInitial = state;
 }

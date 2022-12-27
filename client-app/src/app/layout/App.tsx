@@ -20,6 +20,7 @@ import LoadingComponent from './LoadingComponent';
 import RegisterSuccess from '../../features/users/RegisterSuccess';
 import ConfirmEmail from '../../features/users/ConfirmEmail';
 import RoomCalendar from '../../features/fullCalendar/RoomCalendar';
+import IMCCalendarDashboard from '../../features/fullCalendar/IMCCalendarDashboard';
 
 function App() {
   const location = useLocation();
@@ -51,6 +52,7 @@ function App() {
               <Switch>
                 <Route exact path={`${process.env.PUBLIC_URL}/activities`} component={ActivityDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/academiccalendar`} component={AcademicCalendarDashboard}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/imccalendar`} component={IMCCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/genericcalendar/:id`} component={GenericCalendar}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/roomcalendar/:id`} component={RoomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/rooms`} component={RoomDashboard}/>

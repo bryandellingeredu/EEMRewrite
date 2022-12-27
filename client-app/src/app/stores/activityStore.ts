@@ -73,7 +73,16 @@ export default class ActivityStore {
               end: activity.end,
               allDay: activity.allDayEvent,
               id: activity.id,
-              categoryId: activity.categoryId
+              categoryId: activity.categoryId,
+              color: '',
+              description: '',
+              primaryLocation: '',
+              leadOrg: '',
+              actionOfficer: '',
+              actionOfficerPhone: '',
+              categoryName: '',
+              eventLookup: '',
+              coordinatorEmail: ''
             });
         })
       })
@@ -84,9 +93,23 @@ export default class ActivityStore {
     }
   }
 
+  getIMCalendarEvents = async(start: string, end: string) =>{
+    try{
+       const academicCategory = await store.categoryStore.getAcademicCalendarCategory();
+       const academicEvents  = await(this.getAcademicCalendarEvents(start, end));
+       const newAcademicEvents = academicEvents!.map(obj  => (
+        { ...obj, categoryId: academicCategory!.id, categoryName: 'Academic Calendar' }
+        ))
+       const nonAcademicEvents  = await(agent.Activities.getIMCEventsByDate(start, end));
+       const allEvents  = newAcademicEvents?.concat(nonAcademicEvents)
+       return allEvents;
+    } catch(error){
+      console.log(error);
+    }
+  }
+
   loadActivites = async (day? : Date) => {
     if (typeof day !== 'undefined') {
-      debugger;
       this.day = day;
   }
     const categoryStore = store.categoryStore;

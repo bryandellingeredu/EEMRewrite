@@ -9,8 +9,10 @@ namespace Domain
     public class Category
     {
         public Guid Id { get; set; }
-        public String Name { get; set; }
-        public String RouteName { get; set; }
+        public string Name { get; set; }
+        public string RouteName { get; set; }
+        public string IMCColor {get; set;}
+        public bool IncludeInIMC {get; set;}
         public List<Activity> Activities { get; set; }
     }
 }

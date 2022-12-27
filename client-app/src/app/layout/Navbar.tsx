@@ -67,11 +67,6 @@ export default observer(function Navbar() {
             </Menu.Item>
               <Dropdown item text="Department Calendars" scrolling >
                 <Dropdown.Menu>
-                  <Dropdown.Item
-                    text="Academic"
-                    as={Link}
-                    to={`${process.env.PUBLIC_URL}/academiccalendar`}
-                  />
                   {categories.filter(x => x.routeName).map((category) => (
                     <Dropdown.Item key={category.id}
                      text={category.name}   as={Link} 
@@ -87,7 +82,22 @@ export default observer(function Navbar() {
                     <Dropdown.Item key={room.id} text={room.displayName}   as={Link}   to={`${process.env.PUBLIC_URL}/roomcalendar/${room.id}`}  />
                   ))}
                 </Dropdown.Menu>
-              </Dropdown>             
+              </Dropdown>  
+              <Dropdown item text="IMC Calendars" >
+                <Dropdown.Menu>           
+                   <Dropdown.Item
+                    text="Integrated Master Calendar (IMC)"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/imccalendar`}
+                  />
+                  <Dropdown.Item
+                    text="Academic"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/academiccalendar`}
+                  />
+                
+                </Dropdown.Menu>
+              </Dropdown>           
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
               Rooms
             </Menu.Item>

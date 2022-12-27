@@ -50,7 +50,8 @@ export default observer(function HomePage(){
          { process.env.REACT_APP_SERVER_TYPE === 'CAC' && 
          <>
         <Divider inverted />
-        <Header as ='h4' inverted content = 'Or if you do not have an edu account login with your CAC (you must have a compass account to do this)'/>
+        <Header as ='h4'
+         inverted content = 'Or if you do not have an edu account login with your CAC'/>
         <Divider inverted />
         <Button onClick={signInCacUser} loading = {loadingInitial}>
            Sign In With CAC

@@ -14,6 +14,7 @@ import { GraphScheduleRequest } from '../models/graphScheduleRequest';
 import { NonDepartmentRoomReservationRequest } from '../models/nonDepartmentRoomReservationRequest';
 import { Recurrence } from '../models/recurrence';
 import { User, UserFormValues } from '../models/user';
+import { CalendarEvent } from '../models/calendarEvent';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -124,7 +125,8 @@ const Activities = {
             '/activities/reserveNonDepartmentRoom', room ),
     listPossibleByRecurrence: (recurrence: Recurrence) => axiosRequest.post<Activity[]>('/activities/listPossibleByRecurrence', recurrence),
     getByRoom: (title: string, start: string, end: string) => axiosRequest.get<Activity>(`/activities/getByRoom/${title}/${start}/${end}`),
-    getRoomNames: (eventLookup: string, coordinatorEmail: string) => axiosRequest.get<string>(`/activities/getRoomNames/${eventLookup}/${coordinatorEmail}`)
+    getRoomNames: (eventLookup: string, coordinatorEmail: string) => axiosRequest.get<string>(`/activities/getRoomNames/${eventLookup}/${coordinatorEmail}`),
+    getIMCEventsByDate: (start: string, end: string) => axiosRequest.get<CalendarEvent[]>(`/activities/getIMCEventsByDate?start=${start}&end=${end}`)
 }
 
 const Categories = {

@@ -77,5 +77,14 @@ namespace API.Controllers
             string end = Request.Query["end"];
             return HandleResult(await Mediator.Send(new GetEventsByDate.Query { RouteName = routeName, Start = start, End = end }));
         }
+
+        [AllowAnonymous]
+        [HttpGet("getIMCEventsByDate")]
+        public async Task<ActionResult> GetIMCEvents(string routeName)
+        {
+            string start = Request.Query["start"];
+            string end = Request.Query["end"];
+            return HandleResult(await Mediator.Send(new GetIMCEventsByDate.Query { Start = start, End = end }));
+        }
     }
 }
