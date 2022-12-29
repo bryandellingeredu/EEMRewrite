@@ -10,10 +10,11 @@ namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
     {
-        [AllowAnonymous]
+    
         [HttpGet]
         public async Task<IActionResult> GetActivities() =>
          HandleResult(await Mediator.Send(new List.Query()));
+
 
         [HttpGet("getByDay/{day}")]
         public async Task<IActionResult> GetActivities(string day)

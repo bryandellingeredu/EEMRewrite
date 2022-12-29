@@ -32,7 +32,7 @@ export default observer(function HomePage(){
     <Header as ='h2' inverted content = 'Welcome to the Enterprise Event Manager '/>
     {userStore.isLoggedIn ? (
 
-        <Button as={Link} to={`${process.env.PUBLIC_URL}/activities`} size='huge' inverted>
+        <Button as={Link} to={`${process.env.PUBLIC_URL}/activityTable`} size='huge' inverted>
         Go to Events
     </Button>
            

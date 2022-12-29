@@ -115,6 +115,7 @@ const GraphEvents = {
 
 const Activities = {
     list: (day: Date) => axiosRequest.get<Activity[]>(`/activities/getByDay/${day.toISOString()}`),
+    listTen: (day: Date) => axiosRequest.get<Activity[]>(`/activities/getTen/${day.toISOString()}`),
     details: (id: string) => axiosRequest.get<Activity>(`/activities/${id}`),
     create: (activity: Activity) => axiosRequest.post<void>('/activities', activity),
     update: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/${id}`, activity),

@@ -21,6 +21,7 @@ import RegisterSuccess from '../../features/users/RegisterSuccess';
 import ConfirmEmail from '../../features/users/ConfirmEmail';
 import RoomCalendar from '../../features/fullCalendar/RoomCalendar';
 import IMCCalendarDashboard from '../../features/fullCalendar/IMCCalendarDashboard';
+import activityTable from '../../features/activities/table/activityTable';
 
 function App() {
   const location = useLocation();
@@ -50,6 +51,7 @@ function App() {
              <Navbar /> 
             <Container style={{marginTop: '7em'}}>  
               <Switch>
+                <Route exact path={`${process.env.PUBLIC_URL}/activityTable`} component={activityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/activities`} component={ActivityDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/academiccalendar`} component={AcademicCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar`} component={IMCCalendarDashboard}/>

@@ -108,6 +108,57 @@ export default class ActivityStore {
     }
   }
 
+  loadActivitiesForTable = async(day? : Date) => {
+    if (typeof day !== 'undefined') {
+      this.day = day;
+    }
+    const categoryStore = store.categoryStore;
+    this.setLoadingInitial(true);
+    try{
+      const categories: Category[] = await categoryStore.loadCategories(); 
+      const axiosResponse: Activity[] = await agent.Activities.listTen(this.day);
+    } catch(error){
+
+    }
+  }
+
+
+  getActivities = async( day : Date) =>{
+    let activities : Activity[] = []
+    const categoryStore = store.categoryStore;
+    try{
+      const categories: Category[] = await categoryStore.loadCategories();
+      const axiosResponse: Activity[] = await agent.Activities.list(day); 
+      runInAction(() => {
+        axiosResponse.forEach(response => {
+          response.start = new Date(response.start);
+          response.end = new Date(response.end);
+          activities.push(response);
+        })
+      })
+      if (agent.IsSignedIn()) {
+        const start = store.commonStore.convertDateToGraph(store.commonStore.addDays(day, -10), true, false);
+        const end = store.commonStore.convertDateToGraph(store.commonStore.addDays(day, 10), true, true);
+        const graphResponse: GraphEvent[] = await agent.GraphEvents.listForCalendar(start, end);
+        runInAction(() => {
+          graphResponse.forEach(graphEvent => {
+            const activity: Activity = this.convertGraphEventToActivity(
+              graphEvent, categories.find(x => x.name === "Academic Calendar")!);
+            activity.category.id = activity.categoryId
+            activity.category.name = 'Academic Calendar'
+            //activity.start = store.commonStore.convertUTCtoEST(activity.start)
+            //activity.end = store.commonStore.convertUTCtoEST(activity.end)
+           activities.push(activity);
+          })
+        })
+      }
+      return activities
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   loadActivites = async (day? : Date) => {
     if (typeof day !== 'undefined') {
       this.day = day;

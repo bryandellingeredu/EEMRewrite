@@ -48,7 +48,6 @@ isWheelChairAccessible: ''
     });
 
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-      console.log(clickInfo);
       getActivityIdByRoom( clickInfo.event.title, clickInfo.event.startStr, clickInfo.event.endStr).then((activity) => {
         if(!activity || activity.id === '00000000-0000-0000-0000-000000000000' ){
           toast.info(`Event ${clickInfo.event.title} is reserved in outlook only, there is no eem information`, {
@@ -68,37 +67,42 @@ isWheelChairAccessible: ''
       });
     }, [categories, history]);
 
-    const handleMouseEnter = (arg : any) =>{
-      tippy(arg.el, {
-        content: `<strong> 
-        ${ 
-          arg.event.allDay ?
-          format(arg.event.start, 'MM/dd') :
-          format(arg.event.start, 'h:mm aa')} - ${format(arg.event.end, 'h:mm aa')
-        }</strong>              
-        <p> <span>${arg.event.title}</span></p>
-        ${arg.event.color === 'Green' ? '(Reservation Approved)' : '(Reservation Pending)'}`,
-        allowHTML: true,
-      });
+    const handleMouseEnter = async (arg : any) =>{
+      let content =  `<p><strong> 
+      ${ 
+        arg.event.allDay ?
+        format(arg.event.start, 'MM/dd') :
+        format(arg.event.start, 'h:mm aa')} - ${format(arg.event.end, 'h:mm aa')
+      }</strong></p>             
+      <p> <span>${arg.event.title}</span></p>
+      ${arg.event.backgroundColor === 'Green' ? '(Reservation Approved)' : '(Reservation Pending)'}`;
+
+     var tooltip : any = tippy(arg.el, {     
+      content,
+      allowHTML: true,
+    });
+
+      try {
+        const activity =  await getActivityIdByRoom( arg.event.title, arg.event.startStr, arg.event.endStr)
+        if(activity && activity.id !== '00000000-0000-0000-0000-000000000000' ){
+          const activityContent  = ` <p></p>
+          ${activity.description ?'<p><strong>Description: <strong>' + activity.description + '</p>' : '' }
+          ${activity.category ?'<p><strong>Sub Calendar: <strong>' + activity.category.name + '</p>' : '' }
+          ${activity.organization?.name ? '<p><strong>Lead Org: <strong>' + activity.organization?.name + '</p>' : '' }
+          ${activity.actionOfficer ? '<p><strong>Action Officer: <strong>' + activity.actionOfficer + '</p>' : ''}
+          ${activity.actionOfficerPhone ?'<p><strong>Action Officer Phone: <strong>' + activity.actionOfficerPhone + '</p>' : ''}
+           `;
+
+          content = content + activityContent
+          tooltip.setContent(content);
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
   }
 
-    function renderEventContent(info : any) {
-      if(info.view.type === 'dayGridMonth' && !info.event.allDay)
-      {
-     return (
-        <Popup
-         content={info.event.title}
-         header={info.event.allDay ? `${format(info.event.start, 'MM/dd')} ${info.event.color === 'Green' ? '(Reservation Approved)' : '(Reservation Pending)'}` : 
-         `${format(info.event.start, 'h:mm aa')} - ${format(info.event.end, 'h:mm aa')}  ${info.event.color === 'Green' ? '(Reservation Approved)' : '(Reservation Pending)'}`}
-         trigger={
-            <Header size='tiny'
-            color={info.event.allDay ? 'yellow': info.event.color === 'Green' ? 'green' : 'orange'}
-             content={`${info.timeText} ${info.event.title}`}
-            style={{overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer'}}
-            />} />
-      )
-    }
-    }
+ 
     
   useEffect(() => {
     if(!graphRooms.length){

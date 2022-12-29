@@ -6,7 +6,8 @@ import { Activity } from '../../../app/models/activity';
 import RecurrenceMessageWrapper from '../recurrenceMessage/RecurrenceMessageWrapper';
 import { useStore } from "../../../app/stores/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faRepeat } from "@fortawesome/free-solid-svg-icons";
+import { useHistory } from 'react-router-dom'
 
 const activityImageStyle = {
     filter: 'brightness(30%)'
@@ -27,6 +28,7 @@ interface Props {
 
 export default observer(function ActivityDetailedHeader({ activity }: Props) {
     const {modalStore} = useStore();
+    const history = useHistory();
     return (
         <Segment.Group>
             <Segment basic attached='top' style={{ padding: '0' }}>
@@ -73,10 +75,30 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                                 }
                                 { activity.activityRooms && activity.activityRooms.map(room => (
                                        <p key={room.id}>{room.name}</p>
-                                ))}                                    
+                                ))}   
+                                { (!activity.activityRooms || activity.activityRooms.length <= 0) && activity.primaryLocation &&
+                                    <p>{activity.primaryLocation}</p>
+                                }                                 
                                 <p>
                                     <strong>{activity.category.name}</strong>
                                 </p>
+
+                                { activity.category.name != "Academic Calendar" && activity.organization && activity.organization?.name &&
+                                  <p>
+                                  <strong>Lead Org: </strong> {activity.organization?.name}
+                                 </p>
+                                }
+
+                                { activity.category.name != "Academic Calendar" && activity.actionOfficer &&
+                                    <p>
+                                    <strong>Action Officer: </strong> {activity.actionOfficer}, {activity.actionOfficerPhone} 
+                                   </p>
+                                }      
+                                { activity.category.name != "Academic Calendar" && (activity.coordinatorName || activity.coordinatorEmail) &&
+                                    <p>
+                                    <strong>Coordinator: </strong> {activity.coordinatorName}  <a href={`"mailto: ${activity.coordinatorEmail}"`} style={{color: 'white'}}> {activity.coordinatorEmail}</a>
+                                   </p>
+                                } 
                                 </>
                             </Item.Content>
                         </Item>
@@ -84,6 +106,12 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                 </Segment>
             </Segment>
             <Segment clearing attached='bottom'>
+           <Button icon color='brown' onClick={() => history.goBack()} >
+            <FontAwesomeIcon icon={faBackward} style={{paddingRight: '5px'}} />
+            Back
+           </Button>
+
+
             {activity.recurrenceInd && activity.recurrence &&
       <>
       <Button  icon color='teal' 

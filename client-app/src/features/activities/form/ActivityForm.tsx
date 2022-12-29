@@ -726,7 +726,7 @@ export default observer(function ActivityForm() {
 
 
             )}
-                     
+            <Segment color='purple' inverted>
            <MySelectInput
               options={categoryOptions.filter(
                 (x: any) => x.text !== "Academic Calendar"
@@ -735,6 +735,7 @@ export default observer(function ActivityForm() {
               name="categoryId"
               label="*Sub Calendar:"
             />
+            </Segment>   
 
 { categories.find((x) => x.id === values.categoryId)?.name === 'Weekly Pocket Calendar' &&
   <Segment color ="teal">
@@ -1544,7 +1545,7 @@ export default observer(function ActivityForm() {
             />
             <Button
               as={Link}
-              to={`${process.env.PUBLIC_URL}/activities`}
+              to={`${process.env.PUBLIC_URL}/activityTable`}
               floated="right"
               type="button"
               content="Cancel"

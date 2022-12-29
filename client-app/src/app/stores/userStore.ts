@@ -25,7 +25,7 @@ export default class UserStore {
             store.commonStore.setToken(user.token);
             this.startRefreshTokenTimer(user)
             runInAction(() =>  this.user = user)
-            history.push(`${process.env.PUBLIC_URL}/activities`);
+            history.push(`${process.env.PUBLIC_URL}/activityTable`);
             store.modalStore.closeModal();
             this.user = user;
         } catch (error){
@@ -69,7 +69,7 @@ export default class UserStore {
             store.commonStore.setToken(user.token);
             runInAction(() =>  this.user = user)
             this.setLoadingInitial(false);
-            history.push(`${process.env.PUBLIC_URL}/activities`);
+            history.push(`${process.env.PUBLIC_URL}/activityTable`);
         }catch(errors){
             debugger;
             this.setErrors(errors as string[])
@@ -90,7 +90,7 @@ export default class UserStore {
         store.commonStore.setToken(user.token);
         this.startRefreshTokenTimer(user);
         runInAction(() =>  this.user = user)
-        history.push(`${process.env.PUBLIC_URL}/activities`);
+        history.push(`${process.env.PUBLIC_URL}/activityTable`);
       } catch(error){
         throw error;
       }

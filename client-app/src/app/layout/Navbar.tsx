@@ -61,10 +61,12 @@ export default observer(function Navbar() {
                 content="New EEM Event"
               />
             </Menu.Item>
-
-            <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/activities`}>
-              Today's Events
-            </Menu.Item>
+            <Dropdown item text="Events"  >
+            <Dropdown.Menu>
+              <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/activityTable`} text ="Event List"/>
+              <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/activities`} text ="Today's Events"/>
+            </Dropdown.Menu>    
+            </Dropdown>        
               <Dropdown item text="Department Calendars" scrolling >
                 <Dropdown.Menu>
                   {categories.filter(x => x.routeName).map((category) => (
