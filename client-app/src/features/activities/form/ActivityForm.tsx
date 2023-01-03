@@ -256,7 +256,7 @@ export default observer(function ActivityForm() {
         initialValues={activity}
         onSubmit={(values) => handleFormSubmit(values)}
       >
-        {({ handleSubmit, isValid, isSubmitting, dirty, values, handleChange }) => (
+        {({ handleSubmit, isSubmitting,  values }) => (
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
             <FormObserver />
             <ScrollToFieldError />
@@ -265,7 +265,7 @@ export default observer(function ActivityForm() {
               rows={3}
               placeholder="Description"
               name="description"
-              label="Event Details:"
+              label="Event Details / Description:"
             />
           <Grid>
             <Grid.Row>
@@ -1492,11 +1492,11 @@ export default observer(function ActivityForm() {
             <Grid.Column width={13}>
             <SemanticForm.Group inline>
               <MySemanticCheckBox name="commandantRequested" label="Commandant"/>
-              <MySemanticCheckBox name="dptCmdtRequested" label="Dept Cmdt"/>
+              <MySemanticCheckBox name="dptCmdtRequested" label="DCOM"/>
               <MySemanticCheckBox name="provostRequested" label="Provost"/>
-              <MySemanticCheckBox name="cofsRequested" label="Cofs"/>
+              <MySemanticCheckBox name="cofsRequested" label="COS"/>
               <MySemanticCheckBox name="deanRequested" label="Dean"/>
-              <MySemanticCheckBox name="ambassadorRequested" label="Ambassador"/>
+              <MySemanticCheckBox name="ambassadorRequested" label="AMB"/>
               <MySemanticCheckBox name="cSMRequested" label="CSM"/>
             </SemanticForm.Group>
             <i>Request the presence of the leader. (Sends an e-mail invite to the leader's admin assistant.)</i>
@@ -1509,7 +1509,7 @@ export default observer(function ActivityForm() {
            <Grid.Row>
             <Grid.Column width={3}>
                       <strong>
-                       Reports:
+                       Hosting / Visitor Report:
                       </strong>
             </Grid.Column>
             <Grid.Column width={13}>
@@ -1519,12 +1519,12 @@ export default observer(function ActivityForm() {
                         name="report"
                       />
               <MySemanticRadioButton
-                        label="Hosting Report - BG / Flag Officer or above or Civilian Equiv"
+                        label="Hosting Report (BG (O7) and Above or Civilian SES Equivalent"
                         value="Hosting Report"
                         name="report"
                       />
               <MySemanticRadioButton
-                        label="Outsiders Report - Important Visitors, COL or Below, that are meeting with students, staff, or faculty"
+                        label="Outsiders Report - Important Visitors, O6 or Below"
                         value="Outsiders Report"
                         name="report"
                       />

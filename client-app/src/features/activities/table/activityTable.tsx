@@ -1,12 +1,18 @@
 import { observer } from "mobx-react-lite";
 import InfiniteScroll from "react-infinite-scroller";
-import { Button, Divider, Header, Icon, Table } from "semantic-ui-react";
+import { Button, Divider, Grid, Header, Icon, Table } from "semantic-ui-react";
 import {useEffect, useState} from 'react';
 import { useStore } from "../../../app/stores/store";
 import { format } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from 'react-router-dom'
+import { Form, Formik } from "formik";
+import MyTextInput from "../../../app/common/form/MyTextInput";
+import MyDateInput from "../../../app/common/form/MyDateInput";
+import MyMultiSelectInput from "../../../app/common/form/MyMultiSelectInput";
+import { SearchFormValues } from "../../../app/models/searchFormValues";
+import { v4 as uuid } from "uuid";
 
 interface TableData{
   id: string
@@ -14,90 +20,45 @@ interface TableData{
   title: string
   start: string
   end: string
+  startAsDate: Date
+  endAsDate: Date
   actionOfficer: string
   leadOrg: string
   subCalander: string
   location: string
 }
 
+
 export default observer(function ActivityTable(){
   const [loadingNext, setLoadingNext] = useState(false)
   const [day, setDay] = useState(new Date())
   const [tableData, setTableData] = useState<TableData[]>([]);
   const [thereIsNoMoreData, setThereIsNoMoreData] = useState(false);
-  const {commonStore, activityStore} = useStore();
+  const {commonStore, activityStore, categoryStore} = useStore();
   const {addDays} = commonStore;
-  const {getActivities} = activityStore;
+  const {getActivities, getActivitiesBySearchParams} = activityStore;
+  const [submitting, setSubmitting] = useState(false);
   const history = useHistory();
+  const { categoryOptions, loadCategories } = categoryStore;
 
-  async function handleGetNext(){
+  
+  async function loadData(d : Date, numOfRecords: number){
     setLoadingNext(true);
     let combinedData : TableData[] = [];
-    let theDay = day;
-    const newDay = addDays(day,1);
     let counter = 0;
-    while(combinedData.length < 5 && counter <= 10){
+    while(combinedData.length < numOfRecords && counter <= 10){
       counter = counter + 1;
       if(counter >= 10){
         setThereIsNoMoreData(true);
       }
-      theDay = addDays(theDay, 1)
-      setDay(theDay)
-      const activities = await getActivities(theDay);
+      d = addDays(d, 1)
+      setDay(d)
+      const activities = await getActivities(d);
       if(activities && activities.length){
         counter = 0;
         let newTableDataArray : TableData[] = [];
         activities.forEach((activity) =>{
-          if(isTheDay(activity.start, theDay))
-          {
-          let newTableData : TableData = {
-            id: activity.id,
-            categoryId: activity.categoryId,
-            title: activity.title,
-            start: format(activity.start, 'MM/dd h:mma' ),
-            end: format(activity.end, 'MM/dd h:mma'),
-            actionOfficer: activity.actionOfficer,
-            leadOrg: activity.organization?.name || '',
-            subCalander: activity.category.name,
-            location: activity.activityRooms && activity.activityRooms.length > 0 ? activity.activityRooms.map(x => x.name).join(', ') : activity.primaryLocation
-          }
-          newTableDataArray.push(newTableData);
-          }
-        })       
-        combinedData = combinedData.concat(newTableDataArray);
-        setTableData([...tableData, ...combinedData]);
-      }
-    }
-    setDay(newDay);
-    setLoadingNext(false); 
-  }
-
-  const isTheDay = (activityDate : Date, theDay : Date) => {
-    return activityDate.getDate() == theDay.getDate() &&
-    activityDate.getMonth() == theDay.getMonth() &&
-    activityDate.getFullYear() == theDay.getFullYear()
-  }
-
-  useEffect(() => {
-    (async () => {
-      let combinedData : TableData[] = [];
-      let theDay = new Date();
-      theDay = addDays(theDay, -1);
-      setLoadingNext(true);
-      let counter = 0;
-      while(combinedData.length < 20 && counter <= 10){
-      counter = counter + 1;
-      if(counter >= 10){
-        setThereIsNoMoreData(true);
-      }
-      theDay = addDays(theDay, 1)
-      setDay(theDay)
-      const activities = await getActivities(theDay);
-      if(activities && activities.length){
-        counter = 0;
-        let newTableDataArray : TableData[] = [];
-        activities.forEach((activity) =>{
-          if(isTheDay(activity.start, theDay))
+          if(isTheDay(activity.start, d))
           {
           let newTableData : TableData = {
             id: activity.id,
@@ -108,19 +69,85 @@ export default observer(function ActivityTable(){
             actionOfficer: activity.actionOfficer,
             leadOrg: activity.organization?.name || '',
             subCalander: activity.category.name,
-            location: activity.activityRooms && activity.activityRooms.length > 0 ? activity.activityRooms.map(x => x.name).join(', ') : activity.primaryLocation
+            location: activity.activityRooms && activity.activityRooms.length > 0 ? activity.activityRooms.map(x => x.name).join(', ') : activity.primaryLocation,
+            startAsDate: activity.start,
+            endAsDate: activity.end
           }
           newTableDataArray.push(newTableData);
           }
         })       
         combinedData = combinedData.concat(newTableDataArray);
-        setTableData(combinedData);
+        setTableData([...tableData, ...combinedData]);
       }
-      }
-      setLoadingNext(false); 
+    }
+    setLoadingNext(false); 
+  }
+
+  async function handleGetNext(){
+    await loadData(day, 5)
+  }
+
+  const isTheDay = (activityDate : Date, theDay : Date) => {
+    return activityDate.getDate() === theDay.getDate() &&
+    activityDate.getMonth() === theDay.getMonth() &&
+    activityDate.getFullYear() === theDay.getFullYear()
+  }
+
+  useEffect(() => {
+    if(!categoryOptions){
+      loadCategories();
+    }  
+    (async () => {
+      await loadData(addDays(new Date(), -1), 20)
     })();
   }, []);
  
+  function handleFormSubmit(values : SearchFormValues ) {
+    setSubmitting(true);
+    setTableData([]);
+    setThereIsNoMoreData(true);
+    setDay(new Date());
+    getActivitiesBySearchParams(values).then((activities) =>{
+      let newTableDataArray : TableData[] = [];
+      activities!.forEach((activity) =>{
+        let newTableData : TableData = {
+          id: activity.id,
+          categoryId: activity.categoryId,
+          title: activity.title,
+          start: activity.allDayEvent ?  format(activity.start, 'MM/dd' ) : format(activity.start, 'MM/dd h:mma' ),
+          end: activity.allDayEvent ?  format(activity.end, 'MM/dd' ) : format(activity.end, 'MM/dd h:mma' ),
+          actionOfficer: activity.actionOfficer,
+          leadOrg: activity.organization?.name || '',
+          subCalander: activity.category.name,
+          location: activity.activityRooms && activity.activityRooms.length > 0 ? activity.activityRooms.map(x => x.name).join(', ') : activity.primaryLocation,
+          startAsDate: activity.start,
+          endAsDate: activity.end
+        }
+        let dateIsOk = true
+        if(values.start){
+          const start = values.start
+          start.setHours(0,0,0,0)
+          debugger;
+          if(newTableData.startAsDate < start ){
+            dateIsOk = false;
+          }
+         console.log('values.start: ' + values.start + ' startAsDate: ' + newTableData.startAsDate + ' ' + dateIsOk);
+        }
+         if(values.end){
+          const end = values.end
+          end.setHours(23,59,59,999);
+          if(newTableData.endAsDate > end){
+            dateIsOk = false;
+          }
+        } 
+        if(dateIsOk ){
+          newTableDataArray.push(newTableData);
+        }
+      })
+      setTableData(newTableDataArray);
+      setSubmitting(false);
+    })
+  }
 
     return(
       <>
@@ -130,6 +157,70 @@ export default observer(function ActivityTable(){
           Event List
        </Header>
        </Divider>
+
+    <>
+  
+       <Formik
+         initialValues={{title: '', start: new Date(), end: null, categoryIds: []}}
+         onSubmit={(values) => handleFormSubmit(values)}
+       >
+      {({handleSubmit}) => (
+                <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
+                    <Grid verticalAlign='middle'>
+                      <Grid.Row>
+                  
+                        <Grid.Column width={3}>
+                        <MyTextInput name='title'  placeholder="search by title" />
+                       </Grid.Column>
+                       <Grid.Column width={3}>
+                       <MyDateInput
+                           isClearable
+                           placeholderText="event starts after"
+                           name="start"
+                           dateFormat="MMMM d, yyyy"
+                        />
+                       </Grid.Column>
+                       <Grid.Column width={3}>
+                       <MyDateInput
+                           isClearable
+                           placeholderText="event ends before"
+                           name="end"
+                           dateFormat="MMMM d, yyyy"
+                        />
+                       </Grid.Column>
+                       <Grid.Column width={5}>
+                       <MyMultiSelectInput
+                          options = {categoryOptions.map((option: any) => {
+                            return {label: option.text , value: option.value , disabled: false}
+                          })}
+                           placeholder="search categories, may select multiple"
+                           name="categoryIds"
+                        />
+                       </Grid.Column>
+                       <Grid.Column width={2}>
+                        <Button.Group>
+                       <Button icon loading={submitting} color='violet' size='medium' type='submit' >
+                        <Icon name='search'/>
+                       </Button>
+                       <Button
+                icon
+                color='red'
+                size='medium'
+                type='button'
+                onClick={() => window.location.reload()}
+              >
+                <Icon name='x'/>
+              </Button>
+                       </Button.Group>
+                       </Grid.Column>
+                    </Grid.Row>
+                  </Grid>                                  
+                </Form>
+            )}
+       </Formik>
+       <Divider />
+       </>
+
       <InfiniteScroll
       pageStart={0}
       loadMore={handleGetNext}
@@ -152,15 +243,13 @@ export default observer(function ActivityTable(){
 
     <Table.Body>
     {tableData
-    .sort((a, b) => {
-      const dateA = Date.parse(a.start);
-      const dateB = Date.parse(b.start);
-      if (dateA < dateB) return -1;
-      if (dateA > dateB) return 1;
+    .sort((a, b) => { 
+      if (a.startAsDate < b.startAsDate) return -1;
+      if (a.startAsDate > b.startAsDate) return 1;
       return 0;
     })
     .map(item => (
-          <Table.Row key={item.title}  onClick={() => history.push(`${process.env.PUBLIC_URL}/activities/${item.id}/${item.categoryId}`)}>
+          <Table.Row key={uuid()}  onClick={() => history.push(`${process.env.PUBLIC_URL}/activities/${item.id}/${item.categoryId}`)}>
                <Table.Cell>{item.title}</Table.Cell>
                <Table.Cell>{item.start}</Table.Cell>
                <Table.Cell>{item.end}</Table.Cell>

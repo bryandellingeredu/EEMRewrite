@@ -1,6 +1,6 @@
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
-import { useField, useFormik} from 'formik';
+import { useField} from 'formik';
 import { Form, Label } from "semantic-ui-react";
 
 
@@ -27,6 +27,8 @@ export default function MyMultiSelectInput(props: Props) {
     const values = selectedOptions.map((item: Option) => item.value);
     return values;
   }
+
+ 
 
     const getValue = () => {
       if (props.options) {

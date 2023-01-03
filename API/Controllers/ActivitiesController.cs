@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using List = Application.Activities.List;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Routing;
+using System.Reflection;
 
 namespace API.Controllers
 {
@@ -37,6 +38,10 @@ namespace API.Controllers
             return HandleResult(result);
            
         }
+
+        [HttpPost("listBySearchParams")]
+        public async Task<IActionResult> ListBySearchParams(ActivitySearchParams data) =>
+            HandleResult(await Mediator.Send(new ListBySearchParams.Query { Title = data.Title, Start = data.Start, End = data.End, CategoryIds = data.CategoryIds }));
 
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity) =>

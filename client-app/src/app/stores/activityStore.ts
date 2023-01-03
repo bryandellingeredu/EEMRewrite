@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { store } from "./store";
 import { Category } from "../models/category";
 import { GraphLocation } from "../models/graphLocation";
+import { SearchFormValues } from "../models/searchFormValues";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -108,19 +109,6 @@ export default class ActivityStore {
     }
   }
 
-  loadActivitiesForTable = async(day? : Date) => {
-    if (typeof day !== 'undefined') {
-      this.day = day;
-    }
-    const categoryStore = store.categoryStore;
-    this.setLoadingInitial(true);
-    try{
-      const categories: Category[] = await categoryStore.loadCategories(); 
-      const axiosResponse: Activity[] = await agent.Activities.listTen(this.day);
-    } catch(error){
-
-    }
-  }
 
 
   getActivities = async( day : Date) =>{
@@ -158,6 +146,76 @@ export default class ActivityStore {
       console.log(error);
     }
   }
+
+  getActivitiesBySearchParams = async(searchParams : SearchFormValues) => {
+    let activities : Activity[] = [];
+    const categoryStore = store.categoryStore;
+    const categories: Category[] = await categoryStore.loadCategories();
+    const academicCategory = await store.categoryStore.getAcademicCalendarCategory();
+    const academicCategoryId = academicCategory!.id;
+    try{
+      
+    const data = {...searchParams,
+       start: searchParams.start ? format(searchParams.start, 'MM-dd-yyy') : '',
+       end:  searchParams.end ? format(searchParams.end, 'MM-dd-yyy') : ''}
+    const axiosResponse: Activity[] = await agent.Activities.listBySearchParams(data);
+    runInAction(() => {
+      axiosResponse.forEach(response => {
+        response.start = new Date(response.start);
+        response.end = new Date(response.end);
+        activities.push(response);
+      })
+    })
+    if (agent.IsSignedIn() && 
+    (!searchParams.categoryIds || !searchParams.categoryIds.length || searchParams.categoryIds.includes(academicCategoryId))
+    ) {
+       let graphResponse: GraphEvent[] = [];
+        let filter : string = '';
+        if(searchParams.start){
+          const graphStart = store.commonStore.convertDateToGraph(store.commonStore.addDays(searchParams.start, -1), true, false);
+          filter = `start/dateTime ge \'${graphStart}\'`
+        }
+        if(searchParams.end){
+          const graphEnd = store.commonStore.convertDateToGraph(searchParams.end, true, true);
+          if(filter){
+            filter = filter + ` and end/dateTime lt \'${graphEnd}\'`
+          } else{
+            filter = `end/dateTime lt \'${graphEnd}\'`
+          }
+        }
+        if(searchParams.title){
+          if(filter){
+            filter = filter + ` and contains(subject, \'${searchParams.title}\')`
+          } else{
+            filter = `contains(subject, \'${searchParams.title}\')`
+          }
+        }
+        if(filter){
+            graphResponse = await(agent.GraphEvents.listForCalendarUsingFilter(filter))
+        } else {
+          const start = store.commonStore.convertDateToGraph(store.commonStore.addDays(new Date(), -10), true, false);
+          const end = store.commonStore.convertDateToGraph(store.commonStore.addDays(new Date(), 10), true, true);
+          graphResponse = await agent.GraphEvents.listForCalendar(start, end);
+        }
+        runInAction(() => {
+          graphResponse.forEach(graphEvent => {
+            const activity: Activity = this.convertGraphEventToActivity(
+              graphEvent, categories.find(x => x.name === "Academic Calendar")!);
+            activity.category.id = activity.categoryId
+            activity.category.name = 'Academic Calendar'
+           activities.push(activity);
+          })
+        })
+    }
+    return activities
+    }
+    catch (error) {
+      console.log(error);
+    }
+
+  }
+
+ 
 
   loadActivites = async (day? : Date) => {
     if (typeof day !== 'undefined') {

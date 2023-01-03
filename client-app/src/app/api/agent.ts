@@ -87,6 +87,7 @@ const IsSignedIn = () => Providers.globalProvider.state === ProviderState.Signed
 const graphRequests = {
     get: (url: string) => getGraphClient().api(url).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
     getForCalendar: (url: string, start: string, end: string) => getGraphClient().api(url).filter(`start/dateTime ge \'${start}\' and end/dateTime le \'${end}\'`).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
+    getForCalendarUsingFilter: (url: string, filter: string) => getGraphClient().api(url).filter(filter).orderby('start/dateTime').top(100).get().then(graphResponseBody),
     getSingle: (url: string) => getGraphClient().api(url).get().then(graphResponseBody),
     update: (url: string, body:{}) => getGraphClient().api(url).update(body),
     create: (url: string, body:{}) => getGraphClient().api(url).create(body).then(graphResponseBody),
@@ -103,6 +104,7 @@ const axiosRequest = {
 const GraphEvents = {
     list: () => graphRequests.get(academicCalendarURL),
     listForCalendar: (start: string, end: string) => graphRequests.getForCalendar(academicCalendarURL, start, end),
+    listForCalendarUsingFilter: (filter: string) => graphRequests.getForCalendarUsingFilter(academicCalendarURL, filter),
     update: (graphEvent: GraphEvent) => graphRequests.update(`${academicCalendarURL}/${graphEvent.id}`, graphEvent),
     create: (graphEvent: GraphEvent) => graphRequests.create(academicCalendarURL, graphEvent),
     delete: (id: string) =>graphRequests.delete(`${academicCalendarURL}/${id}`),
@@ -115,7 +117,7 @@ const GraphEvents = {
 
 const Activities = {
     list: (day: Date) => axiosRequest.get<Activity[]>(`/activities/getByDay/${day.toISOString()}`),
-    listTen: (day: Date) => axiosRequest.get<Activity[]>(`/activities/getTen/${day.toISOString()}`),
+    listBySearchParams: (data: any) => axiosRequest.post<Activity[]>('/activities/listBySearchParams', data),
     details: (id: string) => axiosRequest.get<Activity>(`/activities/${id}`),
     create: (activity: Activity) => axiosRequest.post<void>('/activities', activity),
     update: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/${id}`, activity),
