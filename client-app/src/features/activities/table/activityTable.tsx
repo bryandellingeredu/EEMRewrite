@@ -98,7 +98,7 @@ export default observer(function ActivityTable(){
       loadCategories();
     }  
     (async () => {
-      await loadData(addDays(new Date(), -1), 20)
+      await loadData(addDays(new Date(), -1), 10)
     })();
   }, []);
  
