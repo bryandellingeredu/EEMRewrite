@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,10 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230103153635_HostingReport2")]
+    partial class HostingReport2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -473,52 +475,13 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("AVSubmitted")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("ActivityId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Arrival")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("BioAttachedOrPending")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Departure")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DietaryRestrictions")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EscortOfficer")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EscortOfficerPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FlagIsFor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("FlagSupport")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("FlagType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ForeignVisitor")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("GenerateItinerary")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("GiftRequirement")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GuestItinerary")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GuestName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GuestOfficePhone")
@@ -545,62 +508,11 @@ namespace Persistence.Migrations
                     b.Property<bool>("HostedLocationWWA")
                         .HasColumnType("bit");
 
-                    b.Property<string>("HostingReportStatus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LocalTransportationNeeded")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LodgingArrangements")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LodgingLocation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("MealRequestBreakfast")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("MealRequestDinner")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("MealRequestLunch")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("MealRequestOther")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ModeOfTravel")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("OfficeCallWithCommandant")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ParkingDetails")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ParkingRequirements")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("PhotographSubmitted")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("PurposeOfVisit")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TravelArrangementDetails")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TravelPartyAccomaniedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UniformOfGuest")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("ViosSupportAV")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ViosSupportPhotography")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

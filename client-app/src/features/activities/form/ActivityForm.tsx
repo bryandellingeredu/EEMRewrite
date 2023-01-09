@@ -11,6 +11,7 @@ import {
   Message,
   Grid,
   Divider,
+  Label,
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -24,7 +25,7 @@ import { ActivityFormValues } from "../../../app/models/activity";
 import MyCheckBox from "../../../app/common/form/MyCheckBox";
 import LocationRadioButtons from "./LocationRadioButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpenReader, faPeopleRoof, faPersonRifle } from "@fortawesome/free-solid-svg-icons";
+import { faBookOpenReader, faFileLines, faPeopleRoof, faPersonRifle } from "@fortawesome/free-solid-svg-icons";
 import RoomPicker from "./RoomPicker";
 import MyTextInput from "../../../app/common/form/MyTextInput";
 import { v4 as uuid } from "uuid";
@@ -38,6 +39,12 @@ import { format } from "date-fns";
 import MySemanticCheckBox from "../../../app/common/form/MySemanticCheckbox";
 import MySemanticRadioButton from "../../../app/common/form/MySemanticRadioButton";
 import ScrollToFieldError from "../../../app/common/form/ScrollToFieldError";
+import { Editor } from "react-draft-wysiwyg";
+import { convertToRaw, EditorState, convertFromRaw} from "draft-js";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { convertToHTML } from "draft-convert";
+import DocumentUploadWidget from "../../../app/common/documentUpload/documentUploadWidget";
+
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -76,6 +83,8 @@ export default observer(function ActivityForm() {
     updateActivity,
     loadActivity,
     loadingInitial,
+    uploadDocument,
+    uploading
   } = activityStore;
   const { categoryOptions, categories, loadCategories } = categoryStore;
   const { graphUser, loadUser } = graphUserStore;
@@ -91,6 +100,8 @@ export default observer(function ActivityForm() {
   const [recurrence, setRecurrence] = useState<Recurrence>(
     new RecurrenceFormValues()
   );
+  const [submitting, setSubmitting] = useState(false);
+  const [attachBioError, setAttachBioError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
   const [roomEmails, setRoomEmails] = useState<string[]>([]);
@@ -108,6 +119,18 @@ export default observer(function ActivityForm() {
   const handleSetRecurrenceInd = (recurrenceInd: boolean) => {
     setRecurrenceInd(recurrenceInd);
   };
+
+  const [editorState, setEditorState] = useState(
+    () => EditorState.createEmpty(),
+  );
+
+  const [bioUrl, setBioUrl] = useState<string>('');
+
+  function handleDocumentUpload(file: any){
+    uploadDocument(file).then((url) => {
+       setBioUrl(url);
+    })
+  }
 
   const validationSchema = Yup.object({
     communityEvent: Yup.boolean(),
@@ -139,7 +162,9 @@ export default observer(function ActivityForm() {
         categories.find((x) => x.name === "Other")?.id,
       otherwise: Yup.string().required("Action Officer is Required"),
     }),
+
   });
+
 
   useEffect(() => {
     if (id) {
@@ -154,6 +179,15 @@ export default observer(function ActivityForm() {
           setRecurrence(response.recurrence);
           setRecurrenceInd(true);
         }
+
+        if (response?.hostingReport?.guestItinerary) {
+          setEditorState(EditorState.createWithContent(
+            convertFromRaw(
+            JSON.parse(response!.hostingReport!.guestItinerary))))
+        } else {
+          setEditorState(EditorState.createEmpty());
+        }
+     
       });
       loadOrganizations();
       loadLocations();
@@ -168,6 +202,24 @@ export default observer(function ActivityForm() {
   }, [isSignedIn]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
+    let hostingReportError = false;
+    setAttachBioError(false);
+    if(activity.report === 'Hosting Report'){
+      if(!activity.hostingReport?.bioAttachedOrPending){
+        setAttachBioError(true);
+        hostingReportError = true;
+        const currentBioAnchor = document.getElementById('currentBioAnchor');
+        if(currentBioAnchor){
+          currentBioAnchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }      
+      }
+    }
+    if(!hostingReportError){
+    setSubmitting(true);
+    if(activity.report === 'Hosting Report'){
+      activity.hostingReport!.guestItinerary = 
+         JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    }
     activity.recurrenceInd = recurrenceInd;
     activity.recurrence = recurrence;
     activity.roomEmails = roomRequired ? roomEmails : [];
@@ -217,6 +269,7 @@ export default observer(function ActivityForm() {
           );
     }
   }
+}
 
   if (
     loadingInitial ||
@@ -1531,13 +1584,213 @@ export default observer(function ActivityForm() {
             </Grid.Column>
            </Grid.Row>
           </Grid>  
+
+          {
+                values.report === 'Hosting Report' && 
+                <Segment inverted color='teal'>
+                    <Header as="h5" icon textAlign="center" >
+      <FontAwesomeIcon icon={faFileLines} size='2x' style={{marginRight: '10px'}} />
+      <Header.Content>Hosting Report Information</Header.Content>
+      </Header>
+            <MyTextArea
+              rows={3}
+              placeholder="Description"
+              name="hostingReport.purposeOfVisit"
+              label="Purpose of Visit / Visit Objectives:"
+            />
+
+           <Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Office Call With Commandant:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="hostingReport.officeCallWithCommandant" label="Only for Military Family Program 'MFP' Personnel"/>
+            </SemanticForm.Group>
+            <i>If yes please coordinate with Ashley </i>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+
+           <Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Primary Location:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="hostingReport.hostedLocationRootHall" label="Root Hall"/>
+              <MySemanticCheckBox name="hostingReport.hostedLocationCollinsHall" label="Collins Hall"/>
+              <MySemanticCheckBox name="hostingReport.hostedLocationAHEC" label="AHEC"/>
+              <MySemanticCheckBox name="hostingReport.hostedLocationCCR" label="CCR"/>
+              <MySemanticCheckBox name="hostingReport.hostedLocationWWA" label="WWA"/>
+            </SemanticForm.Group>
+            <i>Please contact the front office</i>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+
+           <MyTextInput
+                name="hostingReport.escortOfficer"
+                placeholder="full name of the escort officer"
+                label="Escort Officer:"
+              />
+            
+            <MyTextInput
+                name="hostingReport.escortOfficerPhone"
+                placeholder="phone number to contact the escort officer"
+                label="Escort Officer Phone:"
+              />
+
+<MyTextInput
+                name="hostingReport.guestName"
+                placeholder="Guest Full Name"
+                label="Guest Name:"
+              />
+
+           <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'GEN', value: 'GEN' },
+                {text: 'Gen', value: 'Gen' },
+                {text: 'ADM', value: 'ADM' },
+                {text: 'LTG', value: 'LTG' },
+                {text: 'LT Gen', value: 'LT Gen' },
+                {text: 'LTGen', value: 'LTGen' },
+                {text: 'SES', value: 'SES' },
+                {text: 'VADM', value: 'VADM' },
+                {text: 'MG', value: 'MG' },
+                {text: 'Maj Gen', value: 'Maj Gen' },
+                {text: 'MajGen', value: 'MajGen' },
+                {text: 'RADM', value: 'RADM' },
+                {text: 'BG', value: 'BG' },
+                {text: 'Brig Gen', value: 'Brig Gen' },
+                {text: 'BGen', value: 'BGen' },
+                {text: 'RDML', value: 'RDML' },
+                {text: 'COL', value: 'COL' },
+                {text: 'CAPT', value: 'CAPT' },
+                {text: 'LTC', value: 'LTC' },
+                {text: 'Lt Col', value: 'Lt Col' },
+                {text: 'LtCol', value: 'LtCol' },
+                {text: 'CDR', value: 'CDR' },
+                {text: 'MAJ', value: 'MAJ' },
+                {text: 'Maj', value: 'Maj' },
+                {text: 'LCDR', value: 'LCDR' },
+                {text: 'SMA', value: 'SMA' },
+                {text: 'CSM', value: 'CSM' },
+                {text: 'Mr.', value: 'Mr.' },
+                {text: 'Mrs.', value: 'Mrs.' },
+                {text: 'Ms.', value: 'Ms.' },
+                {text: 'Dr.', value: 'Dr.' },
+                {text: 'Prof.', value: 'Prof.' },
+                {text: 'HON', value: 'HON' },
+              ]}
+              placeholder="Guest Rank / Honorific"
+              name="hostingReport.guestRank"
+              label="Guest Rank / Honorific:"
+            />
+
+             <MyTextInput
+                name="hostingReport.guestTitle"
+                placeholder="Guest Title / Org"
+                label="Guest Title / Org:"
+              />
+
+              <MyTextInput
+                name="hostingReport.guestOfficePhone"
+                placeholder="Guest Phone"
+                label="Guest Phone:"
+              />
+
+             <MyTextInput
+                name="hostingReport.uniformOfGuest"
+                placeholder="Unifrom of Guest"
+                label="Uniform of Guest:"
+              />
+
+<Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      * Current Bio Attached:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <MySemanticRadioButton
+                        label="Current Bio is Attached"
+                        value="attached"
+                        name="hostingReport.bioAttachedOrPending"
+                      />
+              <MySemanticRadioButton
+                        label="Current Bio is Pending"
+                        value="pending"
+                        name="hostingReport.bioAttachedOrPending"
+                      />
+            </SemanticForm.Group>
+            <i id='currentBioAnchor'>attach current bio</i>
+            { attachBioError &&
+            <p>
+            <Label basic color='red' >
+                Choose either Attached Or Pending
+            </Label>
+            </p>
+            }
+            </Grid.Column>
+            </Grid.Row>           
+            </Grid> 
+            <Divider color='black'/>
+            <Grid>
+              <Grid.Row>
+              <Grid.Column width={4}>
+                      <strong>
+                      Upload Bio:
+                      </strong>
+            </Grid.Column>
+                <Grid.Column width={12}>
+                   <DocumentUploadWidget
+                    uploadDocument = {handleDocumentUpload}
+                    loading = {uploading}
+                     />
+                </Grid.Column>
+              </Grid.Row> 
+            </Grid>
+            <Divider color='black'/>
+
+
+            <MyTextArea
+              rows={3}
+              placeholder="Travel Party / Accombied by"
+              name="hostingReport.travelPartyAccomaniedBy"
+              label="Travel Party / Accombied by:"
+            />
+             Guest Itenerary:
+             <Editor
+                 editorState={editorState}
+                 onEditorStateChange={setEditorState}
+                 wrapperClassName="wrapper-class"
+                 editorClassName="editor-class"
+                 toolbarClassName="toolbar-class"
+              />
+   
+                </Segment> }
+
+
           <Divider />
 
        
 
             <Button
-              disabled={isSubmitting}
-              loading={isSubmitting}
+              disabled={submitting}
+              loading={submitting}
               floated="right"
               positive
               type="submit"

@@ -1,6 +1,9 @@
-﻿using Application.Core;
+﻿using Application.Activities;
+using Application.Core;
 using Application.Interfaces;
 using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Infrastructucture.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -82,6 +85,8 @@ namespace API.Extensions
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<ICACAccessor, CACAccessor>();
+            services.AddFluentValidationAutoValidation();
+            services.AddValidatorsFromAssemblyContaining<Create>();
 
             return services;
         }

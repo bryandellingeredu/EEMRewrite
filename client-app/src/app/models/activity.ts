@@ -4,6 +4,7 @@ import { Category } from "./category";
 import { Organization } from "./organization";
 import { ActivityRoom } from "./activityRoom"
 import { Recurrence } from "./recurrence";
+import { HostingReport } from "./hostingReport";
 
 
 const commonStore = store.commonStore;
@@ -17,6 +18,7 @@ export interface Activity{
     category: Category,
     organizationId: string | null,
     organization: Organization | null,
+    hostingReport: HostingReport  | null,
     start: Date,
     end: Date,
     allDayEvent: boolean,
@@ -142,6 +144,7 @@ export class ActivityFormValues{
     organizationId: string | null = null;
     category: Category = {id: '', name: '', routeName: '', imcColor: ''}
     organization: Organization | null =  null;
+    hostingReport: HostingReport | null =  null
     description: string = '';
     start: Date = roundToNearest15(new Date(new Date().setTime(new Date().getTime() + 1 * 60 * 60 * 1000)));
     end: Date = roundToNearest15(new Date(new Date().setTime(new Date().getTime() + 2 * 60 * 60 * 1000)));
@@ -262,6 +265,7 @@ export class ActivityFormValues{
         this.category = activity.category
         this.organizationId = activity.organizationId
         this.organization = activity.organization
+        this.hostingReport = activity.hostingReport
         this.description = activity.description;
         this.start = activity.start;
         this.end = activity.end;

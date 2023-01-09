@@ -17,6 +17,7 @@ namespace Persistence
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Recurrence> Recurrences { get; set; }
+        public DbSet<HostingReport> HostingReports {get; set;}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -28,6 +29,12 @@ namespace Persistence
             builder.Entity<IdentityUserLogin<string>>().Property(x => x.LoginProvider).HasMaxLength(225);
             builder.Entity<IdentityUserToken<string>>().Property(x => x.Name).HasMaxLength(112);
             builder.Entity<IdentityUserToken<string>>().Property(x => x.LoginProvider).HasMaxLength(112);
+
+        builder.Entity<Activity>()
+        .HasOne(u => u.HostingReport)
+        .WithOne(a => a.Activity)
+        .HasForeignKey<HostingReport>(a => a.ActivityId)
+        .IsRequired(false);
         }
     }
 

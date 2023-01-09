@@ -37,6 +37,7 @@ namespace Application.Activities
                     .Include(c => c.Category)
                     .Include(o => o.Organization)
                     .Include(r => r.Recurrence)
+                    .Include(h => h.HostingReport)
                 .FirstOrDefaultAsync(x => x.Id == request.Id);
 
                 if (activity.Organization != null)
@@ -48,6 +49,10 @@ namespace Application.Activities
                 if (activity.Recurrence != null)
                 {
                     activity.Recurrence.Activities = null;
+                }
+                if(activity.HostingReport != null)
+                {
+                    activity.HostingReport.Activity = null;
                 }
 
                 if (!string.IsNullOrEmpty(activity.EventLookup) && !string.IsNullOrEmpty(activity.CoordinatorEmail))

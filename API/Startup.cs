@@ -29,11 +29,8 @@ namespace API
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.WriteIndented = true;
-            })
-           .AddFluentValidation(config =>
-               {
-                   config.RegisterValidatorsFromAssemblyContaining<Application.Activities.Create>();
-               });
+            });
+        
             services.AddApplicationServices(_config);
             services.AddIdentityServices(_config);
 

@@ -165,6 +165,16 @@ const Account = {
                 axiosRequest.get(`/account/resendEmailConfirmationLink?email=${email}`)
 }
 
+const Uploads = {
+    uploadDocument: (file: any) => {
+      let formData = new FormData();
+      formData.append('File', file);
+      return axios.post('upload', formData, {
+        headers: {'Content-Type': 'multipart/form-data'}
+      })
+    }
+}
+
 const agent = {
     Activities,
     Account,
@@ -175,7 +185,8 @@ const agent = {
     GraphRooms,
     GraphSchedules,
     GraphUser,
-    IsSignedIn
+    IsSignedIn,
+    Uploads
 }
 
 export default agent;

@@ -17,6 +17,7 @@ export default class ActivityStore {
   loadingInitial = false;
   loading = false;
   day = new Date();
+  uploading = false;
   
 
   constructor() {
@@ -405,6 +406,7 @@ export default class ActivityStore {
       description: graphEvent.bodyPreview,
       category,
       categoryId: category.id,
+      hostingReport: null,
       organization: null,
       organizationId: null,
       actionOfficer: '',
@@ -541,6 +543,20 @@ export default class ActivityStore {
   }
 
   setLoadingInitial = (state: boolean) => this.loadingInitial = state;
+
+  uploadDocument = async (file: any) => {
+    this.uploading = true;
+    try{
+      const response = await agent.Uploads.uploadDocument(file);
+      const url = response.data;
+      return url;
+    } catch(error){
+      console.log(error);
+      runInAction(() => {
+        this.uploading = false;
+      })
+    }
+  }
 
   }
 

@@ -66,3 +66,18 @@ mgt-login {
   font-size: 0.8em;
   }
 
+  .wrapper-class {
+    padding: 1rem;
+    border: 1px solid #ccc;
+  }
+  .editor-class {
+    background-color: white;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    color: black;
+  }
+  .toolbar-class {
+    border: 1px solid #ccc;
+    color: black;
+  }
+
