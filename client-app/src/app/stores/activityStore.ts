@@ -273,6 +273,12 @@ export default class ActivityStore {
           const activity = await agent.Activities.details(id);
           activity.start = new Date(activity.start);
           activity.end = new Date(activity.end);
+          if(activity.hostingReport && activity.hostingReport.arrival){
+            activity.hostingReport.arrival = new Date(activity.hostingReport.arrival);
+          } 
+          if(activity.hostingReport && activity.hostingReport.departure){
+            activity.hostingReport.arrival = new Date(activity.hostingReport.departure);
+          } 
           this.activityRegistry.set(activity.id, activity);
           runInAction(() => {
             this.setLoadingInitial(false);
@@ -523,6 +529,7 @@ export default class ActivityStore {
     seniorAttendeeNameRank : '',
     additionalVTCInfo :	'',
     vtcStatus : '',
+    attachmentLookup: null
     }
     return activity;
   }
@@ -548,8 +555,11 @@ export default class ActivityStore {
     this.uploading = true;
     try{
       const response = await agent.Uploads.uploadDocument(file);
-      const url = response.data;
-      return url;
+      const attachment = response.data;
+      runInAction(() => {
+        this.uploading = false;
+      })
+      return attachment;
     } catch(error){
       console.log(error);
       runInAction(() => {
@@ -557,6 +567,8 @@ export default class ActivityStore {
       })
     }
   }
+
+
 
   }
 

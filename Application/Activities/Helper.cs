@@ -218,6 +218,13 @@ namespace Application.Activities
                 if (activity != null)
                 {
                     _mapper.Map(activity, a);
+                           if(a.HostingReport != null && a.HostingReport.Arrival != null){
+                               a.HostingReport.Arrival = TimeZoneInfo.ConvertTime(a.HostingReport.Arrival.Value, TimeZoneInfo.Local);
+                        }
+                         if(a.HostingReport != null && a.HostingReport.Departure != null){
+                               activity.HostingReport.Departure = TimeZoneInfo.ConvertTime(a.HostingReport.Departure.Value, TimeZoneInfo.Local);
+                        }
+
                 }
                 else
                 {

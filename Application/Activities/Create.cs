@@ -11,6 +11,8 @@ using Recurrence = Domain.Recurrence;
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Application.DTOs;
+using System.Diagnostics;
+using Azure.Core;
 
 namespace Application.Activities
 {
@@ -76,6 +78,12 @@ namespace Application.Activities
                     {
                         Activity activity = new Activity();
                         _mapper.Map(request.Activity, activity);
+                        if(activity.HostingReport != null && activity.HostingReport.Arrival != null){
+                               activity.HostingReport.Arrival = TimeZoneInfo.ConvertTime(activity.HostingReport.Arrival.Value, TimeZoneInfo.Local);
+                        }
+                         if(activity.HostingReport != null && activity.HostingReport.Departure != null){
+                               activity.HostingReport.Departure = TimeZoneInfo.ConvertTime(activity.HostingReport.Departure.Value, TimeZoneInfo.Local);
+                        }
                         activities.Add(activity);
                     }
 
@@ -140,13 +148,37 @@ namespace Application.Activities
                         }
                         a.CreatedBy = user.Email;
                         a.CreatedAt = DateTime.Now;
+
+                        a.HostingReport = null;
                         _context.Activities.Add(a);
+
+                 
+
                         var result = await _context.SaveChangesAsync() > 0;
+
+
+                        if (request.Activity.HostingReport != null )
+                        {
+                            HostingReport hostingReport = request.Activity.HostingReport;
+                            hostingReport.Id = Guid.Empty;
+                            hostingReport.ActivityId = a.Id;
+                            if (hostingReport.Arrival != null)
+                            {
+                                hostingReport.Arrival = TimeZoneInfo.ConvertTime(hostingReport.Arrival.Value, TimeZoneInfo.Local);
+                            }
+                            if (hostingReport.Departure != null)
+                            {
+                                hostingReport.Departure = TimeZoneInfo.ConvertTime(hostingReport.Departure.Value, TimeZoneInfo.Local);
+                            }
+                            _context.HostingReports.Add(hostingReport);
+                            var result2 = await _context.SaveChangesAsync() > 0;
+                        }
+
                         if (!result) return Result<Unit>.Failure("Failed to Create Activity");
                     }
                     return Result<Unit>.Success(Unit.Value);
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
 
                     throw;

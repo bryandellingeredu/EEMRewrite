@@ -129,6 +129,7 @@ export interface Activity{
     seniorAttendeeNameRank : string
     additionalVTCInfo :	string
     vtcStatus :	string
+    attachmentLookup : number | null
 }
 
 export class Activity implements Activity{
@@ -256,6 +257,8 @@ export class ActivityFormValues{
     seniorAttendeeNameRank : string = ''
     additionalVTCInfo :	string = ''
     vtcStatus :	string = ''
+    attachmentLookup : number | null = null
+
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -376,6 +379,7 @@ export class ActivityFormValues{
         this.seniorAttendeeNameRank = activity.seniorAttendeeNameRank
         this.additionalVTCInfo = activity.additionalVTCInfo
         this.vtcStatus = activity.vtcStatus
+        this.attachmentLookup = activity.attachmentLookup
        } 
     }
 }

@@ -18,6 +18,7 @@ namespace Persistence
         public DbSet<Location> Locations { get; set; }
         public DbSet<Recurrence> Recurrences { get; set; }
         public DbSet<HostingReport> HostingReports {get; set;}
+        public DbSet<Attachment> Attachments {get; set;}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -35,6 +36,10 @@ namespace Persistence
         .WithOne(a => a.Activity)
         .HasForeignKey<HostingReport>(a => a.ActivityId)
         .IsRequired(false);
+
+        builder.Entity<Attachment>()
+            .Property(e => e.BinaryData)
+            .HasColumnType("VARBINARY(MAX)");
         }
     }
 

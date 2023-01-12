@@ -172,7 +172,9 @@ const Uploads = {
       return axios.post('upload', formData, {
         headers: {'Content-Type': 'multipart/form-data'}
       })
-    }
+    },
+
+    downloadDocument: (id: number) => axiosRequest.get<any>(`upload/${id}`)
 }
 
 const agent = {

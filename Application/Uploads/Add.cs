@@ -5,23 +5,18 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Persistence;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Activities;
+using Domain;
 
 namespace Application.Uploads
 {
     public class Add
     {
-        public class Command : IRequest<Result<string>>
+        public class Command : IRequest<Result<Attachment>>
         {
             public IFormFile File { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<string>>
+        public class Handler : IRequestHandler<Command, Result<Attachment>>
         {
             public Handler(
              DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor)
@@ -37,19 +32,30 @@ namespace Application.Uploads
             private readonly IConfiguration _config;
             private readonly IUserAccessor _userAccessor;
 
-            public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Attachment>> Handle(Command request, CancellationToken cancellationToken)
             {
                 try
                 {
-                    Helper.InitHelper(_mapper);
-                    Settings s = new Settings();
-                    var settings = s.LoadSettings(_config);
-                    GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
-                    string url = await GraphHelper.UploadFile( request.File);
+       
 
-                    return Result<string>.Success("Success");
+                    using (var stream = request.File.OpenReadStream())
+                    using (var ms = new MemoryStream()){
+                         stream.CopyTo(ms);
+                         var attachment = new Attachment{
+                            FileName = request.File.FileName,
+                            BinaryData = ms.ToArray(),
+                            FileType = request.File.ContentType           
+                         };
+                        await _context.Attachments.AddAsync(attachment);
+                        var result = await _context.SaveChangesAsync() > 0;
+                        if (!result) return Result<Attachment>.Failure("Failed to Create Activity");
+
+                        attachment.BinaryData = null;
+                   
+                    return Result<Attachment>.Success(attachment);
+                    }
                 }
-                catch(Exception e)
+                catch(Exception )
                 {
                     throw;
                 }

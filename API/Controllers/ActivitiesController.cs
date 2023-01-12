@@ -21,7 +21,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetActivities(string day)
         {
             DateTime utcDateTime = DateTime.Parse(day, null, System.Globalization.DateTimeStyles.RoundtripKind);
-            DateTime estDateTime = TimeZone.CurrentTimeZone.ToLocalTime(utcDateTime);
+            DateTime estDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, TimeZoneInfo.Local);
             var result = await Mediator.Send(new ListByDay.Query { Day = estDateTime });
             return HandleResult(result);
         }

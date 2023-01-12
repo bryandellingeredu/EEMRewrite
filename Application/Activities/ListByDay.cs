@@ -29,6 +29,10 @@ namespace Application.Activities
             }
             public async Task<Result<List<Activity>>> Handle(Query request, CancellationToken cancellationToken)
             {
+                try
+                {
+
+            
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
@@ -81,6 +85,12 @@ namespace Application.Activities
                 }
 
                 return Result<List<Activity>>.Success(activities);
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
             }
             private string getName(Attendee item, IGraphServicePlacesCollectionPage allrooms)
             {

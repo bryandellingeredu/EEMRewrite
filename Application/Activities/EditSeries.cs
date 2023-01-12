@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Application.Interfaces;
-
+using Azure.Core;
 
 namespace Application.Activities
 {
@@ -52,7 +52,10 @@ namespace Application.Activities
                 {
                     Helper.InitHelper(_mapper);
                     var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
+                    DeleteHostingReports(request.Activity.RecurrenceId);
+
                     var activitiesToBeDeleted = _context.Activities.Where(x => x.RecurrenceId == request.Activity.RecurrenceId);
+                    var activityIds = activitiesToBeDeleted.Select(x => x.Id).ToArray();
                     var newActivities = new List<Activity>();
               
                     Settings s = new Settings();
@@ -148,12 +151,18 @@ namespace Application.Activities
                        a.LastUpdatedAt = DateTime.Now;
                       a.CreatedBy = createdBy;
                      a.CreatedAt = createdAt;
+                        a.HostingReport = null;
                       newActivities.Add(a);
                     }
                     newRecurrence.Activities = newActivities;   
                     _context.Recurrences.Add(newRecurrence);
                     var result = await _context.SaveChangesAsync() > 0;
                     if (!result) return Result<Unit>.Failure("Failed to Update Activity");
+
+                    if (request.Activity.HostingReport != null)
+                    {
+                        AddHostingReportToNewActivities(newRecurrence.Id, request.Activity.HostingReport);
+                    }
 
                     return Result<Unit>.Success(Unit.Value);
                 }
@@ -162,6 +171,49 @@ namespace Application.Activities
 
                     throw;
                 }
+            }
+
+            private void AddHostingReportToNewActivities(Guid id, HostingReport hostingReport)
+            {
+                if (hostingReport.Arrival != null)
+                {
+                    hostingReport.Arrival = TimeZoneInfo.ConvertTime(hostingReport.Arrival.Value, TimeZoneInfo.Local);
+                }
+                if (hostingReport.Departure != null)
+                {
+                    hostingReport.Departure = TimeZoneInfo.ConvertTime(hostingReport.Departure.Value, TimeZoneInfo.Local);
+                }
+                hostingReport.Id = Guid.Empty;
+                hostingReport.Activity = null;
+
+                var activities = _context.Activities.Where(x => x.RecurrenceId == id).ToArray();
+
+                foreach (var activity  in activities)
+                {
+                    HostingReport newHostingReport = new HostingReport();
+                    newHostingReport.Activity = null;
+                    _mapper.Map(hostingReport, newHostingReport);
+                    newHostingReport.ActivityId = activity.Id;
+                    _context.HostingReports.Add(newHostingReport);
+                }
+                _context.SaveChanges();
+            }
+
+      
+
+            private void DeleteHostingReports(Guid? recurrenceId)
+            {
+                var recurrence= _context.Recurrences.Include(x => x.Activities).ThenInclude(x => x.HostingReport).AsNoTracking().FirstOrDefault(x => x.Id == recurrenceId);
+
+                foreach (var activity in recurrence.Activities)
+                {
+                    if (activity.HostingReport != null)
+                    {
+                        _context.HostingReports.Remove(activity.HostingReport);
+                    }
+                }
+
+                _context.SaveChanges();
             }
 
         }

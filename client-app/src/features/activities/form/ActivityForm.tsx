@@ -44,6 +44,8 @@ import { convertToRaw, EditorState, convertFromRaw} from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { convertToHTML } from "draft-convert";
 import DocumentUploadWidget from "../../../app/common/documentUpload/documentUploadWidget";
+import { Attachment } from "../../../app/models/attachment";
+import { toast } from "react-toastify";
 
 
 function useIsSignedIn(): [boolean] {
@@ -106,7 +108,11 @@ export default observer(function ActivityForm() {
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
   const [roomEmails, setRoomEmails] = useState<string[]>([]);
   const [originalRoomEmails, setOriginalRoomEmails] = useState<string[]>([]);
+  const [uploadDifferentBioIndicator, setUploadDifferentBioIndicator] = useState(false);
+
   const handleSetRoomRequired = () => setRoomRequired(!roomRequired);
+  const handleUploadDifferentBioClick = () => setUploadDifferentBioIndicator(true);
+
 
   const handleSetRoomEmails = (roomEmails: string[]) => {
     setRoomEmails(roomEmails);
@@ -124,13 +130,51 @@ export default observer(function ActivityForm() {
     () => EditorState.createEmpty(),
   );
 
-  const [bioUrl, setBioUrl] = useState<string>('');
+  const [attachment, setAttachment] = useState<Attachment>({id: 0,  fileName: '', fileType: ''});
 
   function handleDocumentUpload(file: any){
-    uploadDocument(file).then((url) => {
-       setBioUrl(url);
+    uploadDocument(file).then((response) => {
+      setUploadDifferentBioIndicator(false);
+       setAttachment(response);
+       toast.success(`${response.fileName} successfully uploaded`);
     })
   }
+
+  const handleDownloadAttachment = async () =>{
+    try{
+      const token = commonStore.token;
+
+      const headers = new Headers();
+        headers.append('Authorization', `Bearer ${token}`);
+        headers.append('Content-Type', 'application/json');
+
+      const requestOptions = {
+       method: 'GET',
+      headers: headers,
+      };
+
+
+      const id = attachment.id
+      const url = `${process.env.REACT_APP_API_URL}/upload/${id}`;
+      const response = await fetch(url, requestOptions); 
+
+      console.log(response);
+      console.log(typeof(response));
+      const data = await response.arrayBuffer();
+      var file = new Blob([data], {type: attachment.fileType});
+      var fileUrl = window.URL.createObjectURL(file);
+      var a = document.createElement("a");
+      a.href = fileUrl;
+      a.download = attachment.fileName;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(fileUrl);
+    }catch(err){
+      console.error(err);
+    }
+  }
+
+
 
   const validationSchema = Yup.object({
     communityEvent: Yup.boolean(),
@@ -170,6 +214,9 @@ export default observer(function ActivityForm() {
     if (id) {
       loadActivity(id, categoryId).then((response) => {
         setActivity(new ActivityFormValues(response));
+        if(response?.attachmentLookup && response?.attachmentLookup > 0 ){
+          setAttachment({id: response?.attachmentLookup, fileName: '', fileType: ''})
+        }
         if (response?.activityRooms && response.activityRooms.length > 0) {
           setRoomRequired(true);
           setRoomEmails(response.activityRooms.map((x) => x.email));
@@ -205,7 +252,7 @@ export default observer(function ActivityForm() {
     let hostingReportError = false;
     setAttachBioError(false);
     if(activity.report === 'Hosting Report'){
-      if(!activity.hostingReport?.bioAttachedOrPending){
+      if(!activity.hostingReport?.bioAttachedOrPending && !attachment?.id){
         setAttachBioError(true);
         hostingReportError = true;
         const currentBioAnchor = document.getElementById('currentBioAnchor');
@@ -219,6 +266,10 @@ export default observer(function ActivityForm() {
     if(activity.report === 'Hosting Report'){
       activity.hostingReport!.guestItinerary = 
          JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+      if(attachment && attachment.id && attachment.id > 0){
+        activity.attachmentLookup = attachment.id;
+        activity.hostingReport!.bioAttachedOrPending = 'Current Bio is Attached';
+      }
     }
     activity.recurrenceInd = recurrenceInd;
     activity.recurrence = recurrence;
@@ -1586,11 +1637,11 @@ export default observer(function ActivityForm() {
           </Grid>  
 
           {
-                values.report === 'Hosting Report' && 
+                values.report !== 'none' && 
                 <Segment inverted color='teal'>
                     <Header as="h5" icon textAlign="center" >
       <FontAwesomeIcon icon={faFileLines} size='2x' style={{marginRight: '10px'}} />
-      <Header.Content>Hosting Report Information</Header.Content>
+      <Header.Content>{values.report} Information</Header.Content>
       </Header>
             <MyTextArea
               rows={3}
@@ -1598,7 +1649,9 @@ export default observer(function ActivityForm() {
               name="hostingReport.purposeOfVisit"
               label="Purpose of Visit / Visit Objectives:"
             />
-
+      
+      {values.report === 'Hosting Report' && 
+      <>
            <Divider color='black'/>
            <Grid>
             <Grid.Row>
@@ -1615,7 +1668,11 @@ export default observer(function ActivityForm() {
             </Grid.Column>
             </Grid.Row>           
            </Grid>
+           </>
+       }
 
+{values.report === 'Hosting Report' && 
+ <>
            <Divider color='black'/>
            <Grid>
             <Grid.Row>
@@ -1636,25 +1693,34 @@ export default observer(function ActivityForm() {
             </Grid.Column>
             </Grid.Row>           
            </Grid>
+           </>
+    }
 
+          {values.report === 'Hosting Report' && 
            <MyTextInput
                 name="hostingReport.escortOfficer"
                 placeholder="full name of the escort officer"
                 label="Escort Officer:"
               />
+             }
             
+            {values.report === 'Hosting Report' && 
             <MyTextInput
                 name="hostingReport.escortOfficerPhone"
                 placeholder="phone number to contact the escort officer"
                 label="Escort Officer Phone:"
               />
-
-<MyTextInput
+            }
+            
+            {values.report === 'Hosting Report' && 
+            <MyTextInput
                 name="hostingReport.guestName"
                 placeholder="Guest Full Name"
                 label="Guest Name:"
               />
-
+             }
+          
+          {values.report === 'Hosting Report' && 
            <MySelectInput
               options={[
                 {text: '', value: ''},
@@ -1696,25 +1762,36 @@ export default observer(function ActivityForm() {
               name="hostingReport.guestRank"
               label="Guest Rank / Honorific:"
             />
+           }
 
+            {values.report === 'Hosting Report' && 
              <MyTextInput
                 name="hostingReport.guestTitle"
                 placeholder="Guest Title / Org"
                 label="Guest Title / Org:"
               />
+             }
 
+            {values.report === 'Hosting Report' && 
               <MyTextInput
                 name="hostingReport.guestOfficePhone"
                 placeholder="Guest Phone"
                 label="Guest Phone:"
               />
+            }
 
+            {values.report === 'Hosting Report' && 
              <MyTextInput
                 name="hostingReport.uniformOfGuest"
                 placeholder="Unifrom of Guest"
                 label="Uniform of Guest:"
               />
+          }
 
+
+
+{(!attachment || attachment.id < 1) && values.report === 'Hosting Report' && 
+<>
 <Divider color='black'/>
            <Grid>
             <Grid.Row>
@@ -1745,8 +1822,65 @@ export default observer(function ActivityForm() {
             </p>
             }
             </Grid.Column>
-            </Grid.Row>           
+            </Grid.Row> 
             </Grid> 
+   </>
+}
+
+{( attachment && attachment.id > 0 ) && values.report === 'Hosting Report' && 
+<>
+<Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      * Current Bio Attached:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <SemanticForm.Radio
+                        label="Current Bio is Attached"
+                        checked
+                      />
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row> 
+            </Grid> 
+   </>
+}
+
+ {attachment  && attachment.id > 0 && !uploadDifferentBioIndicator && values.report === 'Hosting Report' && 
+  <>
+  <Divider color='black'/>
+  <Grid>
+    <Grid.Row>
+  <Grid.Column width={4}>
+                      <strong>
+                      * Current Bio has been uploaded:
+                      </strong>
+    </Grid.Column>
+    <Grid.Column width={4} textAlign = 'center'>
+    <Button icon labelPosition='left' color='orange' onClick={handleDownloadAttachment} type='button'>
+      <Icon name='download' />
+      Download Current Bio
+    </Button>
+    </Grid.Column>
+    <Grid.Column width={4} textAlign = 'center' type='button'>
+    <Button icon labelPosition='left' color='olive' onClick={handleUploadDifferentBioClick}>
+      <Icon name='upload' />
+      Upload a different Bio
+    </Button>
+    </Grid.Column>
+    </Grid.Row>
+  </Grid>
+  <Divider color='black'/>
+  </>
+}
+
+
+{(uploadDifferentBioIndicator ||!(attachment && attachment.id && attachment.id > 0)) && values.report === 'Hosting Report' && 
+            <>
             <Divider color='black'/>
             <Grid>
               <Grid.Row>
@@ -1764,14 +1898,16 @@ export default observer(function ActivityForm() {
               </Grid.Row> 
             </Grid>
             <Divider color='black'/>
-
-
+            </>
+}
+       {values.report === 'Hosting Report' && 
             <MyTextArea
               rows={3}
               placeholder="Travel Party / Accombied by"
               name="hostingReport.travelPartyAccomaniedBy"
               label="Travel Party / Accombied by:"
             />
+        }
              Guest Itenerary:
              <Editor
                  editorState={editorState}
@@ -1780,6 +1916,48 @@ export default observer(function ActivityForm() {
                  editorClassName="editor-class"
                  toolbarClassName="toolbar-class"
               />
+
+{values.report === 'Hosting Report' && 
+ <>
+           <Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Vios Support Requested:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="hostingReport.viosSupportPhotography" label="Photography"/>
+              <MySemanticCheckBox name="hostingReport.viosSupportAV" label="AV"/>
+            </SemanticForm.Group>
+            <i>Has Vios request been submitted?</i>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+
+      <div className= "ui yellow message">
+        <div className="header">
+            VIOS
+        </div>
+        To request a photo or record video, click the <a href="https://vios.army.mil" target="_blank">VIOS</a> link. Opens the Visual Information Ordering Site (VIOS) in a new browswer tab
+    </div> 
+           </>
+    }
+
+{values.report === 'Hosting Report' && 
+              <MyDateInput
+                  timeIntervals={15}
+                  placeholderText="Date / Time of Arrival"
+                  name="hostingReport.arrival"
+                  showTimeSelect
+                  timeCaption="time"
+                  dateFormat="MMMM d, yyyy h:mm aa"
+                  title="Date / Time of Arrival:"
+                  minDate= {new Date()}
+                />
+  }
    
                 </Segment> }
 

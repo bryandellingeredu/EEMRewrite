@@ -79,13 +79,14 @@
         public static Task<Event> GetEventAsync(string email, string id)
         {
 
-            EnsureGraphForAppOnlyAuth();
-            _ = _appClient ??
-              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+                EnsureGraphForAppOnlyAuth();
+                _ = _appClient ??
+                  throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
-            return _appClient.Users[email].Events[id]
-              .Request()
-              .GetAsync();
+                return _appClient.Users[email].Events[id]
+                  .Request()
+                  .GetAsync();
+           
         }
 
         public static Task<IGraphServicePlacesCollectionPage> GetRoomsAsync()

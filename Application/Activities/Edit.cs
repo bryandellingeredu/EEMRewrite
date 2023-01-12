@@ -85,6 +85,12 @@ namespace Application.Activities
                 var createdBy = activity.CreatedBy;
                 var createdAt = activity.CreatedAt;
                 _mapper.Map(request.Activity, activity);
+                    if(activity.HostingReport != null && activity.HostingReport.Arrival != null){
+                               activity.HostingReport.Arrival = TimeZoneInfo.ConvertTime(activity.HostingReport.Arrival.Value, TimeZoneInfo.Local);
+                        }
+                         if(activity.HostingReport != null && activity.HostingReport.Departure != null){
+                               activity.HostingReport.Departure = TimeZoneInfo.ConvertTime(activity.HostingReport.Departure.Value, TimeZoneInfo.Local);
+                        }
                 activity.Category = null;
                 activity.EventLookup = null;
                 activity.RecurrenceId = null;

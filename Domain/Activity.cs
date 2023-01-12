@@ -154,5 +154,7 @@ namespace Domain
          public string AdditionalVTCInfo {get; set;}
          public string VTCStatus {get; set;}
          public HostingReport HostingReport {get; set;}
+
+         public int? AttachmentLookup {get; set;}
     }
 }
