@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230113151344_OutsiderReport")]
+    partial class OutsiderReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -522,9 +525,6 @@ namespace Persistence.Migrations
                     b.Property<string>("EscortOfficerPhone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FlagDetails")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FlagIsFor")
                         .HasColumnType("nvarchar(max)");
 
@@ -603,6 +603,9 @@ namespace Persistence.Migrations
                     b.Property<bool>("OfficeCallWithCommandant")
                         .HasColumnType("bit");
 
+                    b.Property<string>("OutsiderNumOfPeople")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("OutsiderReportDV")
                         .HasColumnType("nvarchar(max)");
 
@@ -610,9 +613,6 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OutsiderReportEngagement")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OutsiderReportNumOfPeople")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OutsiderReportPOC")

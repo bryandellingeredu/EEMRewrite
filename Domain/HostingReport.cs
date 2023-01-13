@@ -50,9 +50,18 @@ namespace Domain
         public bool FlagSupport {get; set;}
         public string FlagIsFor {get; set;}
         public string FlagType {get; set;}
+        public string FlagDetails {get; set;}
         public string GiftRequirement {get; set;}
         public bool ForeignVisitor {get; set;}
         public string HostingReportStatus {get; set;}
+        public string ReportType {get; set;}
+        public string OutsiderReportUSAWCGraduate {get; set;}
+        public string OutsiderReportDirectorate {get; set;}
+         public string OutsiderReportPOC {get; set;}
+         public string OutsiderReportDV {get; set;}
+         public string OutsiderReportNumOfPeople {get; set;}
+         public string OutsiderReportStatus {get; set;}
+         public string OutsiderReportEngagement {get; set;}
     
      }
 }

@@ -38,7 +38,17 @@ parkingDetails:	string
 flagSupport: boolean
 flagIsFor:	string
 flagType:	string
+flagDetails: string
 giftRequirement:	string
 foreignVisitor:	boolean
 hostingReportStatus:	string
+reportType: string
+outsiderReportUSAWCGraduate: string
+outsiderReportDirectorate: string
+outsiderReportPOC: string
+outsiderReportDV: string
+outsiderReportNumOfPeople: string
+outsiderReportStatus: string
+outsiderReportEngagement: string
+
 }

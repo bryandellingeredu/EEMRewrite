@@ -104,6 +104,7 @@ export default observer(function ActivityForm() {
   );
   const [submitting, setSubmitting] = useState(false);
   const [attachBioError, setAttachBioError] = useState(false);
+  const [attachNoAttachmentError, setAttachNoAttachmentError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
   const [roomEmails, setRoomEmails] = useState<string[]>([]);
@@ -251,6 +252,7 @@ export default observer(function ActivityForm() {
   function handleFormSubmit(activity: ActivityFormValues) {
     let hostingReportError = false;
     setAttachBioError(false);
+    setAttachNoAttachmentError(false);
     if(activity.report === 'Hosting Report'){
       if(!activity.hostingReport?.bioAttachedOrPending && !attachment?.id){
         setAttachBioError(true);
@@ -260,13 +262,23 @@ export default observer(function ActivityForm() {
           currentBioAnchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }      
       }
+
+      if(activity.hostingReport?.bioAttachedOrPending === 'attached' && (!attachment || attachment.id < 1)){
+        setAttachNoAttachmentError(true);
+        hostingReportError = true;
+        const currentBioAnchor = document.getElementById('currentBioAnchor');
+        if(currentBioAnchor){
+          currentBioAnchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }    
+      }
     }
     if(!hostingReportError){
     setSubmitting(true);
-    if(activity.report === 'Hosting Report'){
+    if(activity.report === 'Hosting Report' || 'Outsiders Report'){
+      activity.hostingReport!.reportType = activity.report;
       activity.hostingReport!.guestItinerary = 
          JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-      if(attachment && attachment.id && attachment.id > 0){
+      if(attachment && attachment.id && attachment.id > 0 && activity.report === 'Hosting Report'){
         activity.attachmentLookup = attachment.id;
         activity.hostingReport!.bioAttachedOrPending = 'Current Bio is Attached';
       }
@@ -1821,6 +1833,13 @@ export default observer(function ActivityForm() {
             </Label>
             </p>
             }
+             { attachNoAttachmentError &&
+            <p>
+            <Label basic color='red' >
+                If you choose attach you must upload the Bio Attachment
+            </Label>
+            </p>
+            }
             </Grid.Column>
             </Grid.Row> 
             </Grid> 
@@ -1947,6 +1966,7 @@ export default observer(function ActivityForm() {
     }
 
 {values.report === 'Hosting Report' && 
+       <>
               <MyDateInput
                   timeIntervals={15}
                   placeholderText="Date / Time of Arrival"
@@ -1957,7 +1977,318 @@ export default observer(function ActivityForm() {
                   title="Date / Time of Arrival:"
                   minDate= {new Date()}
                 />
+
+                <MyDateInput
+                timeIntervals={15}
+                placeholderText="Date / Time of Departure"
+                name="hostingReport.departure"
+                showTimeSelect
+                timeCaption="time"
+                dateFormat="MMMM d, yyyy h:mm aa"
+                title="Date / Time of Departure:"
+                minDate= {new Date()}
+              />
+
+         </>
   }
+
+{values.report === 'Hosting Report' && 
+           <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'None', value: 'None' },
+                {text: 'POV', value: 'POV' },
+                {text: 'GOV', value: 'GOV' },
+                {text: 'Commercial Air', value: 'Commercial Air' },
+                {text: 'Aviation (Helicopter)', value: 'Aviation (Helicopter)' },
+                {text: 'Aviation (Fixed Wing)', value: 'Aviation (Fixed Wing)' },
+                {text: 'Milair (Rotary Wing)', value: 'Milair (Rotary Wing)' },
+                {text: 'Milair (Fixed Wing)', value: 'Milair (Fixed Wing)' },
+                {text: 'Rental Car', value: 'Rental Car' },
+                {text: 'Bus', value: 'Bus' },
+                {text: 'Rail', value: 'Rail' }
+              ]}
+              placeholder="Mode of Travel"
+              name="hostingReport.modeOfTravel"
+              label="Mode of Travel:"
+            />
+           }
+
+{values.report === 'Hosting Report' && 
+            <MyTextArea
+              rows={3}
+              placeholder="Travel Arrangement Details"
+              name="hostingReport.travelArrangementDetails"
+              label="Travel Arrangement Details:"
+            />
+          }
+  
+  {values.report === 'Hosting Report' && 
+ <>
+           <Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Meal Requests:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="hostingReport.mealRequestLunch" label="Lunch"/>
+              <MySemanticCheckBox name="hostingReport.mealRequestDinner" label="Dinner"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider color='black'/>
+           </>
+    }
+
+{values.report === 'Hosting Report' && 
+            <MyTextArea
+              rows={3}
+              placeholder="List any Dietary Restrictions"
+              name="hostingReport.dietaryRestrictions"
+              label="List any Dietary Restrictions:"
+            />
+          }
+
+{values.report === 'Hosting Report' && 
+ <>
+           <Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Are Lodging Arrangements Made:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="hostingReport.lodgingArrangements" />
+            </SemanticForm.Group>
+            <i>If yes provide lodging details. Lodging location, room #, etc.</i>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider color='black'/>
+
+           </>
+    }
+
+{values.report === 'Hosting Report' && 
+            <MyTextArea
+              rows={3}
+              placeholder="Lodging Location"
+              name="hostingReport.lodgingLocation"
+              label="Lodging Location:"
+            />
+          }
+
+{values.report === 'Hosting Report' && 
+ <>
+           <Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Local Transportation Needed:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="hostingReport.localTransportationNeeded" />
+            </SemanticForm.Group>
+            <i>If local transportation support is needed, check the box and see instructions below</i>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider color='black'/>
+
+  <div className= "ui yellow message">
+        <div className="header">
+            Bus Transportation Request
+        </div>
+        If local transportation support is needed, check the Local Transportation Checkbox above,  and then submit your request by clicking the 
+           <a href="https://armyeitaas.sharepoint-mil.us/teams/EnterprisePortal/Lists/BusTransportationRequest/AllItems.aspx" target="_blank">Bus Transportation Request</a> link. When the site opens in a new tab click the New button.
+    </div> 
+           </>
+    }
+
+        <Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Parking Requirements:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="hostingReport.parkingRequirements" />
+            </SemanticForm.Group>
+            <i>If parking is needed for guest, check the checkbox and notifications will be emailed a group mailbox</i>
+            </Grid.Column>
+            </Grid.Row>       
+           </Grid>
+           <Divider color='black'/>
+
+           <MyTextArea
+              rows={3}
+              placeholder="Parking Details:  (Include any special requirements.)"
+              name="hostingReport.parkingDetails"
+              label="Parking Details:  (Include any special requirements.)"
+            />
+
+            
+           {values.report === 'Outsiders Report' && 
+           <>
+             <MyTextInput
+                name="hostingReport.outsiderReportUSAWCGraduate"
+                placeholder="USAWC Graduate: Enter Resident or DDEE and Year, e.g Res 2009, DDE 2008"
+                label="USAWC Graduate: Enter Resident or DDEE and Year, e.g Res 2009, DDE 2008"
+              />
+            
+            <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'ACOM Outreach', value: 'ACOM Outreach' },
+                {text: "Cmdt's Personnal Staff", value: "Cmdt's Personnal Staff" },
+                {text: "Cmdt's Special Staff", value: "Cmdt's Special Staff" },
+                {text: 'Commmandant', value: 'Commandant' },
+                {text: 'CoS', value: 'CoS' },
+                {text: 'CSLD', value: 'CSLD' },
+                {text: 'EO', value: 'EO' },
+                {text: 'Office of the Commandant', value: 'Office of the Commandant' },
+                {text: 'Office of the Dean', value: 'Office of the Dean' },
+                {text: 'Office of the Provost', value: 'Office of the Provost' },
+                {text: 'PKSOI', value: 'PKSOI' },
+                {text: 'RCI', value: 'RCI' },
+                {text: 'School of Strategic Landpower', value: 'School of Strategic Landposer' },
+                {text: 'SSI and USAWC Press', value: 'SSI and USAWC Press' },
+                {text: 'USAHEC', value: 'USAHEC' },
+
+              ]}
+              placeholder="Directorate"
+              name="hostingReport.outsiderReportDirectorate"
+              label="Directorate:"
+            />
+
+              <MyTextInput
+                name="hostingReport.outsiderReportDV"
+                placeholder="Visiting DV: Enter the Rank and Names of the Distinguished Visitors (DV). Outsiders report is for COL and below"
+                label="Visiting DV: Enter the Rank and Names of the Distinguished Visitors (DV)"
+              />
+
+             <MyTextInput
+                name="hostingReport.outsiderReportNumOfPeople"
+                placeholder="Number of People"
+                label="Number of People:"
+              />
+
+              </>
+          }
+
+
+    {values.report === 'Hosting Report' && 
+ <>
+           <Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Flag Support Needed:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="hostingReport.flagSupport" />
+            </SemanticForm.Group>
+            <i>Is General Officer flag support needed? this will send a request to G-4 Log/Maint for flag support</i>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider color='black'/>
+
+           <MyTextArea
+              rows={3}
+              placeholder="Flag Details:  (Describe type of flags and where to set up  e.g. US Army flag, USAWCflag, 2 star flag in Bliss Hall, etc.)"
+              name="hostingReport.flagDetails"
+              label="Flag Details::  (Describe type of flags and where to set up.)"
+            />
+
+           </>
+    }    
+
+            
+
+           {values.report === 'Hosting Report' && 
+             <MyTextInput
+                name="hostingReport.giftRequirement"
+                placeholder="Gift Requirement"
+                label="Gift Requirement:"
+              />
+          }
+
+         <Divider color='black'/>
+           <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                      Guest is From Foreign Country:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="hostingReport.foreignVisitor" />
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row> 
+            <Grid.Row>
+            <Grid.Column width={4}/>
+            <Grid.Column width={12}>
+              If guest is from a foreign country this will e-mail the Security Office. If you have any questions, contact the Security Office (245-3233 / 245 - 4188)
+            </Grid.Column>
+            </Grid.Row>          
+           </Grid>
+           <Divider color='black'/>
+
+           {values.report === 'Hosting Report' && 
+           <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'Draft', value: 'Draft' },
+                {text: 'Exec Services Approved', value: 'Exec Services Approved' },
+              ]}
+              placeholder="Hosting Report Status"
+              name="hostingReport.hostingReportStatus"
+              label="Hosting Report Status:  (Only Exec Services may use this dropdown."
+            />
+           }
+
+{values.report === 'Outsiders Report' && 
+        <>
+          <MySelectInput
+              options={[
+                {text: '', value: ''},
+                {text: 'Draft', value: 'Draft' },
+                {text: 'Exec Services Approved', value: 'Exec Services Approved' },
+              ]}
+              placeholder="Outsiders Report Status"
+              name="hostingReport.outsiderReportStatus"
+              label="Outsiders Report Status:  (Only Exec Services may use this dropdown."
+            />
+
+            <MyTextInput
+                name="hostingReport.outsiderReportEngagement"
+                placeholder="Enagement With"
+                label="Engagement With:"
+              />
+
+      </>
+}
+
    
                 </Segment> }
 
