@@ -70,6 +70,15 @@ namespace Infrastructucture.Security
 
         public bool IsCACAuthenticated()
         {
+            string headerValue = _httpContextAccessor.HttpContext.Request.Headers["ArmyEmail"];
+
+            if(!string.IsNullOrEmpty(headerValue)) {
+                return true;
+            }
+            return false;
+
+
+            /*
             var clientCerticate = _httpContextAccessor.HttpContext.Connection.ClientCertificate;
             if (clientCerticate == null || string.IsNullOrEmpty(clientCerticate.Subject))
             {
@@ -104,6 +113,7 @@ namespace Infrastructucture.Security
                 }
             }
             return true;
+            */
         }
     }
 }

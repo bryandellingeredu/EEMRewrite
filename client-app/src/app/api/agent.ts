@@ -21,6 +21,8 @@ axios.defaults.baseURL = process.env.REACT_APP_API_URL
 axios.interceptors.request.use(config => {
     const token = store.commonStore.token;
     if (token) config.headers.Authorization = `Bearer ${token}`;
+    const armyEmail = store.graphUserStore.armyProfile?.mail
+    if(armyEmail) config.headers['ArmyEmail'] = armyEmail;
     return config;
 })
 
@@ -82,7 +84,7 @@ const axiosResponseBody = <T> (response: AxiosResponse<T>) =>{
 //const academicCalendarURL = `/groups/${process.env.ACADEMIC_CALENDAR_ID}/calendar/events`;
 const academicCalendarURL = `/groups/17422b10-09fc-42c9-8d98-f0e7c2c97899/calendar/events`;
 const getGraphClient = () => Providers.globalProvider.graph.client;
-const IsSignedIn = () => Providers.globalProvider.state === ProviderState.SignedIn;
+const IsEDUSignedIn = () => Providers.globalProvider.state === ProviderState.SignedIn;
 
 const graphRequests = {
     get: (url: string) => getGraphClient().api(url).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
@@ -187,7 +189,7 @@ const agent = {
     GraphRooms,
     GraphSchedules,
     GraphUser,
-    IsSignedIn,
+    IsEDUSignedIn,
     Uploads
 }
 

@@ -9,6 +9,7 @@ using Persistence;
 using Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
+using Application.Interfaces;
 
 namespace Application.Activities
 {
@@ -23,22 +24,39 @@ namespace Application.Activities
         {
             private readonly DataContext _context;
             private readonly IConfiguration _config;
+            private readonly ICACAccessor _cacAccessor;
 
 
-            public Handler(DataContext context, IConfiguration config)
+            public Handler(DataContext context, IConfiguration config, ICACAccessor cacAccesor)
             {
                 _context = context;
                 _config = config;   
+                _cacAccessor = cacAccesor;
             }
 
             public async Task<Result<Activity>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities
+
+                Activity activity;
+
+                if (_cacAccessor.IsCACAuthenticated())
+                {
+                    activity = await _context.Activities
+                     .Include(c => c.Category)
+                    .Include(o => o.Organization)
+                     .Include(r => r.Recurrence)
+                      .Include(h => h.HostingReport)
+                     .FirstOrDefaultAsync(x => x.Id == request.Id);
+                } else
+                {
+                    activity = await _context.Activities
                     .Include(c => c.Category)
                     .Include(o => o.Organization)
                     .Include(r => r.Recurrence)
-                    .Include(h => h.HostingReport)
-                .FirstOrDefaultAsync(x => x.Id == request.Id);
+                     .FirstOrDefaultAsync(x => x.Id == request.Id);
+                }
+
+
 
                 if (activity.Organization != null)
                 {

@@ -22,6 +22,7 @@ import ConfirmEmail from '../../features/users/ConfirmEmail';
 import RoomCalendar from '../../features/fullCalendar/RoomCalendar';
 import IMCCalendarDashboard from '../../features/fullCalendar/IMCCalendarDashboard';
 import activityTable from '../../features/activities/table/activityTable';
+import AuthenticateToArmy from '../../features/home/AuthenticateToArmy';
 
 function App() {
   const location = useLocation();
@@ -58,6 +59,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/genericcalendar/:id`} component={GenericCalendar}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/roomcalendar/:id`} component={RoomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/rooms`} component={RoomDashboard}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/authenticatetoarmy`} component={AuthenticateToArmy}/>
                 <Route path={`${process.env.PUBLIC_URL}/activities/:id/:categoryId`} component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={[`${process.env.PUBLIC_URL}/createActivity`, `${process.env.PUBLIC_URL}/manage/:id/:categoryId`, `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries`]} component={ActivityForm}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />

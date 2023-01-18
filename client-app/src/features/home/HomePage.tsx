@@ -11,14 +11,14 @@ import ValidationErrors from "../errors/ValidationErrors";
 
 export default observer(function HomePage(){
     const {userStore, graphUserStore} = useStore();
-    const {loadUser} = graphUserStore;
-    const {signInGraphUser, signInCacUser, loadingInitial, errors} = userStore;
+    const {loadEDUGraphUser} = graphUserStore;
+    const {signInEDUGraphUser, signInArmyUser, loadingInitial, errors} = userStore;
     const [loading, setLoading] = useState<boolean>(false);
     const loginCompleted = () => {
         setLoading(true);
-        loadUser().then((graphUser) => {
+        loadEDUGraphUser().then((graphUser) => {
           if(graphUser){
-            signInGraphUser(graphUser);
+            signInEDUGraphUser(graphUser);
           }
         });
       };
@@ -39,7 +39,7 @@ export default observer(function HomePage(){
     ) : (
         <>
           <Divider inverted />
-        <Header as ='h4' inverted content = 'Sign in with your edu account '/>
+        <Header as ='h2' inverted content = 'Sign in with your edu account (this is the preffered option)'/>
 
         {loading && <LoadingComponent content="logging in..." /> }
         {!loading &&
@@ -53,7 +53,7 @@ export default observer(function HomePage(){
         <Header as ='h4'
          inverted content = 'Or if you do not have an edu account login with your CAC'/>
         <Divider inverted />
-        <Button onClick={signInCacUser} loading = {loadingInitial}>
+        <Button onClick={signInArmyUser} loading = {loadingInitial}>
            Sign In With CAC
         </Button>
        {errors && errors.length > 0 && <ValidationErrors errors={errors}/>}

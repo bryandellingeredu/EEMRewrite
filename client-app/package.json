@@ -85,6 +85,7 @@
     ]
   },
   "devDependencies": {
+    "@types/babel__core": "^7.1.20",
     "@types/bootstrap": "^4.6.2",
     "@types/react-calendar": "^3.5.2",
     "@types/react-datepicker": "^4.4.2",

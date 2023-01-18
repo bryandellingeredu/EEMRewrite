@@ -5,6 +5,7 @@ import { GraphUser } from "../models/graphUser";
 import { User, UserFormValues } from "../models/user";
 import { store } from "./store";
 
+// user store handles the C# EEM Application user.   the graph users, army and edu, are handled in the graph user store
 export default class UserStore {
     user: User | null = null;
     refreshTokenTimeout: any;
@@ -76,9 +77,40 @@ export default class UserStore {
             this.setLoadingInitial(false);
             throw errors;
         }
+    } 
+
+    signInArmyUser = async() => {
+        try{
+            debugger;
+            this.setErrors([]);
+            this.setLoadingInitial(true);
+            await store.graphUserStore.signInArmy();
+            const armyProfile  = await store.graphUserStore.getAndSetArmyProfile();
+            if(armyProfile){
+            const graphUser : GraphUser = armyProfile as GraphUser;
+            const creds: UserFormValues = {
+                password: `${graphUser.id}aA`,
+                email: graphUser.mail,
+                displayName: graphUser.displayName || graphUser.mail,
+                userName: graphUser.mail
+            }
+            const user = await agent.Account.signInGraphUser(creds);
+            store.commonStore.setToken(user.token);
+            this.startRefreshTokenTimer(user);
+            runInAction(() =>  this.user = user)
+            history.push(`${process.env.PUBLIC_URL}/activityTable`);
+            }
+
+        }
+        catch(errors){
+            debugger;
+            this.setErrors(errors as string[])
+            this.setLoadingInitial(false);
+            throw errors;
+        }
     }
 
-    signInGraphUser = async(graphUser: GraphUser) => {
+    signInEDUGraphUser = async(graphUser: GraphUser) => {
       try{
         const creds: UserFormValues = {
             password: `${graphUser.id}aA`,
@@ -90,7 +122,7 @@ export default class UserStore {
         store.commonStore.setToken(user.token);
         this.startRefreshTokenTimer(user);
         runInAction(() =>  this.user = user)
-        history.push(`${process.env.PUBLIC_URL}/activityTable`);
+        //history.push(`${process.env.PUBLIC_URL}/activityTable`);
       } catch(error){
         throw error;
       }

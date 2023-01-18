@@ -103,6 +103,9 @@ export default observer(function Navbar() {
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
               Rooms
             </Menu.Item>
+            <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/authenticatetoarmy`}>
+              Log In Army
+            </Menu.Item>
             {!isSignedIn && (
               <Menu.Item position="right">
                 <Image

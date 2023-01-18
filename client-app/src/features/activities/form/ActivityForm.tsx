@@ -46,6 +46,7 @@ import { convertToHTML } from "draft-convert";
 import DocumentUploadWidget from "../../../app/common/documentUpload/documentUploadWidget";
 import { Attachment } from "../../../app/models/attachment";
 import { toast } from "react-toastify";
+import LoginToArmy365 from "./LoginToArmy365";
 
 
 function useIsSignedIn(): [boolean] {
@@ -89,7 +90,7 @@ export default observer(function ActivityForm() {
     uploading
   } = activityStore;
   const { categoryOptions, categories, loadCategories } = categoryStore;
-  const { graphUser, loadUser } = graphUserStore;
+  const { eduGraphUser, loadEDUGraphUser, armyProfile } = graphUserStore;
   const { locationOptions, loadLocations } = locationStore;
   const { organizationOptions, organizations, loadOrganizations } =
     organizationStore;
@@ -245,7 +246,7 @@ export default observer(function ActivityForm() {
       loadLocations();
     }
     if (isSignedIn) {
-      loadUser();
+      loadEDUGraphUser();
     }
   }, [isSignedIn]);
 
@@ -253,7 +254,7 @@ export default observer(function ActivityForm() {
     let hostingReportError = false;
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
-    if(activity.report === 'Hosting Report'){
+    if(activity.report === 'Hosting Report' && armyProfile && armyProfile?.mail){
       if(!activity.hostingReport?.bioAttachedOrPending && !attachment?.id){
         setAttachBioError(true);
         hostingReportError = true;
@@ -274,7 +275,7 @@ export default observer(function ActivityForm() {
     }
     if(!hostingReportError){
     setSubmitting(true);
-    if(activity.report === 'Hosting Report' || 'Outsiders Report'){
+    if( (activity.report === 'Hosting Report' || activity.report === 'Outsiders Report') && armyProfile && armyProfile?.mail ){
       activity.hostingReport!.reportType = activity.report;
       activity.hostingReport!.guestItinerary = 
          JSON.stringify(convertToRaw(editorState.getCurrentContent()));
@@ -282,6 +283,9 @@ export default observer(function ActivityForm() {
         activity.attachmentLookup = attachment.id;
         activity.hostingReport!.bioAttachedOrPending = 'Current Bio is Attached';
       }
+    }
+    if(!armyProfile || !armyProfile?.mail){
+      activity.hostingReport = null;
     }
     activity.recurrenceInd = recurrenceInd;
     activity.recurrence = recurrence;
@@ -296,13 +300,13 @@ export default observer(function ActivityForm() {
       activity.allDayEvent,
       true
     );
-    activity.coordinatorEmail = isSignedIn && graphUser ? graphUser.mail : "";
+    activity.coordinatorEmail = isSignedIn && eduGraphUser ? eduGraphUser.mail : "";
     activity.coordinatorName =
-      isSignedIn && graphUser ? graphUser.displayName : "";
+      isSignedIn && eduGraphUser  ? eduGraphUser .displayName : "";
     activity.coordinatorFirstName =
-      isSignedIn && graphUser ? graphUser.givenName : "";
+      isSignedIn && eduGraphUser ? eduGraphUser.givenName : "";
     activity.coordinatorLastName =
-      isSignedIn && graphUser ? graphUser.surname : "";
+      isSignedIn && eduGraphUser  ? eduGraphUser.surname : "";
     const category = categories.find((x) => x.id === activity.categoryId)!;
     const organization = activity.organizationId
       ? organizations.find((x) => x.id === activity.organizationId) || null
@@ -358,6 +362,7 @@ export default observer(function ActivityForm() {
   
 
   return (
+   
     <Segment clearing>
       <Header
         content={activity.id ? `Update ${activity.title}` : "Add Event"}
@@ -366,6 +371,18 @@ export default observer(function ActivityForm() {
         sub
         color="teal"
       />
+       {(!armyProfile || !armyProfile?.mail) &&
+      <div className= "ui yellow message">
+      <div className="header">
+          You are not authorized to work with Hosting or Outsider Reports.
+      </div>
+        If you would like to work with reports you must first sign into your army 365 account.  Please save all pending work before doing this.
+        <div style={{textAlign: 'center'}}>
+        <LoginToArmy365 />
+        </div>
+     </div> 
+    
+       }
       <Formik
         enableReinitialize
         validationSchema={validationSchema}
@@ -1621,6 +1638,9 @@ export default observer(function ActivityForm() {
            </Grid>
            <Divider/>
 
+           {armyProfile && armyProfile?.mail && 
+           <>
+
            <Grid>
            <Grid.Row>
             <Grid.Column width={3}>
@@ -2291,6 +2311,8 @@ export default observer(function ActivityForm() {
 
    
                 </Segment> }
+                </>
+}
 
 
           <Divider />

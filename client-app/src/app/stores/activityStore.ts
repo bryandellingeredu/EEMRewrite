@@ -59,7 +59,7 @@ export default class ActivityStore {
     const endArray = end.split('T');
     const startForGraph = `${startArray[0]}T00:00:00Z`;
     const endForGraph = `${endArray[0]}T00:00:00Z`;
-    if (agent.IsSignedIn()) {
+    if (agent.IsEDUSignedIn()) {
      try{
       const events: CalendarEvent[] = [];
       const categoryStore = store.categoryStore;
@@ -125,7 +125,7 @@ export default class ActivityStore {
           activities.push(response);
         })
       })
-      if (agent.IsSignedIn()) {
+      if (agent.IsEDUSignedIn()) {
         const start = store.commonStore.convertDateToGraph(store.commonStore.addDays(day, -10), true, false);
         const end = store.commonStore.convertDateToGraph(store.commonStore.addDays(day, 10), true, true);
         const graphResponse: GraphEvent[] = await agent.GraphEvents.listForCalendar(start, end);
@@ -167,7 +167,7 @@ export default class ActivityStore {
         activities.push(response);
       })
     })
-    if (agent.IsSignedIn() && 
+    if (agent.IsEDUSignedIn() && 
     (!searchParams.categoryIds || !searchParams.categoryIds.length || searchParams.categoryIds.includes(academicCategoryId))
     ) {
        let graphResponse: GraphEvent[] = [];
@@ -235,7 +235,7 @@ export default class ActivityStore {
             this.activityRegistry.set(response.id, response);
           })
         })
-        if (agent.IsSignedIn()) {
+        if (agent.IsEDUSignedIn()) {
           const start = store.commonStore.convertDateToGraph(store.commonStore.addDays(this.day, -10), true, false);
           const end = store.commonStore.convertDateToGraph(store.commonStore.addDays(this.day, 10), true, true);
           const graphResponse: GraphEvent[] = await agent.GraphEvents.listForCalendar(start, end);
