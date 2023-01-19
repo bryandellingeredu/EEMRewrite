@@ -39,13 +39,16 @@ namespace Application.Activities
             private readonly IMapper _mapper;
             private readonly IConfiguration _config;
             private readonly IUserAccessor _userAccessor;
+            private readonly ICACAccessor _cacAccessor;
 
-            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor)
+            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
                 _userAccessor = userAccessor;
+                _cacAccessor = cacAccessor;  
+
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -84,6 +87,10 @@ namespace Application.Activities
                 if (activity == null) return null;
                 var createdBy = activity.CreatedBy;
                 var createdAt = activity.CreatedAt;
+                if(!_cacAccessor.IsCACAuthenticated()){
+                    var originalHostingReport = _context.HostingReports.AsNoTracking().FirstOrDefault(x => x.ActivityId == request.Activity.Id);
+                    request.Activity.HostingReport = originalHostingReport;
+                }
                 _mapper.Map(request.Activity, activity);
                     if(activity.HostingReport != null && activity.HostingReport.Arrival != null){
                                activity.HostingReport.Arrival = TimeZoneInfo.ConvertTime(activity.HostingReport.Arrival.Value, TimeZoneInfo.Local);

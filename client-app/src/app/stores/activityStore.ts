@@ -277,7 +277,7 @@ export default class ActivityStore {
             activity.hostingReport.arrival = new Date(activity.hostingReport.arrival);
           } 
           if(activity.hostingReport && activity.hostingReport.departure){
-            activity.hostingReport.arrival = new Date(activity.hostingReport.departure);
+            activity.hostingReport.departure = new Date(activity.hostingReport.departure);
           } 
           this.activityRegistry.set(activity.id, activity);
           runInAction(() => {

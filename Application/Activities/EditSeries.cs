@@ -37,26 +37,38 @@ namespace Application.Activities
             private readonly IMapper _mapper;
             private readonly IConfiguration _config;
             private readonly IUserAccessor _userAccessor;
+            private readonly ICACAccessor _cacAccessor;
 
-            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor)
+            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
                 _userAccessor = userAccessor;
+                _cacAccessor = cacAccessor;
+            
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 try
                 {
+
                     Helper.InitHelper(_mapper);
                     var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
+                    
+                   if(!_cacAccessor.IsCACAuthenticated()){
+                        var originalHostingReport = _context.HostingReports.AsNoTracking().FirstOrDefault(x => x.ActivityId == request.Activity.Id);
+                        request.Activity.HostingReport = originalHostingReport;
+                    }
+
                     DeleteHostingReports(request.Activity.RecurrenceId);
 
                     var activitiesToBeDeleted = _context.Activities.Where(x => x.RecurrenceId == request.Activity.RecurrenceId);
                     var activityIds = activitiesToBeDeleted.Select(x => x.Id).ToArray();
                     var newActivities = new List<Activity>();
+
+
               
                     Settings s = new Settings();
                     var settings = s.LoadSettings(_config);

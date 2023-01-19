@@ -378,7 +378,9 @@ export default observer(function ActivityForm() {
       </div>
         If you would like to work with reports you must first sign into your army 365 account.  Please save all pending work before doing this.
         <div style={{textAlign: 'center'}}>
-        <LoginToArmy365 />
+        <Link to={`${process.env.PUBLIC_URL}/authenticatetoarmy`} className='ui primary button'>
+            Log Into Army 365
+        </Link>
         </div>
      </div> 
     
@@ -1973,7 +1975,7 @@ export default observer(function ActivityForm() {
             </SemanticForm.Group>
             <i>Has Vios request been submitted?</i>
             </Grid.Column>
-            </Grid.Row>           
+            </Grid.Row>          
            </Grid>
 
       <div className= "ui yellow message">

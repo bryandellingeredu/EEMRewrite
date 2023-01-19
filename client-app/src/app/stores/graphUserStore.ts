@@ -19,7 +19,7 @@ export default class GraphUserStore {
           // Full directory URL, in the form of https://login.microsoftonline.com/<tenant-id>
           authority: "https://login.microsoftonline.com/common",
           // Full redirect URL, in form of http://localhost:3000
-          redirectUri: "http://localhost:3000/eem/",
+          redirectUri: process.env.REDIRECT_URI_ARMY,
       },
       cache: {
           cacheLocation: "sessionStorage", // This configures where your cache will be stored

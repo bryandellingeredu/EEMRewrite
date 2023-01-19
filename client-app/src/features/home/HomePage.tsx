@@ -3,7 +3,7 @@ import { Login } from "@microsoft/mgt-react";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Container, Header, Segment, Image, Button, Divider } from "semantic-ui-react";
+import { Container, Header, Segment, Image, Button, Divider, Label } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
 import ValidationErrors from "../errors/ValidationErrors";
@@ -39,7 +39,7 @@ export default observer(function HomePage(){
     ) : (
         <>
           <Divider inverted />
-        <Header as ='h2' inverted content = 'Sign in with your edu account (this is the preffered option)'/>
+        <Header as ='h2' inverted content = 'Sign in with your EDU account (this is the preffered option).  Make sure you choose your EDU account. '/>
 
         {loading && <LoadingComponent content="logging in..." /> }
         {!loading &&
@@ -51,12 +51,12 @@ export default observer(function HomePage(){
          <>
         <Divider inverted />
         <Header as ='h4'
-         inverted content = 'Or if you do not have an edu account login with your CAC'/>
+         inverted content = 'Or if you do not have an edu account login with your Army 365 Account.  make sure you choose your Army 365 Account'/>
         <Divider inverted />
-        <Button onClick={signInArmyUser} loading = {loadingInitial}>
-           Sign In With CAC
+        <Button onClick={signInArmyUser} >
+           Sign In With Army 365 Account
         </Button>
-       {errors && errors.length > 0 && <ValidationErrors errors={errors}/>}
+       {errors && errors.length > 0 && <Label color='red' content='an error occured during log in please try again' />}
         </>
     }
       {/* <Button onClick={() => {modalStore.openModal(<LoginForm />, 'tiny')}} size='huge' inverted>
