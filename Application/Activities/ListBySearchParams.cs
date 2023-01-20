@@ -37,6 +37,7 @@ namespace Application.Activities
                 var query = _context.Activities
                    .Include(c => c.Category)
                    .Include(o => o.Organization)
+                   .Where(x => !x.LogicalDeleteInd)
                    .AsQueryable();
 
                 if (!string.IsNullOrEmpty(request.Title))

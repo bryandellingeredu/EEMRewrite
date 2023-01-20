@@ -46,7 +46,6 @@ import { convertToHTML } from "draft-convert";
 import DocumentUploadWidget from "../../../app/common/documentUpload/documentUploadWidget";
 import { Attachment } from "../../../app/models/attachment";
 import { toast } from "react-toastify";
-import LoginToArmy365 from "./LoginToArmy365";
 
 
 function useIsSignedIn(): [boolean] {

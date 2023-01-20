@@ -33,7 +33,11 @@ namespace Application.Activities
             {
                 var activity = new Activity();
 
-                var activities = await _context.Activities.Include(x => x.Organization).Include(x => x.Category).Where(x => x.Title == request.Title).ToListAsync();
+                var activities = await _context.Activities
+                .Include(x => x.Organization)
+                .Include(x => x.Category)
+                .Where(x => !x.LogicalDeleteInd)
+                .Where(x => x.Title == request.Title).ToListAsync();
                 if (!activities.Any())
                 {
                     var titleArray = request.Title.Split("- Requested by:");

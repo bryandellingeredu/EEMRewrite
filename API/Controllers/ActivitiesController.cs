@@ -16,6 +16,10 @@ namespace API.Controllers
         public async Task<IActionResult> GetActivities() =>
          HandleResult(await Mediator.Send(new List.Query()));
 
+        [HttpGet("getDeleted")]
+       public async Task<IActionResult> GetDeletedActivities() =>
+      HandleResult(await Mediator.Send(new ListDeleted.Query()));
+
 
         [HttpGet("getByDay/{day}")]
         public async Task<IActionResult> GetActivities(string day)
@@ -64,6 +68,11 @@ namespace API.Controllers
             activity.Id = id;
             return HandleResult(await Mediator.Send(new EditSeries.Command { Activity = activity }));
         }
+
+        [HttpPut("restore/{id}")]
+        public async Task<ActionResult<Activity>> RestoreActivity(Guid id) =>
+          HandleResult(await Mediator.Send(new Restore.Command { Id = id }));
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Activity>> DeleteActivity(Guid id) =>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Application.GraphRooms
 {

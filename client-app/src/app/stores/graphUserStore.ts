@@ -58,6 +58,17 @@ armyProfile : GraphUser | null = null;
         //  }else{
             this.setArmyToken('');
             this.setLoggedIntoArmy(false);
+            toast.error('Error Getting Army Access Token - please login again',
+            {
+              position: "top-center",
+              autoClose: 25000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+              });
             console.log('error acquiring token');
             console.log(error);
          // }        

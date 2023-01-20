@@ -130,6 +130,9 @@ export interface Activity{
     additionalVTCInfo :	string
     vtcStatus :	string
     attachmentLookup : number | null
+    logicalDeleteInd : boolean
+    deletedBy: string
+    deletedAt: Date | null
 }
 
 export class Activity implements Activity{
@@ -258,6 +261,9 @@ export class ActivityFormValues{
     additionalVTCInfo :	string = ''
     vtcStatus :	string = ''
     attachmentLookup : number | null = null
+    logicalDeleteInd : boolean = false
+    deletedAt: Date | null = null
+    deletedBy: string = ''
 
 
     constructor(activity?: ActivityFormValues){
@@ -380,6 +386,9 @@ export class ActivityFormValues{
         this.additionalVTCInfo = activity.additionalVTCInfo
         this.vtcStatus = activity.vtcStatus
         this.attachmentLookup = activity.attachmentLookup
+        this.logicalDeleteInd = activity.logicalDeleteInd
+        this.deletedAt = activity.deletedAt
+        this.deletedBy = activity.deletedBy
        } 
     }
 }

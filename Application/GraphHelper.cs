@@ -215,8 +215,12 @@
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
               throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
-
-            await _appClient.Users[coordinatorEmail].Events[eventLookup]
+            string derivedCoordinatorEmail = coordinatorEmail;
+            
+            if(!coordinatorEmail.EndsWith(GetEEMServiceAccount().Split('@')[1])){
+               derivedCoordinatorEmail = GetEEMServiceAccount();
+            }
+            await _appClient.Users[derivedCoordinatorEmail].Events[eventLookup]
               .Request()
               .DeleteAsync();
 

@@ -156,5 +156,8 @@ namespace Domain
          public HostingReport HostingReport {get; set;}
 
          public int? AttachmentLookup {get; set;}
+         public bool LogicalDeleteInd {get; set;}
+          public string DeletedBy { get; set; }
+        public DateTime? DeletedAt { get; set; }
     }
 }

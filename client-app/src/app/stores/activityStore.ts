@@ -529,7 +529,10 @@ export default class ActivityStore {
     seniorAttendeeNameRank : '',
     additionalVTCInfo :	'',
     vtcStatus : '',
-    attachmentLookup: null
+    attachmentLookup: null,
+    logicalDeleteInd: false,
+    deletedAt: null,
+    deletedBy: ''
     }
     return activity;
   }

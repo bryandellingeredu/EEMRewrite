@@ -39,7 +39,8 @@ namespace Application.Activities
                 var activities = await _context.Activities.Include(x => x.Organization).
                     Where(x => DateTime.Compare(start, x.Start) <= 0).
                     Where(x => DateTime.Compare(end, x.End) >= 0).
-                    Where(x => x.CategoryId == category.Id)
+                    Where(x => x.CategoryId == category.Id).
+                    Where(x => !x.LogicalDeleteInd)
                     .ToListAsync();
 
                 List<FullCalendarEventDTO> fullCalendarEventDTOs = new List<FullCalendarEventDTO>();

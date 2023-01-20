@@ -1,13 +1,18 @@
 import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
-import { Button, Header, Item, Segment, Image } from 'semantic-ui-react'
+import { Button, Header, Item, Segment, Image, Confirm, Label } from 'semantic-ui-react'
 import { Activity } from '../../../app/models/activity';
 import RecurrenceMessageWrapper from '../recurrenceMessage/RecurrenceMessageWrapper';
 import { useStore } from "../../../app/stores/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward, faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { useHistory } from 'react-router-dom'
+import { useState } from 'react';
+import agent from '../../../app/api/agent';
+import { toast } from 'react-toastify';
+
+
 
 const activityImageStyle = {
     filter: 'brightness(30%)'
@@ -24,11 +29,42 @@ const activityImageTextStyle = {
 
 interface Props {
     activity: Activity
+    setReloadTrigger: () => void
 }
 
-export default observer(function ActivityDetailedHeader({ activity }: Props) {
+export default observer(function ActivityDetailedHeader({ activity, setReloadTrigger }: Props) {
     const {modalStore} = useStore();
     const history = useHistory();
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [restoring, setRestoring] = useState(false);
+    const handleDeleteEvent = async() =>{
+        try{
+           setShowConfirm(false);
+           setDeleting(true);
+           await agent.Activities.delete(activity.id);
+           toast.success('This event has been deleted');
+           history.push(`${process.env.PUBLIC_URL}/deletedactivityTable`)
+           setDeleting(false);
+        } catch(error){
+            console.log(error);
+           setDeleting(false);
+
+        }
+    }
+    const handleRestoreEvent = async() =>{
+        try{
+           setShowConfirm(false);
+           setRestoring(true);
+           await agent.Activities.restore(activity.id);
+           toast.success('This event has been restored');
+           setReloadTrigger();
+        } catch(error){
+            console.log(error);
+           setRestoring(false);
+
+        }
+    }
     return (
         <Segment.Group>
             <Segment basic attached='top' style={{ padding: '0' }}>
@@ -43,6 +79,11 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                         <Item>
                             <Item.Content>
                                 <>
+                                {activity.logicalDeleteInd && 
+        
+                                <Label size='huge' color='red' content='This Event is Deleted' style={{marginBottom: '10px'}}/>
+                
+                                 }
                                 <Header
                                     size='huge'
                                     content={activity.title}
@@ -111,8 +152,48 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
             Back
            </Button>
 
+           {
+       activity.category.name !== 'Academic Calendar' && !activity.logicalDeleteInd &&
+          <>
+                <Button color='red'
+                 floated='right'
+                  type='button'
+                  onClick={() => setShowConfirm(true)}
+                  loading={deleting}
+                  >
+                    Delete Event
+                </Button>
+                  <Confirm
+                  open={showConfirm}
+                  onCancel={() => setShowConfirm(false)}
+                  onConfirm={handleDeleteEvent}
+                  header='You are about to delete this event'
+                />
+        </>
+    }
 
-            {activity.recurrenceInd && activity.recurrence &&
+{
+       activity.category.name !== 'Academic Calendar' && activity.logicalDeleteInd &&
+          <>
+                <Button color='orange'
+                 floated='right'
+                  type='button'
+                  onClick={() => setShowConfirm(true)}
+                  loading={restoring}
+                  >
+                    Restore / Un-Delete
+                </Button>
+                  <Confirm
+                  open={showConfirm}
+                  onCancel={() => setShowConfirm(false)}
+                  onConfirm={handleRestoreEvent}
+                  header='You are about to restore this event. Please note that this action will not restore any associated room reservations.'
+                  content='This will restore the deleted event, but will not re-instate any room reservations that were associated with it. If new room reservations are needed, those will have to be made separately.'
+                />
+        </>
+    }
+
+            {activity.recurrenceInd && activity.recurrence && !activity.logicalDeleteInd &&
       <>
       <Button  icon color='teal' 
        onClick={() => modalStore.openModal(
@@ -132,11 +213,12 @@ Update Series
 </>
    
      }
-   { activity.category.name !== 'Academic Calendar' && 
+   { activity.category.name !== 'Academic Calendar' && !activity.logicalDeleteInd &&
                 <Button color='orange' floated='right' as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
                     Update Event
                 </Button>
     }
+    
             </Segment>
         </Segment.Group>
     )

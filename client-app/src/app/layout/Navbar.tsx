@@ -65,6 +65,7 @@ export default observer(function Navbar() {
             <Dropdown.Menu>
               <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/activityTable`} text ="Event List"/>
               <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/activities`} text ="Today's Events"/>
+              <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/deletedactivityTable`} text ="Recycle Bin / Deleted Activities"/>
             </Dropdown.Menu>    
             </Dropdown>        
               <Dropdown item text="Department Calendars" scrolling >

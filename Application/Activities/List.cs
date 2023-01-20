@@ -33,6 +33,7 @@ namespace Application.Activities
                    .Include(c => c.Category)
                    .Include(o => o.Organization)
                    .Include(r => r.Recurrence)
+                   .Where(x => !x.LogicalDeleteInd)
                   .ToListAsync(cancellationToken);
 
                 foreach (var activity in activities)

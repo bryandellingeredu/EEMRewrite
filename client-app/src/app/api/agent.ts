@@ -119,12 +119,14 @@ const GraphEvents = {
 
 const Activities = {
     list: (day: Date) => axiosRequest.get<Activity[]>(`/activities/getByDay/${day.toISOString()}`),
+    listDeleted: () => axiosRequest.get<Activity[]>('activities/getDeleted'),
     listBySearchParams: (data: any) => axiosRequest.post<Activity[]>('/activities/listBySearchParams', data),
     details: (id: string) => axiosRequest.get<Activity>(`/activities/${id}`),
     create: (activity: Activity) => axiosRequest.post<void>('/activities', activity),
     update: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/${id}`, activity),
     updateSeries: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/updateSeries/${id}`, activity),
     delete: (id: string) =>  axiosRequest.del<void>(`/activities/${id}`),
+    restore: (id: string) => axiosRequest.put<void>(`/activities/restore/${id}`, {}),
     reserveNonDepartmentRoom: (
         room: NonDepartmentRoomReservationRequest) => axiosRequest.post<string>(
             '/activities/reserveNonDepartmentRoom', room ),
