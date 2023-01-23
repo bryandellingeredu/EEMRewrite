@@ -80,9 +80,9 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                             <Item.Content>
                                 <>
                                 {activity.logicalDeleteInd && 
-        
+                                <p>
                                 <Label size='huge' color='red' content='This Event is Deleted' style={{marginBottom: '10px'}}/>
-                
+                                </p>
                                  }
                                 <Header
                                     size='huge'

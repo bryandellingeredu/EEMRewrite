@@ -24,6 +24,7 @@ import IMCCalendarDashboard from '../../features/fullCalendar/IMCCalendarDashboa
 import activityTable from '../../features/activities/table/activityTable';
 import AuthenticateToArmy from '../../features/home/AuthenticateToArmy';
 import DeletedActivityTable from '../../features/activities/table/deletedActivityTable';
+import RoomCalendarLinks from '../../features/fullCalendar/RoomCalendarLinks';
 
 function App() {
   const location = useLocation();
@@ -60,6 +61,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar`} component={IMCCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/genericcalendar/:id`} component={GenericCalendar}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/roomcalendar/:id`} component={RoomCalendar}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/roomCalendarLinks`} component={RoomCalendarLinks}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/rooms`} component={RoomDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/authenticatetoarmy`} component={AuthenticateToArmy}/>
                 <Route path={`${process.env.PUBLIC_URL}/activities/:id/:categoryId`} component={ActivityDetails} sensitive/>

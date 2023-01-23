@@ -77,15 +77,20 @@ export default observer(function Navbar() {
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
-
+              {/*
               <Dropdown item text="Room Calendars" scrolling >
                 <Dropdown.Menu>
                   {loadingInitial && <Dropdown.Item text="Loading Rooms..." />}
                   {graphRooms.map((room) => (
                     <Dropdown.Item key={room.id} text={room.displayName}   as={Link}   to={`${process.env.PUBLIC_URL}/roomcalendar/${room.id}`}  />
                   ))}
-                </Dropdown.Menu>
-              </Dropdown>  
+                  *
+                </Dropdown.Menu>           
+              </Dropdown> 
+                  */} 
+               <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/roomCalendarLinks`}>
+              Room Calendars
+            </Menu.Item>
               <Dropdown item text="IMC Calendars" >
                 <Dropdown.Menu>           
                    <Dropdown.Item
