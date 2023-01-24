@@ -46,6 +46,7 @@ export default observer(function GenericCalendar() {
       const response = await agent.Activities.getRoomNames(
         arg.event.extendedProps.eventLookup, arg.event.extendedProps.coordinatorEmail);
         if(response){
+          tooltip.setContent('');
           content = content + '<p><strong>Room(s): <strong>' + response + '</p>';
           tooltip.setContent(content);
         }

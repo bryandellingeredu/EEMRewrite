@@ -115,7 +115,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                                     </p>
                                 }
                                 { activity.activityRooms && activity.activityRooms.map(room => (
-                                       <p key={room.id}>{room.name}</p>
+                                       <p key={room.id}>{`${room.name} (${room.status})`}</p>
                                 ))}   
                                 { (!activity.activityRooms || activity.activityRooms.length <= 0) && activity.primaryLocation &&
                                     <p>{activity.primaryLocation}</p>

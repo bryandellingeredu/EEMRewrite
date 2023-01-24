@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Application.GraphSchedules;
 using System.Diagnostics;
 using Microsoft.Graph;
+using System.Globalization;
+using System;
 
 namespace Application.Activities
 {
@@ -51,7 +53,14 @@ namespace Application.Activities
                     {
                         Id = index++,
                         Name = getName(item, allrooms),
-                        Email = item.EmailAddress.Address
+                        Email = item.EmailAddress.Address,
+                        Status = await getRoomStatus(new ScheduleRequestDTO
+                        {
+                            Schedules = new List<string> { item.EmailAddress.Address },
+                            StartTime = ConvertToEST(evt.Start),
+                            EndTime = ConvertToEST(evt.End),
+                            AvailabilityViewInterval = 15
+                        })
                     });
                 }
 
@@ -59,10 +68,23 @@ namespace Application.Activities
 
                 if (newActivityRooms.Any())
                 {
-                    roomNames = String.Join( ", ", newActivityRooms.Select(x => x.Name).ToArray());
+                    roomNames = String.Join( ", ", newActivityRooms.Select(x => $"{x.Name} ( {x.Status} )").ToArray());
                 }
 
                 return Result<string>.Success(roomNames);
+            }
+
+            private DateTimeTimeZone ConvertToEST(DateTimeTimeZone dateTimeTimeZone)
+            {
+                DateTime utcDateTime = DateTime.SpecifyKind(DateTime.Parse(dateTimeTimeZone.DateTime), DateTimeKind.Utc);
+                TimeZoneInfo est = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                DateTime estDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, est);
+                var estdateTimeTimeZone = new DateTimeTimeZone
+                {
+                    DateTime = estDateTime.ToString("o"),
+                    TimeZone = TimeZoneInfo.Local.Id
+                };
+                return estdateTimeTimeZone;
             }
 
             private string getName(Attendee item, IGraphServicePlacesCollectionPage allrooms)
@@ -72,6 +94,24 @@ namespace Application.Activities
                 return name;
             }
 
+            private async Task<string> getRoomStatus(ScheduleRequestDTO scheduleRequestDTO)
+            {
+                var status = "Free";
+                ICalendarGetScheduleCollectionPage result = await GraphHelper.GetScheduleAsync(scheduleRequestDTO);
+                foreach (ScheduleInformation scheduleInformation in result.CurrentPage)
+                {
+                    foreach (ScheduleItem scheduleItem in scheduleInformation.ScheduleItems)
+                    {
+                        if (scheduleItem.Status != FreeBusyStatus.Free)
+                        {
+                            status = scheduleItem.Status == FreeBusyStatus.Busy ? "Approved" : "Tentative";
+                        }
+                    }
+                }
+                return status;
+            }
+
+            
         }
     }
 }

@@ -10,6 +10,9 @@ using Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 using Application.Interfaces;
+using Application.Emails;
+using Application.GraphSchedules;
+using System.Globalization;
 
 namespace Application.Activities
 {
@@ -96,7 +99,14 @@ namespace Application.Activities
                         {
                           Id = index++,
                           Name = getName(item, allrooms),
-                          Email = item.EmailAddress.Address
+                          Email = item.EmailAddress.Address,
+                          Status = await getRoomStatus(new ScheduleRequestDTO
+                          {
+                              Schedules = new List<string> { item.EmailAddress.Address},
+                              StartTime = getDateTimeTimeZone( activity.Start),
+                              EndTime = getDateTimeTimeZone(activity.End),
+                              AvailabilityViewInterval = 15
+                          })
                         });
                     }
 
@@ -105,6 +115,32 @@ namespace Application.Activities
                 }
 
                 return Result<Activity>.Success(activity);
+            }
+
+            private async Task<string> getRoomStatus(ScheduleRequestDTO scheduleRequestDTO)
+            {
+                var status = "Free";
+                ICalendarGetScheduleCollectionPage result = await GraphHelper.GetScheduleAsync(scheduleRequestDTO);
+                foreach (ScheduleInformation scheduleInformation in result.CurrentPage)
+                {
+                    foreach (ScheduleItem scheduleItem in scheduleInformation.ScheduleItems)
+                    {
+                        if (scheduleItem.Status != FreeBusyStatus.Free)
+                        {
+                            status = scheduleItem.Status == FreeBusyStatus.Busy ? "Approved" : "Tentative";
+                        }
+                    }
+                }
+                return status;
+            }
+
+            private DateTimeTimeZone getDateTimeTimeZone(DateTime dt)
+            {
+                string dateAsString = dt.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
+                DateTimeTimeZone dateTimeZone = new DateTimeTimeZone();
+                dateTimeZone.DateTime = dateAsString;
+                dateTimeZone.TimeZone = "UTC";
+                return dateTimeZone;
             }
 
             private string getName(Attendee item, IGraphServicePlacesCollectionPage allrooms)
