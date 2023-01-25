@@ -35,15 +35,19 @@ export default class CommonStore{
     }
 
     convertDateToGraph = (date: Date, isAllDay: boolean, isEndDt: boolean): string => {
+        debugger
         if(isEndDt && isAllDay){
             date = this.addDays(date,1);
         }
-        const isoStringDate = date.toISOString().split('T')[0];
+        const year = date.getFullYear().toString();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0");
+        const day = date.getDate().toString().padStart(2, "0")
         const hour = ("0" + date.getHours()).slice(-2);
         const minute = ("0" + date.getMinutes()).slice(-2);
+        const datePartOfIsoString = `${year}-${month}-${day}`;
         const convertedDate = isAllDay 
-        ? `${isoStringDate}T00:00:00.0000000`
-        : `${isoStringDate}T${hour}:${minute}:00.0000000`
+        ? `${datePartOfIsoString}T00:00:00.0000000`
+        : `${datePartOfIsoString}T${hour}:${minute}:00.0000000`
         return convertedDate;
       }
 
