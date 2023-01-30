@@ -11,25 +11,118 @@ namespace Persistence
 {
     public class Seed
     {
-        public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
+        public static async Task SeedData(DataContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            if(!roleManager.Roles.Any())
+            {
+                await roleManager.CreateAsync(new IdentityRole() { Name = "admin" });
+            }
+
             if (!userManager.Users.Any())
             {
                 var users = new List<AppUser>
                 {
                     new AppUser
                     {
-                        DisplayName = "Bob",
-                        UserName = "bob",
-                        Email = "bob@test.com"
+                        DisplayName = "Dellinger, Bryan Mr",
+                        UserName = "bryan.dellinger.civ@armywarcollege.edu",
+                        Email = "bryan.dellinger.civ@armywarcollege.edu"
+                    },
+                      new AppUser
+                    {
+                        DisplayName = "Mr. Robert H. Hoss",
+                        UserName = "robert.h.hoss@armywarcollege.edu",
+                        Email = "robert.h.hoss@armywarcollege.edu"
                     },
                 };
 
                 foreach (var user in users)
                 {
-                    await userManager.CreateAsync(user, "Pa$$w0rd");
+                    user.EmailConfirmed = true;
+                    await userManager.CreateAsync(user);
+                    await userManager.AddToRoleAsync(user, "admin");
                 }
 
+            }
+
+            if(!context.EmailGroups.Any())
+            {
+                var emailGroups = new List<EmailGroup>
+                {
+                  new EmailGroup {Name = "Request Commandt Presence"},
+                  new EmailGroup {Name = "Request Provost Presence"},
+                  new EmailGroup {Name = "Request Dep Cmdt Presence"},
+                  new EmailGroup {Name = "Request Cofs Presence"},
+                  new EmailGroup {Name = "Request Deans Presence"},
+                  new EmailGroup {Name = "Request Ambassador Presence"},
+                };
+
+                await context.EmailGroups.AddRangeAsync(emailGroups);
+                await context.SaveChangesAsync();
+            }
+
+            if(!context.EmailGroupMembers.Any())
+            {
+              var emailGroupMembers = new List<EmailGroupMember>
+              {
+                new EmailGroupMember {DisplayName = "Dellinger, Bryan Mr", Email = "bryan.dellinger.civ@armywarcollege.edu"}
+              };
+               await context.EmailGroupMembers.AddRangeAsync(emailGroupMembers);
+               await context.SaveChangesAsync();
+            }
+            
+            if(!context.EmailGroupEmailGroupMemberJunctions.Any())
+            {
+              var emailGroupEmailGroupMemberJunctions = new List<EmailGroupEmailGroupMemberJunction>();
+              var emailGroupMember = await context.EmailGroupMembers.Where(x => x.Email == "bryan.dellinger.civ@armywarcollege.edu").FirstOrDefaultAsync();
+              foreach (var item in context.EmailGroups)
+              {
+                emailGroupEmailGroupMemberJunctions.Add(new EmailGroupEmailGroupMemberJunction{EmailGroupMemberId = emailGroupMember.Id, EmailGroupId = item.Id});
+              }
+              await context.EmailGroupEmailGroupMemberJunctions.AddRangeAsync(emailGroupEmailGroupMemberJunctions);
+              await context.SaveChangesAsync();
+
+            }
+          
+        
+
+            if (!context.RoomDelegates.Any())
+            {
+                var roomDelegates = new List<RoomDelegate>
+                { 
+                    new RoomDelegate {RoomEmail = "BlissHallTestAuditorium @armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "ReynoldsTheater@armywarcollege.edu ", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "USAHECVECTestRoom1@armywarcollege.edu ", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "USAHECConservationFacility@armywarcollege.edu ", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "USAHECArmyHeritageTrailTestStation@armywarcollege.edu ", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "USAHECRidgwayHallTestConferenceRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "UptonHallTestConfRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "TestRoom5@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "RootHallTestRoom2@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "CollinsHallTestRoom2@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "RootHallTestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "Bldg315TestConferenceRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "Bldg632TestConfRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "CollinsHallTestRoom1Rm1015@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "ArmstrongHallTestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "Bldg47TestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "AnneElyHallTestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "TestRoom4@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "CollinsHallB015ConferenceTable@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "BryanRoom@armywarcollege.edu", DelegateEmail="bryan.dellinger.civ@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "experimental.classroom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "will.washcoe@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "one.button@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "library.collaboration2@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "library.collaboration1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                     new RoomDelegate {RoomEmail = "upton@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                     new RoomDelegate {RoomEmail = "ccr@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                      new RoomDelegate {RoomEmail = "mary.walker@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                      new RoomDelegate {RoomEmail = "JoanTestRoom2@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                      new RoomDelegate {RoomEmail = "JoanTestRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+               };
+                await context.RoomDelegates.AddRangeAsync(roomDelegates);
+                await context.SaveChangesAsync();
             }
 
 

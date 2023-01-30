@@ -41,6 +41,10 @@ export default observer(function Navbar() {
   useEffect(() => {
     if (!graphRooms.length) loadGraphRooms();
     if (!categories.length) loadCategories();
+    console.log('user');
+    console.log(user);
+    console.log(user?.displayName);
+    console.log(user?.roles);
   }, [loadGraphRooms, graphRooms.length, categories.length]);
 
   return (
@@ -109,6 +113,13 @@ export default observer(function Navbar() {
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
               Rooms
             </Menu.Item>
+            {user && user.roles && user.roles.includes("admin") &&
+            <Dropdown item text="Admin">
+            <Dropdown.Menu>
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/emailGroupTable`} text ="Manage Email Groups"/>
+            </Dropdown.Menu>    
+            </Dropdown> 
+           }
             {!isSignedIn && (
               <Menu.Item position="right">
                 <Image

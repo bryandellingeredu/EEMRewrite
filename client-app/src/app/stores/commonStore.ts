@@ -35,7 +35,6 @@ export default class CommonStore{
     }
 
     convertDateToGraph = (date: Date, isAllDay: boolean, isEndDt: boolean): string => {
-        debugger
         if(isEndDt && isAllDay){
             date = this.addDays(date,1);
         }

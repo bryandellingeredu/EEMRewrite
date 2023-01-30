@@ -87,7 +87,7 @@ namespace API.Controllers
                 if (result.Succeeded)
                 {
                     await SetRefreshToken(user);
-                    return CreateUserObject(user);
+                    return await   CreateUserObject(user);
                 }
                 return BadRequest("problem registering user");
             }
@@ -97,14 +97,14 @@ namespace API.Controllers
                 if (result.Succeeded)
                 {
                     await SetRefreshToken(user);
-                    return CreateUserObject(user);
+                    return await    CreateUserObject(user);
                 }
                 else
                 {
                     string token = await _userManager.GeneratePasswordResetTokenAsync(user);
                     await _userManager.ResetPasswordAsync(user, token, cac.DodIdNumber + "AaBb");
                     await SetRefreshToken(user);
-                    return CreateUserObject(user);
+                    return await    CreateUserObject(user);
 
                 }
 
@@ -144,7 +144,7 @@ namespace API.Controllers
                 if (result.Succeeded)
                 {
                     await SetRefreshToken(user);
-                    return CreateUserObject(user);
+                    return await    CreateUserObject(user);
                 }
                 return BadRequest("problem registering user");
             }
@@ -154,18 +154,31 @@ namespace API.Controllers
                 if (result.Succeeded)
                 {
                     await SetRefreshToken(user);
-                    return CreateUserObject(user);
+                    return await CreateUserObject(user);
                 } else
                 {
                     string token = await _userManager.GeneratePasswordResetTokenAsync(user);
                     await _userManager.ResetPasswordAsync(user, token, Dto.Password);
                     await SetRefreshToken(user);
-                    return CreateUserObject(user);
+                    return await    CreateUserObject(user);
 
                 }
                 
             }
 
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getRoles/{userEmail}")]
+        public async Task<IActionResult> GetRoles(string userEmail){
+            
+            var user = await _userManager.FindByEmailAsync(userEmail);
+             if (user == null) return Unauthorized("Invalid Email");
+              var roles = await _userManager.GetRolesAsync(user);
+            if(roles.Any()){
+                  return Ok(roles.ToArray());
+            }
+            return  Ok(Array.Empty<string>());
         }
 
 
@@ -181,7 +194,7 @@ namespace API.Controllers
             if (result.Succeeded)
             {
                 await SetRefreshToken(user);
-                return  CreateUserObject(user);
+                return await CreateUserObject(user);
             }
             return Unauthorized("Invalid Password");
 
@@ -268,7 +281,7 @@ namespace API.Controllers
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser() =>
-          CreateUserObject(
+         await CreateUserObject(
            await _userManager.Users
            .FirstOrDefaultAsync(
                x => x.Email == User.FindFirstValue(ClaimTypes.Email)));
@@ -289,7 +302,7 @@ namespace API.Controllers
 
             if (oldToken != null) oldToken.Revoked = DateTime.UtcNow;
 
-            return CreateUserObject(user);
+            return await    CreateUserObject(user);
 
         }
 
@@ -307,13 +320,13 @@ namespace API.Controllers
             };
             Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
         }
-        private UserDto CreateUserObject(AppUser user)
+        private async Task<UserDto> CreateUserObject(AppUser user)
         {
             return new UserDto
             {
                 DisplayName = user.DisplayName,
                 Image = null,
-                Token = _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken(user),
                 UserName = user.UserName
             };
         }

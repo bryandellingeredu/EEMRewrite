@@ -15,6 +15,9 @@ import { NonDepartmentRoomReservationRequest } from '../models/nonDepartmentRoom
 import { Recurrence } from '../models/recurrence';
 import { User, UserFormValues } from '../models/user';
 import { CalendarEvent } from '../models/calendarEvent';
+import { EmailGroupMember } from '../models/emailGroupMember';
+import { EmailGroup } from '../models/emailGroup';
+import { EmailGroupMemberPostData } from '../models/emailGroupMemberPostData';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -166,7 +169,8 @@ const Account = {
     verifyEmail: (token: string, email: string) => 
                 axiosRequest.post<void>(`/account/verifyEmail?token=${token}&email=${email}`, {}),
     resendEmailConfirm: (email: string) => 
-                axiosRequest.get(`/account/resendEmailConfirmationLink?email=${email}`)
+                axiosRequest.get(`/account/resendEmailConfirmationLink?email=${email}`),
+    getRoles: (userEmail: string) => axiosRequest.get<string[]>(`/account/getRoles/${userEmail}`)
 }
 
 const Uploads = {
@@ -181,6 +185,14 @@ const Uploads = {
     downloadDocument: (id: number) => axiosRequest.get<any>(`upload/${id}`)
 }
 
+const EmailGroups ={
+    getEmailGroupMembers : () => axiosRequest.get<EmailGroupMember[]>('/emailGroup'),
+    list : () => axiosRequest.get<EmailGroup[]>('/emailGroup/GetGroups'),
+    post : (data: EmailGroupMemberPostData) => axiosRequest.post<void>('/emailGroup', data),
+    details: (id: string) => axiosRequest.get<EmailGroupMember>(`/emailGroup/${id}`),
+    delete: (id: string) => axiosRequest.del<void>(`/emailGroup/${id}`)
+}
+
 const agent = {
     Activities,
     Account,
@@ -192,7 +204,8 @@ const agent = {
     GraphSchedules,
     GraphUser,
     IsEDUSignedIn,
-    Uploads
+    Uploads,
+    EmailGroups
 }
 
 export default agent;

@@ -25,6 +25,8 @@ import activityTable from '../../features/activities/table/activityTable';
 import AuthenticateToArmy from '../../features/home/AuthenticateToArmy';
 import DeletedActivityTable from '../../features/activities/table/deletedActivityTable';
 import RoomCalendarLinks from '../../features/fullCalendar/RoomCalendarLinks';
+import EmailGroupTable from '../../features/admin/emailGroup/emailGroupTable';
+import EmailGroupForm from '../../features/admin/emailGroup/emailGroupForm';
 
 function App() {
   const location = useLocation();
@@ -55,7 +57,8 @@ function App() {
             <Container style={{marginTop: '7em'}}>  
               <Switch>
                 <Route exact path={`${process.env.PUBLIC_URL}/activityTable`} component={activityTable}/>
-                <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>              
+                <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/>                 
                 <Route exact path={`${process.env.PUBLIC_URL}/activities`} component={ActivityDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/academiccalendar`} component={AcademicCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar`} component={IMCCalendarDashboard}/>
@@ -66,6 +69,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/authenticatetoarmy`} component={AuthenticateToArmy}/>
                 <Route path={`${process.env.PUBLIC_URL}/activities/:id/:categoryId`} component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={[`${process.env.PUBLIC_URL}/createActivity`, `${process.env.PUBLIC_URL}/manage/:id/:categoryId`, `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries`]} component={ActivityForm}/>
+                <Route key={location.key} exact path={[`${process.env.PUBLIC_URL}/createEmailGroupMember`, `${process.env.PUBLIC_URL}/manageEmailGroupMember/:id`]} component={EmailGroupForm}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />
                 <Route path={`${process.env.PUBLIC_URL}/account/verifyEmail`} component={ConfirmEmail} />

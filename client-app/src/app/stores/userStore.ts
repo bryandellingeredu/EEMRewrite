@@ -24,7 +24,10 @@ export default class UserStore {
         try{
             const user = await agent.Account.login(creds);
             store.commonStore.setToken(user.token);
+            user.roles = await agent.Account.getRoles(user.userName);
             this.startRefreshTokenTimer(user)
+            const roles = await agent.Account.getRoles(user.userName);
+            user.roles = roles;
             runInAction(() =>  this.user = user)
             history.push(`${process.env.PUBLIC_URL}/activityTable`);
             store.modalStore.closeModal();
@@ -43,7 +46,9 @@ export default class UserStore {
 
     getUser = async() => {
         try{
-            const user = await agent.Account.current()
+            const user = await agent.Account.current();
+            const roles = await agent.Account.getRoles(user.userName);
+            user.roles = roles;
             runInAction(() => this.user =  user);
             store.commonStore.setToken(user.token);
             this.startRefreshTokenTimer(user);
@@ -67,12 +72,12 @@ export default class UserStore {
             this.setErrors([]);
             this.setLoadingInitial(true);
             const user = await agent.Account.signInCacUser();
+            user.roles = await agent.Account.getRoles(user.userName);
             store.commonStore.setToken(user.token);
             runInAction(() =>  this.user = user)
             this.setLoadingInitial(false);
             history.push(`${process.env.PUBLIC_URL}/activityTable`);
         }catch(errors){
-            debugger;
             this.setErrors(errors as string[])
             this.setLoadingInitial(false);
             throw errors;
@@ -81,7 +86,6 @@ export default class UserStore {
 
     signInArmyUser = async() => {
         try{
-            debugger;
             this.setErrors([]);
             this.setLoadingInitial(true);
             await store.graphUserStore.signInArmy();
@@ -92,9 +96,11 @@ export default class UserStore {
                 password: `${graphUser.id}aA`,
                 email: graphUser.mail,
                 displayName: graphUser.displayName || graphUser.mail,
-                userName: graphUser.mail
+                userName: graphUser.mail,
             }
             const user = await agent.Account.signInGraphUser(creds);
+            const roles = await agent.Account.getRoles(user.userName);
+            user.roles = roles;
             store.commonStore.setToken(user.token);
             this.startRefreshTokenTimer(user);
             runInAction(() =>  this.user = user)
@@ -103,7 +109,6 @@ export default class UserStore {
 
         }
         catch(errors){
-            debugger;
             this.setErrors(errors as string[])
             this.setLoadingInitial(false);
             throw errors;
@@ -119,6 +124,8 @@ export default class UserStore {
             userName: graphUser.mail
         }
         const user = await agent.Account.signInGraphUser(creds);
+        const roles = await agent.Account.getRoles(user.userName);
+        user.roles = roles;
         store.commonStore.setToken(user.token);
         this.startRefreshTokenTimer(user);
         runInAction(() =>  this.user = user)
@@ -132,6 +139,8 @@ export default class UserStore {
         this.stopRefreshTokenTimer();
         try{
          const user = await agent.Account.refreshToken();
+         const roles = await agent.Account.getRoles(user.userName);
+         user.roles = roles;
          runInAction(() => this.user = user);
          store.commonStore.setToken(user.token);
          this.startRefreshTokenTimer(user)

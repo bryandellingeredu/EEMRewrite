@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230125150912_RoomDelegates2")]
+    partial class RoomDelegates2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -501,58 +504,6 @@ namespace Persistence.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Domain.EmailGroup", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmailGroups");
-                });
-
-            modelBuilder.Entity("Domain.EmailGroupEmailGroupMemberJunction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EmailGroupId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EmailGroupMemberId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmailGroupId");
-
-                    b.HasIndex("EmailGroupMemberId");
-
-                    b.ToTable("EmailGroupEmailGroupMemberJunctions");
-                });
-
-            modelBuilder.Entity("Domain.EmailGroupMember", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmailGroupMembers");
-                });
-
             modelBuilder.Entity("Domain.HostingReport", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1035,25 +986,6 @@ namespace Persistence.Migrations
                     b.Navigation("Recurrence");
                 });
 
-            modelBuilder.Entity("Domain.EmailGroupEmailGroupMemberJunction", b =>
-                {
-                    b.HasOne("Domain.EmailGroup", "EmailGroup")
-                        .WithMany("EmailGroupMembers")
-                        .HasForeignKey("EmailGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.EmailGroupMember", "EmailGroupMember")
-                        .WithMany("EmailGroups")
-                        .HasForeignKey("EmailGroupMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("EmailGroup");
-
-                    b.Navigation("EmailGroupMember");
-                });
-
             modelBuilder.Entity("Domain.HostingReport", b =>
                 {
                     b.HasOne("Domain.Activity", "Activity")
@@ -1136,16 +1068,6 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Category", b =>
                 {
                     b.Navigation("Activities");
-                });
-
-            modelBuilder.Entity("Domain.EmailGroup", b =>
-                {
-                    b.Navigation("EmailGroupMembers");
-                });
-
-            modelBuilder.Entity("Domain.EmailGroupMember", b =>
-                {
-                    b.Navigation("EmailGroups");
                 });
 
             modelBuilder.Entity("Domain.Organization", b =>

@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Domain;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace API
 {
@@ -27,7 +28,8 @@ namespace API
                 var context = services.GetRequiredService<DataContext>();
                 await context.Database.MigrateAsync();
                 var userManager = services.GetRequiredService<UserManager<AppUser>>();
-                await Seed.SeedData(context, userManager);
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                await Seed.SeedData(context, userManager, roleManager);
             }
             catch (System.Exception ex)
             {
