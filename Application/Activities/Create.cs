@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.DTOs;
 using System.Diagnostics;
 using Azure.Core;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Activities
 {
@@ -155,6 +156,8 @@ namespace Application.Activities
                  
 
                         var result = await _context.SaveChangesAsync() > 0;
+                        WorkflowHelper workflowHelper = new WorkflowHelper(a, settings, _context);
+                        await   workflowHelper.SendNotifications();
 
 
                         if (request.Activity.HostingReport != null )

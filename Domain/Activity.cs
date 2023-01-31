@@ -73,12 +73,19 @@ namespace Domain
         public bool MFP { get; set; }
         public string EducationalCategory { get; set; }
         public bool CommandantRequested { get; set; }
+         public bool CommandantRequestedNotificationSent { get; set; }
         public bool DptCmdtRequested { get; set; }
+          public bool DptCmdtRequestedNotificationSent { get; set; }
         public bool ProvostRequested { get; set; }
+        public bool ProvostRequestedNotificationSent { get; set; }
          public bool CofsRequested { get; set; }
+            public bool CofsRequestedNotificationSent { get; set; }
         public bool DeanRequested { get; set; }
+         public bool DeanRequestedNotificationSent { get; set; }
         public bool AmbassadorRequested { get; set; }
+        public bool AmbassadorRequestedNotificationSent { get; set; }
         public bool CSMRequested { get; set; }
+        public bool CSMRequestedNotificationSent { get; set; }
         public string Report { get; set; }
         public bool IMC { get; set; }
         public string Type { get; set; }

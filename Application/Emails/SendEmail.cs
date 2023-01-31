@@ -36,7 +36,7 @@ namespace Application.Emails
                     Settings s = new Settings();
                     var settings = s.LoadSettings(_config);
                     GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
-                    await GraphHelper.SendEmail(request.EmailDto.Email, request.EmailDto.Subject, request.EmailDto.Body);
+                    await GraphHelper.SendEmail(new string[] { request.EmailDto.Email}, request.EmailDto.Subject, request.EmailDto.Body);
                     return Result<Unit>.Success(Unit.Value);
                 }
             }

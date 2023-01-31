@@ -10,6 +10,7 @@ namespace Application
         public string AuthTenant { get; set; }
         public string[] GraphUserScopes { get; set; }
         public string ServiceAccount { get; set; }
+        public string BaseUrl { get; set; }
 
 
         public Settings LoadSettings(IConfiguration config)

@@ -226,11 +226,22 @@
 
         }
 
-        public static async Task SendEmail(string email, string subject, string body)
+        public static async Task SendEmail(string[] emails, string subject, string body)
         {
             EnsureGraphForAppOnlyAuth();
-            _ = _appClient ??
-              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+            _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            var recipients = new List<Recipient>();
+            foreach (var email in emails)
+            {
+                recipients.Add(new Recipient
+                {
+                    EmailAddress = new EmailAddress
+                    {
+                        Address = email
+                    }
+                });
+            }
 
             var message = new Message
             {
@@ -240,14 +251,9 @@
                     ContentType = BodyType.Html,
                     Content = body
                 },
-                ToRecipients = new List<Recipient>() {
-            new Recipient {
-              EmailAddress = new EmailAddress {
-                Address = email
-              }
-            }
-          }
-         };
+                ToRecipients = recipients
+            };
+
 
             var saveToSentItems = false;
 
@@ -255,7 +261,6 @@
                 .SendMail(message, saveToSentItems)
                 .Request()
                 .PostAsync();
-
         }
 
         public static async Task<string> UploadFile(IFormFile formFile)

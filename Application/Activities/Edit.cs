@@ -11,6 +11,7 @@ using Microsoft.Graph;
 using Application.Interfaces;
 using System.Dynamic;
 using Application.DTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Activities
 {
@@ -137,6 +138,8 @@ namespace Application.Activities
                 activity.CreatedAt = createdAt;
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return Result<Unit>.Failure("Failed to Update Activity");
+                WorkflowHelper workflowHelper = new WorkflowHelper(activity, settings, _context);
+                await workflowHelper.SendNotifications();
 
                 return Result<Unit>.Success(Unit.Value);
             }

@@ -2,16 +2,19 @@
 import { Login } from "@microsoft/mgt-react";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Container, Header, Segment, Image, Button, Divider, Label } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
 import ValidationErrors from "../errors/ValidationErrors";
+import { useEffect } from 'react';
 
 
 export default observer(function HomePage(){
-    const {userStore, graphUserStore} = useStore();
+    const history = useHistory();
+    const {userStore, graphUserStore, commonStore} = useStore();
     const {loadEDUGraphUser} = graphUserStore;
+    const {redirectId, redirectCategoryId} = commonStore;
     const {signInEDUGraphUser, signInArmyUser, loadingInitial, errors} = userStore;
     const [loading, setLoading] = useState<boolean>(false);
     const loginCompleted = () => {
@@ -22,6 +25,11 @@ export default observer(function HomePage(){
           }
         });
       };
+
+      useEffect(() => {
+        if(redirectId && redirectCategoryId && userStore.isLoggedIn) history.push(`${process.env.PUBLIC_URL}/activities/${redirectId}/${redirectCategoryId}`)
+      }, [redirectId, redirectCategoryId, userStore.isLoggedIn ])
+
     return(
         <Segment inverted textAlign='center' vertical className='masthead'>
     <Container text>

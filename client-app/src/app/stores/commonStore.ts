@@ -7,6 +7,8 @@ export default class CommonStore{
     error: ServerError | null = null;
     token: string | null = window.localStorage.getItem('jwt');
     appLoaded = false;
+    redirectId = '';
+    redirectCategoryId = '';
 
     constructor() {
         makeAutoObservable(this);
@@ -32,6 +34,14 @@ export default class CommonStore{
 
     setAppLoaded = () => {
         this.appLoaded = true;
+    }
+
+    setRedirectId = (id: string) =>{
+        this.redirectId = id;
+    }
+
+    setRedirectCategoryId = (categoryId: string) =>{
+        this.redirectCategoryId = categoryId;
     }
 
     convertDateToGraph = (date: Date, isAllDay: boolean, isEndDt: boolean): string => {

@@ -31,9 +31,17 @@ import EmailGroupForm from '../../features/admin/emailGroup/emailGroupForm';
 function App() {
   const location = useLocation();
   const {commonStore, userStore} = useStore();
+  const query = new URLSearchParams(location.search);
 
   useEffect(() => {
+    const id = query.get('id');
+    const categoryId = query.get('categoryid');
+    if(id && categoryId){
+      commonStore.setRedirectId(id);
+      commonStore.setRedirectCategoryId(categoryId);
+    }
     if (commonStore.token){
+
       userStore.getUser().finally(() => commonStore.setAppLoaded());
     } else {
       commonStore.setAppLoaded()

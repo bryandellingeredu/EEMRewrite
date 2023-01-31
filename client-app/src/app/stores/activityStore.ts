@@ -532,7 +532,14 @@ export default class ActivityStore {
     attachmentLookup: null,
     logicalDeleteInd: false,
     deletedAt: null,
-    deletedBy: ''
+    deletedBy: '',
+    commandantRequestedNotificationSent: false,
+    dptCmdtRequestedNotificationSent:  false,
+    provostRequestedNotificationSent: false,
+    cofsRequestedNotificationSent: false,
+    deanRequestedNotificationSent: false,
+    ambassadorRequestedNotificationSent: false,
+    cSMRequestedNotificationSent: false
     }
     return activity;
   }
