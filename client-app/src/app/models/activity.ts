@@ -133,6 +133,13 @@ export interface Activity{
     logicalDeleteInd : boolean
     deletedBy: string
     deletedAt: Date | null
+    commandantRequestedNotificationSent: boolean
+    dptCmdtRequestedNotificationSent: boolean
+    provostRequestedNotificationSent: boolean
+    cofsRequestedNotificationSent: boolean
+    deanRequestedNotificationSent: boolean
+    ambassadorRequestedNotificationSent: boolean
+    cSMRequestedNotificationSent: boolean
 }
 
 export class Activity implements Activity{
@@ -264,6 +271,13 @@ export class ActivityFormValues{
     logicalDeleteInd : boolean = false
     deletedAt: Date | null = null
     deletedBy: string = ''
+    commandantRequestedNotificationSent: boolean = false
+    dptCmdtRequestedNotificationSent: boolean = false
+    provostRequestedNotificationSent: boolean = false
+    cofsRequestedNotificationSent: boolean = false
+    deanRequestedNotificationSent: boolean = false
+    ambassadorRequestedNotificationSent: boolean = false
+    cSMRequestedNotificationSent: boolean = false
 
 
     constructor(activity?: ActivityFormValues){
@@ -389,6 +403,13 @@ export class ActivityFormValues{
         this.logicalDeleteInd = activity.logicalDeleteInd
         this.deletedAt = activity.deletedAt
         this.deletedBy = activity.deletedBy
+        this.commandantRequestedNotificationSent= activity.commandantRequestedNotificationSent
+        this.dptCmdtRequestedNotificationSent  = activity.dptCmdtRequestedNotificationSent
+        this.provostRequestedNotificationSent  = activity.provostRequestedNotificationSent
+        this.cofsRequestedNotificationSent  = activity.cofsRequestedNotificationSent
+        this.deanRequestedNotificationSent = activity.deanRequestedNotificationSent
+        this.ambassadorRequestedNotificationSent = activity.ambassadorRequestedNotificationSent
+        this.cSMRequestedNotificationSent = activity.cSMRequestedNotificationSent
        } 
     }
 }

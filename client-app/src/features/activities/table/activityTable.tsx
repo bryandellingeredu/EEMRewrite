@@ -31,8 +31,10 @@ interface TableData{
 
 export default observer(function ActivityTable(){
   const [loadingNext, setLoadingNext] = useState(false)
+  const [searchedClicked, setSearchClicked] = useState(false)
   const [day, setDay] = useState(new Date())
   const [tableData, setTableData] = useState<TableData[]>([]);
+  const [searchedTableData, setSearchedTableData] = useState<TableData[]>([]);
   const [thereIsNoMoreData, setThereIsNoMoreData] = useState(false);
   const {commonStore, activityStore, categoryStore} = useStore();
   const {addDays} = commonStore;
@@ -103,12 +105,13 @@ export default observer(function ActivityTable(){
   }, []);
  
   function handleFormSubmit(values : SearchFormValues ) {
+    setSearchClicked(true);
     setSubmitting(true);
-    setTableData([]);
+    setSearchedTableData([]);
     setThereIsNoMoreData(true);
     setDay(new Date());
     getActivitiesBySearchParams(values).then((activities) =>{
-      let newTableDataArray : TableData[] = [];
+      let searchedTableDataArray : TableData[] = [];
       activities!.forEach((activity) =>{
         let newTableData : TableData = {
           id: activity.id,
@@ -141,13 +144,14 @@ export default observer(function ActivityTable(){
           }
         } 
         if(dateIsOk ){
-          newTableDataArray.push(newTableData);
+          searchedTableDataArray.push(newTableData);
         }
       })
-      setTableData(newTableDataArray);
+      setSearchedTableData(searchedTableDataArray);
       setSubmitting(false);
     })
   }
+ 
 
     return(
       <>
@@ -242,7 +246,24 @@ export default observer(function ActivityTable(){
     </Table.Header>
 
     <Table.Body>
-    {tableData
+    {searchedClicked && searchedTableData
+    .sort((a, b) => { 
+      if (a.startAsDate < b.startAsDate) return -1;
+      if (a.startAsDate > b.startAsDate) return 1;
+      return 0;
+    })
+    .map(item => (
+          <Table.Row key={uuid()}  onClick={() => history.push(`${process.env.PUBLIC_URL}/activities/${item.id}/${item.categoryId}`)}>
+               <Table.Cell>{item.title}</Table.Cell>
+               <Table.Cell>{item.start}</Table.Cell>
+               <Table.Cell>{item.end}</Table.Cell>
+               <Table.Cell>{item.location}</Table.Cell>
+               <Table.Cell>{item.actionOfficer}</Table.Cell>
+               <Table.Cell>{item.leadOrg}</Table.Cell>
+               <Table.Cell>{item.subCalander}</Table.Cell>
+          </Table.Row>
+        ))}
+    {!searchedClicked && tableData
     .sort((a, b) => { 
       if (a.startAsDate < b.startAsDate) return -1;
       if (a.startAsDate > b.startAsDate) return 1;

@@ -11,7 +11,8 @@ import ActivityDetailedSideBar from "./ActivityDetailedSideBar";
 
 export default observer (function ActivityDetails() {
 
-    const{activityStore} = useStore();
+    const{activityStore, commonStore} = useStore();
+    const {setRedirectId, setRedirectCategoryId} = commonStore
     const {selectedActivity: activity, loadActivity, loadingInitial} = activityStore
     const {id} = useParams<{id: string}>();
     const {categoryId} = useParams<{categoryId: string}>();
@@ -19,6 +20,8 @@ export default observer (function ActivityDetails() {
     const handleReloadTrigger = () => setReloadTrigger(true);
 
     useEffect(() => {
+      setRedirectId('');
+      setRedirectCategoryId('');
       if(id){
         activityStore.loadActivity(id, categoryId);
       } 
