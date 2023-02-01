@@ -68,9 +68,14 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
     }
 
     const handleAddToCalendar = () =>{
-       const url = createICSFile(activity);
-       let blob = new Blob([url], { type: 'text/calendar;charset=utf-8' });
-       window.open(encodeURI("data:text/calendar;charset=utf8," + url));
+       const icsFile = createICSFile(activity);
+       let blob = new Blob([icsFile], { type: 'text/calendar;charset=utf-8' });
+       //window.open(encodeURI("data:text/calendar;charset=utf8," + url));
+       let url = URL.createObjectURL(blob);
+       let a = document.createElement('a');
+       a.href = url;
+       a.download = `${activity.title}.ics`;
+       a.click();
     }
     return (
         <Segment.Group>
