@@ -33,7 +33,8 @@ interface Props {
 }
 
 export default observer(function ActivityDetailedHeader({ activity, setReloadTrigger }: Props) {
-    const {modalStore} = useStore();
+    const {modalStore, activityStore} = useStore();
+    const {createICSFile} = activityStore;
     const history = useHistory();
     const [showConfirm, setShowConfirm] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -64,6 +65,12 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
            setRestoring(false);
 
         }
+    }
+
+    const handleAddToCalendar = () =>{
+       const url = createICSFile(activity);
+       let blob = new Blob([url], { type: 'text/calendar;charset=utf-8' });
+       window.open(encodeURI("data:text/calendar;charset=utf8," + url));
     }
     return (
         <Segment.Group>
@@ -171,6 +178,11 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                 />
         </>
     }
+        { activity.category.name === 'Academic Calendar' &&
+            <Button color='teal' floated='right' onClick={handleAddToCalendar} >
+                     Add to Calendar
+            </Button>
+        }
 
 {
        activity.category.name !== 'Academic Calendar' && activity.logicalDeleteInd &&
@@ -214,9 +226,15 @@ Update Series
    
      }
    { activity.category.name !== 'Academic Calendar' && !activity.logicalDeleteInd &&
+   <>
+              
                 <Button color='orange' floated='right' as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
                     Update Event
                 </Button>
+                <Button color='teal' floated='right' onClick={handleAddToCalendar} >
+                     Add to Calendar
+                </Button>
+      </>
     }
     
             </Segment>

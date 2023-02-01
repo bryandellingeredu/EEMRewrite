@@ -578,6 +578,29 @@ export default class ActivityStore {
     }
   }
 
+  createICSFile = (activity: Activity) => {
+    let location = activity.primaryLocation;
+    if(activity.activityRooms && activity.activityRooms.length > 0){
+      location = activity.activityRooms.map(x => x.name).join('-');
+    }
+    const url = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'BEGIN:VEVENT',
+    'CLASS:PUBLIC',
+    `DESCRIPTION:${activity.title}`,
+    `DTSTART${activity.allDayEvent?'VALUE=DATE:':':'}${store.commonStore.convertDateToGraph(activity.start, activity.allDayEvent, false).replace(/[^\w\s]/gi, '').substring(0, 15)}`,
+    `DTEND${activity.allDayEvent?'VALUE=DATE:':':'}${store.commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true).replace(/[^\w\s]/gi, '').substring(0, 15)}`,
+    `LOCATION:${location||'N/A'}`,
+    `SUMMARY;LANGUAGE=en-us:${activity.title}`,
+    'TRANSP:TRANSPARENT',
+    'END:VEVENT',
+    'END:VCALENDAR'
+    ].join('\n');
+
+    return url;
+  }
+
 
 
   }
