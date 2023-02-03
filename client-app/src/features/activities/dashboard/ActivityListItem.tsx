@@ -107,7 +107,13 @@ export default function ActivityListItem({activity}:Props){
               </Label>
              }
 
-              {activity.category.name === 'Academic Calendar' &&
+              {activity.category.name === 'Academic IMC Event' &&
+              <Label color='teal'>
+                     <FontAwesomeIcon icon={faGraduationCap} size='3x' />
+              </Label>
+             }
+
+            {activity.category.name === 'Academic Calendar' &&
               <Label color='teal'>
                      <FontAwesomeIcon icon={faGraduationCap} size='3x' />
               </Label>

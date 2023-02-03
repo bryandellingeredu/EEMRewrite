@@ -90,6 +90,23 @@ const getGraphClient = () => Providers.globalProvider.graph.client;
 const IsEDUSignedIn = () => Providers.globalProvider.state === ProviderState.SignedIn;
 
 const graphRequests = {
+    isInAcademicCalendarGroup: () => getGraphClient().api("/me/transitiveMemberOf/microsoft.graph.group?$select=id&$filter=id eq '17422b10-09fc-42c9-8d98-f0e7c2c97899'")
+  .get()
+  .then(response => {
+    if (response.status === 404) {
+      console.log(response);
+      console.log("404 error: edu user is not a member of the academic calendar group");
+      return false;
+    } else if (response.value) {
+      return true;
+    } else {
+      return false;
+    }
+  })
+  .catch(error => {
+    console.log("the edu user is not a member of the academic calendar group:");
+    return false;
+  }),
     get: (url: string) => getGraphClient().api(url).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
     getForCalendar: (url: string, start: string, end: string) => getGraphClient().api(url).filter(`start/dateTime ge \'${start}\' and end/dateTime le \'${end}\'`).orderby('start/dateTime').top(1000).get().then(graphResponseBody),
     getForCalendarUsingFilter: (url: string, filter: string) => getGraphClient().api(url).filter(filter).orderby('start/dateTime').top(100).get().then(graphResponseBody),
@@ -107,6 +124,7 @@ const axiosRequest = {
 }
 
 const GraphEvents = {
+    isInAcademicCalendarGroup: () => graphRequests.isInAcademicCalendarGroup(),
     list: () => graphRequests.get(academicCalendarURL),
     listForCalendar: (start: string, end: string) => graphRequests.getForCalendar(academicCalendarURL, start, end),
     listForCalendarUsingFilter: (filter: string) => graphRequests.getForCalendarUsingFilter(academicCalendarURL, filter),

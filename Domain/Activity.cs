@@ -69,6 +69,7 @@ namespace Domain
         public string  Hyperlink { get; set; }
         public string HyperlinkDescription { get; set; }
         public string EventClearanceLevel { get; set; }
+        public bool EventClearanceLevelNotificationSent {get; set;}
         public bool CommunityEvent { get; set; }
         public bool MFP { get; set; }
         public string EducationalCategory { get; set; }

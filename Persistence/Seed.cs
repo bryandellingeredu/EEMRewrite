@@ -55,6 +55,7 @@ namespace Persistence
                   new EmailGroup {Name = "Request Cofs Presence"},
                   new EmailGroup {Name = "Request Deans Presence"},
                   new EmailGroup {Name = "Request Ambassador Presence"},
+                  new EmailGroup {Name = "Event Clearence Level POC"}
                 };
 
                 await context.EmailGroups.AddRangeAsync(emailGroups);
@@ -129,7 +130,8 @@ namespace Persistence
             if (!context.Categories.Any()){
                 var categories = new List<Category>
             {
-                new Category{Name = "Academic Calendar", IMCColor = "#4183C4"},
+                new Category{Name = "Academic Calendar"},
+                new Category{Name = "Academic IMC Event", RouteName = "academic", IMCColor = "#4183C4", IncludeInIMC = true},
                 new Category{Name = "ASEP Calendar", RouteName = "asep", IncludeInIMC = true},
                 new Category{Name = "Chapel", RouteName = "chapel", IMCColor = "#CD5C5C", IncludeInIMC = true},
                 new Category{Name = "Command Group Calendar", RouteName = "commandGroup"},
@@ -148,7 +150,7 @@ namespace Persistence
                 new Category{Name = "USAHEC Calendar", RouteName = "usahec", IMCColor = "#755070"},
                 new Category{Name = "USAHEC Facilities Usage Calendar", RouteName = "usahecFacilitiesUsage", IMCColor = "#B0AA0C"},
                 new Category{Name = "Visits And Tours", RouteName = "visitsAndTours"},
-                new Category{Name = "Weekly Pocket Calendar", RouteName = "weeklyPocket", IMCColor = "#71B559"},
+                new Category{Name = "Weekly Pocket Calendar", RouteName = "weeklyPocket", IMCColor = "#71B559"}
             };
                 await context.Categories.AddRangeAsync(categories);
                 await context.SaveChangesAsync();

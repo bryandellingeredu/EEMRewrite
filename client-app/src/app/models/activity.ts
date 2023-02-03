@@ -47,6 +47,7 @@ export interface Activity{
     hyperlink : string
     hyperlinkDescription : string
     eventClearanceLevel : string
+    eventClearanceLevelNotificationSent : boolean
     communityEvent: boolean
     checkedForOpsec: boolean
     mfp: boolean
@@ -185,6 +186,7 @@ export class ActivityFormValues{
     hyperlink : string = '';
     hyperlinkDescription : string = '';
     eventClearanceLevel : string = '';
+    eventClearanceLevelNotificationSent : boolean = false;
     communityEvent : boolean = false;
     checkedForOpsec : boolean = false;
     commandantRequested: boolean = false;
@@ -318,6 +320,7 @@ export class ActivityFormValues{
         this.hyperlink = activity.hyperlink
         this.hyperlinkDescription  = activity.hyperlinkDescription
         this.eventClearanceLevel = activity.eventClearanceLevel
+        this.eventClearanceLevelNotificationSent = activity.eventClearanceLevelNotificationSent
         this.communityEvent = activity.communityEvent
         this.checkedForOpsec = activity.checkedForOpsec
         this.commandantRequested = activity.commandantRequested

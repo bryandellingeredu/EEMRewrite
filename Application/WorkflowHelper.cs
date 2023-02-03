@@ -16,6 +16,9 @@ namespace Application
         private Activity _activity;
         private readonly DataContext _context;
         private readonly Settings _settings;
+        private string GetLocation() => _activity.ActivityRooms.Any() ? string.Join(", ", _activity.ActivityRooms.Select(x => x.Name).ToArray()) : _activity.PrimaryLocation;
+        private string GetStartTime() => _activity.AllDayEvent ? _activity.Start.ToString("MMMM dd, yyyy") : _activity.Start.ToString("MMMM dd, yyyy h:mm tt");
+        private string GetEndTime() => _activity.AllDayEvent ? _activity.End.ToString("MMMM dd, yyyy") : _activity.End.ToString("MMMM dd, yyyy h:mm tt");
 
         Dictionary<string, OfficerInformation> officerTypeLookup = new Dictionary<string, OfficerInformation>();
 
@@ -54,8 +57,51 @@ namespace Application
             await  this.SendOfficerRequestedNotification(officerType);
         }
     }
-}
+   if (!_activity.EventClearanceLevelNotificationSent && (_activity.EventClearanceLevel == "Secret" || _activity.EventClearanceLevel == "Top Secret" || _activity.EventClearanceLevel == "TS-SCI"))
+            {
+                await this.SendEventClearanceLevelNotification();
+            }
+     }
 
+        private async Task SendEventClearanceLevelNotification()
+        {
+            string[] emails = _context.EmailGroups
+          .Include(x => x.EmailGroupMembers)
+          .Where(x => x.Name == "Event Clearence Level POC")
+          .SelectMany(x => x.EmailGroupMembers.Select(m => m.EmailGroupMember.Email))
+          .ToArray();
+
+            string title = $"EEM Event Clearance Level is {_activity.EventClearanceLevel} for {_activity.Title}";
+
+            string body = $@"<p> FYI G2 Personnel ,</p><p></p>
+                             <p>The EEM event  {_activity.Title}  has an Event Clearance level of {_activity.EventClearanceLevel} </p><p></p>
+                            <p><strong>Start Time: </strong> {GetStartTime()} </p>
+                            <p><strong>End Time: </strong> {GetEndTime()} </p>
+                           <p><strong>Action Officer: </strong> {_activity.ActionOfficer}</p>
+                           <p><strong>Action Office Phoner: </strong> {_activity.ActionOfficerPhone}</p> ";
+
+            if (!string.IsNullOrEmpty(_activity.Description))
+            {
+                body = body + $"<p><strong>Event Details: </strong> {_activity.Description}</p>";
+            }
+
+            if (!string.IsNullOrEmpty(GetLocation()))
+            {
+                body = body + $"<p><strong>Location: </strong> {GetLocation()}</p>";
+            }
+            body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
+
+            body = body + $"<p><p/><p><p/><p> To view in the Enterprise Event Manager (EEM), click the: <a href='{_settings.BaseUrl}?id={_activity.Id}&categoryid={_activity.CategoryId}'> EEM Link </a></p>";
+
+            await GraphHelper.SendEmail(emails, title, body);
+            var activityToUpdate = await _context.Activities.FindAsync(_activity.Id);
+            activityToUpdate.EventClearanceLevelNotificationSent= true; 
+            _context.Activities.Update(activityToUpdate);
+            await _context.SaveChangesAsync();
+        }
+
+       
+     
         private async Task SendOfficerRequestedNotification(string officerType)
         {
 
@@ -65,25 +111,23 @@ namespace Application
             .SelectMany(x => x.EmailGroupMembers.Select(m => m.EmailGroupMember.Email))
             .ToArray();
 
-            if (_activity.RoomEmails.Any() && _activity.ActivityRooms == null)
+            if ( !(_activity.ActivityRooms == null) &&_activity.RoomEmails.Any() )
             {
               _activity.ActivityRooms = await  GetActivityRooms();
             }
 
             string title = $"The {officerTypeLookup[officerType].EmailHeader} presence is requested"; 
-            string location = _activity.ActivityRooms.Any() ?  string.Join(", ", _activity.ActivityRooms.Select(x => x.Name).ToArray()) : _activity.PrimaryLocation;
-            string startTime =  _activity.AllDayEvent ? _activity.Start.ToString("MMMM dd, yyyy") : _activity.Start.ToString("MMMM dd, yyyy h:mm tt");
-            string endTime =  _activity.AllDayEvent ? _activity.End.ToString("MMMM dd, yyyy") : _activity.End.ToString("MMMM dd, yyyy h:mm tt");
+
 
             string body = $@"<h3> The {officerTypeLookup[officerType].EmailHeader} presence has been requested for the following event: </h3>
                              <p><strong>Event Title: </strong> {_activity.Title} </p>";
             
-             if(!string.IsNullOrEmpty(location)){
-                body = body + $"<p><strong>Location/s: </strong> {location} <p>";
+             if(!string.IsNullOrEmpty(GetLocation())){
+                body = body + $"<p><strong>Location/s: </strong> {GetLocation()} <p>";
              }
 
-             body = body + $@"<p><strong>Start Time: </strong> {startTime} </p>
-                              <p><strong>End Time: </strong> {endTime} </p>";
+             body = body + $@"<p><strong>Start Time: </strong> {GetStartTime()} </p>
+                              <p><strong>End Time: </strong> {GetEndTime()} </p>";
 
             if(!string.IsNullOrEmpty(_activity.Description)){
                 body = body + $"<p><strong>Event Details: </strong> {_activity.Description} </p>";

@@ -10,6 +10,7 @@ import { store } from "./store";
 import { Category } from "../models/category";
 import { GraphLocation } from "../models/graphLocation";
 import { SearchFormValues } from "../models/searchFormValues";
+import { toast } from "react-toastify";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -54,7 +55,24 @@ export default class ActivityStore {
     }
   }
 
+  isEDUUserAMemberOfTheAcademicCalendar = async () =>{
+    if (agent.IsEDUSignedIn()) {
+      try{
+         const result : boolean = await agent.GraphEvents.isInAcademicCalendarGroup();
+         return result;
+      }catch(error){
+        console.log(error);
+        return false;
+      }
+    }else{
+      return false;
+    }
+    
+  }
+
   getAcademicCalendarEvents = async (start: string, end: string) => {
+    const isMemberOfAcademicCalendar = await this.isEDUUserAMemberOfTheAcademicCalendar();
+    if(isMemberOfAcademicCalendar){
     const startArray = start.split('T');
     const endArray = end.split('T');
     const startForGraph = `${startArray[0]}T00:00:00Z`;
@@ -93,7 +111,10 @@ export default class ActivityStore {
       console.log(error);
     }
     }
+  }else{
+    toast.error('You are not a member of the Academic Calendar Group')
   }
+}
 
   getIMCalendarEvents = async(start: string, end: string) =>{
     try{
@@ -126,6 +147,8 @@ export default class ActivityStore {
         })
       })
       if (agent.IsEDUSignedIn()) {
+        const isMemberOfAcademicCalendar = await this.isEDUUserAMemberOfTheAcademicCalendar();
+        if(isMemberOfAcademicCalendar){
         const start = store.commonStore.convertDateToGraph(store.commonStore.addDays(day, -10), true, false);
         const end = store.commonStore.convertDateToGraph(store.commonStore.addDays(day, 10), true, true);
         const graphResponse: GraphEvent[] = await agent.GraphEvents.listForCalendar(start, end);
@@ -140,7 +163,7 @@ export default class ActivityStore {
            activities.push(activity);
           })
         })
-      }
+      }}
       return activities
     }
     catch (error) {
@@ -170,6 +193,8 @@ export default class ActivityStore {
     if (agent.IsEDUSignedIn() && 
     (!searchParams.categoryIds || !searchParams.categoryIds.length || searchParams.categoryIds.includes(academicCategoryId))
     ) {
+       const isMemberOfAcademicCalendar : boolean = await agent.GraphEvents.isInAcademicCalendarGroup();
+       if(isMemberOfAcademicCalendar){
        let graphResponse: GraphEvent[] = [];
         let filter : string = '';
         if(searchParams.start){
@@ -207,7 +232,7 @@ export default class ActivityStore {
            activities.push(activity);
           })
         })
-    }
+    }}
     return activities
     }
     catch (error) {
@@ -236,6 +261,8 @@ export default class ActivityStore {
           })
         })
         if (agent.IsEDUSignedIn()) {
+          const isMemberOfAcademicCalendar : boolean = await agent.GraphEvents.isInAcademicCalendarGroup();
+          if(isMemberOfAcademicCalendar){
           const start = store.commonStore.convertDateToGraph(store.commonStore.addDays(this.day, -10), true, false);
           const end = store.commonStore.convertDateToGraph(store.commonStore.addDays(this.day, 10), true, true);
           const graphResponse: GraphEvent[] = await agent.GraphEvents.listForCalendar(start, end);
@@ -246,7 +273,7 @@ export default class ActivityStore {
               this.activityRegistry.set(activity.id, activity);
             })
           })
-        }
+        }}
         this.setLoadingInitial(false);
       } catch (error) {
         console.log(error);
@@ -447,6 +474,7 @@ export default class ActivityStore {
       hyperlink: '',
       hyperlinkDescription: '',
       eventClearanceLevel : '',
+      eventClearanceLevelNotificationSent : false,
       communityEvent: false,
       checkedForOpsec: false,
       commandantRequested: false,
@@ -600,8 +628,5 @@ export default class ActivityStore {
 
     return url;
   }
-
-
-
   }
 

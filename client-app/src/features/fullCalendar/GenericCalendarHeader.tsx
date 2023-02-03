@@ -1,5 +1,5 @@
 import { Divider, Header, Icon } from "semantic-ui-react";
-import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
 
@@ -125,6 +125,12 @@ export default function GenericCalendarHeader({id} : Props){
         <>
           <FontAwesomeIcon icon={faPersonMilitaryPointing} size='2x' style={{marginRight: '10px'}} />
           Command Group Calendar
+        </>
+      }
+      {id === 'academic' &&
+        <>
+          <FontAwesomeIcon icon={faGraduationCap} size='2x' style={{marginRight: '10px'}} />
+          Academic IMC Event Calendar
         </>
       }
       
