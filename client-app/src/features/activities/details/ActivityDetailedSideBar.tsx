@@ -58,6 +58,40 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
          </Segment>
  }
 
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.blissHallSupport &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='check' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '5px'}}>
+                 Bliss Hall Support Requested
+                 </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.activityRooms && activity.activityRooms.length > 0 && activity.blissHallAVSptRequired && 
+      activity.additionalVTCInfo &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='info' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={4}>
+                 <span style={{paddingLeft: '5px'}}>
+                 Bliss Hall Spt:
+                 </span>
+                 </Grid.Column>
+                 <Grid.Column width={10}>
+                 {activity.blissHallAVSptRequired}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
 {activity.activityRooms && activity.activityRooms.length > 0 && activity.vtc &&
              <Segment attached>
              <Grid verticalAlign='middle'>

@@ -7,6 +7,7 @@ import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { Recurrence } from "../../../app/models/recurrence";
 import agent from "../../../app/api/agent";
+import { GraphScheduleItem } from "../../../app/models/graphScheduleItem";
 
 interface Option {
   label: string;
@@ -100,18 +101,23 @@ export default observer(function RoomPicker({
                       schedule.scheduleItems.forEach((item) => {
                         const itemStart = new Date(item.start.dateTime);
                         const itemEnd = new Date(item.end.dateTime);
-                        console.log("item start");
+                        console.log("scheduled item start");
                         console.log(itemStart);
-                        console.log("item end");
+                        console.log("scheuled item end");
                         console.log(itemEnd);
                         activitiesWithEstDates.forEach((element: any) => {
+                          console.log('activity start');
+                          console.log(element.estStart);
+                          console.log('activity end');
+                          console.log(element.estEnd);
+                          debugger;
                           if (
-                            (element.estStart <= itemEnd &&
-                              itemStart <= element.estEnd) ||
-                            (itemStart >= element.estStart &&
-                              itemEnd <= element.estEnd) ||
-                            (element.estStart >= itemStart &&
-                              element.estEnd <= itemEnd)
+                            (element.estStart < itemEnd &&
+                              itemStart < element.estEnd) ||
+                            (itemStart > element.estStart &&
+                              itemEnd < element.estEnd) ||
+                            (element.estStart > itemStart &&
+                              element.estEnd < itemEnd)
                           ) {
                             setRoomOptions([
                               ...o.filter(
@@ -145,7 +151,8 @@ export default observer(function RoomPicker({
                     graphRooms.find((x) => x.emailAddress === room.scheduleId)
                       ?.displayName || room.scheduleId,
                   value: room.scheduleId,
-                  isDisabled: room.scheduleItems.length > 0,
+                  isDisabled: getIsDisabled(start, end, room.scheduleItems)
+                  //isDisabled: room.scheduleItems.length > 0,
                 })
               );
               setRoomOptions(o);
@@ -155,6 +162,27 @@ export default observer(function RoomPicker({
       }
     }
   }, [start, end, loadSchedule, loadGraphRooms, recurrenceInd, recurrence]);
+
+  function getIsDisabled(start: Date, end: Date, scheduledItems: GraphScheduleItem[]){
+    if (scheduledItems.length < 1) return false;
+    let result = false;
+    scheduledItems.forEach((item) =>{
+      const itemStart = new Date(item.start.dateTime);
+      const itemEnd = new Date(item.end.dateTime);
+      if (
+        (start < itemEnd &&
+          itemStart < end) ||
+        (itemStart > start &&
+          itemEnd < end) ||
+        (start > itemStart &&
+          end < itemEnd)
+      ) {
+        debugger;
+        result = true;
+      }
+    });
+    return result;
+  }
 
   return (
     <>

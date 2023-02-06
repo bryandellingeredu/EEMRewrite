@@ -77,6 +77,7 @@ export default observer(function ActivityForm() {
     commonStore,
     graphUserStore,
     modalStore,
+    graphRoomStore,
   } = useStore();
   const {
     createGraphEvent,
@@ -93,6 +94,7 @@ export default observer(function ActivityForm() {
   const { locationOptions, loadLocations } = locationStore;
   const { organizationOptions, organizations, loadOrganizations } =
     organizationStore;
+  const {graphRooms, loadGraphRooms} = graphRoomStore;
   const { id } = useParams<{ id: string }>();
   const { manageSeries } = useParams<{ manageSeries: string }>();
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -210,8 +212,10 @@ export default observer(function ActivityForm() {
 
   });
 
+  
 
   useEffect(() => {
+    if(!graphRooms || graphRooms.length < 1) loadGraphRooms();
     if (id) {
       loadActivity(id, categoryId).then((response) => {
         setActivity(new ActivityFormValues(response));
@@ -342,7 +346,8 @@ export default observer(function ActivityForm() {
     categoryStore.loadingInitial ||
     organizationStore.loadingInitial ||
     locationStore.loadingInitial ||
-    graphUserStore.loadingInitial
+    graphUserStore.loadingInitial ||
+    graphRoomStore.loadingInitial
   ) {
     return <LoadingComponent content="Loading form..." />;
   }
@@ -740,6 +745,12 @@ export default observer(function ActivityForm() {
                 placeholder="Phone # of person requesting room"
                 label="Phone Number of Person Requesting Room:"
               />
+              {graphRooms
+            .filter(obj => roomEmails.includes(obj.emailAddress))
+            .map(x => x.displayName)
+            .join(",")
+            .includes('Command') && 
+            <>
               <MySelectInput
               options={[
                 {text: '', value: ''},
@@ -758,11 +769,54 @@ export default observer(function ActivityForm() {
               name="roomSetUpInstructions"
               label="Special Room Setup Instructions:"
             />
+            </>
+            }
+  {graphRooms
+            .filter(obj => roomEmails.includes(obj.emailAddress))
+            .map(x => x.displayName)
+            .join(",")
+            .includes('Bliss Hall') && 
+            <>
+         <Grid>
+            <Grid.Row>
+            <Grid.Column width={3}>
+                      <strong>
+                      Bliss Hall Support:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={13}>
+            <SemanticForm.Group inline>
+              <MySemanticCheckBox name="blissHallSupport"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>           
+           </Grid>
+           <Divider/>
+
+           <MyTextArea
+              rows={3}
+              placeholder="Bliss Hall A/V Spt Required"
+              name="blissHallAVSptRequired"
+              label="Bliss Hall A/V Spt Required:"
+            />
+             </>
+          }
+            {graphRooms
+            .filter(obj => roomEmails.includes(obj.emailAddress))
+            .map(x => x.displayName)
+            .join(",")
+            .includes('VTC') && 
             <MyCheckBox
               name="vtc"
               label="VTC: (allow 30 minute set up time)"/>
+             }
 
              {
+              graphRooms
+              .filter(obj => roomEmails.includes(obj.emailAddress))
+              .map(x => x.displayName)
+              .join(",")
+              .includes('VTC') && 
                 values.vtc && 
                 <Segment inverted color='brown'>
 

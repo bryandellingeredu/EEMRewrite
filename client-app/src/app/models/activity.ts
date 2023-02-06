@@ -141,6 +141,8 @@ export interface Activity{
     deanRequestedNotificationSent: boolean
     ambassadorRequestedNotificationSent: boolean
     cSMRequestedNotificationSent: boolean
+    blissHallSupport: boolean
+    blissHallAVSptRequired : string
 }
 
 export class Activity implements Activity{
@@ -280,6 +282,8 @@ export class ActivityFormValues{
     deanRequestedNotificationSent: boolean = false
     ambassadorRequestedNotificationSent: boolean = false
     cSMRequestedNotificationSent: boolean = false
+    blissHallSupport: boolean = false
+    blissHallAVSptRequired : string = ''
 
 
     constructor(activity?: ActivityFormValues){
@@ -413,6 +417,8 @@ export class ActivityFormValues{
         this.deanRequestedNotificationSent = activity.deanRequestedNotificationSent
         this.ambassadorRequestedNotificationSent = activity.ambassadorRequestedNotificationSent
         this.cSMRequestedNotificationSent = activity.cSMRequestedNotificationSent
+        this.blissHallSupport = activity.blissHallSupport
+        this.blissHallAVSptRequired = activity.blissHallAVSptRequired
        } 
     }
 }

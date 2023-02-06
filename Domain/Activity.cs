@@ -167,5 +167,7 @@ namespace Domain
          public bool LogicalDeleteInd {get; set;}
           public string DeletedBy { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public bool BlissHallSupport {get; set;}
+        public string BlissHallAVSptRequired {get; set;}
     }
 }

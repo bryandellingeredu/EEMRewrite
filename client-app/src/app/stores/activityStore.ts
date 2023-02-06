@@ -567,7 +567,9 @@ export default class ActivityStore {
     cofsRequestedNotificationSent: false,
     deanRequestedNotificationSent: false,
     ambassadorRequestedNotificationSent: false,
-    cSMRequestedNotificationSent: false
+    cSMRequestedNotificationSent: false,
+    blissHallSupport: false,
+    blissHallAVSptRequired: ''
     }
     return activity;
   }
