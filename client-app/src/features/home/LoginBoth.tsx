@@ -72,8 +72,6 @@ export default observer(function LoginBoth(){
   </Header>
   <Divider />
 
-  {active}
-
   <Step.Group ordered widths={3}>
   <Step
           completed={isEDUSignedIn}
@@ -220,12 +218,21 @@ export default observer(function LoginBoth(){
     {!armyProfile &&
     <>
     <Header as ='h4' color='violet'>
-     You have not signed into Army 365. please complete step 1
+     You have not signed into Army 365. please complete step 2
      </Header>
      <p></p>
      </>
 }
-    {armyProfile && 
+
+{!isEDUSignedIn &&
+    <>
+    <Header as ='h4' color='violet'>
+     You have not signed into EDU. please complete step 1
+     </Header>
+     <p></p>
+     </>
+}
+    {armyProfile && isEDUSignedIn &&
         <Button style={{backgroundColor: '#004080', color:'white'}}
          onClick={loginToEEM}
                  size='big'

@@ -30,7 +30,6 @@ export default observer(function HomePage(){
 
       useEffect(() => {
         if(redirectId && redirectCategoryId && userStore.isLoggedIn) history.push(`${process.env.PUBLIC_URL}/activities/${redirectId}/${redirectCategoryId}`)
-        if(!redirectId && userStore.isLoggedIn && armyProfile) history.push(`${process.env.PUBLIC_URL}/activityTable`);
       }, [redirectId, redirectCategoryId, userStore.isLoggedIn, armyProfile ])
 
     return(
