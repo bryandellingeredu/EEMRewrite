@@ -55,7 +55,8 @@ namespace Persistence
                   new EmailGroup {Name = "Request Cofs Presence"},
                   new EmailGroup {Name = "Request Deans Presence"},
                   new EmailGroup {Name = "Request Ambassador Presence"},
-                  new EmailGroup {Name = "Event Clearence Level POC"}
+                  new EmailGroup {Name = "Event Clearence Level POC"},
+                  new EmailGroup {Name = "Bliss Hall AV Tech"},
                 };
 
                 await context.EmailGroups.AddRangeAsync(emailGroups);

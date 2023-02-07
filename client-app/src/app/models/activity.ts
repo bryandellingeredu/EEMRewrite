@@ -143,6 +143,7 @@ export interface Activity{
     cSMRequestedNotificationSent: boolean
     blissHallSupport: boolean
     blissHallAVSptRequired : string
+    blissHallAVNotificationSent: boolean
 }
 
 export class Activity implements Activity{
@@ -284,6 +285,7 @@ export class ActivityFormValues{
     cSMRequestedNotificationSent: boolean = false
     blissHallSupport: boolean = false
     blissHallAVSptRequired : string = ''
+    blissHallAVNotificationSent : boolean = false
 
 
     constructor(activity?: ActivityFormValues){
@@ -419,6 +421,7 @@ export class ActivityFormValues{
         this.cSMRequestedNotificationSent = activity.cSMRequestedNotificationSent
         this.blissHallSupport = activity.blissHallSupport
         this.blissHallAVSptRequired = activity.blissHallAVSptRequired
+        this.blissHallAVNotificationSent = activity.blissHallAVNotificationSent
        } 
     }
 }

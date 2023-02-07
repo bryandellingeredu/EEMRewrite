@@ -27,6 +27,7 @@ import DeletedActivityTable from '../../features/activities/table/deletedActivit
 import RoomCalendarLinks from '../../features/fullCalendar/RoomCalendarLinks';
 import EmailGroupTable from '../../features/admin/emailGroup/emailGroupTable';
 import EmailGroupForm from '../../features/admin/emailGroup/emailGroupForm';
+import LoginBoth from '../../features/home/LoginBoth';
 
 function App() {
   const location = useLocation();
@@ -58,12 +59,14 @@ function App() {
         <ModalContainer />
          <Route exact path={`${process.env.PUBLIC_URL}/`} component={HomePage}/>
          <Route
-          path={`${process.env.PUBLIC_URL}/(.+)`}
+          path={`${process.env.PUBLIC_URL}/(.+)`} 
           render={() =>(
             <>
+           
              <Navbar /> 
             <Container style={{marginTop: '7em'}}>  
               <Switch>
+                <Route exact path={`${process.env.PUBLIC_URL}/loginBoth`} component={LoginBoth}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/activityTable`} component={activityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/>                 

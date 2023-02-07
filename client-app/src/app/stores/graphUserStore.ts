@@ -171,7 +171,7 @@ armyProfile : GraphUser | null = null;
             progress: undefined,
             theme: "colored",
             });
-          console.error(error);
+          console.log(error);
           }    
       }
 

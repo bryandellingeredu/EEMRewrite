@@ -169,5 +169,6 @@ namespace Domain
         public DateTime? DeletedAt { get; set; }
         public bool BlissHallSupport {get; set;}
         public string BlissHallAVSptRequired {get; set;}
+        public bool BlissHallAVNotificationSent { get; set; }
     }
 }
