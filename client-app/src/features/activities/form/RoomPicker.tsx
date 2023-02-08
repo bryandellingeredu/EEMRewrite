@@ -71,8 +71,6 @@ export default observer(function RoomPicker({
                   estEnd: convertUTCtoEST(new Date(activity.end)),
                 });
               });
-              console.log("activitiesWithEstDates");
-              console.log(activitiesWithEstDates);
               const utcStartDate = new Date(activities[0].start);
               const utcEndDate = new Date(
                 activities[activities.length - 1].end
@@ -101,16 +99,7 @@ export default observer(function RoomPicker({
                       schedule.scheduleItems.forEach((item) => {
                         const itemStart = new Date(item.start.dateTime);
                         const itemEnd = new Date(item.end.dateTime);
-                        console.log("scheduled item start");
-                        console.log(itemStart);
-                        console.log("scheuled item end");
-                        console.log(itemEnd);
                         activitiesWithEstDates.forEach((element: any) => {
-                          console.log('activity start');
-                          console.log(element.estStart);
-                          console.log('activity end');
-                          console.log(element.estEnd);
-                          debugger;
                           if (
                             (element.estStart < itemEnd &&
                               itemStart < element.estEnd) ||

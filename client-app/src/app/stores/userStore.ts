@@ -32,7 +32,7 @@ export default class UserStore {
             if(store.commonStore.redirectId && store.commonStore.redirectCategoryId){
                 history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
             }else{
-                history.push(`${process.env.PUBLIC_URL}/activityTable`);
+               // history.push(`${process.env.PUBLIC_URL}/activityTable`);
             } 
            
             store.modalStore.closeModal();
@@ -142,6 +142,9 @@ export default class UserStore {
         store.commonStore.setToken(user.token);
         this.startRefreshTokenTimer(user);
         runInAction(() =>  this.user = user)
+        if(store.commonStore.redirectId && store.commonStore.redirectCategoryId){
+            history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
+        }
         //history.push(`${process.env.PUBLIC_URL}/activityTable`);
       } catch(error){
         throw error;
