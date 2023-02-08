@@ -1,9 +1,11 @@
 import { GraphRoom } from "../models/graphRoom";
 import { makeAutoObservable, runInAction} from "mobx";
 import agent from "../api/agent";
+import { GraphRoomReservationParameters } from "../models/graphRoomReservationParameters";
 
 export default class GraphRoomStore {
     graphRoomRegistry = new Map<string, GraphRoom>();
+    graphRoomReservationParametersRegistry = new Map<string, GraphRoomReservationParameters>();
     loadingInitial = false;
 
 
@@ -16,12 +18,21 @@ constructor() {
     a.displayName > b.displayName ? 1 : -1);
   }
 
+  get graphReservationParameters() {
+    return Array.from(this.graphRoomReservationParametersRegistry.values());
+  }
+
   get graphRoomOptions () {
     const options : any = [];
     this.graphRooms.forEach(room => {
         options.push({text: room.displayName, value: room.id })
     });
     return options
+  }
+
+  
+  addGraphRoomReservation = (response: GraphRoomReservationParameters) => {
+    this.graphRoomReservationParametersRegistry.set(response.id, response);
   }
 
   loadGraphRooms = async () => {

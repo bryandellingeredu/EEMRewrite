@@ -94,8 +94,9 @@ export default observer(function ActivityForm() {
   const { locationOptions, loadLocations } = locationStore;
   const { organizationOptions, organizations, loadOrganizations } =
     organizationStore;
-  const {graphRooms, loadGraphRooms} = graphRoomStore;
+  const {graphRooms, loadGraphRooms, graphReservationParameters} = graphRoomStore;
   const { id } = useParams<{ id: string }>();
+  const {roomid} = useParams<{roomid: string}>();
   const { manageSeries } = useParams<{ manageSeries: string }>();
   const { categoryId } = useParams<{ categoryId: string }>();
   const [activity, setActivity] = useState<ActivityFormValues>(
@@ -160,9 +161,6 @@ export default observer(function ActivityForm() {
       const id = attachment.id
       const url = `${process.env.REACT_APP_API_URL}/upload/${id}`;
       const response = await fetch(url, requestOptions); 
-
-      console.log(response);
-      console.log(typeof(response));
       const data = await response.arrayBuffer();
       var file = new Blob([data], {type: attachment.fileType});
       var fileUrl = window.URL.createObjectURL(file);
@@ -187,9 +185,6 @@ export default observer(function ActivityForm() {
                           then: Yup.boolean().isTrue("Review event details for pii and opsec and check the box ")
                          }),
     title: Yup.string().required("The title is required"),
-    categoryId: Yup.string().required(
-      "Category is required, choose other if you are just reserving a room"
-    ),
     start: Yup.string()
       .required()
       .nullable()
@@ -197,25 +192,46 @@ export default observer(function ActivityForm() {
         return new Date(this.parent.start) < new Date(this.parent.end);
       }),
     end: Yup.string().required().nullable(),
-    actionOfficer: Yup.string().when("categoryId", {
-      is: categories.find((x) => x.name === "Academic Calendar")?.id,
-      otherwise:
-        Yup.string().required("Action Officer is Required") ||
-        categories.find((x) => x.name === "Other")?.id,
-    }),
-    actionOfficerPhone: Yup.string().when("categoryId", {
-      is:
-        categories.find((x) => x.name === "Academic Calendar")?.id ||
-        categories.find((x) => x.name === "Other")?.id,
-      otherwise: Yup.string().required("Action Officer is Required"),
-    }),
-
+    actionOfficer: Yup.string().required(),
+    actionOfficerPhone: Yup.string().required()
   });
 
   
 
   useEffect(() => {
     if(!graphRooms || graphRooms.length < 1) loadGraphRooms();
+    if(roomid){
+      const parameters = graphReservationParameters.find(x => x.id === roomid);
+      if(!!parameters && graphRooms && graphRooms.length > 0){
+        const startDatePart = parameters.start.split('-')[0];
+        const endDatePart = parameters.end.split('-')[0];
+        const startTimePart = parameters.start.split('-')[1];
+        const endTimePart = parameters.end.split('-')[1];
+        const startoffset = startTimePart.split(':')[2].includes('PM') ? 12 : 0;
+        const endoffset = endTimePart.split(':')[2].includes('PM') ? 12 : 0;
+        const startMonth = parseInt(startDatePart.split('/')[0]) - 1;
+        const endMonth = parseInt(endDatePart.split('/')[0]) - 1;
+        const startDay =  parseInt(startDatePart.split('/')[1]);
+        const endDay =  parseInt(endDatePart.split('/')[1]);
+        const startYear =  parseInt(startDatePart.split('/')[2]);
+        const endYear =  parseInt(endDatePart.split('/')[2]);
+        const startHour = parseInt(startTimePart.split(':')[0]) + startoffset;
+        const endHour = parseInt(endTimePart.split(':')[0]) + endoffset;
+        const startMinute = parseInt(startTimePart.split(':')[1]);
+        const endMinute = parseInt(endTimePart.split(':')[1]);
+        const start = new Date(startYear, startMonth, startDay, startHour, startMinute);
+        const end = new Date(endYear, endMonth, endDay, endHour, endMinute);
+        let activityFormValue = new ActivityFormValues();
+        activityFormValue.start = start;
+        activityFormValue.end = end;
+        setActivity(activityFormValue);
+        setRoomRequired(true);
+        const graphRoom = graphRooms.filter(x => x.id === parameters.roomId)
+          if(graphRoom && graphRooms.length > 0) {
+            setRoomEmails(graphRoom.map((x) => x.emailAddress));
+          }        
+      }
+    }
     if (id) {
       loadActivity(id, categoryId).then((response) => {
         setActivity(new ActivityFormValues(response));
@@ -251,7 +267,7 @@ export default observer(function ActivityForm() {
     if (isSignedIn) {
       loadEDUGraphUser();
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, graphRooms]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
     let hostingReportError = false;
@@ -278,6 +294,7 @@ export default observer(function ActivityForm() {
     }
     if(!hostingReportError){
     setSubmitting(true);
+    if(!activity.categoryId) activity.categoryId = categories.find(x => x.name === 'Other')!.id;
     if( (activity.report === 'Hosting Report' || activity.report === 'Outsiders Report') && armyProfile && armyProfile?.mail ){
       activity.hostingReport!.reportType = activity.report;
       activity.hostingReport!.guestItinerary = 
@@ -921,7 +938,7 @@ export default observer(function ActivityForm() {
               )}
               placeholder="Sub Calendar"
               name="categoryId"
-              label="*Sub Calendar:"
+              label="Sub Calendar:"
             />
             </Segment>   
 

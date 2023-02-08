@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { Divider, Form, Grid, Header, Icon, Segment } from "semantic-ui-react";
+import { Button, Divider, Form, Grid, Header, Icon, Segment } from "semantic-ui-react";
 import DatePicker from "react-datepicker";
 import {useState, useEffect} from 'react'
 import { GraphRoom } from "../../app/models/graphRoom";
@@ -7,15 +7,21 @@ import { useStore } from "../../app/stores/store";
 import { GraphScheduleResponse} from "../../app/models/graphScheduleResponse";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import RoomAvailabilityDetails from "./RoomAvailabilityDetails";
+import { v4 as uuid } from "uuid";
+import { useHistory } from "react-router-dom";
+import { GraphRoomReservationParameters } from "../../app/models/graphRoomReservationParameters";
 
 interface Props{
     room: GraphRoom
 }
 
 export default observer (function RoomAvailability({room}: Props){
-    const {availabilityStore, commonStore} = useStore();
+
+    const {availabilityStore, commonStore, graphRoomStore} = useStore();
+    const history = useHistory();
     const{loadSchedule } = availabilityStore
     const{roundToNearest15} = commonStore;
+    const {addGraphRoomReservation} = graphRoomStore;
     const tommorow = new Date();
     const [startDate, setStartDate] = useState<Date>(roundToNearest15(new Date()));
     const [endDate, setEndDate] = useState<Date>(roundToNearest15(new Date(tommorow.setDate(new Date().getDate() + 1))));
@@ -48,6 +54,15 @@ export default observer (function RoomAvailability({room}: Props){
     const handleSetEndDate = (date: Date) => {
         setEndDate(date);
     }
+
+    const handleAddGraphRoomReservation = () =>{
+        const startDateAsString = `${startDate.toLocaleDateString()}-${startDate.toLocaleTimeString()}`
+        const endDateAsString = `${endDate.toLocaleDateString()}-${endDate.toLocaleTimeString()}`
+        const paramId = uuid();
+        const reservation : GraphRoomReservationParameters = {id: paramId, start: startDateAsString, end: endDateAsString, roomId: room.id}
+        addGraphRoomReservation(reservation)
+        history.push(`${process.env.PUBLIC_URL}/createActivityWithRoom/${paramId}`);
+        }
 
     useEffect(() => {
         setLoading(true);
@@ -92,6 +107,7 @@ export default observer (function RoomAvailability({room}: Props){
         <Form.Field>
         <label>Pick an End Time</label>
         <DatePicker
+        minDate={startDate}
         timeIntervals={15}
         selected={endDate}
         onChange={(date:Date) => handleSetEndDate(date)}
@@ -108,8 +124,14 @@ export default observer (function RoomAvailability({room}: Props){
                  <Grid.Column width={1}>
                      <Icon size='large' color='green' name='thumbs up' />
                  </Grid.Column>
-                 <Grid.Column width={14}>
+                 <Grid.Column width={9}>
                      This Room is available for the time selected
+                 </Grid.Column>
+                 <Grid.Column width={6}>
+                 <Button size='tiny' type='button'primary onClick={handleAddGraphRoomReservation}>
+                        <Icon name='calendar'></Icon>
+                        Reserve This Room
+                     </Button>
                  </Grid.Column>
              </Grid>
          </Segment>

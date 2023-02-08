@@ -12,8 +12,6 @@ interface Props{
 
 export default observer (function RoomListItem(
   {room, showAvailabilityIndicatorList, addIdToShowAvailabilityIndicatorList } : Props) {
-   
-
     return (
             <Card>
             <Card.Content>

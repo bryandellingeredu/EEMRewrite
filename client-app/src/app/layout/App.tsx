@@ -79,7 +79,12 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/rooms`} component={RoomDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/authenticatetoarmy`} component={AuthenticateToArmy}/>
                 <Route path={`${process.env.PUBLIC_URL}/activities/:id/:categoryId`} component={ActivityDetails} sensitive/>
-                <Route key={location.key} exact path={[`${process.env.PUBLIC_URL}/createActivity`, `${process.env.PUBLIC_URL}/manage/:id/:categoryId`, `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries`]} component={ActivityForm}/>
+                <Route key={location.key} exact path={[
+                  `${process.env.PUBLIC_URL}/createActivity`,
+                  `${process.env.PUBLIC_URL}/manage/:id/:categoryId`,
+                  `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries`,
+                  `${process.env.PUBLIC_URL}/createActivityWithRoom/:roomid`,
+                  ]} component={ActivityForm}/>
                 <Route key={location.key} exact path={[`${process.env.PUBLIC_URL}/createEmailGroupMember`, `${process.env.PUBLIC_URL}/manageEmailGroupMember/:id`]} component={EmailGroupForm}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />

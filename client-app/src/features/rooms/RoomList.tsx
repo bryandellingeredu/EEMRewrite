@@ -19,8 +19,10 @@ interface SearchFormValues{
 export default observer (function RoomList() {
 const[showAvailabilityIndicatorList, setShowAvailabilityIndicatorList] = useState<string[]>([]);
 const {graphRoomStore} = useStore();
-const{ graphRooms } = graphRoomStore;
+const{ graphRooms} = graphRoomStore;
 const [filteredGraphRooms, setFilteredGraphRooms] = useState<GraphRoom[]>([]);
+
+
 
 useEffect(() => {
   setFilteredGraphRooms(graphRooms);
