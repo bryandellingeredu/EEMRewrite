@@ -250,7 +250,7 @@ export default observer(function LoginBoth(){
      labelPosition="left"
      floated="left"
      type="button"
-     onClick={handleStep1Click}
+     onClick={handleStep2Click}
      color="violet"
    >
      Previous

@@ -194,7 +194,7 @@ export default observer(function ActivityForm() {
       .required()
       .nullable()
       .test("startBeforeEnd", "Start must be before End", function () {
-        return this.parent.start < this.parent.end;
+        return new Date(this.parent.start) < new Date(this.parent.end);
       }),
     end: Yup.string().required().nullable(),
     actionOfficer: Yup.string().when("categoryId", {
