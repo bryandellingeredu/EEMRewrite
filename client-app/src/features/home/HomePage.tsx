@@ -8,6 +8,7 @@ import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
 import ValidationErrors from "../errors/ValidationErrors";
 import { useEffect } from 'react';
+import { toast } from "react-toastify";
 
 
 export default observer(function HomePage(){
@@ -22,7 +23,7 @@ export default observer(function HomePage(){
         loadEDUGraphUser().then((graphUser) => {
           if(graphUser){
             signInEDUGraphUser(graphUser).then(() =>{
-              history.push(`${process.env.PUBLIC_URL}/activityTable`);
+           //   history.push(`${process.env.PUBLIC_URL}/activityTable`);
             })
           }
         });
@@ -31,6 +32,12 @@ export default observer(function HomePage(){
       useEffect(() => {
         if(redirectId && redirectCategoryId && userStore.isLoggedIn) history.push(`${process.env.PUBLIC_URL}/activities/${redirectId}/${redirectCategoryId}`)
       }, [redirectId, redirectCategoryId, userStore.isLoggedIn, armyProfile ])
+
+      const handleLoginInitiated = () =>{
+        debugger;
+        toast('Sign in with your edu account NOT your army account');
+        setLoading(true)
+      }
 
     return(
         <Segment inverted textAlign='center' vertical className='masthead'>
@@ -104,7 +111,7 @@ export default observer(function HomePage(){
               {!loading &&
               <Login
                 loginCompleted={loginCompleted}
-                loginInitiated={() => setLoading(true)}
+                loginInitiated={handleLoginInitiated}
               />}
             </Grid.Column>
             <Grid.Column>

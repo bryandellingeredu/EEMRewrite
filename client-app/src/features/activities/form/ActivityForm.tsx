@@ -889,7 +889,7 @@ export default observer(function ActivityForm() {
                 <SemanticForm.Group inline>
                   <MySemanticCheckBox name="gosesInAttendance"/>
                 </SemanticForm.Group>
-                <i>Check if a  General Officer(GO) / Senior Executive (SES) is in attendance her or at the distant end</i>
+                <i>Check if a  General Officer(GO) / Senior Executive (SES) is in attendance here or at the distant end</i>
                 </Grid.Column>
                 </Grid.Row>           
                </Grid>
@@ -1699,10 +1699,10 @@ export default observer(function ActivityForm() {
               <MySemanticCheckBox name="commandantRequested" label="Commandant"/>
               <MySemanticCheckBox name="dptCmdtRequested" label="DCOM"/>
               <MySemanticCheckBox name="provostRequested" label="Provost"/>
-              <MySemanticCheckBox name="cofsRequested" label="COS"/>
+              <MySemanticCheckBox name="cofsRequested" label="COFS"/>
               <MySemanticCheckBox name="deanRequested" label="Dean"/>
               <MySemanticCheckBox name="ambassadorRequested" label="AMB"/>
-              <MySemanticCheckBox name="cSMRequested" label="CSM"/>
+              <MySemanticCheckBox name="csmRequested" label="CSM"/>
             </SemanticForm.Group>
             <i>Request the presence of the leader. (Sends an e-mail invite to the leader's admin assistant.)</i>
             </Grid.Column>

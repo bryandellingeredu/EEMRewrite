@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Application.Categories;
+using Application.RoomDelegates;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class CategoriesController : BaseApiController
+     public class RoomDelegateController : BaseApiController
     {
         [AllowAnonymous]
         [HttpGet]

@@ -483,7 +483,7 @@ export default class ActivityStore {
       cofsRequested: false,
       deanRequested: false,
       ambassadorRequested:  false,
-      cSMRequested: false,
+      csmRequested: false,
       mfp: false,
       type: '',
       report: 'none',
@@ -567,7 +567,7 @@ export default class ActivityStore {
     cofsRequestedNotificationSent: false,
     deanRequestedNotificationSent: false,
     ambassadorRequestedNotificationSent: false,
-    cSMRequestedNotificationSent: false,
+    csmRequestedNotificationSent: false,
     blissHallSupport: false,
     blissHallAVSptRequired: '',
     blissHallAVNotificationSent: false

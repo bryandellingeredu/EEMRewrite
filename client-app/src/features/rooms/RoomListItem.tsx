@@ -2,7 +2,9 @@ import { observer } from "mobx-react-lite";
 import { Button, Card, Divider, Grid, Header, Icon, Label, Segment } from "semantic-ui-react";
 import { GraphRoom } from "../../app/models/graphRoom";
 import RoomAvailability from "./RoomAvailability";
-
+import { useStore } from "../../app/stores/store";
+import { useEffect } from 'react';
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 interface Props{
     room: GraphRoom
@@ -12,6 +14,15 @@ interface Props{
 
 export default observer (function RoomListItem(
   {room, showAvailabilityIndicatorList, addIdToShowAvailabilityIndicatorList } : Props) {
+
+    const {graphRoomStore} = useStore();
+    const{ roomDelegates, loadingInitial, loadRoomDelegates} = graphRoomStore;
+
+    useEffect(() => {
+      if(!roomDelegates || roomDelegates.length < 1) loadRoomDelegates(); 
+    }, [roomDelegates]);
+
+
     return (
             <Card>
             <Card.Content>
@@ -44,6 +55,27 @@ export default observer (function RoomListItem(
               </Header>
             </Divider>
               <Segment.Group>
+            {loadingInitial && 
+                  <Segment >
+                  <Grid>
+                      <Grid.Column width={15}>
+                          <LoadingComponent content='loading room owners'/>
+                      </Grid.Column>
+                  </Grid>
+              </Segment>
+            }
+            {!loadingInitial && roomDelegates && roomDelegates.length > 0 &&
+                  <Segment >
+                    <Grid>
+                    <Grid.Column width={1}>
+                        <Icon size='large' color='teal' name='user' />
+                    </Grid.Column>
+                    <Grid.Column width={14}>
+                        <p>room owner/s: {roomDelegates.filter(x => x.roomEmail === room.emailAddress).map(x => x.delegateDisplayName).join(', ') || 'N/A'}</p>
+                    </Grid.Column>
+                </Grid>
+              </Segment>
+            }
             { room.phone && room.phone !== "N/A" &&
             <Segment >
                 <Grid>

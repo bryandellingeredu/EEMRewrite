@@ -42,11 +42,24 @@ export default class UserStore {
         }
     }
 
-    logout = () => {
+    logout = async() => {
+        debugger;
+        try{
         store.commonStore.setToken(null);
         window.localStorage.removeItem('jwt');
         this.user = null;
+        if(!!store.graphUserStore.armyProfile){
+            store.graphUserStore.myMSALObj.logoutPopup();
+            history.push(`${process.env.PUBLIC_URL}/`);
+        } else{
+            history.push(`${process.env.PUBLIC_URL}/`);
+        }
+     
+    }catch(error){
+        console.log('logout error')
+        console.log(error);
         history.push(`${process.env.PUBLIC_URL}/`);
+      }
     }
 
     getUser = async() => {

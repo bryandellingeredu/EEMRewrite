@@ -57,7 +57,7 @@ export interface Activity{
     cofsRequested: boolean
     deanRequested: boolean
     ambassadorRequested: boolean
-    cSMRequested: boolean
+    csmRequested: boolean
     report: string
     type: string
     color: string
@@ -140,7 +140,7 @@ export interface Activity{
     cofsRequestedNotificationSent: boolean
     deanRequestedNotificationSent: boolean
     ambassadorRequestedNotificationSent: boolean
-    cSMRequestedNotificationSent: boolean
+    csmRequestedNotificationSent: boolean
     blissHallSupport: boolean
     blissHallAVSptRequired : string
     blissHallAVNotificationSent: boolean
@@ -198,7 +198,7 @@ export class ActivityFormValues{
     cofsRequested: boolean = false;
     deanRequested: boolean = false;
     ambassadorRequested: boolean = false;
-    cSMRequested: boolean = false;
+    csmRequested: boolean = false;
     mfp: boolean = false;
     report: string = 'none';
     type: string = 'Event On-Site'
@@ -282,7 +282,7 @@ export class ActivityFormValues{
     cofsRequestedNotificationSent: boolean = false
     deanRequestedNotificationSent: boolean = false
     ambassadorRequestedNotificationSent: boolean = false
-    cSMRequestedNotificationSent: boolean = false
+    csmRequestedNotificationSent: boolean = false
     blissHallSupport: boolean = false
     blissHallAVSptRequired : string = ''
     blissHallAVNotificationSent : boolean = false
@@ -335,7 +335,7 @@ export class ActivityFormValues{
         this.cofsRequested = activity.cofsRequested
         this.deanRequested = activity.deanRequested
         this.ambassadorRequested = activity.ambassadorRequested
-        this.cSMRequested = activity.cSMRequested
+        this.csmRequested = activity.csmRequested
         this.mfp = activity.mfp
         this.report = activity.report
         this.type = activity.type
@@ -418,7 +418,7 @@ export class ActivityFormValues{
         this.cofsRequestedNotificationSent  = activity.cofsRequestedNotificationSent
         this.deanRequestedNotificationSent = activity.deanRequestedNotificationSent
         this.ambassadorRequestedNotificationSent = activity.ambassadorRequestedNotificationSent
-        this.cSMRequestedNotificationSent = activity.cSMRequestedNotificationSent
+        this.csmRequestedNotificationSent = activity.csmRequestedNotificationSent
         this.blissHallSupport = activity.blissHallSupport
         this.blissHallAVSptRequired = activity.blissHallAVSptRequired
         this.blissHallAVNotificationSent = activity.blissHallAVNotificationSent

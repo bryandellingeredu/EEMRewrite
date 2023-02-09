@@ -362,7 +362,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
 
  {(activity.commandantRequested || activity.dptCmdtRequested || activity.provostRequested ||
    activity.cofsRequested || activity.deanRequested || activity.ambassadorRequested ||
-   activity.cSMRequested) && 
+   activity.csmRequested) && 
    <Segment attached>
    <Grid verticalAlign='middle'>
        <Grid.Column width={1}>
@@ -379,7 +379,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
             {activity.cofsRequested && <List.Item>Cofs</List.Item> }
             {activity.deanRequested && <List.Item>Dean</List.Item> }
             {activity.ambassadorRequested && <List.Item>Ambassador</List.Item> }
-            {activity.cSMRequested && <List.Item>CSM</List.Item> }
+            {activity.csmRequested && <List.Item>CSM</List.Item> }
        </List>
        </Grid.Column>
    </Grid>

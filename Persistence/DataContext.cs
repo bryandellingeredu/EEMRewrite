@@ -23,6 +23,7 @@ namespace Persistence
         public DbSet<EmailGroup> EmailGroups { get; set; }
         public DbSet<EmailGroupMember> EmailGroupMembers { get; set; }
         public DbSet<EmailGroupEmailGroupMemberJunction> EmailGroupEmailGroupMemberJunctions {get; set;}
+        public DbSet<RoomVTCCoordinator> RoomVTCCoordinators {get; set;}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

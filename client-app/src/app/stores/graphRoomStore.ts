@@ -2,10 +2,12 @@ import { GraphRoom } from "../models/graphRoom";
 import { makeAutoObservable, runInAction} from "mobx";
 import agent from "../api/agent";
 import { GraphRoomReservationParameters } from "../models/graphRoomReservationParameters";
+import { RoomDelegate } from "../models/roomDelegate";
 
 export default class GraphRoomStore {
     graphRoomRegistry = new Map<string, GraphRoom>();
     graphRoomReservationParametersRegistry = new Map<string, GraphRoomReservationParameters>();
+    roomDelegatesRegistry = new Map<string, RoomDelegate>();
     loadingInitial = false;
 
 
@@ -22,6 +24,10 @@ constructor() {
     return Array.from(this.graphRoomReservationParametersRegistry.values());
   }
 
+  get roomDelegates() {
+    return Array.from(this.roomDelegatesRegistry.values());
+  }
+
   get graphRoomOptions () {
     const options : any = [];
     this.graphRooms.forEach(room => {
@@ -33,6 +39,28 @@ constructor() {
   
   addGraphRoomReservation = (response: GraphRoomReservationParameters) => {
     this.graphRoomReservationParametersRegistry.set(response.id, response);
+  }
+
+  loadRoomDelegates = async () => {
+    if(!this.roomDelegatesRegistry.size){
+      this.setLoadingInitial(true); 
+      try{
+        const axiosResponse : RoomDelegate[] = await agent.RoomDelegates.list();
+        runInAction(() => {
+          axiosResponse.forEach(response => {
+              this.roomDelegatesRegistry.set(response.id, response);
+            })   
+          })  
+      } catch (error) {
+        console.log(error);
+       
+      } finally  {
+          this.setLoadingInitial(false);
+          return this.roomDelegates;
+      }
+    } else {
+      return this.roomDelegates;
+    }
   }
 
   loadGraphRooms = async () => {

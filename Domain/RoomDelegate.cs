@@ -8,8 +8,9 @@ namespace Domain
 {
     public class RoomDelegate
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string DelegateEmail { get; set; }   
+        public string DelegateDisplayName { get; set; }   
         public string RoomEmail { get; set; }
     }
 }

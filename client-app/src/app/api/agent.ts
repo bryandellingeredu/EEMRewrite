@@ -18,6 +18,7 @@ import { CalendarEvent } from '../models/calendarEvent';
 import { EmailGroupMember } from '../models/emailGroupMember';
 import { EmailGroup } from '../models/emailGroup';
 import { EmailGroupMemberPostData } from '../models/emailGroupMemberPostData';
+import { RoomDelegate } from '../models/roomDelegate';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -161,6 +162,10 @@ const Categories = {
     list: () => axiosRequest.get<Category[]>('/categories'),
 }
 
+const RoomDelegates = {
+    list: () => axiosRequest.get<RoomDelegate[]>('/roomDelegate'),
+}
+
 const Organizations = {
     list: () => axiosRequest.get<Organization[]>('/organizations'),
 }
@@ -215,6 +220,7 @@ const agent = {
     Activities,
     Account,
     Categories,
+    RoomDelegates,
     Organizations,
     Locations,
     GraphEvents,

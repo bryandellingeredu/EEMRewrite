@@ -50,16 +50,29 @@ namespace Application.Activities
                     }
 
                     if (!string.IsNullOrEmpty(activity.EventLookup) && !string.IsNullOrEmpty(activity.CoordinatorEmail))
-                    {                      
+                    {
                         string coordinatorEmail = activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
                             ? activity.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
-                        var evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup);
+                        Event evt;
+                        try
+                        {
+                            evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup);
+                        }
+                        catch (Exception)
+                        {
+
+                            evt = new Event();
+                            activity.EventLookup = string.Empty;
+                        }
+
                         var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();
 
                         List<ActivityRoom> newActivityRooms = new List<ActivityRoom>();
                         int index = 0;
 
-                        foreach (var item in evt.Attendees.Where(x => allroomEmails.Contains(x.EmailAddress.Address)))
+                       if(evt !=null && evt.Attendees !=null)
+                        {
+                            foreach (var item in evt.Attendees.Where(x => allroomEmails.Contains(x.EmailAddress.Address)))
                         {
 
                             newActivityRooms.Add(new ActivityRoom
@@ -69,6 +82,7 @@ namespace Application.Activities
                                 Email = item.EmailAddress.Address
                             });
                         }
+                    }
 
                         activity.ActivityRooms = newActivityRooms;
 

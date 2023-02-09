@@ -92,36 +92,16 @@ namespace Persistence
             {
                 var roomDelegates = new List<RoomDelegate>
                 { 
-                    new RoomDelegate {RoomEmail = "BlissHallTestAuditorium @armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "ReynoldsTheater@armywarcollege.edu ", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "USAHECVECTestRoom1@armywarcollege.edu ", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "USAHECConservationFacility@armywarcollege.edu ", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "USAHECArmyHeritageTrailTestStation@armywarcollege.edu ", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "USAHECRidgwayHallTestConferenceRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "UptonHallTestConfRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "TestRoom5@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "RootHallTestRoom2@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "CollinsHallTestRoom2@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "RootHallTestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "Bldg315TestConferenceRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "Bldg632TestConfRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "CollinsHallTestRoom1Rm1015@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "ArmstrongHallTestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "Bldg47TestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "AnneElyHallTestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "TestRoom4@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "CollinsHallB015ConferenceTable@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "BryanRoom@armywarcollege.edu", DelegateEmail="bryan.dellinger.civ@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "experimental.classroom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "will.washcoe@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "one.button@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "library.collaboration2@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                    new RoomDelegate {RoomEmail = "library.collaboration1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                     new RoomDelegate {RoomEmail = "upton@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                     new RoomDelegate {RoomEmail = "ccr@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                      new RoomDelegate {RoomEmail = "mary.walker@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                      new RoomDelegate {RoomEmail = "JoanTestRoom2@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
-                      new RoomDelegate {RoomEmail = "JoanTestRoom@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu"},
+                    new RoomDelegate {RoomEmail = "BlissHallTestAuditorium @armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu",DelegateDisplayName="Robert Hoss"},
+                    new RoomDelegate {RoomEmail = "CollinsHallTestRoom2@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu", DelegateDisplayName="Robert Hoss"},
+                    new RoomDelegate {RoomEmail = "RootHallTestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu", DelegateDisplayName="Robert Hoss"},
+                    new RoomDelegate {RoomEmail = "AnneElyHallTestRoom1@armywarcollege.edu", DelegateEmail="robert.h.hoss@armywarcollege.edu" ,DelegateDisplayName="Robert Hoss"},
+                    new RoomDelegate {RoomEmail = "AnneElyHallTestRoom1@armywarcollege.edu", DelegateEmail="mauricio.velasquezhussein@armywarcollege.edu" ,DelegateDisplayName="Mauricio Velasquez"},
+                    new RoomDelegate {RoomEmail = "CollinsHallB015ConferenceTable@armywarcollege.edu", DelegateEmail="bryan.dellinger.civ@armywarcollege.edu" ,DelegateDisplayName="Bryan Dellinger"},
+                    new RoomDelegate {RoomEmail = "BryanRoom@armywarcollege.edu", DelegateEmail="bryan.dellinger.civ@armywarcollege.edu" ,DelegateDisplayName="Bryan Dellinger"},
+                    new RoomDelegate {RoomEmail = "JoanTestRoom@armywarcollege.edu", DelegateEmail="derrick.simon@armywarcollege.edu",DelegateDisplayName="Derrick Simon"},
+                    new RoomDelegate {RoomEmail = "JoanTestRoom@armywarcollege.edu", DelegateEmail="eddie.rogers@armywarcollege.edu" ,DelegateDisplayName="Eddie Rogers"},
+                    new RoomDelegate {RoomEmail = "JoanTestRoom2@armywarcollege.edu", DelegateEmail="eddie.rogers@armywarcollege.edu",DelegateDisplayName="Eddie Rogers"},
                };
                 await context.RoomDelegates.AddRangeAsync(roomDelegates);
                 await context.SaveChangesAsync();
@@ -135,7 +115,7 @@ namespace Persistence
                 new Category{Name = "Academic IMC Event", RouteName = "academic", IMCColor = "#4183C4", IncludeInIMC = true},
                 new Category{Name = "ASEP Calendar", RouteName = "asep", IncludeInIMC = true},
                 new Category{Name = "Chapel", RouteName = "chapel", IMCColor = "#CD5C5C", IncludeInIMC = true},
-                new Category{Name = "Command Group Calendar", RouteName = "commandGroup"},
+                new Category{Name = "Command Group Calendar", RouteName = "commandGroup", IMCColor = "#EEDC82", IncludeInIMC = true},
                 new Category{Name = "Complemenary Events", RouteName = "complementary" },
                 new Category{Name = "Community Relations", RouteName = "community" },
                 new Category{Name = "CSL Calendar", RouteName = "csl", IMCColor = "#787271" },
@@ -180,6 +160,7 @@ namespace Persistence
                 new Organization {Name = "Exec Svc"},
                 new Organization {Name = "CoS"},
                 new Organization {Name = "PA/LL"},
+                new Organization {Name = "PROVOST"},
 
             };
                 await context.Organizations.AddRangeAsync(organizations);

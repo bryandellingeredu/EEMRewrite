@@ -91,23 +91,35 @@ namespace Application.Activities
                     {
                         string coordinatorEmail = activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
                             ? activity.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
-                        var evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup);
+                        Event evt;
+                        try
+                        {
+                            evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup);
+                        }
+                        catch (Exception)
+                        {
+                            activity.EventLookup = string.Empty;
+                            evt = new Event();
+                        }
+
                         var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();
 
                         List<ActivityRoom> newActivityRooms = new List<ActivityRoom>();
                         int index = 0;
 
-                        foreach (var item in evt.Attendees.Where(x => allroomEmails.Contains(x.EmailAddress.Address)))
+                       if(evt !=null && evt.Attendees !=null)
                         {
-
-                            newActivityRooms.Add(new ActivityRoom
+                            foreach (var item in evt.Attendees.Where(x => allroomEmails.Contains(x.EmailAddress.Address)))
                             {
-                                Id = index++,
-                                Name = getName(item, allrooms),
-                                Email = item.EmailAddress.Address
-                            });
-                        }
 
+                                newActivityRooms.Add(new ActivityRoom
+                                {
+                                    Id = index++,
+                                    Name = getName(item, allrooms),
+                                    Email = item.EmailAddress.Address
+                                });
+                            }
+                        }
                         activity.ActivityRooms = newActivityRooms;
 
                     }
