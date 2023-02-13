@@ -341,7 +341,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                      <Icon name='calendar check' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={14}>
-                  Military Family Program
+                  Military Spouse and Family Program
                  </Grid.Column>
              </Grid>
          </Segment>

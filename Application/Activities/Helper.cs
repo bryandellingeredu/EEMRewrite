@@ -74,14 +74,9 @@ namespace Application.Activities
                                 d = d.AddDays(1);
                             }
                             index++;
-                            if (recurrence.WeekInterval == "2")
-                            {
-                                d = d.AddDays(7);
-                            }
-                            if (recurrence.WeekInterval == "3")
-                            {
-                                d = d.AddDays(14);
-                            }
+
+                            int weekInterval = int.Parse(recurrence.WeekInterval);
+                            d = d.AddDays(7 * (weekInterval - 1));
                         }
                     }
                     else
@@ -108,14 +103,8 @@ namespace Application.Activities
                                 d = d.AddDays(1);
 
                             }
-                            if (recurrence.WeekInterval == "2")
-                            {
-                                d = d.AddDays(7);
-                            }
-                            if (recurrence.WeekInterval == "3")
-                            {
-                                d = d.AddDays(14);
-                            }
+                             int weekInterval = int.Parse(recurrence.WeekInterval);
+                              d = d.AddDays(7 * (weekInterval - 1));
                         }
                     }
                     break;

@@ -1,5 +1,4 @@
 import { makeAutoObservable, reaction } from "mobx";
-import { date } from "yup";
 import { ServerError } from "../models/serverError";
 
 
@@ -44,7 +43,14 @@ export default class CommonStore{
         this.redirectCategoryId = categoryId;
     }
 
-    convertDateToGraph = (date: Date, isAllDay: boolean, isEndDt: boolean): string => {
+    convertDateToGraph = (dt: Date, isAllDay: boolean, isEndDt: boolean): string => {
+        let date : Date = new Date();
+        if(typeof dt === 'string'){
+            date = new Date(dt)
+        } else{
+            date = dt;
+        }
+        
         if(isEndDt && isAllDay){
             date = this.addDays(date,1);
         }

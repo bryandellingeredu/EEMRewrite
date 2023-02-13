@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
-import { Button, Header, Item, Segment, Image, Confirm, Label } from 'semantic-ui-react'
+import { Button, Header, Item, Segment, Image, Confirm, Label, ButtonGroup } from 'semantic-ui-react'
 import { Activity } from '../../../app/models/activity';
 import RecurrenceMessageWrapper from '../recurrenceMessage/RecurrenceMessageWrapper';
 import { useStore } from "../../../app/stores/store";
@@ -86,7 +86,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                 <Segment style={activityImageTextStyle} basic>
                     
              
-                    <Item.Group>
+                    <Item.Group style={{marginRight: '5px'}}>
   
                         <Item>
                             <Item.Content>
@@ -158,8 +158,9 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                     </Item.Group>
                 </Segment>
             </Segment>
-            <Segment clearing attached='bottom'>
-           <Button icon color='brown' onClick={() => history.goBack()} >
+            <Segment clearing attached='bottom' textAlign='center'>
+            <ButtonGroup size='tiny' fluid>
+           <Button icon  color='brown' onClick={() => history.goBack()} >
             <FontAwesomeIcon icon={faBackward} style={{paddingRight: '5px'}} />
             Back
            </Button>
@@ -184,7 +185,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
         </>
     }
         { activity.category.name === 'Academic Calendar' &&
-            <Button color='teal' floated='right' onClick={handleAddToCalendar} >
+            <Button color='teal'  onClick={handleAddToCalendar} >
                      Add to Calendar
             </Button>
         }
@@ -193,7 +194,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
        activity.category.name !== 'Academic Calendar' && activity.logicalDeleteInd &&
           <>
                 <Button color='orange'
-                 floated='right'
+              
                   type='button'
                   onClick={() => setShowConfirm(true)}
                   loading={restoring}
@@ -210,8 +211,9 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
         </>
     }
 
-            {activity.recurrenceInd && activity.recurrence && !activity.logicalDeleteInd &&
+     {activity.recurrenceInd && activity.recurrence && !activity.logicalDeleteInd &&
       <>
+      
       <Button  icon color='teal' 
        onClick={() => modalStore.openModal(
         <RecurrenceMessageWrapper
@@ -224,7 +226,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
        Repeating Event
      </Button>
 
-<Button color='purple' floated='right' as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}/true`}>
+<Button color='purple'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}/true`}>
 Update Series
 </Button>
 </>
@@ -232,15 +234,17 @@ Update Series
      }
    { activity.category.name !== 'Academic Calendar' && !activity.logicalDeleteInd &&
    <>
-              
-                <Button color='orange' floated='right' as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
+            
+                <Button  color='orange'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
                     Update Event
                 </Button>
-                <Button color='teal' floated='right' onClick={handleAddToCalendar} >
+                <Button  color='teal'  onClick={handleAddToCalendar} >
                      Add to Calendar
                 </Button>
+         
       </>
     }
+    </ButtonGroup>
     
             </Segment>
         </Segment.Group>

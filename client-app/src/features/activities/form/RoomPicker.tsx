@@ -8,6 +8,8 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { Recurrence } from "../../../app/models/recurrence";
 import agent from "../../../app/api/agent";
 import { GraphScheduleItem } from "../../../app/models/graphScheduleItem";
+import { Activity } from "../../../app/models/activity";
+import { GraphScheduleResponse } from "../../../app/models/graphScheduleResponse";
 
 interface Option {
   label: string;
@@ -33,7 +35,7 @@ export default observer(function RoomPicker({
   recurrenceInd,
 }: Props) {
   const animatedComponents = makeAnimated();
-  const { availabilityStore, graphRoomStore } = useStore();
+  const { availabilityStore, graphRoomStore, commonStore } = useStore();
   const { loadingInitial, loadSchedule } = availabilityStore;
   const { loadGraphRooms } = graphRoomStore;
   const [roomOptions, setRoomOptions] = useState<Option[]>([
@@ -46,102 +48,48 @@ export default observer(function RoomPicker({
     setRoomEmails(values);
   };
 
-  const convertUTCtoEST = (utcDate: Date): Date => {
-    const offset = utcDate.getTimezoneOffset();
-    const estDate = new Date(utcDate.getTime() - offset * 60 * 1000);
-    return estDate;
-  };
+
 
   useEffect(() => {
-    console.log('loading rooms')
+    console.log('starting use effect');
     const diff = Math.abs(+end - +start);
     var minutes = Math.floor(diff / 1000 / 60);
     if (minutes >= 15 && start < end) {
       if (recurrenceInd) {
         recurrence.activityStart = start;
         recurrence.activityEnd = end;
-        agent.Activities.listPossibleByRecurrence(recurrence).then(
-          (activities) => {
-            if (activities && activities.length) {
-              const activitiesWithEstDates: any = [];
-              activities.forEach((activity) => {
-                activitiesWithEstDates.push({
-                  ...activity,
-                  estStart: convertUTCtoEST(new Date(activity.start)),
-                  estEnd: convertUTCtoEST(new Date(activity.end)),
-                });
-              });
-              const utcStartDate = new Date(activities[0].start);
-              const utcEndDate = new Date(
-                activities[activities.length - 1].end
-              );
-              const estStartDate = convertUTCtoEST(utcStartDate);
-              const estEndDate = convertUTCtoEST(utcEndDate);
-              loadSchedule(estStartDate, estEndDate).then((schedule) => {
-                loadGraphRooms().then((graphRooms) => {
-                  let o: Option[] = [];
-                  schedule!.forEach((room) =>
-                    o.push({
-                      label:
-                        graphRooms.find(
-                          (x) => x.emailAddress === room.scheduleId
-                        )?.displayName || room.scheduleId,
-                      value: room.scheduleId,
-                      isDisabled: false,
-                    })
-                  );
-                  setRoomOptions(o);
-                  const filteredSchedule = schedule?.filter(
-                    (x) => x.scheduleItems && x.scheduleItems.length
-                  );
-                  if (filteredSchedule && filteredSchedule.length) {
-                    filteredSchedule.forEach((schedule) => {
-                      schedule.scheduleItems.forEach((item) => {
-                        const itemStart = new Date(item.start.dateTime);
-                        const itemEnd = new Date(item.end.dateTime);
-                        activitiesWithEstDates.forEach((element: any) => {
-                          if (
-                            (element.estStart < itemEnd &&
-                              itemStart < element.estEnd) ||
-                            (itemStart > element.estStart &&
-                              itemEnd < element.estEnd) ||
-                            (element.estStart > itemStart &&
-                              element.estEnd < itemEnd)
-                          ) {
-                            setRoomOptions([
-                              ...o.filter(
-                                (x) => x.value !== schedule.scheduleId
-                              ),
-                              {
-                                ...o.find(
-                                  (x) => x.value === schedule.scheduleId
-                                ),
-                                isDisabled: true,
-                              } as Option,
-                            ]);
-                          }
-                        });
-                      });
-                    });
-                  }
-                });
-              });
-            }
-          }
-        );
+        agent.Activities.listPossibleByRecurrence(recurrence).then( (activities) => {
+          loadSchedule(activities[0].start, activities[activities.length - 1].end).then((schedule) => { 
+            if(schedule){
+            loadGraphRooms().then((graphRooms) => {
+              let o: Option[] = []; 
+              schedule.forEach((room) =>
+              o.push({
+                label:
+                  graphRooms.find((x) => x.emailAddress === room.scheduleId)
+                    ?.displayName || room.scheduleId,
+                value: room.scheduleId,
+                isDisabled: getIsRecurrenceDisabled(room, activities)
+              })
+            );
+            setRoomOptions(o);
+
+            });
+          }         
+          });
+        });
       } else {
-        loadSchedule(start, end).then((response) => {
-          if (response) {
+        loadSchedule(start, end).then((schedule) => {
+          if (schedule) {
             let o: Option[] = [];
             loadGraphRooms().then((graphRooms) => {
-              response.forEach((room) =>
+              schedule.forEach((room) =>
                 o.push({
                   label:
                     graphRooms.find((x) => x.emailAddress === room.scheduleId)
                       ?.displayName || room.scheduleId,
                   value: room.scheduleId,
                   isDisabled: getIsDisabled(start, end, room.scheduleItems)
-                  //isDisabled: room.scheduleItems.length > 0,
                 })
               );
               setRoomOptions(o);
@@ -152,21 +100,44 @@ export default observer(function RoomPicker({
     }
   }, [start, end, loadSchedule, loadGraphRooms, recurrenceInd, recurrence]);
 
+  function getIsRecurrenceDisabled(room: GraphScheduleResponse, activities: Activity[]){
+       let result = false;
+       if(!room || !room.scheduleItems ||  room.scheduleItems.length <1) return result
+       room.scheduleItems.forEach(scheduledItem => {
+          activities.forEach(activity => {
+            const conflict =  
+            (new Date(activity.start) < new Date(scheduledItem.end.dateTime) && new Date(scheduledItem.start.dateTime) < new Date(activity.end)) ||
+            (new Date(scheduledItem.start.dateTime) > new Date(activity.start) && new Date(scheduledItem.end.dateTime) < new Date(activity.end)) ||
+            (new Date(activity.start) > new Date(scheduledItem.start.dateTime) &&  new Date(activity.end) < new Date(scheduledItem.end.dateTime)) ||
+            (new Date(activity.start) === new Date(scheduledItem.start.dateTime) && new Date(activity.end) === new Date(scheduledItem.end.dateTime));
+            if(conflict){
+              console.log('room', room.scheduleId)
+              console.log('schedule', room.scheduleItems)
+              result = true;
+              debugger;
+            }
+            return result;
+          })
+       });
+       return result;
+  }
+
+
   function getIsDisabled(start: Date, end: Date, scheduledItems: GraphScheduleItem[]){
     if (scheduledItems.length < 1) return false;
     let result = false;
     scheduledItems.forEach((item) =>{
       const itemStart = new Date(item.start.dateTime);
       const itemEnd = new Date(item.end.dateTime);
+
       if (
-        (start < itemEnd &&
-          itemStart < end) ||
-        (itemStart > start &&
-          itemEnd < end) ||
-        (start > itemStart &&
-          end < itemEnd)
+        (new Date(start) < new Date(itemEnd) && new Date(itemStart) < new Date(end)) ||
+        (new Date(itemStart) > new Date(start)  &&  new Date(itemEnd) < new Date(end)) ||
+        (new Date(start) > new Date(itemStart) && new Date(end) < new Date(itemEnd)) ||
+        (new Date(start) === new Date(itemStart) && new Date(end) === new Date(itemEnd))
       ) {
-        debugger;
+        console.log('scheduled items')
+        console.log(scheduledItems);
         result = true;
       }
     });

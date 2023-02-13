@@ -29,13 +29,20 @@ export default observer(function RecurrenceMessage({ values, weeklyRepeatType, m
     info
     header='Weekly repeating information'
     content={`this event will start on ${format(new Date(values.intervalStart), 'MMMM d, yyyy')} and will repeat 
-    ${values.weekInterval === '1' ? 'every week' : values.weekInterval === '2' ? 'every other week' : 'every third week' }
-    on  ${values.sunday ? 'Sunday' : ''} ${values.monday ? 'Monday' : ''}  ${values.tuesday ? 'Tuesday' : ''}  ${values.wednesday ? 'Wednesday' : ''}
-    ${values.thursday ? 'Thursday' : ''} ${values.friday ? 'Friday' : ''} ${values.saturday ? 'Saturday' : ''}.
-     ${weeklyRepeatType === 'number' ? 'This series will repeat' : 'ending on'} 
-     ${weeklyRepeatType === 'number' ? values.weeksRepeating : format(new Date(values.intervalEnd), 'MMMM d, yyyy')}
-     ${weeklyRepeatType === 'number' ? 'time/s' : ''}
-    ` } 
+    ${values.weekInterval === '1' ? 'every week' : 
+     values.weekInterval === '2' ? 'every other week' : 
+     values.weekInterval === '3' ? 'every third week' :
+     values.weekInterval === '4' ? 'every fourth week' :
+     values.weekInterval === '5' ? 'every fifth week' :
+     values.weekInterval === '6' ? 'every sixth week' : ''}
+    on ${values.sunday ? 'Sunday, ' : ''}${values.monday ? 'Monday, ' : ''}${values.tuesday ? 'Tuesday, ' : ''}
+    ${values.wednesday ? 'Wednesday, ' : ''}${values.thursday ? 'Thursday, ' : ''}${values.friday ? 'Friday, ' : ''}
+    ${values.saturday ? 'Saturday' : ''}. ${weeklyRepeatType === 'number' ? 'This series will repeat' : 'ending on'} 
+    ${weeklyRepeatType === 'number' ? values.weeksRepeating : format(new Date(values.intervalEnd), 'MMMM d, yyyy')}
+    ${weeklyRepeatType === 'number' ? ' time/s' : ''}
+    `}
+
+
   />
 }
 {

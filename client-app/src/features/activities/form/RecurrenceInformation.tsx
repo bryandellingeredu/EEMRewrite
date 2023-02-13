@@ -311,13 +311,12 @@ export default observer(function RecurrenceInformation({
               <>
                 <Grid>
                   <Grid.Row>
-                    <Grid.Column width={7}>
+                    <Grid.Column width={1}>
                       <strong>
-                        Should this event occur weekly, every other week, or
-                        every third week?
+                        Iteration
                       </strong>
                     </Grid.Column>
-                    <Grid.Column width={8}>
+                    <Grid.Column width={14}>
                       <SemanticForm.Group inline>
                         <MySemanticRadioButton
                           name="weekInterval"
@@ -333,6 +332,21 @@ export default observer(function RecurrenceInformation({
                           name="weekInterval"
                           label="Every Third Week"
                           value="3"
+                        />
+                         <MySemanticRadioButton
+                          name="weekInterval"
+                          label="Every Fourth Week"
+                          value="4"
+                        />
+                        <MySemanticRadioButton
+                          name="weekInterval"
+                          label="Every Fifth Week"
+                          value="5"
+                        />
+                          <MySemanticRadioButton
+                          name="weekInterval"
+                          label="Every Sixth Week"
+                          value="6"
                         />
                       </SemanticForm.Group>
                     </Grid.Column>

@@ -109,6 +109,7 @@ export default observer(function ActivityForm() {
   const [attachBioError, setAttachBioError] = useState(false);
   const [attachNoAttachmentError, setAttachNoAttachmentError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
+  const [recurrenceDisabled, setRecurrenceDisabled] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
   const [roomEmails, setRoomEmails] = useState<string[]>([]);
   const [originalRoomEmails, setOriginalRoomEmails] = useState<string[]>([]);
@@ -373,6 +374,12 @@ export default observer(function ActivityForm() {
     const { values, setFieldValue, submitCount } = useFormikContext();
     const v = values as ActivityFormValues;
     useEffect(() => {
+      if(v.end.getDate() !== v.start.getDate()){
+        setRecurrenceDisabled(true);
+        setRecurrenceInd(false);
+      }else{
+        setRecurrenceDisabled(false);
+      }
       if (v.end < v.start) {
         setFieldValue("end", new Date(v.start.getTime() + 30 * 60000));
       }
@@ -525,6 +532,58 @@ export default observer(function ActivityForm() {
               </>
             )}
 
+
+             
+            { (!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0 && (
+              <>
+                <Popup
+                  trigger={
+                    <SemanticForm.Field>
+                      <label>*Start:</label>
+                      <input
+                        name="start"
+                        value={
+                          values.allDayEvent
+                            ? format(values.start, "MMMM d, yyyy")
+                            : format(values.start, "MMMM d, yyyy h:mm aa")
+                        }
+                        disabled
+                      />
+                    </SemanticForm.Field>
+                  }
+                >
+                  <Popup.Header>
+                  Room Registration Notice
+                  </Popup.Header>
+                  <Popup.Content>
+                  Please remove all selected rooms before making changes to the dates or times to ensure that your changes are reflected accurately.
+                  </Popup.Content>
+                </Popup>
+
+                <Popup
+                  trigger={
+                    <SemanticForm.Field>
+                      <label>*End:</label>
+                      <input
+                        name="end"
+                        value={
+                          values.allDayEvent
+                            ? format(values.end, "MMMM d, yyyy")
+                            : format(values.end, "MMMM d, yyyy h:mm aa")
+                        }
+                        disabled
+                      />
+                    </SemanticForm.Field>
+                  }
+                >
+                  <Popup.Header>Room Registration Notice</Popup.Header>
+                  <Popup.Content>
+                  Please remove all selected rooms before making changes to the dates or times to ensure that your changes are reflected accurately.
+                  </Popup.Content>
+                </Popup>
+              </>
+            )}
+
             {!values.allDayEvent &&
               !(id && originalRoomEmails && originalRoomEmails.length) && (
                 <MyDateInput
@@ -619,7 +678,7 @@ export default observer(function ActivityForm() {
                   id &&
                   originalRoomEmails &&
                   originalRoomEmails.length > 0
-                ) && (
+                ) && !recurrenceDisabled && (
                   <SemanticForm.Field>
                     <label>Does Event Repeat?</label>
                     <Button
@@ -645,6 +704,21 @@ export default observer(function ActivityForm() {
                 )}
               </>
             )}
+
+             {recurrenceDisabled &&
+              <SemanticForm.Field>
+              <label>Recurrence Not Supported For Multi-Day Event:</label>
+              <Button
+                     type="button"
+                      icon
+                      labelPosition="left"
+                      disabled
+                    >
+                      Repeating Event
+                      {!recurrenceInd && <Icon name="square outline" />}
+                    </Button>
+              </SemanticForm.Field>
+             }
        
               <MySelectInput
                     options={organizationOptions}
@@ -686,7 +760,7 @@ export default observer(function ActivityForm() {
     </>
           )}
        
-      <Grid>
+    {/* <Grid>
             <Grid.Row>
             <Grid.Column width={3}>
                       <strong>
@@ -731,6 +805,7 @@ export default observer(function ActivityForm() {
                   label="Organization: (Select the organization that best describes how this event ties into USAWC long range planning)"
                 />
             }
+          */}
   
             {roomRequired && (
               <>
@@ -1661,12 +1736,12 @@ export default observer(function ActivityForm() {
             <Grid.Row>
             <Grid.Column width={3}>
                       <strong>
-                      MFP:
+                      MSFP:
                       </strong>
             </Grid.Column>
             <Grid.Column width={13}>
             <SemanticForm.Group inline>
-              <MySemanticCheckBox name="mfp" label="Only for Military Family Program 'MFP' Personnel"/>
+              <MySemanticCheckBox name="mfp" label="Only for Military Spouse and Family Program 'MSFP' Personnel"/>
             </SemanticForm.Group>
             </Grid.Column>
             </Grid.Row>           

@@ -19,8 +19,11 @@ constructor() {
 
   get categoryOptions () {
     const options : any = [];
+    options.push({ text: ' ', value: this.categories.find(x => x.name === 'Other')?.id });
     this.categories.forEach(category => {
-        options.push({text: category.name, value: category.id })
+        if (category.name !== 'Other') {
+            options.push({ text: category.name, value: category.id });
+        }
     });
     return options
   }
