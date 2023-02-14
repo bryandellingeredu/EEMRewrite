@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230213180443_foreignVisitorAttributes2")]
+    partial class foreignVisitorAttributes2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -643,7 +646,7 @@ namespace Persistence.Migrations
                     b.Property<bool>("GenerateItinerary")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Gift")
+                    b.Property<string>("GiftRequirement")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GuestItinerary")

@@ -144,6 +144,8 @@ export interface Activity{
     blissHallSupport: boolean
     blissHallAVSptRequired : string
     blissHallAVNotificationSent: boolean
+
+
 }
 
 export class Activity implements Activity{

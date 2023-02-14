@@ -39,7 +39,7 @@ flagSupport: boolean
 flagIsFor:	string
 flagType:	string
 flagDetails: string
-giftRequirement:	string
+gift: string
 foreignVisitor:	boolean
 hostingReportStatus:	string
 reportType: string
@@ -50,5 +50,9 @@ outsiderReportDV: string
 outsiderReportNumOfPeople: string
 outsiderReportStatus: string
 outsiderReportEngagement: string
+countryOfGuest: string
+typeOfVisit: string
+classificationOfInformationReleased: string
+additionalForeignGuestInformation: string
 
 }

@@ -28,7 +28,7 @@ export default function DocumentUploadWidget({loading, uploadDocument}: Props){
             </Grid.Column>
             <Grid.Column width={1} />
             <Grid.Column width={4}>
-                <Header sub style={{color: 'white'}} content='Step 2 - Upload Documemnt' textAlign="center" />
+                <Header sub style={{color: 'white'}} content='Step 2 - Upload Document' textAlign="center" />
             </Grid.Column>
             </Grid.Row>
             <Grid.Row>

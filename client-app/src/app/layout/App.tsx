@@ -28,6 +28,8 @@ import RoomCalendarLinks from '../../features/fullCalendar/RoomCalendarLinks';
 import EmailGroupTable from '../../features/admin/emailGroup/emailGroupTable';
 import EmailGroupForm from '../../features/admin/emailGroup/emailGroupForm';
 import LoginBoth from '../../features/home/LoginBoth';
+import RoomDelegateTable from '../../features/admin/roomDelegates/roomDelegateTable';
+import RoomDelegateForm from '../../features/admin/roomDelegates/roomDelegateForm';
 
 function App() {
   const location = useLocation();
@@ -69,7 +71,9 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/loginBoth`} component={LoginBoth}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/activityTable`} component={activityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
-                <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/>                 
+                <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/> 
+                <Route exact path={`${process.env.PUBLIC_URL}/roomDelegateTable`} component={RoomDelegateTable}/> 
+                <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/manageRoomDelegate/:id`} component={RoomDelegateForm}/>                
                 <Route exact path={`${process.env.PUBLIC_URL}/activities`} component={ActivityDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/academiccalendar`} component={AcademicCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar`} component={IMCCalendarDashboard}/>

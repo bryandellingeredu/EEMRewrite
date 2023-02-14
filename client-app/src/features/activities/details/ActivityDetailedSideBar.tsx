@@ -376,7 +376,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
             {activity.commandantRequested && <List.Item>Commandant</List.Item> }
             {activity.dptCmdtRequested && <List.Item>Dept Cmdt</List.Item> }
             {activity.provostRequested && <List.Item>Provost</List.Item> }
-            {activity.cofsRequested && <List.Item>Cofs</List.Item> }
+            {activity.cofsRequested && <List.Item>COS</List.Item> }
             {activity.deanRequested && <List.Item>Dean</List.Item> }
             {activity.ambassadorRequested && <List.Item>Ambassador</List.Item> }
             {activity.csmRequested && <List.Item>CSM</List.Item> }

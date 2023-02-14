@@ -1,4 +1,5 @@
 using Application.RoomDelegates;
+using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,9 +7,18 @@ namespace API.Controllers
 {
      public class RoomDelegateController : BaseApiController
     {
-        [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetCategories() =>
+        public async Task<IActionResult> GetRoomDelegates() =>
       HandleResult(await Mediator.Send(new List.Query()));
+
+       [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> Post(RoomDelegate roomDelegate) =>
+         HandleResult(await Mediator.Send(new Post.Command { RoomDelegate = roomDelegate }));
+
+        [Authorize(Roles = "admin")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Activity>> DeleteRoomDelegate(Guid id) =>
+          HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
     }
 }

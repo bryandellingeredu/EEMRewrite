@@ -133,6 +133,7 @@ export default observer(function EmailGroupTable() {
                 <Table.HeaderCell>Display Name</Table.HeaderCell>
                 <Table.HeaderCell>Email</Table.HeaderCell>
                 <Table.HeaderCell>Groups</Table.HeaderCell>
+                <Table.HeaderCell></Table.HeaderCell>
               </Table.Row>
             </Table.Header>
 

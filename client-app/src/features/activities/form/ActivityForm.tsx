@@ -46,6 +46,7 @@ import { convertToHTML } from "draft-convert";
 import DocumentUploadWidget from "../../../app/common/documentUpload/documentUploadWidget";
 import { Attachment } from "../../../app/models/attachment";
 import { toast } from "react-toastify";
+import { Countries } from "../../../app/models/countryList";
 
 
 function useIsSignedIn(): [boolean] {
@@ -423,6 +424,10 @@ export default observer(function ActivityForm() {
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
             <FormObserver />
             <ScrollToFieldError />
+
+
+
+
             <MyTextInput name="title" placeholder="Title" label="*Title:" />
             <MyTextArea
               rows={3}
@@ -1774,7 +1779,7 @@ export default observer(function ActivityForm() {
               <MySemanticCheckBox name="commandantRequested" label="Commandant"/>
               <MySemanticCheckBox name="dptCmdtRequested" label="DCOM"/>
               <MySemanticCheckBox name="provostRequested" label="Provost"/>
-              <MySemanticCheckBox name="cofsRequested" label="COFS"/>
+              <MySemanticCheckBox name="cofsRequested" label="COS"/>
               <MySemanticCheckBox name="deanRequested" label="Dean"/>
               <MySemanticCheckBox name="ambassadorRequested" label="AMB"/>
               <MySemanticCheckBox name="csmRequested" label="CSM"/>
@@ -1841,7 +1846,7 @@ export default observer(function ActivityForm() {
             </Grid.Column>
             <Grid.Column width={12}>
             <SemanticForm.Group inline>
-              <MySemanticCheckBox name="hostingReport.officeCallWithCommandant" label="Only for Military Family Program 'MFP' Personnel"/>
+              <MySemanticCheckBox name="hostingReport.officeCallWithCommandant" />
             </SemanticForm.Group>
             <i>If yes please coordinate with Ashley </i>
             </Grid.Column>
@@ -1850,7 +1855,10 @@ export default observer(function ActivityForm() {
            </>
        }
 
-{values.report === 'Hosting Report' && 
+
+
+
+{/*values.report === 'Hosting Report' && 
  <>
            <Divider color='black'/>
            <Grid>
@@ -1873,7 +1881,8 @@ export default observer(function ActivityForm() {
             </Grid.Row>           
            </Grid>
            </>
-    }
+      */}
+
 
           {values.report === 'Hosting Report' && 
            <MyTextInput
@@ -1894,10 +1903,13 @@ export default observer(function ActivityForm() {
             {values.report === 'Hosting Report' && 
             <MyTextInput
                 name="hostingReport.guestName"
-                placeholder="Guest Full Name"
-                label="Guest Name:"
+                placeholder="Visitor Full Name"
+                label="Visitor Name:"
               />
              }
+
+
+
           
           {values.report === 'Hosting Report' && 
            <MySelectInput
@@ -1937,36 +1949,37 @@ export default observer(function ActivityForm() {
                 {text: 'Prof.', value: 'Prof.' },
                 {text: 'HON', value: 'HON' },
               ]}
-              placeholder="Guest Rank / Honorific"
+              placeholder="Visitor Rank / Honorific"
               name="hostingReport.guestRank"
-              label="Guest Rank / Honorific:"
+              label="Visitor Rank / Honorific:"
             />
            }
+
+
 
             {values.report === 'Hosting Report' && 
              <MyTextInput
                 name="hostingReport.guestTitle"
-                placeholder="Guest Title / Org"
-                label="Guest Title / Org:"
+                placeholder="Visitor Title / Org"
+                label="Visitor Title / Org:"
               />
              }
 
             {values.report === 'Hosting Report' && 
               <MyTextInput
                 name="hostingReport.guestOfficePhone"
-                placeholder="Guest Phone"
-                label="Guest Phone:"
+                placeholder="Visitor Phone"
+                label="Visitor Phone:"
               />
             }
 
             {values.report === 'Hosting Report' && 
              <MyTextInput
                 name="hostingReport.uniformOfGuest"
-                placeholder="Unifrom of Guest"
-                label="Uniform of Guest:"
+                placeholder="Unifrom of Visitor"
+                label="Uniform of Visitor:"
               />
           }
-
 
 
 {(!attachment || attachment.id < 1) && values.report === 'Hosting Report' && 
@@ -2094,7 +2107,7 @@ export default observer(function ActivityForm() {
               label="Travel Party / Accombied by:"
             />
         }
-             Guest Itenerary:
+             Visitor Itinerary:
              <Editor
                  editorState={editorState}
                  onEditorStateChange={setEditorState}
@@ -2103,6 +2116,9 @@ export default observer(function ActivityForm() {
                  toolbarClassName="toolbar-class"
               />
 
+
+
+
 {values.report === 'Hosting Report' && 
  <>
            <Divider color='black'/>
@@ -2110,7 +2126,7 @@ export default observer(function ActivityForm() {
             <Grid.Row>
             <Grid.Column width={4}>
                       <strong>
-                      Vios Support Requested:
+                      VIOS Support Requested:
                       </strong>
             </Grid.Column>
             <Grid.Column width={12}>
@@ -2118,7 +2134,7 @@ export default observer(function ActivityForm() {
               <MySemanticCheckBox name="hostingReport.viosSupportPhotography" label="Photography"/>
               <MySemanticCheckBox name="hostingReport.viosSupportAV" label="AV"/>
             </SemanticForm.Group>
-            <i>Has Vios request been submitted?</i>
+            <i>Has VIOS request been submitted?</i>
             </Grid.Column>
             </Grid.Row>          
            </Grid>
@@ -2127,10 +2143,12 @@ export default observer(function ActivityForm() {
         <div className="header">
             VIOS
         </div>
-        To request a photo or record video, click the <a href="https://vios.army.mil" target="_blank">VIOS</a> link. Opens the Visual Information Ordering Site (VIOS) in a new browswer tab
+        To request a photo or record video, click the <a href="https://vios.army.mil" target="_blank">VIOS</a> link. Opens the Visual Information Ordering Site (VIOS) in a new browser tab
     </div> 
            </>
     }
+
+
 
 {values.report === 'Hosting Report' && 
        <>
@@ -2167,10 +2185,8 @@ export default observer(function ActivityForm() {
                 {text: 'POV', value: 'POV' },
                 {text: 'GOV', value: 'GOV' },
                 {text: 'Commercial Air', value: 'Commercial Air' },
-                {text: 'Aviation (Helicopter)', value: 'Aviation (Helicopter)' },
-                {text: 'Aviation (Fixed Wing)', value: 'Aviation (Fixed Wing)' },
-                {text: 'Milair (Rotary Wing)', value: 'Milair (Rotary Wing)' },
-                {text: 'Milair (Fixed Wing)', value: 'Milair (Fixed Wing)' },
+                {text: 'MILAIR (Rotary Wing)', value: 'MILAIR (Rotary Wing)' },
+                {text: 'MILAIR (Fixed Wing)', value: 'MILAIR (Fixed Wing)' },
                 {text: 'Rental Car', value: 'Rental Car' },
                 {text: 'Bus', value: 'Bus' },
                 {text: 'Rail', value: 'Rail' }
@@ -2278,10 +2294,12 @@ export default observer(function ActivityForm() {
             Bus Transportation Request
         </div>
         If local transportation support is needed, check the Local Transportation Checkbox above,  and then submit your request by clicking the 
-           <a href="https://armyeitaas.sharepoint-mil.us/teams/EnterprisePortal/Lists/BusTransportationRequest/AllItems.aspx" target="_blank">Bus Transportation Request</a> link. When the site opens in a new tab click the New button.
+           <a href="https://armyeitaas.sharepoint-mil.us/teams/EnterprisePortal/Lists/BusTransportationRequest/AllItems.aspx" target="_blank"> Bus Transportation Request</a> link. When the site opens in a new tab click the New button.
     </div> 
            </>
     }
+
+
 
         <Divider color='black'/>
            <Grid>
@@ -2295,7 +2313,7 @@ export default observer(function ActivityForm() {
             <SemanticForm.Group inline>
               <MySemanticCheckBox name="hostingReport.parkingRequirements" />
             </SemanticForm.Group>
-            <i>If parking is needed for guest, check the checkbox and notifications will be emailed a group mailbox</i>
+            <i>If parking is needed, check the box and a notification will be sent to Executive Services</i>
             </Grid.Column>
             </Grid.Row>       
            </Grid>
@@ -2366,13 +2384,14 @@ export default observer(function ActivityForm() {
             <Grid.Column width={4}>
                       <strong>
                       Flag Support Needed:
+
                       </strong>
             </Grid.Column>
             <Grid.Column width={12}>
             <SemanticForm.Group inline>
               <MySemanticCheckBox name="hostingReport.flagSupport" />
             </SemanticForm.Group>
-            <i>Is General Officer flag support needed? this will send a request to G-4 Log/Maint for flag support</i>
+            <i>If General Flag Support is needed, check the box and a notification will be sent to Executive Services</i>
             </Grid.Column>
             </Grid.Row>           
            </Grid>
@@ -2388,22 +2407,24 @@ export default observer(function ActivityForm() {
            </>
     }    
 
-            
+      
 
-           {values.report === 'Hosting Report' && 
-             <MyTextInput
-                name="hostingReport.giftRequirement"
-                placeholder="Gift Requirement"
-                label="Gift Requirement:"
-              />
+{values.report === 'Hosting Report' && 
+           <MyTextArea
+              rows={3}
+              placeholder="Gift Requirement"
+              name="hostingReport.gift"
+              label="Gift Requirement:"
+            />
           }
 
+     <Segment color='yellow' inverted>
          <Divider color='black'/>
            <Grid>
             <Grid.Row>
             <Grid.Column width={4}>
                       <strong>
-                      Guest is From Foreign Country:
+                      Visitor is From Foreign Country:
                       </strong>
             </Grid.Column>
             <Grid.Column width={12}>
@@ -2415,11 +2436,99 @@ export default observer(function ActivityForm() {
             <Grid.Row>
             <Grid.Column width={4}/>
             <Grid.Column width={12}>
-              If guest is from a foreign country this will e-mail the Security Office. If you have any questions, contact the Security Office (245-3233 / 245 - 4188)
+              If Visitor is from a foreign country this will e-mail the Security Office. If you have any questions, contact the Security Office (245-3233 / 245 - 4188)
             </Grid.Column>
             </Grid.Row>          
            </Grid>
            <Divider color='black'/>
+
+      
+
+           {values.hostingReport && values.hostingReport.foreignVisitor &&
+           <>
+                <MyDataList
+                name="hostingReport.countryOfGuest"
+                placeholder="Country Of Guest"
+                label="Country of Guest: (Pick from the list or type your own)"
+                dataListId="countries"
+                options={Countries}
+              />
+              
+
+                 <Divider/>
+                  <Grid>
+                  <Grid.Row>
+                   <Grid.Column width={4}>
+                             <strong>
+                              Classification of Info Released:
+                             </strong>
+                   </Grid.Column>
+                   <Grid.Column width={12}>
+                   <SemanticForm.Group inline>
+                   <MySemanticRadioButton
+                               label="UNCLASS"
+                               value=''
+                               name="hostingReport.classificationOfInformationReleased"
+                             />
+                     <MySemanticRadioButton
+                               label="SECRET"
+                               value="SECRET"
+                               name="hostingReport.classificationOfInformationReleased"
+                             />
+                     <MySemanticRadioButton
+                               label="TOP SECRET"
+                               value="TOP SECRET"
+                               name="hostingReport.classificationOfInformationReleased"
+                             />
+                             </SemanticForm.Group>
+                   </Grid.Column>
+                  </Grid.Row>
+                 </Grid>  
+                 <Divider/>
+
+                 <Divider/>
+                  <Grid>
+                  <Grid.Row>
+                   <Grid.Column width={4}>
+                             <strong>
+                              Type of Visit:
+                             </strong>
+                   </Grid.Column>
+                   <Grid.Column width={12}>
+                   <SemanticForm.Group inline>
+                   <MySemanticRadioButton
+                               label="None"
+                               value=''
+                               name="hostingReport.typeOfVisit"
+                             />
+                     <MySemanticRadioButton
+                               label="DOD Sponsored Visit"
+                               value="DOD Sponsored Visit"
+                               name="hostingReport.typeOfVisit"
+                             />
+                     <MySemanticRadioButton
+                               label="Govermnent to Government Visit"
+                               value="Govermnent to Government Visit"
+                               name="report"
+                             />
+                             </SemanticForm.Group>
+                   </Grid.Column>
+                  </Grid.Row>
+                 </Grid>  
+                 <Divider/>
+
+                 <MyTextArea
+              rows={3}
+              placeholder="Additional Foreign Visitor Info"
+              name="hostingReport.additionalForeignGuestInformation"
+              label="Additional Foreign Visitor Info:"
+            />
+                 </>
+           }
+
+</Segment>   
+
+          
 
            {values.report === 'Hosting Report' && 
            <MySelectInput

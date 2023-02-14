@@ -35,7 +35,7 @@ export default function DocumentUploadWidgetDropzone({setFiles}: Props) {
     <div {...getRootProps()} style={isDragActive ? {...dzStyles, ...dzActive} : dzStyles}>
             <input {...getInputProps()} />
             <Icon name='hand point down' size='huge' />
-            <Header content='Drop bio here' />
+            <Header content='Drag And Drop, Or Click To Browse' />
         </div>
   )
 }   

@@ -51,7 +51,7 @@ namespace Domain
         public string FlagIsFor {get; set;}
         public string FlagType {get; set;}
         public string FlagDetails {get; set;}
-        public string GiftRequirement {get; set;}
+        public string Gift {get; set;}
         public bool ForeignVisitor {get; set;}
         public string HostingReportStatus {get; set;}
         public string ReportType {get; set;}
@@ -62,6 +62,10 @@ namespace Domain
          public string OutsiderReportNumOfPeople {get; set;}
          public string OutsiderReportStatus {get; set;}
          public string OutsiderReportEngagement {get; set;}
+         public string CountryOfGuest {get; set;}
+        public string TypeOfVisit {get; set;}
+        public string ClassificationOfInformationReleased {get; set;}
+        public string AdditionalForeignGuestInformation {get; set;}
     
      }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230213170602_foreignVisitorAttributes")]
+    partial class foreignVisitorAttributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,6 +35,9 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ActionOfficerPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdditionalForeignGuestInformation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AdditionalVTCInfo")
@@ -130,6 +136,9 @@ namespace Persistence.Migrations
                     b.Property<bool>("CheckedForOpsec")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ClassificationOfInformationReleased")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("CofsRequested")
                         .HasColumnType("bit");
 
@@ -162,6 +171,9 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("CopyToUSAHECCalendar")
                         .HasColumnType("bit");
+
+                    b.Property<string>("CountryOfGuest")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -388,6 +400,9 @@ namespace Persistence.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TypeOfVisit")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("USAHECCalendarCategory")
                         .HasColumnType("nvarchar(max)");
 
@@ -598,19 +613,10 @@ namespace Persistence.Migrations
                     b.Property<Guid>("ActivityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AdditionalForeignGuestInformation")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("Arrival")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("BioAttachedOrPending")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClassificationOfInformationReleased")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CountryOfGuest")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Departure")
@@ -643,7 +649,7 @@ namespace Persistence.Migrations
                     b.Property<bool>("GenerateItinerary")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Gift")
+                    b.Property<string>("GiftRequirement")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GuestItinerary")
@@ -746,9 +752,6 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TravelPartyAccomaniedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TypeOfVisit")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UniformOfGuest")

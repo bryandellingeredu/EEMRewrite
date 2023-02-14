@@ -164,6 +164,8 @@ const Categories = {
 
 const RoomDelegates = {
     list: () => axiosRequest.get<RoomDelegate[]>('/roomDelegate'),
+    create: (data : RoomDelegate) => axiosRequest.post<void>('/roomDelegate', data),
+    delete: (id: string) => axiosRequest.del<void>(`/roomDelegate/${id}`)
 }
 
 const Organizations = {

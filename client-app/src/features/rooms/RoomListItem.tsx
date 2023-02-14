@@ -59,7 +59,7 @@ export default observer (function RoomListItem(
                   <Segment >
                   <Grid>
                       <Grid.Column width={15}>
-                          <LoadingComponent content='loading room owners'/>
+                          <LoadingComponent content='loading room delegates'/>
                       </Grid.Column>
                   </Grid>
               </Segment>
@@ -71,7 +71,7 @@ export default observer (function RoomListItem(
                         <Icon size='large' color='teal' name='user' />
                     </Grid.Column>
                     <Grid.Column width={14}>
-                        <p>room owner/s: {roomDelegates.filter(x => x.roomEmail === room.emailAddress).map(x => x.delegateDisplayName).join(', ') || 'N/A'}</p>
+                        <p>room delegate/s: {roomDelegates.filter(x => x.roomEmail === room.emailAddress).map(x => x.delegateDisplayName).join(', ') || 'N/A'}</p>
                     </Grid.Column>
                 </Grid>
               </Segment>

@@ -570,7 +570,7 @@ export default class ActivityStore {
     csmRequestedNotificationSent: false,
     blissHallSupport: false,
     blissHallAVSptRequired: '',
-    blissHallAVNotificationSent: false
+    blissHallAVNotificationSent: false,
     }
     return activity;
   }
