@@ -589,7 +589,10 @@ export default observer(function ActivityForm() {
               </>
             )}
 
-            {!values.allDayEvent &&
+            {
+              !((!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0) &&
+            !values.allDayEvent &&
+            
               !(id && originalRoomEmails && originalRoomEmails.length) && (
                 <MyDateInput
                   timeIntervals={15}
@@ -602,7 +605,9 @@ export default observer(function ActivityForm() {
                   minDate= {new Date()}
                 />
               )}
-            {values.allDayEvent &&
+            {
+              !((!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0) &&
+            values.allDayEvent &&
               !(id && originalRoomEmails && originalRoomEmails.length) && (
                 <MyDateInput
                   placeholderText="Start Date"
@@ -617,7 +622,9 @@ export default observer(function ActivityForm() {
                   }
                 />
               )}
-            {!values.allDayEvent &&
+            {
+                !((!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0) &&
+            !values.allDayEvent &&
               !(id && originalRoomEmails && originalRoomEmails.length) && (
                 <MyDateInput
                   timeIntervals={15}
@@ -635,7 +642,9 @@ export default observer(function ActivityForm() {
                   }
                 />
               )}
-            {values.allDayEvent &&
+            {
+                !((!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0) &&
+            values.allDayEvent &&
               !(id && originalRoomEmails && originalRoomEmails.length) && (
                 <MyDateInput
                   placeholderText="End Date"
@@ -989,7 +998,7 @@ export default observer(function ActivityForm() {
               name="additionalVTCInfo"
               label="Additional VTC Info: (Display presentation across vtc - MUST attach presentation (e.g. Powerpoint, Word, PDF)"
             />
-
+          {id && id.length > 0 && 
            <MySelectInput
                 options={[
                   {text: '', value: ''},
@@ -1001,6 +1010,7 @@ export default observer(function ActivityForm() {
                 name="vtcStatus"
                 label="VTC Status: (for VTC Coordinators ONLY)"
               />
+           }
                </Segment>
              }
 
@@ -2530,7 +2540,7 @@ export default observer(function ActivityForm() {
 
           
 
-           {values.report === 'Hosting Report' && 
+           {values.report === 'Hosting Report' && values.hostingReport &&  id &&
            <MySelectInput
               options={[
                 {text: '', value: ''},
@@ -2543,7 +2553,7 @@ export default observer(function ActivityForm() {
             />
            }
 
-{values.report === 'Outsiders Report' && 
+{values.report === 'Outsiders Report' && values.hostingReport &&  id &&
         <>
           <MySelectInput
               options={[

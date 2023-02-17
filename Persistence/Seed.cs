@@ -57,6 +57,13 @@ namespace Persistence
                   new EmailGroup {Name = "Request Ambassador Presence"},
                   new EmailGroup {Name = "Event Clearence Level POC"},
                   new EmailGroup {Name = "Bliss Hall AV Tech"},
+                  new EmailGroup {Name = "Command Conference Room Setup"},
+                  new EmailGroup {Name = "Flag Support Needed"},
+                  new EmailGroup {Name = "Hosting Report Added"},
+                  new EmailGroup {Name = "Outsider Report Added"},
+                  new EmailGroup {Name = "Office Call With Commandant"},
+                  new EmailGroup {Name = "Parking Requirements Needed"},
+                  new EmailGroup {Name = "Foreign Guest is Visiting the USAWC"},               
                 };
 
                 await context.EmailGroups.AddRangeAsync(emailGroups);
@@ -224,144 +231,6 @@ namespace Persistence
                 await context.Locations.AddRangeAsync(locations);
                 await context.SaveChangesAsync();
             }        
-
-        //    if (!context.Activities.Any()) { 
-
-        //    Guid cslCategoryId = context.Categories.First(x => x.Name == "CSL Calendar").Id;
-
-        //    var activities = new List<Activity>
-        //    {
-        //        new Activity
-        //        {
-        //            Title = "LTG Jarrad Visit",
-        //            Start = new DateTime(2022,9,1, 0, 0, 0 ),
-        //            End = new DateTime(2022,9,1, 23, 59, 59 ),
-        //            Description = "LTG Jarrad Visit - Will be in suite 3018 SIPR access",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = true,
-        //            OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
-        //            ActionOfficer = "Tania Beecher",
-        //            ActionOfficerPhone = "245 -3258",
-        //            PrimaryLocation = "Main Entrance"
-                    
-        //        },
-        //        new Activity
-        //        {
-        //            Title = "Golf Course Outing",
-        //            Start = new DateTime(2022,9,1, 13, 30, 0 ),
-        //            End = new DateTime(2022,9,1, 16, 00, 00 ),
-        //            Description = "Golf Course Outing POC CJ 245145",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = false,
-        //            OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
-        //            ActionOfficer = "Tania Beecher",
-        //            ActionOfficerPhone = "245 -3258",
-        //            PrimaryLocation = "CB Golf Course"
-        //        },
-        //        new Activity
-        //        {
-        //            Title = "Labor Day DONSA/Training Holiday",
-        //             Start = new DateTime(2022,9,2, 0, 0, 0 ),
-        //            End = new DateTime(2022,9,2, 23, 59, 59 ),
-        //            Description = "Labor Day DONSA/Training Holiday",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = true,
-        //            OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
-        //            ActionOfficer = "Duetsch",
-        //            ActionOfficerPhone = "4611"
-        //        },
-        //        new Activity
-        //        {
-        //          Title = "USAWC BR Week 6",
-        //             Start = new DateTime(2022,9,4, 0, 0, 0 ),
-        //            End = new DateTime(2022,9,4, 23, 59, 59 ),
-        //            Description = "USAWC Battle Rhythym Week 6",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = true,
-        //            ActionOfficer = "Duetsch",
-        //            ActionOfficerPhone = "4611",
-        //            PrimaryLocation = "Collins Hall"
-        //        },
-        //        new Activity
-        //        {
-        //            Title = "Labor Day Federal Holiday",
-        //             Start = new DateTime(2022,9,5, 0, 0, 0 ),
-        //            End = new DateTime(2022,9,5, 23, 59, 59 ),
-        //            Description = "Labor Day Federal Holiday",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = true,
-        //            OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
-        //            ActionOfficer = "Mr. Wade",
-        //            ActionOfficerPhone = "245-3258",
-        //            PrimaryLocation = "CSL"
-        //        },
-        //        new Activity
-        //        {
-        //            Title = "CSL Director's Meeting ",
-        //            Start = new DateTime(2022,9,6, 11, 00, 0 ),
-        //            End = new DateTime(2022,9,6, 13, 00, 00 ),
-        //            Description = "Director's Meeting",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = false,
-        //            OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
-        //            ActionOfficer = "Hill / Mcalister",
-        //            ActionOfficerPhone = "4534 / 4412"
-        //        },
-        //        new Activity
-        //        {
-        //         Title = "Plan Power Outage Conditions Check ",
-        //            Start = new DateTime(2022,9,6, 13, 45, 0 ),
-        //            End = new DateTime(2022,9,6, 14, 45, 00 ),
-        //            Description = "Plan Power Outage Conditions Check",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = false,
-        //            OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
-        //            ActionOfficer = "Duetsch",
-        //            ActionOfficerPhone = "-4611",
-        //            PrimaryLocation = "Collins Hall"
-        //        },
-        //        new Activity
-        //        {
-        //           Title = "BSAP Exercise (GO) ",
-        //            Start = new DateTime(2022,9,6, 14, 00, 0 ),
-        //            End = new DateTime(2022,9,6, 17, 00, 00 ),
-        //            Description = "Plan Power Outage Conditions Check",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = false,
-        //            OrganizationId = context.Organizations.First(x => x.Name == "SSL").Id,
-        //            ActionOfficer = "Monique Banks",
-        //            ActionOfficerPhone = "717-245-3488"
-        //        },
-        //        new Activity
-        //        {
-        //           Title = "DTRA SR LDR Conference Set-up",
-        //             Start = new DateTime(2022,9,7, 0, 0, 0 ),
-        //            End = new DateTime(2022,9,11, 23, 59, 59 ),
-        //            Description = "DTRA SR LDR Conference Set-up",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = true,
-        //            OrganizationId = context.Organizations.First(x => x.Name == "CSL").Id,
-        //            ActionOfficer = "Duetsch",
-        //            ActionOfficerPhone = "-4611 / 3258"
-        //        },
-        //        new Activity
-        //        {
-        //            Title = "B037-USAREUR-AF TASC PLanninc Discussion ",
-        //            Start = new DateTime(2022,9,8, 8, 30, 0 ),
-        //            End = new DateTime(2022,9,8, 10, 30, 00 ),
-        //            Description = "Discussion with USAREUR-AF team ahead of Junary 2023 TASC",
-        //            CategoryId = cslCategoryId,
-        //            AllDayEvent = false,
-        //            OrganizationId = context.Organizations.First(x => x.Name == "SSL").Id,
-        //            ActionOfficer = "Mark Haseman",
-        //            ActionOfficerPhone = "961-2266"
-
-        //        }
-        //    };
-
-        //    await context.Activities.AddRangeAsync(activities);
-        //    await context.SaveChangesAsync();
-        //}
     }
   }
 }

@@ -571,6 +571,9 @@ export default class ActivityStore {
     blissHallSupport: false,
     blissHallAVSptRequired: '',
     blissHallAVNotificationSent: false,
+    vtcCoordinatorNotificationSent : false,
+    vtcConfirmedConfirmationSent : false,
+    ccrNotificationSent: false
     }
     return activity;
   }

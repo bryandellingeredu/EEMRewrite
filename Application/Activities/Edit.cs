@@ -140,8 +140,15 @@ namespace Application.Activities
                 if (!result) return Result<Unit>.Failure("Failed to Update Activity");
                 WorkflowHelper workflowHelper = new WorkflowHelper(activity, settings, _context);
                 await workflowHelper.SendNotifications();
+                if (!_cacAccessor.IsCACAuthenticated() && activity.HostingReport != null)
+                {
+                    Activity a = await _context.Activities.FindAsync(activity.Id);
+                    HostingReport h = await _context.HostingReports.FindAsync(activity.HostingReport.Id);
+                    HostingReportWorkflowHelper hostingReportWorkflowHelper = new HostingReportWorkflowHelper(activity, settings, _context, h);
+                    await hostingReportWorkflowHelper.SendNotifications();
+                }
 
-                return Result<Unit>.Success(Unit.Value);
+                    return Result<Unit>.Success(Unit.Value);
             }
 
         }

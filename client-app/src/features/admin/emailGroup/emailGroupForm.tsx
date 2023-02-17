@@ -7,6 +7,8 @@ import {
   Icon,
   Form as SemanticForm,
   Label,
+  Grid,
+  Segment
 } from "semantic-ui-react";
 import { EmailGroupMember } from "../../../app/models/emailGroupMember";
 import { useEffect, useState } from "react";
@@ -200,23 +202,28 @@ export default observer(function EmailGroupForm() {
                 </Header>
               </Divider>
 
-              <SemanticForm.Group inline>
+               <Grid>
+                <Grid.Row>
                 {Object.keys(checkBoxOptions).map((checkboxOptionId) => (
+                  <Grid.Column width={4}  key={checkboxOptionId}>
                   <MySemanticCheckBox
                     name={`options.${checkboxOptionId}`}
                     label={
                       emailGroups.find((x) => x.id === checkboxOptionId)?.name
                     }
-                    key={checkboxOptionId}
+                 
                   />
+                  </Grid.Column>
                 ))}
-              </SemanticForm.Group>
+                </Grid.Row>
+             </Grid>
 
               {noRolesError && (
                 <Label basic color="red">
                   You must select at least one role
                 </Label>
               )}
+              <Segment clearing style={{backgroundColor: '#eaeaea', borderColor: '#eaeaea'}}>
               <Button
                 icon
                 color="grey"
@@ -236,6 +243,7 @@ export default observer(function EmailGroupForm() {
                 type="submit"
                 floated="right"
               />
+              </Segment>
             </Form>
           )}
         </Formik>

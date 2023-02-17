@@ -1,6 +1,7 @@
 export interface HostingReport{
     purposeOfVisit: string
     officeCallWithCommandant: boolean
+    officeCallWithCommandantNotificationSent: boolean
     escortOfficer: string
     escortOfficerPhone: string
     hostedLocationRootHall: boolean
@@ -34,14 +35,17 @@ lodgingArrangements:	boolean
 lodgingLocation:	string
 localTransportationNeeded:	boolean
 parkingRequirements:	boolean
+parkingRequirementsNotificationSent: boolean
 parkingDetails:	string
 flagSupport: boolean
+flagSupportNotificationSent: boolean
 flagIsFor:	string
 flagType:	string
 flagDetails: string
 gift: string
 foreignVisitor:	boolean
-hostingReportStatus:	string
+foreignVisitorNotificationSent: boolean
+hostingReportStatus: string
 reportType: string
 outsiderReportUSAWCGraduate: string
 outsiderReportDirectorate: string
@@ -54,5 +58,7 @@ countryOfGuest: string
 typeOfVisit: string
 classificationOfInformationReleased: string
 additionalForeignGuestInformation: string
+hostingReportNotificationSent: boolean
+hostingReportApprovalNotificationSent: boolean
 
 }

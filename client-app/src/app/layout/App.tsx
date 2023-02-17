@@ -4,7 +4,7 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 import { observer } from 'mobx-react-lite';
 import { Container } from 'semantic-ui-react';
 import HomePage from '../../features/home/HomePage';
-import {  Route, Router, Switch, useLocation } from 'react-router-dom';
+import {  Route,  Switch, useLocation } from 'react-router-dom';
 import ActivityForm from '../../features/activities/form/ActivityForm';
 import ActivityDetails from '../../features/activities/details/ActivityDetail';
 import AcademicCalendarDashboard from '../../features/fullCalendar/AcademicCalendarDashboard';
@@ -30,6 +30,8 @@ import EmailGroupForm from '../../features/admin/emailGroup/emailGroupForm';
 import LoginBoth from '../../features/home/LoginBoth';
 import RoomDelegateTable from '../../features/admin/roomDelegates/roomDelegateTable';
 import RoomDelegateForm from '../../features/admin/roomDelegates/roomDelegateForm';
+import vtcCoordinatorsTable from '../../features/admin/vtcCoordinators/vtcCoordinatorsTable';
+import vtcCoordinatorForm from '../../features/admin/vtcCoordinators/vtcCoordinatorForm';
 
 function App() {
   const location = useLocation();
@@ -73,7 +75,9 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/> 
                 <Route exact path={`${process.env.PUBLIC_URL}/roomDelegateTable`} component={RoomDelegateTable}/> 
-                <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/manageRoomDelegate/:id`} component={RoomDelegateForm}/>                
+                <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/manageRoomDelegate/:id`} component={RoomDelegateForm}/> 
+                <Route exact path={`${process.env.PUBLIC_URL}/vtcCoordinatorTable`} component={vtcCoordinatorsTable}/>
+                <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/manageVTCCoordinators/:id`} component={vtcCoordinatorForm}/>                 
                 <Route exact path={`${process.env.PUBLIC_URL}/activities`} component={ActivityDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/academiccalendar`} component={AcademicCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar`} component={IMCCalendarDashboard}/>

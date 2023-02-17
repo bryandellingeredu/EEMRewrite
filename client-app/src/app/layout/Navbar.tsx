@@ -118,6 +118,7 @@ export default observer(function Navbar() {
             <Dropdown.Menu>
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/emailGroupTable`} text ="Manage Email Groups"/>
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/roomDelegateTable`} text ="Manage Room Delegates"/>
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/vtcCoordinatorTable`} text ="Manage VTC Coordinators"/>
             </Dropdown.Menu>    
             </Dropdown> 
            }

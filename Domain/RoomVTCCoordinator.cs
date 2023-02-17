@@ -9,13 +9,10 @@ namespace Domain
 {
     public class RoomVTCCoordinator
     {
-        public Guid Id { get; set; }
-        public string VTCCoordinatorDisplayName {get; set;}
-        public string VTCCoordinatorEmail { get; set;}   
+      public Guid Id { get; set; }
+        public string VTCCoordinatorEmail { get; set; }   
+        public string VTCCoordinatorDisplayName { get; set; }   
         public string RoomEmail { get; set; }
-        
-        [NotMapped]
-        public string RoomName { get; set; }
 
     }
 }

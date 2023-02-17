@@ -144,6 +144,9 @@ export interface Activity{
     blissHallSupport: boolean
     blissHallAVSptRequired : string
     blissHallAVNotificationSent: boolean
+    vtcCoordinatorNotificationSent : boolean
+    vtcConfirmedConfirmationSent : boolean
+    ccrNotificationSent : boolean
 
 
 }
@@ -288,6 +291,9 @@ export class ActivityFormValues{
     blissHallSupport: boolean = false
     blissHallAVSptRequired : string = ''
     blissHallAVNotificationSent : boolean = false
+    vtcCoordinatorNotificationSent : boolean = false
+    vtcConfirmedConfirmationSent : boolean = false
+    ccrNotificationSent : boolean = false
 
 
     constructor(activity?: ActivityFormValues){
@@ -424,6 +430,11 @@ export class ActivityFormValues{
         this.blissHallSupport = activity.blissHallSupport
         this.blissHallAVSptRequired = activity.blissHallAVSptRequired
         this.blissHallAVNotificationSent = activity.blissHallAVNotificationSent
+        this.vtcCoordinatorNotificationSent = activity.vtcCoordinatorNotificationSent
+        this.vtcConfirmedConfirmationSent = activity.vtcConfirmedConfirmationSent
+        this.ccrNotificationSent = activity.ccrNotificationSent
+
+
        } 
     }
 }

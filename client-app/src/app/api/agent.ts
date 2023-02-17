@@ -19,6 +19,7 @@ import { EmailGroupMember } from '../models/emailGroupMember';
 import { EmailGroup } from '../models/emailGroup';
 import { EmailGroupMemberPostData } from '../models/emailGroupMemberPostData';
 import { RoomDelegate } from '../models/roomDelegate';
+import { VTCCoordinator } from '../models/vtcCoordinator';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -168,6 +169,14 @@ const RoomDelegates = {
     delete: (id: string) => axiosRequest.del<void>(`/roomDelegate/${id}`)
 }
 
+const VTCCoordinators = {
+    list: () => axiosRequest.get<VTCCoordinator[]>('/VTCCoordinators'),
+    create: (data : VTCCoordinator) => axiosRequest.post<void>('/VTCCoordinators', data),
+    delete: (id: string) => axiosRequest.del<void>(`/VTCCoordinators/${id}`)
+}
+
+
+
 const Organizations = {
     list: () => axiosRequest.get<Organization[]>('/organizations'),
 }
@@ -223,6 +232,7 @@ const agent = {
     Account,
     Categories,
     RoomDelegates,
+    VTCCoordinators,
     Organizations,
     Locations,
     GraphEvents,

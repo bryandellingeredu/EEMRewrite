@@ -170,6 +170,9 @@ namespace Domain
         public bool BlissHallSupport {get; set;}
         public string BlissHallAVSptRequired {get; set;}
         public bool BlissHallAVNotificationSent { get; set; }
+        public bool VTCCoordinatorNotificationSent { get; set; }
+        public bool VTCConfirmedConfirmationSent { get; set; }
+        public bool CCRNotificationSent { get; set; }
 
 
     }

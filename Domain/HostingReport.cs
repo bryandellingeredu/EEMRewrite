@@ -13,6 +13,7 @@ namespace Domain
         public Activity Activity { get; set; }
         public string PurposeOfVisit { get; set; }
         public bool OfficeCallWithCommandant { get; set; }
+        public bool OfficeCallWithCommandantNotificationSent { get; set; }
         public string EscortOfficer { get; set; }   
         public string EscortOfficerPhone { get; set; }
         public bool HostedLocationRootHall { get; set; }
@@ -46,13 +47,17 @@ namespace Domain
         public string LodgingLocation {get; set;}
         public bool LocalTransportationNeeded {get; set;}
         public bool ParkingRequirements {get; set;}
+        public bool ParkingRequirementsNotificationSent {get; set;}
         public string ParkingDetails {get; set;}
         public bool FlagSupport {get; set;}
+        public bool FlagSupportNotificationSent {get; set;}
         public string FlagIsFor {get; set;}
         public string FlagType {get; set;}
         public string FlagDetails {get; set;}
         public string Gift {get; set;}
         public bool ForeignVisitor {get; set;}
+        public bool ForeignVisitorNotificationSent {get; set;}
+
         public string HostingReportStatus {get; set;}
         public string ReportType {get; set;}
         public string OutsiderReportUSAWCGraduate {get; set;}
@@ -66,6 +71,8 @@ namespace Domain
         public string TypeOfVisit {get; set;}
         public string ClassificationOfInformationReleased {get; set;}
         public string AdditionalForeignGuestInformation {get; set;}
+        public bool HostingReportNotificationSent {get; set;}
+        public bool HostingReportApprovalNotificationSent {get; set;}
     
      }
 }

@@ -175,6 +175,9 @@ namespace Application.Activities
                             }
                             _context.HostingReports.Add(hostingReport);
                             var result2 = await _context.SaveChangesAsync() > 0;
+
+                            HostingReportWorkflowHelper hostingReportWorkflowHelper = new HostingReportWorkflowHelper(a, settings, _context, hostingReport);
+                            await hostingReportWorkflowHelper.SendNotifications();
                         }
 
                         if (!result) return Result<Unit>.Failure("Failed to Create Activity");
