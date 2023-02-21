@@ -2581,7 +2581,6 @@ export default observer(function ActivityForm() {
                 </>
 }
 
-
           <Divider />
 
             <Button

@@ -122,7 +122,7 @@ export class HostingReportComponentToPrint extends PureComponent<Props> {
     </Grid.Column>
   </Grid.Row>
   }
-       {hostingReport && hostingReport.travelPartyAccomaniedBy && 
+       {activity.report === 'Hosting Report' && hostingReport && hostingReport.travelPartyAccomaniedBy && 
     <Grid.Row columns={1}>
       <Grid.Column>
       <Header as={'h4'} content={'Travel Party / Accompanied by:'} />
@@ -131,7 +131,7 @@ export class HostingReportComponentToPrint extends PureComponent<Props> {
     </Grid.Row>
     }
 
-     {hostingReport && hostingReport.travelArrangementDetails && 
+     {activity.report === 'Hosting Report' && hostingReport && hostingReport.travelArrangementDetails && 
     <Grid.Row columns={1}>
       <Grid.Column>
       <Header as={'h4'} content={'Travel Arrangement Details:'} />
@@ -139,7 +139,7 @@ export class HostingReportComponentToPrint extends PureComponent<Props> {
       </Grid.Column>
     </Grid.Row>
     }
-    {hostingReport && (hostingReport.mealRequestLunch || hostingReport.mealRequestDinner || hostingReport.dietaryRestrictions) && 
+    {activity.report === 'Hosting Report' && hostingReport && (hostingReport.mealRequestLunch || hostingReport.mealRequestDinner || hostingReport.dietaryRestrictions) && 
     <Grid.Row columns={2}>
       <Grid.Column>
       <Header as={'h4'} content={'Meal Requests:'} />
@@ -153,14 +153,77 @@ export class HostingReportComponentToPrint extends PureComponent<Props> {
       </Grid.Column>
     </Grid.Row>
     }
-    {hostingReport && hostingReport.lodgingLocation && 
+    {activity.report === 'Hosting Report' && hostingReport && hostingReport.lodgingLocation && 
     <Grid.Row columns={1}>
       <Grid.Column>
-      <Header as={'h4'} content={'Lodging Location::'} />
+      <Header as={'h4'} content={'Lodging Location:'} />
         {hostingReport.lodgingLocation}
       </Grid.Column>
     </Grid.Row>
     }
+
+    {hostingReport && (hostingReport.parkingRequirements || hostingReport.parkingDetails) &&
+    <Grid.Row columns={1}>
+    <Grid.Column>
+    <Header as={'h4'} content={'Parking Requirements:'} />
+      {hostingReport.parkingRequirements && 'Parking is required. '}  {hostingReport.parkingDetails}
+    </Grid.Column>
+    </Grid.Row>
+    }
+
+  {activity.report === 'Hosting Report' && hostingReport && (hostingReport.flagSupport || hostingReport.flagDetails) && 
+    <Grid.Row columns={1}>
+      <Grid.Column>
+      <Header as={'h4'} content={'Flag Support:'} />
+        {hostingReport.flagSupport && 'Flag Support is needed. '}{hostingReport.flagDetails}
+      </Grid.Column>
+    </Grid.Row>
+    }
+
+{activity.report === 'Hosting Report' && hostingReport && hostingReport.gift && 
+    <Grid.Row columns={1}>
+      <Grid.Column>
+      <Header as={'h4'} content={'Gift Requirement:'} />
+        {hostingReport.gift}
+      </Grid.Column>
+    </Grid.Row>
+    }
+
+   {activity.report === 'Outsiders Report' && hostingReport && hostingReport.outsiderReportUSAWCGraduate &&
+    <Grid.Row columns={1}>
+    <Grid.Column>
+    <Header as={'h4'} content={'USAWC Graduate: Enter Resident or DDEE and Year, e.g Res 2009, DDE 2008:'} />
+      {hostingReport.outsiderReportUSAWCGraduate}
+    </Grid.Column>
+    </Grid.Row>
+    }
+
+{activity.report === 'Outsiders Report' && hostingReport && hostingReport.outsiderReportDirectorate &&
+    <Grid.Row columns={1}>
+    <Grid.Column>
+    <Header as={'h4'} content={'Directorate:'} />
+      {hostingReport.outsiderReportDirectorate}
+    </Grid.Column>
+    </Grid.Row>
+  }
+  
+{activity.report === 'Outsiders Report' && hostingReport && hostingReport.outsiderReportDV   &&
+    <Grid.Row columns={1}>
+    <Grid.Column>
+    <Header as={'h4'} content={'Visiting DV:'} />
+      {hostingReport.outsiderReportDV}
+    </Grid.Column>
+    </Grid.Row>
+  }
+
+{activity.report === 'Outsiders Report' && hostingReport && hostingReport.outsiderReportNumOfPeople  &&
+    <Grid.Row columns={1}>
+    <Grid.Column>
+    <Header as={'h4'} content={'Number of People:'} />
+      {hostingReport.outsiderReportNumOfPeople}
+    </Grid.Column>
+    </Grid.Row>
+  }
 
 
 
