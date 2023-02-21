@@ -1,4 +1,5 @@
-﻿using Application.Uploads;
+﻿using Application.Attachments;
+using Application.Uploads;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
 
@@ -16,6 +17,11 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(command));
         }
+
+        [HttpGet("metadata/{id}")]
+            public async Task<ActionResult> GetMetaDatat(int id) =>
+     HandleResult(await Mediator.Send(new Details.Query { Id = id }));
+        
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFile(int id)

@@ -129,8 +129,7 @@ export default observer(function ActivityTable(){
         let dateIsOk = true
         if(values.start){
           const start = values.start
-          start.setHours(0,0,0,0)
-          debugger;
+          start.setHours(0,0,0,0);
           if(newTableData.startAsDate < start ){
             dateIsOk = false;
           }

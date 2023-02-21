@@ -114,7 +114,6 @@ export default observer(function RoomPicker({
               console.log('room', room.scheduleId)
               console.log('schedule', room.scheduleItems)
               result = true;
-              debugger;
             }
             return result;
           })

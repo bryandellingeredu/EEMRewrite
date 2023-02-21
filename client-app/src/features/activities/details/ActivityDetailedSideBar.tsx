@@ -387,19 +387,6 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
    }
 
 
-{activity.report && activity.report !== 'none' &&
-             <Segment attached>
-             <Grid verticalAlign='middle'>
-                 <Grid.Column width={1}>
-                     <Icon name='file' size='large' color='teal' />
-                 </Grid.Column>
-                 <Grid.Column width={14}>
-                   {activity.report}
-                 </Grid.Column>
-             </Grid>
-         </Segment>
- } 
-
 {activity.imc &&
              <Segment attached>
              <Grid verticalAlign='middle'>

@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
-import { Button, Header, Item, Segment, Image, Confirm, Label, ButtonGroup } from 'semantic-ui-react'
+import { Button, Header, Item, Segment, Image, Confirm, Label, ButtonGroup, Grid, Icon } from 'semantic-ui-react'
 import { Activity } from '../../../app/models/activity';
 import RecurrenceMessageWrapper from '../recurrenceMessage/RecurrenceMessageWrapper';
 import { useStore } from "../../../app/stores/store";
@@ -158,7 +158,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                     </Item.Group>
                 </Segment>
             </Segment>
-            <Segment clearing attached='bottom' textAlign='center'>
+            <Segment clearing  textAlign='center'>
             <ButtonGroup size='tiny' fluid>
            <Button icon  color='brown' onClick={() => history.goBack()} >
             <FontAwesomeIcon icon={faBackward} style={{paddingRight: '5px'}} />
@@ -244,10 +244,36 @@ Update Series
          
       </>
     }
-    </ButtonGroup>
-    
-            </Segment>
+    </ButtonGroup>      
+ </Segment>
+        {activity.report && activity.report !== 'none' && 
+        <Segment>
+            <Grid>
+                 <Grid.Column width={1}>
+                     <Icon name='file' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={5}>
+                   {activity.report}
+                  
+                 </Grid.Column>
+                 <Grid.Column width={8}>
+                    <ButtonGroup size='tiny' floated='right' fluid  >
+                <Button color = 'black' as={Link} to={`${process.env.PUBLIC_URL}/hostingReport/${activity.id}/${activity.categoryId}`}>
+                       View  {activity.report}
+                  </Button>  
+                 <Button color = 'grey' as={Link} to={`${process.env.PUBLIC_URL}/itinerary/${activity.id}/${activity.categoryId}`}>
+                       View  Itinerary
+                  </Button>  
+                  <Button color = 'blue' as={Link} to={`${process.env.PUBLIC_URL}/downloadBio/${activity.id}/${activity.categoryId}`}>
+                       Download Bio
+                  </Button> 
+                  </ButtonGroup>              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+        }
         </Segment.Group>
+
     )
 })
 

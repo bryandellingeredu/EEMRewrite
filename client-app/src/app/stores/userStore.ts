@@ -43,7 +43,6 @@ export default class UserStore {
     }
 
     logout = async() => {
-        debugger;
         try{
         store.commonStore.setToken(null);
         window.localStorage.removeItem('jwt');

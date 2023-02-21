@@ -20,6 +20,7 @@ import { EmailGroup } from '../models/emailGroup';
 import { EmailGroupMemberPostData } from '../models/emailGroupMemberPostData';
 import { RoomDelegate } from '../models/roomDelegate';
 import { VTCCoordinator } from '../models/vtcCoordinator';
+import { Attachment } from '../models/attachment';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -227,6 +228,10 @@ const EmailGroups ={
     delete: (id: string) => axiosRequest.del<void>(`/emailGroup/${id}`)
 }
 
+const Attachments = {
+    details: (id: number) => axiosRequest.get<Attachment>(`/upload/metadata/${id}`)
+}
+
 const agent = {
     Activities,
     Account,
@@ -241,7 +246,8 @@ const agent = {
     GraphUser,
     IsEDUSignedIn,
     Uploads,
-    EmailGroups
+    EmailGroups,
+    Attachments
 }
 
 export default agent;

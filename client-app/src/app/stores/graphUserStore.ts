@@ -118,7 +118,6 @@ armyProfile : GraphUser | null = null;
      }
 
      signIntoArmy365 = async () => {
-      debugger;
       this.setLoadingSignIntoArmy365(true);
       try{
         await this.signInArmy();

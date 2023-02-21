@@ -23,7 +23,6 @@ export default observer(function HomePage(){
         loadEDUGraphUser().then((graphUser) => {
           if(graphUser){
             signInEDUGraphUser(graphUser).then(() =>{
-           //   history.push(`${process.env.PUBLIC_URL}/activityTable`);
             })
           }
         });
@@ -34,7 +33,6 @@ export default observer(function HomePage(){
       }, [redirectId, redirectCategoryId, userStore.isLoggedIn, armyProfile ])
 
       const handleLoginInitiated = () =>{
-        debugger;
         toast('Sign in with your edu account NOT your army account');
         setLoading(true)
       }

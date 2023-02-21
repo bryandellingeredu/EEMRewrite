@@ -80,6 +80,7 @@ mgt-login {
     border: 1px solid #ccc;
     color: black;
   }
+  .hide-toolbar { display:none !important; }
 
 
 

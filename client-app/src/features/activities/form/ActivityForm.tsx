@@ -47,6 +47,7 @@ import DocumentUploadWidget from "../../../app/common/documentUpload/documentUpl
 import { Attachment } from "../../../app/models/attachment";
 import { toast } from "react-toastify";
 import { Countries } from "../../../app/models/countryList";
+import agent from "../../../app/api/agent";
 
 
 function useIsSignedIn(): [boolean] {
@@ -152,23 +153,23 @@ export default observer(function ActivityForm() {
 
       const headers = new Headers();
         headers.append('Authorization', `Bearer ${token}`);
-        headers.append('Content-Type', 'application/json');
 
       const requestOptions = {
        method: 'GET',
       headers: headers,
       };
+      
 
-
-      const id = attachment.id
+      //const id = attachment.id
+      const metaData : Attachment = await agent.Attachments.details(attachment.id)
       const url = `${process.env.REACT_APP_API_URL}/upload/${id}`;
       const response = await fetch(url, requestOptions); 
       const data = await response.arrayBuffer();
-      var file = new Blob([data], {type: attachment.fileType});
+      var file = new Blob([data], {type: metaData.fileType});
       var fileUrl = window.URL.createObjectURL(file);
       var a = document.createElement("a");
       a.href = fileUrl;
-      a.download = attachment.fileName;
+      a.download = metaData.fileName;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(fileUrl);
@@ -2112,9 +2113,9 @@ export default observer(function ActivityForm() {
        {values.report === 'Hosting Report' && 
             <MyTextArea
               rows={3}
-              placeholder="Travel Party / Accombied by"
+              placeholder="Travel Party / Accompanied by"
               name="hostingReport.travelPartyAccomaniedBy"
-              label="Travel Party / Accombied by:"
+              label="Travel Party / Accompanied by:"
             />
         }
              Visitor Itinerary:
@@ -2583,8 +2584,6 @@ export default observer(function ActivityForm() {
 
           <Divider />
 
-       
-
             <Button
               disabled={submitting}
               loading={submitting}
@@ -2595,11 +2594,12 @@ export default observer(function ActivityForm() {
             />
             <Button
               as={Link}
-              to={`${process.env.PUBLIC_URL}/activityTable`}
+              to={id && id.length > 0 ? `${process.env.PUBLIC_URL}/activities/${id}/${categoryId}` : `${process.env.PUBLIC_URL}/activityTable`}
               floated="right"
               type="button"
               content="Cancel"
             />
+         
           </Form>
         )}
       </Formik>
