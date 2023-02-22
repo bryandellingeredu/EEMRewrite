@@ -1344,6 +1344,7 @@ export default observer(function ActivityForm() {
               label="Type of Event:"
             />
 
+        {/*
           <MySelectInput
               options={[
                 {text: 'Blue', value: 'Blue'},
@@ -1357,6 +1358,7 @@ export default observer(function ActivityForm() {
               name="color"
               label="Event Color:"
             />
+            */}
 
           <Grid>
             <Grid.Row>

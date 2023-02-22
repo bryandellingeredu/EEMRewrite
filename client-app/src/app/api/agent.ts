@@ -21,6 +21,7 @@ import { EmailGroupMemberPostData } from '../models/emailGroupMemberPostData';
 import { RoomDelegate } from '../models/roomDelegate';
 import { VTCCoordinator } from '../models/vtcCoordinator';
 import { Attachment } from '../models/attachment';
+import { CSLCalendarLegend } from '../models/cslCalendarLegend';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -232,6 +233,10 @@ const Attachments = {
     details: (id: number) => axiosRequest.get<Attachment>(`/upload/metadata/${id}`)
 }
 
+const CSLLegend = {
+    list: () => axiosRequest.get<CSLCalendarLegend[]>('/CSLCalendarLegend')
+}
+
 const agent = {
     Activities,
     Account,
@@ -247,7 +252,8 @@ const agent = {
     IsEDUSignedIn,
     Uploads,
     EmailGroups,
-    Attachments
+    Attachments,
+    CSLLegend,
 }
 
 export default agent;

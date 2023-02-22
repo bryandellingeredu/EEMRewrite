@@ -43,6 +43,8 @@ namespace Application.Activities
                     Where(x => !x.LogicalDeleteInd)
                     .ToListAsync();
 
+                var legend = await _context.CSLCalendarLegends.ToListAsync();
+
                 List<FullCalendarEventDTO> fullCalendarEventDTOs = new List<FullCalendarEventDTO>();
 
                 foreach (var activity in activities)
@@ -54,7 +56,8 @@ namespace Application.Activities
                         Title = activity.Title,
                         Start = Helper.GetStringFromDateTime(activity.Start, activity.AllDayEvent),
                         End = Helper.GetStringFromDateTime(endDateForCalendar, activity.AllDayEvent),
-                        Color = "blue",
+                        Color = GetColor(category, activity, legend),
+                        BorderColor = activity.IMC ? "#EE4B2B" : string.Empty,
                         AllDay = activity.AllDayEvent,
                         CategoryId = category.Id.ToString(),
                         Description = activity.Description,
@@ -73,6 +76,19 @@ namespace Application.Activities
                 return Result<List<FullCalendarEventDTO>>.Success(fullCalendarEventDTOs);
             }
 
+            private string GetColor(Category category, Activity activity, List<CSLCalendarLegend> legendList)
+            {
+                var color = "blue";
+                if (category.RouteName == "csl" && !string.IsNullOrEmpty(activity.Type))
+                {
+                    var legend = legendList.FirstOrDefault(x => x.Name == activity.Type);
+                    if (legend != null) color = legend.Color;
+                }
+
+                if(category.RouteName =="csl" && (activity.ApprovedByOPS == "Pending" || string.IsNullOrEmpty(activity.ApprovedByOPS)))  color = "#F6BE00";
+              
+                return color;
+            }
         }
     }
 }

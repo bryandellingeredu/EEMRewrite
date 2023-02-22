@@ -144,6 +144,26 @@ namespace Persistence
                 await context.SaveChangesAsync();
             }
 
+            if(!context.CSLCalendarLegends.Any()){
+                var cslCalendarLegends = new List<CSLCalendarLegend>{
+                    new CSLCalendarLegend{Name = "Info Event", Color = "#D7C8A0"},
+                    new CSLCalendarLegend{Name = "Event On-Site", Color = "#5E973F"},
+                    new CSLCalendarLegend{Name = "Event Off-Site", Color = "#AB8D00"},
+                    new CSLCalendarLegend{Name = "Leave", Color = "#3F3D2E"},
+                    new CSLCalendarLegend{Name = "TDY", Color = "#7D86F6"},
+                    new CSLCalendarLegend{Name = "Holiday", Color = "#DD8381"},
+                    new CSLCalendarLegend{Name = "VTC", Color = "#E88800"},
+                    new CSLCalendarLegend{Name = "Task", Color = "#BC64E6"},
+                    new CSLCalendarLegend{Name = "Farewell", Color = "#E75AFF"},
+                    new CSLCalendarLegend{Name = "Highlight", Color = "#4C00FF"},
+                    new CSLCalendarLegend{Name = "Set Up", Color = "#7f00ff"},
+                    new CSLCalendarLegend{Name = "Copied to IMC Border Color", Color = "#EE4B2B"},
+                    new CSLCalendarLegend{Name = "Pending OPS Approval", Color = "#F6BE00"},
+
+                };
+                await context.CSLCalendarLegends.AddRangeAsync(cslCalendarLegends);
+                await context.SaveChangesAsync();
+            }
             if (!context.Organizations.Any())
             {
                 var organizations = new List<Organization>

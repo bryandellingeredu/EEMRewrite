@@ -370,7 +370,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
        </Grid.Column>
        <Grid.Column width={8}>
          Leaders Requested: 
-       </Grid.Column>
+       </Grid.Column>pending
        <Grid.Column width={6}>
        <List >
             {activity.commandantRequested && <List.Item>Commandant</List.Item> }
@@ -414,7 +414,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
    
  }
 
-{ activity.category.name  === 'CSL Calendar' && activity.color && 
+{/* activity.category.name  === 'CSL Calendar' && activity.color && 
    <Segment attached>
              <Grid verticalAlign='middle'>
                  <Grid.Column width={1}>
@@ -427,7 +427,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
              </Grid>
          </Segment>
    
- }
+*/ }
 
 { activity.category.name  === 'CSL Calendar' && activity.dti && 
    <Segment attached>

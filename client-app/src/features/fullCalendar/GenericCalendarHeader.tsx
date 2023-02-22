@@ -2,6 +2,7 @@ import { Divider, Header, Icon } from "semantic-ui-react";
 import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
+import CSLLegend from "./CSLLegend";
 
 interface Props {
     id: string
@@ -9,6 +10,7 @@ interface Props {
 
 export default function GenericCalendarHeader({id} : Props){
     return(
+      <>
     <Divider horizontal>
       
     <Header as='h2'>
@@ -136,5 +138,8 @@ export default function GenericCalendarHeader({id} : Props){
       
     </Header>
   </Divider>
+
+    {id === 'csl' && <CSLLegend />}
+    </>
     )
 }

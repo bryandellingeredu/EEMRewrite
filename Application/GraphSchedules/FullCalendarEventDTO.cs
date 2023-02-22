@@ -14,6 +14,8 @@ namespace Application.GraphSchedules
         public string End { get; set; }
         public string CategoryId { get; set; }
         public string Color { get; set; }
+        public string TextColor { get; set; }
+        public string BorderColor { get; set; }
         public bool AllDay { get; set; }
         public string Description { get; set; }
         public string PrimaryLocation { get; set; }

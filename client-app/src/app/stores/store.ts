@@ -10,6 +10,7 @@ import GraphUserStore from "./graphUserStore";
 import ModalStore from "./modalStore";
 import UserStore from "./userStore";
 import EmailGroupStore from "./emailGroupStore";
+import CSLCalendarLegendStore from "./cslCalendarLegendStore";
 
 interface Store{
     activityStore: ActivityStore
@@ -23,6 +24,7 @@ interface Store{
     modalStore: ModalStore
     userStore: UserStore
     emailGroupStore: EmailGroupStore
+    cslCalendarLegendStore: CSLCalendarLegendStore
 }
 
 export const store: Store = {
@@ -36,7 +38,8 @@ export const store: Store = {
     graphUserStore: new GraphUserStore(), 
     modalStore: new ModalStore(),
     userStore: new UserStore(),
-    emailGroupStore: new EmailGroupStore()
+    emailGroupStore: new EmailGroupStore(),
+    cslCalendarLegendStore: new CSLCalendarLegendStore()
 }
 
 export const StoreContext = createContext(store);

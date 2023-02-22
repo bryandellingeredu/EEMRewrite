@@ -24,6 +24,7 @@ namespace Persistence
         public DbSet<EmailGroupMember> EmailGroupMembers { get; set; }
         public DbSet<EmailGroupEmailGroupMemberJunction> EmailGroupEmailGroupMemberJunctions {get; set;}
         public DbSet<RoomVTCCoordinator> RoomVTCCoordinators {get; set;}
+        public DbSet<CSLCalendarLegend> CSLCalendarLegends {get; set;}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
