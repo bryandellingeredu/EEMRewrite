@@ -1,5 +1,5 @@
 import { Divider, Header, Icon } from "semantic-ui-react";
-import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap, faPeopleGroup, faHouseChimneyWindow, faCalendarWeek } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
 import CSLLegend from "./CSLLegend";
@@ -22,7 +22,7 @@ export default function GenericCalendarHeader({id} : Props){
       }
     {id === 'weeklyPocket' &&
      <>
-     <FontAwesomeIcon icon={faCalendar} size='2x' style={{marginRight: '10px'}} />
+     <FontAwesomeIcon icon={faCalendarWeek} size='2x' style={{marginRight: '10px'}} />
      Weekly Pocket Calendar
    </>
       }
@@ -87,7 +87,7 @@ export default function GenericCalendarHeader({id} : Props){
         </>
       }
     {id === 'community' &&
-        <>
+        <>Calendar
           <Icon name='handshake'  />
           Community Relations
         </>
@@ -127,6 +127,18 @@ export default function GenericCalendarHeader({id} : Props){
         <>
           <FontAwesomeIcon icon={faPersonMilitaryPointing} size='2x' style={{marginRight: '10px'}} />
           Command Group Calendar
+        </>
+      }
+         {id === 'symposiumAndConferences' &&
+        <>
+          <FontAwesomeIcon icon={faPeopleGroup} size='2x' style={{marginRight: '10px'}} />
+          Symposium and Conferences Calendar
+        </>
+      }
+       {id === 'militaryFamilyAndSpouseProgram' &&
+        <>
+          <FontAwesomeIcon icon={faHouseChimneyWindow} size='2x' style={{marginRight: '10px'}} />
+          Military Family and Spouse Program
         </>
       }
       {id === 'academic' &&

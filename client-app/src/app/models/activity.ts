@@ -147,6 +147,26 @@ export interface Activity{
     vtcCoordinatorNotificationSent : boolean
     vtcConfirmedConfirmationSent : boolean
     ccrNotificationSent : boolean
+    copiedToacademic: boolean;
+    copiedToasep: boolean;
+    copiedTochapel: boolean;
+    copiedTocommandGroup: boolean;
+    copiedTocomplementary: boolean;
+    copiedTocommunity: boolean;
+    copiedTocsl: boolean;
+    copiedTogarrison: boolean;
+    copiedTogeneralInterest: boolean;
+    copiedToholiday: boolean;
+    copiedTopksoi: boolean;
+    copiedTosocialEventsAndCeremonies: boolean;
+    copiedTossiAndUsawcPress: boolean;
+    copiedTossl: boolean;
+    copiedTotrainingAndMiscEvents: boolean;
+    copiedTousahec: boolean;
+    copiedTousahecFacilitiesUsage: boolean;
+    copiedTovisitsAndTours: boolean;
+    copiedToweeklyPocket: boolean;
+    copiedTosymposiumAndConferences: boolean;
 
 
 }
@@ -162,7 +182,7 @@ export class ActivityFormValues{
     title: string = '';
     categoryId: string = '';
     organizationId: string | null = null;
-    category: Category = {id: '', name: '', routeName: '', imcColor: ''}
+    category: Category = {id: '', name: '', routeName: '', imcColor: '', includeInIMC: false}
     organization: Organization | null =  null;
     hostingReport: HostingReport | null =  null
     description: string = '';
@@ -294,6 +314,26 @@ export class ActivityFormValues{
     vtcCoordinatorNotificationSent : boolean = false
     vtcConfirmedConfirmationSent : boolean = false
     ccrNotificationSent : boolean = false
+    copiedToacademic: boolean = false;
+    copiedToasep: boolean = false;
+    copiedTochapel: boolean = false;
+    copiedTocommandGroup: boolean = false;
+    copiedTocomplementary: boolean = false;
+    copiedTocommunity: boolean = false;
+    copiedTocsl: boolean = false;
+    copiedTogarrison: boolean = false;
+    copiedTogeneralInterest: boolean = false;
+    copiedToholiday: boolean = false;
+    copiedTopksoi: boolean = false;
+    copiedTosocialEventsAndCeremonies: boolean = false;
+    copiedTossiAndUsawcPress: boolean = false;
+    copiedTossl: boolean = false;
+    copiedTotrainingAndMiscEvents: boolean = false;
+    copiedTousahec: boolean = false;
+    copiedTousahecFacilitiesUsage: boolean = false;
+    copiedTovisitsAndTours: boolean = false;
+    copiedToweeklyPocket: boolean = false;
+    copiedTosymposiumAndConferences: boolean = false;
 
 
     constructor(activity?: ActivityFormValues){
@@ -433,8 +473,26 @@ export class ActivityFormValues{
         this.vtcCoordinatorNotificationSent = activity.vtcCoordinatorNotificationSent
         this.vtcConfirmedConfirmationSent = activity.vtcConfirmedConfirmationSent
         this.ccrNotificationSent = activity.ccrNotificationSent
-
-
+        this.copiedToacademic = activity.copiedToacademic;
+        this.copiedToasep = activity.copiedToasep;
+        this.copiedTochapel = activity.copiedTochapel;
+        this.copiedTocommandGroup = activity.copiedTocommandGroup;
+        this.copiedTocomplementary = activity.copiedTocomplementary;
+        this.copiedTocommunity = activity.copiedTocommunity;
+        this.copiedTocsl = activity.copiedTocsl;
+        this.copiedTogarrison = activity.copiedTogarrison;
+        this.copiedTogeneralInterest = activity.copiedTogeneralInterest;
+        this.copiedToholiday = activity.copiedToholiday;
+        this.copiedTopksoi = activity.copiedTopksoi;
+        this.copiedTosocialEventsAndCeremonies = activity.copiedTosocialEventsAndCeremonies;
+        this.copiedTossiAndUsawcPress = activity.copiedTossiAndUsawcPress;
+        this.copiedTossl = activity.copiedTossl;
+        this.copiedTotrainingAndMiscEvents = activity.copiedTotrainingAndMiscEvents;
+        this.copiedTousahec = activity.copiedTousahec;
+        this.copiedTousahecFacilitiesUsage = activity.copiedTousahecFacilitiesUsage;
+        this.copiedTovisitsAndTours = activity.copiedTovisitsAndTours;
+        this.copiedToweeklyPocket = activity.copiedToweeklyPocket;
+        this.copiedTosymposiumAndConferences = activity.copiedTosymposiumAndConferences;
        } 
     }
 }

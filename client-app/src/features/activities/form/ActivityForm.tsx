@@ -42,7 +42,6 @@ import ScrollToFieldError from "../../../app/common/form/ScrollToFieldError";
 import { Editor } from "react-draft-wysiwyg";
 import { convertToRaw, EditorState, convertFromRaw} from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { convertToHTML } from "draft-convert";
 import DocumentUploadWidget from "../../../app/common/documentUpload/documentUploadWidget";
 import { Attachment } from "../../../app/models/attachment";
 import { toast } from "react-toastify";
@@ -116,6 +115,7 @@ export default observer(function ActivityForm() {
   const [roomEmails, setRoomEmails] = useState<string[]>([]);
   const [originalRoomEmails, setOriginalRoomEmails] = useState<string[]>([]);
   const [uploadDifferentBioIndicator, setUploadDifferentBioIndicator] = useState(false);
+  const [currentCategoryId, setCurrentCategoryId] = useState(categoryId)
 
   const handleSetRoomRequired = () => setRoomRequired(!roomRequired);
   const handleUploadDifferentBioClick = () => setUploadDifferentBioIndicator(true);
@@ -184,6 +184,10 @@ export default observer(function ActivityForm() {
     communityEvent: Yup.boolean(),
     checkedForOpsec: Yup.boolean()
                         .when("communityEvent",
+                         {is: true,
+                          then: Yup.boolean().isTrue("Review event details for pii and opsec and check the box ")
+                         })
+                         .when("mfp",
                          {is: true,
                           then: Yup.boolean().isTrue("Review event details for pii and opsec and check the box ")
                          }),
@@ -385,6 +389,51 @@ export default observer(function ActivityForm() {
       if (v.end < v.start) {
         setFieldValue("end", new Date(v.start.getTime() + 30 * 60000));
       }
+      
+      if (currentCategoryId !== v.categoryId && id.length < 1) {
+        const isIncludedInIMC = categories
+          .filter((x) => x.includeInIMC)
+          .map((x) => x.id)
+          .includes(v.categoryId);
+        if (v.imc !== isIncludedInIMC) {
+          setFieldValue("imc", isIncludedInIMC);
+        }
+ 
+        const routeNames = [
+          {routeName: 'commandGroup', copiedTo: 'copiedTocommandGroup'},
+          {routeName: 'academic', copiedTo: 'copiedToacademic'},
+          {routeName: 'asep', copiedTo: 'copiedToasep'},
+          {routeName: 'chapel', copiedTo: 'copiedTochapel'},
+          {routeName: 'complementary', copiedTo: 'copiedTocomplementary'},
+          {routeName: 'community', copiedTo: 'copiedTocommunity'},
+          {routeName: 'csl', copiedTo: 'copiedTocsl'},
+          {routeName: 'garrison', copiedTo: 'copiedTogarrison'},
+          {routeName: 'generalInterest', copiedTo: 'copiedTogeneralInterest'},
+          {routeName: 'holiday', copiedTo: 'copiedToholiday'},
+          {routeName: 'pksoi', copiedTo: 'copiedTopksoi'},
+          {routeName: 'socialEventsAndCeremonies', copiedTo: 'copiedTosocialEventsAndCeremonies'},
+          {routeName: 'ssiAndUsawcPress', copiedTo: 'copiedTossiAndUsawcPress'},
+          {routeName: 'ssl', copiedTo: 'copiedTossl'},
+          {routeName: 'trainingAndMiscEvents', copiedTo: 'copiedTotrainingAndMiscEvents'},
+          {routeName: 'usahec', copiedTo: 'copiedTousahec'},
+          {routeName: 'usahecFacilitiesUsage', copiedTo: 'copiedTousahecFacilitiesUsage'},
+          {routeName: 'visitsAndTours', copiedTo: 'copiedTovisitsAndTours'},
+          {routeName: 'weeklyPocket', copiedTo: 'copiedToweeklyPocket'},
+          {routeName: 'symposiumAndConferences', copiedTo: 'copiedTosymposiumAndConferences'},
+          {routeName: 'militaryFamilyAndSpouseProgram', copiedTo: 'mfp'},
+        ];
+        routeNames.forEach((route) => {
+          const isCategory = categories
+            .filter((x) => x.routeName === route.routeName)
+            .map((x) => x.id)
+            .includes(v.categoryId);
+          if ((v as any)[route.copiedTo] !== isCategory && (isCategory || id.length < 1)) {
+            setFieldValue(route.copiedTo, isCategory);
+          }
+        });
+        setCurrentCategoryId(v.categoryId);
+      }
+     
     }, [values, setFieldValue]);
     return null;
   };
@@ -436,31 +485,8 @@ export default observer(function ActivityForm() {
               name="description"
               label="Event Details / Description:"
             />
+
           <Grid>
-            <Grid.Row>
-            <Grid.Column width={3}>
-                      <strong>
-                      Community Event:
-                      </strong>
-            </Grid.Column>
-            <Grid.Column width={13}>
-            <SemanticForm.Group inline>
-              <MySemanticCheckBox name="communityEvent" label="Check if the event is public and should show on the Community Calendar"/>
-            </SemanticForm.Group>
-            </Grid.Column>
-            </Grid.Row>           
-           </Grid>
-        <Divider/> 
-
-          { values.communityEvent &&
-           <Segment inverted color='red'>
-           <MyCheckBox
-              name="checkedForOpsec"
-              label="You selected Community Event so you must review the event details for OPSEC and PII. check this box when complete"/>
-           </Segment>
-          }
-
-<Grid>
             <Grid.Row>
             <Grid.Column width={3}>
                       <strong>
@@ -483,183 +509,155 @@ export default observer(function ActivityForm() {
            <Divider/>
 
             {id && originalRoomEmails && originalRoomEmails.length > 0 && (
-              <>
-                <Popup
-                  trigger={
-                    <SemanticForm.Field>
-                      <label>*Start:</label>
-                      <input
-                        name="start"
-                        value={
-                          values.allDayEvent
-                            ? format(values.start, "MMMM d, yyyy")
-                            : format(values.start, "MMMM d, yyyy h:mm aa")
-                        }
-                        disabled
-                      />
-                    </SemanticForm.Field>
-                  }
-                >
-                  <Popup.Header>
-                    Why can't I change the start date?
-                  </Popup.Header>
-                  <Popup.Content>
-                    This event has a current room reservation. To change the
-                    start date you must first cancel the room reservation. To do
-                    this choose "no room required" and save your work. you will
-                    then be able to change the start date and reserve a room.
-                  </Popup.Content>
-                </Popup>
-
-                <Popup
-                  trigger={
-                    <SemanticForm.Field>
-                      <label>*End:</label>
-                      <input
-                        name="end"
-                        value={
-                          values.allDayEvent
-                            ? format(values.end, "MMMM d, yyyy")
-                            : format(values.end, "MMMM d, yyyy h:mm aa")
-                        }
-                        disabled
-                      />
-                    </SemanticForm.Field>
-                  }
-                >
-                  <Popup.Header>Why can't I change the end date?</Popup.Header>
-                  <Popup.Content>
-                    This event has a current room reservation. To change the end
-                    date you must first cancel the room reservation. To do this
-                    choose "no room required" and save your work. you will then
-                    be able to change the end date and reserve a room.
-                  </Popup.Content>
-                </Popup>
-              </>
+               <Grid columns={2}>
+               <Grid.Column>
+                 <Popup
+                   trigger={
+                     <SemanticForm.Field>
+                       <label>*Start:</label>
+                       <input
+                         name="start"
+                         value={
+                           values.allDayEvent
+                             ? format(values.start, "MMMM d, yyyy")
+                             : format(values.start, "MMMM d, yyyy h:mm aa")
+                         }
+                         disabled
+                       />
+                     </SemanticForm.Field>
+                   }
+                 >
+                   <Popup.Header>
+                     Why can't I change the start date?
+                   </Popup.Header>
+                   <Popup.Content>
+                     This event has a current room reservation. To change the
+                     start date you must first cancel the room reservation. To do
+                     this choose "no room required" and save your work. you will
+                     then be able to change the start date and reserve a room.
+                   </Popup.Content>
+                 </Popup>
+               </Grid.Column>
+               <Grid.Column>
+                 <Popup
+                   trigger={
+                     <SemanticForm.Field>
+                       <label>*End:</label>
+                       <input
+                         name="end"
+                         value={
+                           values.allDayEvent
+                             ? format(values.end, "MMMM d, yyyy")
+                             : format(values.end, "MMMM d, yyyy h:mm aa")
+                         }
+                         disabled
+                       />
+                     </SemanticForm.Field>
+                   }
+                 >
+                   <Popup.Header>Why can't I change the end date?</Popup.Header>
+                   <Popup.Content>
+                     This event has a current room reservation. To change the end
+                     date you must first cancel the room reservation. To do this
+                     choose "no room required" and save your work. you will then
+                     be able to change the end date and reserve a room.
+                   </Popup.Content>
+                 </Popup>
+               </Grid.Column>
+             </Grid>
             )}
 
 
              
             { (!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0 && (
-              <>
-                <Popup
-                  trigger={
-                    <SemanticForm.Field>
-                      <label>*Start:</label>
-                      <input
-                        name="start"
-                        value={
-                          values.allDayEvent
-                            ? format(values.start, "MMMM d, yyyy")
-                            : format(values.start, "MMMM d, yyyy h:mm aa")
-                        }
-                        disabled
-                      />
-                    </SemanticForm.Field>
-                  }
-                >
-                  <Popup.Header>
+            <Grid columns={2}>
+            <Grid.Column>
+              <Popup
+                trigger={
+                  <SemanticForm.Field>
+                    <label>*Start:</label>
+                    <input
+                      name="start"
+                      value={
+                        values.allDayEvent
+                          ? format(values.start, "MMMM d, yyyy")
+                          : format(values.start, "MMMM d, yyyy h:mm aa")
+                      }
+                      disabled
+                    />
+                  </SemanticForm.Field>
+                }
+              >
+                <Popup.Header>
                   Room Registration Notice
-                  </Popup.Header>
-                  <Popup.Content>
+                </Popup.Header>
+                <Popup.Content>
                   Please remove all selected rooms before making changes to the dates or times to ensure that your changes are reflected accurately.
-                  </Popup.Content>
-                </Popup>
-
-                <Popup
-                  trigger={
-                    <SemanticForm.Field>
-                      <label>*End:</label>
-                      <input
-                        name="end"
-                        value={
-                          values.allDayEvent
-                            ? format(values.end, "MMMM d, yyyy")
-                            : format(values.end, "MMMM d, yyyy h:mm aa")
-                        }
-                        disabled
-                      />
-                    </SemanticForm.Field>
-                  }
-                >
-                  <Popup.Header>Room Registration Notice</Popup.Header>
-                  <Popup.Content>
+                </Popup.Content>
+              </Popup>
+            </Grid.Column>
+            <Grid.Column>
+              <Popup
+                trigger={
+                  <SemanticForm.Field>
+                    <label>*End:</label>
+                    <input
+                      name="end"
+                      value={
+                        values.allDayEvent
+                          ? format(values.end, "MMMM d, yyyy")
+                          : format(values.end, "MMMM d, yyyy h:mm aa")
+                      }
+                      disabled
+                    />
+                  </SemanticForm.Field>
+                }
+              >
+                <Popup.Header>Room Registration Notice</Popup.Header>
+                <Popup.Content>
                   Please remove all selected rooms before making changes to the dates or times to ensure that your changes are reflected accurately.
-                  </Popup.Content>
-                </Popup>
-              </>
+                </Popup.Content>
+              </Popup>
+            </Grid.Column>
+          </Grid>
             )}
 
-            {
-              !((!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0) &&
-            !values.allDayEvent &&
-            
-              !(id && originalRoomEmails && originalRoomEmails.length) && (
-                <MyDateInput
-                  timeIntervals={15}
-                  placeholderText="Start Date / Time"
-                  name="start"
-                  showTimeSelect
-                  timeCaption="time"
-                  dateFormat="MMMM d, yyyy h:mm aa"
-                  title="*Start:"
-                  minDate= {new Date()}
-                />
-              )}
-            {
-              !((!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0) &&
-            values.allDayEvent &&
-              !(id && originalRoomEmails && originalRoomEmails.length) && (
-                <MyDateInput
-                  placeholderText="Start Date"
-                  name="start"
-                  dateFormat="MMMM d, yyyy"
-                  title="*Start:"
-                  minDate= {new Date()}
-                  disabled={
-                    id && originalRoomEmails && originalRoomEmails.length
-                      ? true
-                      : false
-                  }
-                />
-              )}
-            {
-                !((!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0) &&
-            !values.allDayEvent &&
-              !(id && originalRoomEmails && originalRoomEmails.length) && (
-                <MyDateInput
-                  timeIntervals={15}
-                  placeholderText="End Date / Time"
-                  name="end"
-                  showTimeSelect
-                  timeCaption="time"
-                  dateFormat="MMMM d, yyyy h:mm aa"
-                  title="*End:"
-                  minDate={values.start}
-                  disabled={
-                    id && originalRoomEmails && originalRoomEmails.length
-                      ? true
-                      : false
-                  }
-                />
-              )}
-            {
-                !((!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0) &&
-            values.allDayEvent &&
-              !(id && originalRoomEmails && originalRoomEmails.length) && (
-                <MyDateInput
-                  placeholderText="End Date"
-                  name="end"
-                  dateFormat="MMMM d, yyyy"
-                  title="*End:"
-                  minDate={values.start}
-                  disabled={
-                    id && originalRoomEmails && originalRoomEmails.length
-                      ? true
-                      : false
-                  }
-                />
-              )}
+{!((!id || id.length < 1) && roomRequired && roomEmails && roomEmails.length > 0) && !(id && originalRoomEmails && originalRoomEmails.length) && (
+ <SemanticForm.Group widths="equal">
+ <SemanticForm.Field>
+   <MyDateInput
+     placeholderText={values.allDayEvent ? "Start Date" : "Start Date / Time"}
+     name="start"
+     dateFormat={values.allDayEvent ? "MMMM d, yyyy" : "MMMM d, yyyy h:mm aa"}
+     title="*Start:"
+     minDate={new Date()}
+     showTimeSelect={!values.allDayEvent}
+     timeIntervals={!values.allDayEvent ? 15 : undefined}
+     timeCaption="time"
+     disabled={id && originalRoomEmails && originalRoomEmails.length ? true : false}
+   />
+ </SemanticForm.Field>
+ <SemanticForm.Field>
+   <MyDateInput
+     placeholderText={values.allDayEvent ? "End Date" : "End Date / Time"}
+     name="end"
+     dateFormat={values.allDayEvent ? "MMMM d, yyyy" : "MMMM d, yyyy h:mm aa"}
+     title="*End:"
+     minDate={values.start}
+     showTimeSelect={!values.allDayEvent}
+     timeIntervals={!values.allDayEvent ? 15 : undefined}
+     timeCaption="time"
+     disabled={id && originalRoomEmails && originalRoomEmails.length ? true : false}
+   />
+ </SemanticForm.Field>
+</SemanticForm.Group>
+)}
+
+
+
+
+
+
             {(!id || (manageSeries && manageSeries === "true")) && (
               <>
                 {id && originalRoomEmails && originalRoomEmails.length > 0 && (
@@ -735,22 +733,24 @@ export default observer(function ActivityForm() {
               </SemanticForm.Field>
              }
        
-              <MySelectInput
-                    options={organizationOptions}
-                    placeholder="Lead Org"
-                    name="organizationId"
-                    label="Lead Org:"
-                  />
-                  <MyTextInput
-                    name="actionOfficer"
-                    placeholder="Action Officer"
-                    label="*Action Officer:"
-                  />
-                  <MyTextInput
-                    name="actionOfficerPhone"
-                    placeholder="Action Officer Duty Phone"
-                    label="*Action Officer Duty Phone:"
-                  />
+       <SemanticForm.Group widths='equal'>
+  <MySelectInput
+    options={organizationOptions}
+    placeholder="Lead Org"
+    name="organizationId"
+    label="Lead Org:"
+  />
+  <MyTextInput
+    name="actionOfficer"
+    placeholder="Action Officer"
+    label="*Action Officer:"
+  />
+  <MyTextInput
+    name="actionOfficerPhone"
+    placeholder="Action Officer Duty Phone"
+    label="*Action Officer Duty Phone:"
+  />
+</SemanticForm.Group>
             <LocationRadioButtons
               roomRequired={roomRequired}
               setRoomRequired={handleSetRoomRequired}
@@ -1023,14 +1023,23 @@ export default observer(function ActivityForm() {
 
             )}
             <Segment color='purple' inverted>
-           <MySelectInput
-              options={categoryOptions.filter(
-                (x: any) => x.text !== "Academic Calendar"
-              )}
-              placeholder="Sub Calendar"
-              name="categoryId"
-              label="Sub Calendar:"
-            />
+            <MySelectInput
+  options={categoryOptions
+    .filter((x: any) => x.text !== "Academic Calendar")
+    .sort((a: any, b: any) => {
+      if (a.text === '') {
+        return -1;
+      } else if (b.text === '') {
+        return 1;
+      } else {
+        return a.text.localeCompare(b.text);
+      }
+    })
+  }
+  placeholder="Sub Calendar"
+  name="categoryId"
+  label="Sub Calendar:"
+/>
             </Segment>   
 
 { categories.find((x) => x.id === values.categoryId)?.name === 'Weekly Pocket Calendar' &&
@@ -1249,7 +1258,7 @@ export default observer(function ActivityForm() {
               label="Reservation Type:"
             />
    
-   <Grid>
+   {/*<Grid>
             <Grid.Row>
             <Grid.Column width={4}>
                       <strong>
@@ -1263,7 +1272,7 @@ export default observer(function ActivityForm() {
             </Grid.Column>
             </Grid.Row>           
            </Grid>
-           <Divider/>
+            <Divider/>*/}
             
       <hr color='#e03997'/>   
   </Segment>
@@ -1408,7 +1417,6 @@ export default observer(function ActivityForm() {
               <MySemanticCheckBox name="cslDirectorateSLFG" label="SLFG"/>
               <MySemanticCheckBox name="cslDirectorateFellows" label="Fellows"/>
             </SemanticForm.Group>
-            <i>Note: Selecting DSW will copy with the event to the DSW Calendar</i>
             </Grid.Column>
             </Grid.Row>           
            </Grid>
@@ -1701,54 +1709,165 @@ export default observer(function ActivityForm() {
                       .find((x) => x.id === values.categoryId)?.name || '')
                        && 
         <>
-         <Divider/>
-         <Grid>
-            <Grid.Row>
-            <Grid.Column width={1}>
-                      <strong>
-                        IMC:
-                      </strong>
-            </Grid.Column>
-            <Grid.Column width={15}>
-            <SemanticForm.Group inline>
-              <MySemanticCheckBox name="imc" label="Add to Integrated Master Calendar"/>
-            </SemanticForm.Group>
-            <i>For Directorates only (e.g. CSL, PKSOI, SSI, USAG) Copies event from 
-                directorate calendar to IMC. Add event to give CMD Gro up Situational Awareness (SI). External coordination needed.
-              </i>
-            </Grid.Column>
-            </Grid.Row>
-           
-           </Grid>
-           <Divider/>
            </>
           }
 
-             <MyTextInput
-                name="hyperlink"
-                placeholder="https://"
-                label="Public Hyperlink: (CBKS online links are not available to the public)"
-              />
+ 
 
-             <MyTextInput
-                name="hyperlinkDescription"
-                placeholder="desciption for the link"
-                label="Public Hyperlink Description:"
-              />
-            <MySelectInput
+        <Divider/>
+         <Grid>
+            <Grid.Row>
+            <Grid.Column width={4}>
+                      <strong>
+                        Post Event to the Following Calendars:
+                      </strong>
+            </Grid.Column>
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <MySemanticCheckBox name="imc" label="Integrated Master Calendar (IMC)"/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            <Grid.Column width={4} />
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <MySemanticCheckBox name="copiedToacademic" label="Academic IMC Event" 
+              disabled={categories.filter((x) => x.routeName === 'academic').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedToasep" label="ASEP Calendar"
+             disabled={categories.filter((x) => x.routeName === 'asep').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedTochapel" label="Chapel"
+             disabled={categories.filter((x) => x.routeName === 'chapel').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedTocommandGroup" label="Command Group Calendar"
+             disabled={categories.filter((x) => x.routeName === 'commandGroup').map((x) => x.id).includes(currentCategoryId)}/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            <Grid.Column width={4} />
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <MySemanticCheckBox name="copiedTocomplementary" label="Complemenary Events"
+            disabled={categories.filter((x) => x.routeName === 'complementary').map((x) => x.id).includes(currentCategoryId)}/>
+
+            <MySemanticCheckBox name="communityEvent" label="Community Event (External)"/>
+
+            <MySemanticCheckBox name="copiedTocommunity" label="Community Relations"
+            disabled={categories.filter((x) => x.routeName === 'community').map((x) => x.id).includes(currentCategoryId)}/>
+
+            <MySemanticCheckBox name="copiedTocsl" label="CSL Calendar"
+              disabled={categories.filter((x) => x.routeName === 'csl').map((x) => x.id).includes(currentCategoryId)}/>
+
+           
+            </SemanticForm.Group>
+            </Grid.Column>
+            <Grid.Column width={4} />
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <MySemanticCheckBox name="copiedTogarrison" label="Garrison Calendar"
+              disabled={categories.filter((x) => x.routeName === 'garrison').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedTogeneralInterest" label="General Interest"
+              disabled={categories.filter((x) => x.routeName === 'generalInterest').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedToholiday" label="Holiday Calendar"
+              disabled={categories.filter((x) => x.routeName === 'holiday').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="mfp" label="Military Family and Spouse Program"
+              disabled={categories.filter((x) => x.routeName === 'militaryFamilyAndSpouseProgram').map((x) => x.id).includes(currentCategoryId)}/>
+          
+            </SemanticForm.Group>
+            </Grid.Column>
+            <Grid.Column width={4} />
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <MySemanticCheckBox name="copiedTopksoi" label="PKSOI Calendar"
+            disabled={categories.filter((x) => x.routeName === 'pksoi').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedTosocialEventsAndCeremonies" label="Social Events And Ceremonies"
+            disabled={categories.filter((x) => x.routeName === 'socialEventsAndCeremonies').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedTossiAndUsawcPress" label="SSI And USAWC Press Calendar"
+             disabled={categories.filter((x) => x.routeName === 'ssiAndUsawcPress').map((x) => x.id).includes(currentCategoryId)}/>
+           
+          
+            </SemanticForm.Group>
+            </Grid.Column>
+            <Grid.Column width={4} />
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <MySemanticCheckBox name="copiedTosymposiumAndConferences" label="Symposium and Conferences"
+               disabled={categories.filter((x) => x.routeName === 'symposiumAndConferences').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedTossl" label="SSL Calendar"
+              disabled={categories.filter((x) => x.routeName === 'ssl').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedTotrainingAndMiscEvents" label="Training And Misc Events"
+             disabled={categories.filter((x) => x.routeName === 'trainingAndMiscEvents').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedTousahec" label="USAHEC Calendar"
+            disabled={categories.filter((x) => x.routeName === 'usahec').map((x) => x.id).includes(currentCategoryId)}/>
+           
+           
+            </SemanticForm.Group>
+            </Grid.Column>
+            <Grid.Column width={4} />
+            <Grid.Column width={12}>
+            <SemanticForm.Group inline>
+            <MySemanticCheckBox name="copiedTousahecFacilitiesUsage" label="USAHEC Facilities Usage Calendar"
+             disabled={categories.filter((x) => x.routeName === 'usahecFacilitiesUsage').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedTovisitsAndTours" label="Visits And Tours"
+             disabled={categories.filter((x) => x.routeName === 'visitsAndTours').map((x) => x.id).includes(currentCategoryId)}/>
+            <MySemanticCheckBox name="copiedToweeklyPocket" label="Weekly Pocket Calendar"
+             disabled={categories.filter((x) => x.routeName === 'weeklyPocket').map((x) => x.id).includes(currentCategoryId)}/>
+            </SemanticForm.Group>
+            </Grid.Column>
+            </Grid.Row>        
+           </Grid>
+           <Divider/>
+ 
+           { (values.communityEvent || values.mfp) &&
+           <Segment inverted color='red'>
+           <MyCheckBox
+              name="checkedForOpsec"
+              label="You selected Community Event and / or Military Spouse and Family Program so you must review the event details for OPSEC and PII. check this box when complete"/>
+           </Segment>
+          }
+
+           {
+           (values.mfp
+            ||
+            ['ASEP Calendar'].includes(categories.find((x) => x.id === values.categoryId)?.name || '') 
+           )
+           && <MySelectInput
               options={[
-                {text: '', value: ''},
-                {text: 'Undetermined', value: 'Undetermined' },
-                {text: 'Unclassified', value: 'Unclassified' },
-                {text: 'Secret', value: 'Secret' },
-                {text: 'Top Secret', value: 'Top Secret' },
+                {text: 'No Color', value: ''},
+                {text: 'Leadership & Readiness', value: 'Leadership & Readiness' },
+                {text: 'Personal Finance Management', value: 'Personal Finance Management' },
+                {text: 'Personal Growth and Fitness', value: 'Personal Growth and Fitness' },
+                {text: 'Family Growth & Resiliency', value: 'Family Growth & Resiliency' },
                 {text: 'TS-SCI', value: 'TS-SCI' },
               ]}
-              placeholder="Event Clearance Level"
-              name="eventClearanceLevel"
-              label="Event Clearance Level:"
+              placeholder="No Color"
+              name="educationalCategory"
+              label="Educational Category for MFSP:"
             />
+           }
 
+<SemanticForm.Group widths="equal">
+  <MyTextInput
+    name="hyperlink"
+    placeholder="https://"
+    label="Public Hyperlink: (CBKS links not available to public)"
+  />
+  <MyTextInput
+    name="hyperlinkDescription"
+    placeholder="desciption for the link"
+    label="Public Hyperlink Description:"
+  />
+  <MySelectInput
+    options={[
+      {text: '', value: ''},
+      {text: 'Undetermined', value: 'Undetermined' },
+      {text: 'Unclassified', value: 'Unclassified' },
+      {text: 'Secret', value: 'Secret' },
+      {text: 'Top Secret', value: 'Top Secret' },
+      {text: 'TS-SCI', value: 'TS-SCI' },
+    ]}
+    placeholder="Event Clearance Level"
+    name="eventClearanceLevel"
+    label="Event Clearance Level:"
+  />
+</SemanticForm.Group>
+  {/*
           <Divider/>
            <Grid>
             <Grid.Row>
@@ -1764,20 +1883,8 @@ export default observer(function ActivityForm() {
             </Grid.Column>
             </Grid.Row>           
            </Grid>
-
-          { values.mfp && <MySelectInput
-              options={[
-                {text: 'No Color', value: ''},
-                {text: 'Leadership & Readiness', value: 'Leadership & Readiness' },
-                {text: 'Personal Finance Management', value: 'Personal Finance Management' },
-                {text: 'Personal Growth and Fitness', value: 'Personal Growth and Fitness' },
-                {text: 'Family Growth & Resiliency', value: 'Family Growth & Resiliency' },
-                {text: 'TS-SCI', value: 'TS-SCI' },
-              ]}
-              placeholder="No Color"
-              name="educationalCategory"
-              label="Educational Category:"
-            /> }
+    */}
+         
 
              <Divider/>
             <Grid>
@@ -1814,6 +1921,7 @@ export default observer(function ActivityForm() {
                       </strong>
             </Grid.Column>
             <Grid.Column width={13}>
+            <SemanticForm.Group inline>
             <MySemanticRadioButton
                         label="None"
                         value="none"
@@ -1829,6 +1937,7 @@ export default observer(function ActivityForm() {
                         value="Outsiders Report"
                         name="report"
                       />
+                      </SemanticForm.Group>
             </Grid.Column>
            </Grid.Row>
           </Grid>  

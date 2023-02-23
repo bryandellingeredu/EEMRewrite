@@ -7,8 +7,8 @@ namespace Application.CSLLegend
 {
     public class List
     {
-        public class Query : IRequest<Result<List<CSLCalendarLegend>>> { }
-        public class Handler : IRequestHandler<Query, Result<List<CSLCalendarLegend>>>
+        public class Query : IRequest<Result<List<Domain.CSLCalendarLegend>>> { }
+        public class Handler : IRequestHandler<Query, Result<List<Domain.CSLCalendarLegend>>>
         {
             private readonly DataContext _context;
 

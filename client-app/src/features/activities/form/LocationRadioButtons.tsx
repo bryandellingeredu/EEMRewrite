@@ -9,9 +9,10 @@ export default function LocationRadioButtons({roomRequired, setRoomRequired} : P
     
     return(
        <Segment inverted color='purple'>
-    <Form.Field>
-        Book a Room
-      </Form.Field>
+        <Form.Group inline>
+    <Form.Field style={{ paddingRight: "50px" }}>
+      Book a Room:
+    </Form.Field>
       <Form.Field>
         <Radio
           label='No Room Required'
@@ -30,6 +31,7 @@ export default function LocationRadioButtons({roomRequired, setRoomRequired} : P
           onChange={setRoomRequired}
         />
       </Form.Field>
+      </Form.Group>
       </Segment>
     )
 

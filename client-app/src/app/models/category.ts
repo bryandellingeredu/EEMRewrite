@@ -3,4 +3,5 @@ export interface Category{
     name: string
     routeName: string
     imcColor: string
+    includeInIMC: boolean
 }

@@ -3,7 +3,7 @@ import { Segment, Icon, Grid, List } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faBuilding, faBus, faCalendar, faCalendarWeek, faChalkboardTeacher, faCheck, faComputer, faFax, faGraduationCap, faHashtag, faIdCard, faP, faPalette, faPeopleGroup, faPeopleRoof, faShieldHalved, faSitemap, faSquareParking, faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarWeek, faChalkboardTeacher, faCheck, faChurch, faComputer, faDove, faFax, faGraduationCap, faHashtag, faIdCard, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faShieldHalved, faSitemap, faSquareParking, faUserSecret } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
     activity: Activity
@@ -370,7 +370,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
        </Grid.Column>
        <Grid.Column width={8}>
          Leaders Requested: 
-       </Grid.Column>pending
+       </Grid.Column>
        <Grid.Column width={6}>
        <List >
             {activity.commandantRequested && <List.Item>Commandant</List.Item> }
@@ -399,6 +399,269 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
              </Grid>
          </Segment>
  }
+
+{activity.copiedToacademic &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='graduation' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the Academic IMC Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedToasep &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='adn' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the ASEP Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTochapel &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faChurch} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '25px'}}>
+                   Added to the Chapel Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTocommandGroup &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faPersonMilitaryPointing} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
+                   Added to the Command Group Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTocomplementary &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='star' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the Complementary Events Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTocommunity &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='handshake' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the Community Relations Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTocsl &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='copyright' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the CSL Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTogarrison &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='building' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the Garrison Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTogeneralInterest &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faBahai} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
+                   Added to the General Interest Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedToholiday &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='tree' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the Holiday Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTopksoi &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faDove} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
+                   Added to the PKSOI Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTosocialEventsAndCeremonies &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='glass martini' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to Social Events & Ceremonies Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTossiAndUsawcPress &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faNewspaper} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
+                   Added to SSI & USAWC Press Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTossl &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faPersonRifle} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
+                   Added to the SSL Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTotrainingAndMiscEvents &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faChalkboardTeacher} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '25px'}}>
+                   Added to Training & Misc Events Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTousahec &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='book' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to USAHEC Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTousahecFacilitiesUsage &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faBookOpenReader} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
+                   Added to the USAHEC Facilities Usage Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTovisitsAndTours &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faBus} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
+                   Added to the Visits and Tour Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedToweeklyPocket &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faCalendarWeek} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
+                   Added to the Weekly Pocket Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTosymposiumAndConferences &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faPeopleGroup} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '25px'}}>
+                   Added to the Symposium & Conferences Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+
+
 
  { activity.category.name  === 'CSL Calendar' && activity.type && 
    <Segment attached>

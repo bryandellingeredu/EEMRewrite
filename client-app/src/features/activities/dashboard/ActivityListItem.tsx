@@ -4,7 +4,7 @@ import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
 import { Activity } from "../../../app/models/activity";
 import { format } from "date-fns";
-import { faBahai, faBook, faBookOpenReader, faBuilding, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faO, faPersonRifle, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBook, faBookOpenReader, faBuilding, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faHouseChimneyWindow, faO, faPeopleGroup, faPersonRifle, faStar } from "@fortawesome/free-solid-svg-icons";
 import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { faTree } from "@fortawesome/free-solid-svg-icons";
@@ -148,6 +148,18 @@ export default function ActivityListItem({activity}:Props){
                 size='3x' />
                </Label>
                }
+            {activity.category.name === 'Symposium and Conferences Calendar' && 
+           <Label color='pink' >
+          <FontAwesomeIcon icon={faPeopleGroup}
+           size='3x' />
+          </Label>
+          }
+          {activity.category.name === 'Military Family and Spouse Program' && 
+           <Label color='orange' >
+          <FontAwesomeIcon icon={faHouseChimneyWindow}
+           size='3x' />
+          </Label>
+          }
                             
                 <Item.Content>
                     <Item.Header as={Link} to={`${process.env.PUBLIC_URL}/activities/${activity.id}/${activity.categoryId}`}>

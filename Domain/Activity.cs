@@ -173,7 +173,25 @@ namespace Domain
         public bool VTCCoordinatorNotificationSent { get; set; }
         public bool VTCConfirmedConfirmationSent { get; set; }
         public bool CCRNotificationSent { get; set; }
-
-
+        public bool CopiedToacademic { get; set; }
+        public bool CopiedToasep { get; set; }
+        public bool CopiedTochapel { get; set; }
+        public bool CopiedTocommandGroup { get; set; }
+        public bool CopiedTocomplementary { get; set; }
+        public bool CopiedTocommunity { get; set; }
+        public bool CopiedTocsl { get; set; }
+        public bool CopiedTogarrison { get; set; }
+        public bool CopiedTogeneralInterest { get; set; }
+        public bool CopiedToholiday { get; set; }
+        public bool CopiedTopksoi { get; set; }
+        public bool CopiedTosocialEventsAndCeremonies { get; set; }
+        public bool CopiedTossiAndUsawcPress { get; set; }
+        public bool CopiedTossl { get; set; }
+        public bool CopiedTotrainingAndMiscEvents { get; set; }
+        public bool CopiedTousahec { get; set; }
+        public bool CopiedTousahecFacilitiesUsage { get; set; }
+        public bool CopiedTovisitsAndTours { get; set; }
+        public bool CopiedToweeklyPocket { get; set; }
+        public bool CopiedTosymposiumAndConferences {get; set;}
     }
 }

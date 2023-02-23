@@ -573,7 +573,27 @@ export default class ActivityStore {
     blissHallAVNotificationSent: false,
     vtcCoordinatorNotificationSent : false,
     vtcConfirmedConfirmationSent : false,
-    ccrNotificationSent: false
+    ccrNotificationSent: false,
+    copiedToacademic: false,
+    copiedToasep: false,
+    copiedTochapel: false,
+    copiedTocommandGroup: false,
+    copiedTocomplementary: false,
+    copiedTocommunity: false,
+    copiedTocsl: false,
+    copiedTogarrison: false,
+    copiedTogeneralInterest: false,
+    copiedToholiday: false,
+    copiedTopksoi: false,
+    copiedTosocialEventsAndCeremonies: false,
+    copiedTossiAndUsawcPress: false,
+    copiedTossl: false,
+    copiedTotrainingAndMiscEvents: false,
+    copiedTousahec: false,
+    copiedTousahecFacilitiesUsage: false,
+    copiedTovisitsAndTours: false,
+    copiedToweeklyPocket: false,
+    copiedTosymposiumAndConferences: false,
     }
     return activity;
   }

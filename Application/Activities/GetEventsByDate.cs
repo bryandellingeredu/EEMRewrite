@@ -3,9 +3,9 @@ using Application.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Domain;
 using Microsoft.Extensions.Configuration;
 using Application.GraphSchedules;
+using Domain;
 
 namespace Application.Activities
 {
@@ -37,11 +37,31 @@ namespace Application.Activities
 
 
                 var activities = await _context.Activities.Include(x => x.Organization).
-                    Where(x => DateTime.Compare(start, x.Start) <= 0).
-                    Where(x => DateTime.Compare(end, x.End) >= 0).
-                    Where(x => x.CategoryId == category.Id).
-                    Where(x => !x.LogicalDeleteInd)
-                    .ToListAsync();
+                          Where(x => DateTime.Compare(start, x.Start) <= 0).
+                          Where(x => DateTime.Compare(end, x.End) >= 0).
+                          Where(x => x.CategoryId == category.Id ||
+                                      ((category.RouteName == "asep" && x.CopiedToasep) ||
+                                      (category.RouteName == "chapel" && x.CopiedTochapel) ||
+                                      (category.RouteName == "commandGroup" && x.CopiedTocommandGroup) ||
+                                      (category.RouteName == "complementary" && x.CopiedTocomplementary) ||
+                                      (category.RouteName == "community" && x.CopiedTocommunity) ||
+                                      (category.RouteName == "csl" && x.CopiedTocsl) ||
+                                      (category.RouteName == "garrison" && x.CopiedTogarrison) ||
+                                      (category.RouteName == "GeneralInterest" && x.CopiedTogeneralInterest) ||
+                                      (category.RouteName == "holiday" && x.CopiedToholiday) ||
+                                      (category.RouteName == "pksoi" && x.CopiedTopksoi) ||
+                                      (category.RouteName == "socialEventsAndCeremonies" && x.CopiedTosocialEventsAndCeremonies) ||
+                                      (category.RouteName == "ssiAndUsawcPress" && x.CopiedTossiAndUsawcPress) ||
+                                      (category.RouteName == "ssl" && x.CopiedTossl) ||
+                                      (category.RouteName == "trainingAndMiscEvents" && x.CopiedTotrainingAndMiscEvents) ||
+                                      (category.RouteName == "usahec" && x.CopiedTousahec) ||
+                                      (category.RouteName == "usahecFacilitiesUsage" && x.CopiedTousahecFacilitiesUsage) ||
+                                      (category.RouteName == "visitsAndTours" && x.CopiedTovisitsAndTours) ||
+                                      (category.RouteName == "weeklyPocket" && x.CopiedToweeklyPocket) ||
+                                      (category.RouteName == "symposiumAndConferences" && x.CopiedTosymposiumAndConferences) ||
+                                      (category.RouteName == "militaryFamilyAndSpouseProgram" && x.MFP))).
+                          Where(x => !x.LogicalDeleteInd)
+                          .ToListAsync();
 
                 var legend = await _context.CSLCalendarLegends.ToListAsync();
 
@@ -75,6 +95,7 @@ namespace Application.Activities
 
                 return Result<List<FullCalendarEventDTO>>.Success(fullCalendarEventDTOs);
             }
+
 
             private string GetColor(Category category, Activity activity, List<CSLCalendarLegend> legendList)
             {
