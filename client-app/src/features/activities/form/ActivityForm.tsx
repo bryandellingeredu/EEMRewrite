@@ -377,7 +377,7 @@ export default observer(function ActivityForm() {
   }
 
   const FormObserver: React.FC = () => {
-    const { values, setFieldValue, submitCount } = useFormikContext();
+    const { values, setFieldValue} = useFormikContext();
     const v = values as ActivityFormValues;
     useEffect(() => {
       if(v.end.getDate() !== v.start.getDate()){
@@ -390,7 +390,7 @@ export default observer(function ActivityForm() {
         setFieldValue("end", new Date(v.start.getTime() + 30 * 60000));
       }
       
-      if (currentCategoryId !== v.categoryId && id.length < 1) {
+      if (currentCategoryId !== v.categoryId)  {
         const isIncludedInIMC = categories
           .filter((x) => x.includeInIMC)
           .map((x) => x.id)
@@ -427,12 +427,14 @@ export default observer(function ActivityForm() {
             .filter((x) => x.routeName === route.routeName)
             .map((x) => x.id)
             .includes(v.categoryId);
-          if ((v as any)[route.copiedTo] !== isCategory && (isCategory || id.length < 1)) {
+          if ((v as any)[route.copiedTo] !== isCategory && (isCategory || !id || id.length < 1)) {
             setFieldValue(route.copiedTo, isCategory);
           }
         });
-        setCurrentCategoryId(v.categoryId);
+        
       }
+
+      if(currentCategoryId !== v.categoryId) setCurrentCategoryId(v.categoryId);
      
     }, [values, setFieldValue]);
     return null;
