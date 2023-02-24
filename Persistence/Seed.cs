@@ -189,6 +189,7 @@ namespace Persistence
                 new Organization {Name = "CoS"},
                 new Organization {Name = "PA/LL"},
                 new Organization {Name = "PROVOST"},
+                new Organization {Name = "NEC"},
 
             };
                 await context.Organizations.AddRangeAsync(organizations);

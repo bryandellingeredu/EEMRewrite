@@ -224,12 +224,15 @@ namespace Application.Activities
                 {
                     a.Id = new Guid();
                 }
-                var start = new DateTime(day.Year, day.Month, day.Day, a.Start.Hour, a.Start.Minute, 0);
+                var start = new DateTime(day.Year, day.Month, day.Day,  a.Start.Hour, a.Start.Minute, 0);
                 var end = new DateTime(day.Year, day.Month, day.Day, a.End.Hour, a.End.Minute, 0);
                // var easternStart = TimeZone.CurrentTimeZone.ToLocalTime(start);
               // var easternEnd = TimeZone.CurrentTimeZone.ToLocalTime(end);
-                var startDateAsString = start.ToString("o", CultureInfo.InvariantCulture);
-                var endDateAsString = end.ToString("o", CultureInfo.InvariantCulture);
+              var modifiedStart = new DateTime(day.Year, day.Month, day.Day, a.AllDayEvent ? 0 : a.Start.Hour, a.AllDayEvent ? 0 :  a.Start.Minute, 0);
+              var modifiedEnd= new DateTime(day.Year, day.Month, day.Day, a.AllDayEvent ? 0 : a.End.Hour, a.AllDayEvent ? 0 : a.End.Minute, 0);
+                if (a.AllDayEvent) modifiedEnd = modifiedEnd.AddDays(1);
+                var startDateAsString = modifiedStart.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                var endDateAsString = modifiedEnd.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
                 a.Start = start;
                 a.End = end;
                 a.StartDateAsString = startDateAsString;
