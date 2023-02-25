@@ -36,10 +36,16 @@ namespace Application.Activities
                 var category = await _context.Categories.Where(x => x.RouteName.ToLower() == request.RouteName.ToLower()).FirstOrDefaultAsync();
 
 
-                var activities = await _context.Activities.Include(x => x.Organization).
-                          Where(x => DateTime.Compare(start, x.Start) <= 0).
-                          Where(x => DateTime.Compare(end, x.End) >= 0).
-                          Where(x => x.CategoryId == category.Id ||
+                var activities = await _context.Activities.Include(x => x.Organization)
+                        .Where(
+                                         x =>
+                                            ( x.Start  <= start && x.End <= end)  ||
+                                            (x.Start >= start && x.End <= end) ||
+                                            (x.Start <= end && x.End >= end) ||
+                                            (x.Start <= start && x.End >= end)
+                                   )
+                                  
+                         .Where(x => x.CategoryId == category.Id ||
                                       ((category.RouteName == "asep" && x.CopiedToasep) ||
                                       (category.RouteName == "chapel" && x.CopiedTochapel) ||
                                       (category.RouteName == "commandGroup" && x.CopiedTocommandGroup) ||

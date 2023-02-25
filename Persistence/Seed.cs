@@ -118,7 +118,8 @@ namespace Persistence
             if (!context.Categories.Any()){
                 var categories = new List<Category>
                 {
-                     new Category { Name = "Academic IMC Event", RouteName = "academic", IMCColor = "#FF0000", IncludeInIMC = true },
+     new Category{Name = "Academic Calendar"},
+    new Category { Name = "Academic IMC Event", RouteName = "academic", IMCColor = "#FF0000", IncludeInIMC = true },
     new Category { Name = "ASEP Calendar", RouteName = "asep", IncludeInIMC = true, IMCColor = "#FF7F00" },
     new Category { Name = "Chapel", RouteName = "chapel", IMCColor = "#c9b60a", IncludeInIMC = true },
     new Category { Name = "Command Group Calendar", RouteName = "commandGroup", IMCColor = "#128712", IncludeInIMC = true },
