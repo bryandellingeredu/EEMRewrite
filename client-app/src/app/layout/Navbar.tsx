@@ -33,8 +33,9 @@ function useIsSignedIn(): [boolean] {
 export default observer(function Navbar() {
   const {
     userStore: { user, logout, isLoggedIn },
-    graphRoomStore: { loadingInitial, graphRooms, loadGraphRooms },
-    categoryStore: {categories, loadCategories}
+    graphRoomStore: { graphRooms, loadGraphRooms },
+    categoryStore: {categories, loadCategories},
+    graphUserStore: {armyProfile}
   } = useStore();
   const [isSignedIn] = useIsSignedIn();
 
@@ -48,7 +49,19 @@ export default observer(function Navbar() {
   }, [loadGraphRooms, graphRooms.length, categories.length]);
 
   return (
-    <Menu fixed="top" inverted color="teal">
+    <div style={{position: "fixed", top: 0, width: "100%", zIndex: 999}}>
+   <div style={{backgroundColor: isSignedIn && armyProfile && armyProfile.mail  ?  "black" :
+    isSignedIn ? "green" :
+    armyProfile && armyProfile.mail ? "#cd5700": "red",
+    height: "25px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+    <p style={{color: "white", margin: 0, padding: "0 10px"}}>
+    {isSignedIn && armyProfile && armyProfile.mail  ?  "Logged on with both .edu and CAC - CUI Authorized" :
+    isSignedIn ? "Logged on .edu - No PII or CUI Authorized" :
+    armyProfile && armyProfile.mail ? "Logged on with CAC - CUI Authorized": "You are no logged onto the EEM"}
+    </p>
+  </div>
+  <div>
+    <Menu  inverted color="teal">
       <Container>
         <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/`} header>
           <img src={`${process.env.PUBLIC_URL}/assets/logo.png`} alt="logo" style={{ marginRight: 10 }} />
@@ -81,17 +94,6 @@ export default observer(function Navbar() {
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
-              {/*
-              <Dropdown item text="Room Calendars" scrolling >
-                <Dropdown.Menu>
-                  {loadingInitial && <Dropdown.Item text="Loading Rooms..." />}
-                  {graphRooms.map((room) => (
-                    <Dropdown.Item key={room.id} text={room.displayName}   as={Link}   to={`${process.env.PUBLIC_URL}/roomcalendar/${room.id}`}  />
-                  ))}
-                  *
-                </Dropdown.Menu>           
-              </Dropdown> 
-                  */} 
                <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/roomCalendarLinks`}>
               Room Calendars
             </Menu.Item>
@@ -155,5 +157,7 @@ export default observer(function Navbar() {
         )}
       </Container>
     </Menu>
+    </div>
+</div>
   );
 });

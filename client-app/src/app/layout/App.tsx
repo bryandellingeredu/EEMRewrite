@@ -71,7 +71,7 @@ function App() {
             <>
            
              <Navbar /> 
-            <Container style={{marginTop: '7em'}}>  
+            <Container style={{marginTop: '8em'}}>  
               <Switch>
                 <Route exact path={`${process.env.PUBLIC_URL}/loginBoth`} component={LoginBoth}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/activityTable`} component={activityTable}/>
