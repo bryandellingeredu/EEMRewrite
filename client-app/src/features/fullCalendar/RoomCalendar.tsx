@@ -134,7 +134,7 @@ isWheelChairAccessible: ''
       </Divider>
 
       <FullCalendar
-            initialView="dayGridMonth"
+            initialView="timeGridWeek"
             headerToolbar={{
               left: "prev,next",
               center: "title",
@@ -144,6 +144,8 @@ isWheelChairAccessible: ''
             eventClick={handleEventClick}
             events={`${process.env.REACT_APP_API_URL}/roomEvents/${id}`}
             eventMouseEnter={handleMouseEnter}
+            slotMinTime={'07:00:00'}
+            slotMaxTime={'21:00:00'}
             //eventContent={renderEventContent}  
           />
       </>

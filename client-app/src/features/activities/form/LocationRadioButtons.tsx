@@ -1,4 +1,4 @@
-import { Form, Radio, Segment } from "semantic-ui-react";
+import { Form, Header, Radio, Segment } from "semantic-ui-react";
 
 interface Props{
     roomRequired: boolean
@@ -31,7 +31,11 @@ export default function LocationRadioButtons({roomRequired, setRoomRequired} : P
           onChange={setRoomRequired}
         />
       </Form.Field>
+      <Form.Field>
+        <Header as={'h4'} content='Takes a few seconds for rooms to appear when selecting a room' style={{color: 'white', paddingLeft: '100px'}}/>
+      </Form.Field>
       </Form.Group>
+
       </Segment>
     )
 

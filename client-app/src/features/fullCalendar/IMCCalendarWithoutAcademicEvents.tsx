@@ -63,7 +63,9 @@ export default function IMCCalendarWithoutAcademicEvents() {
             plugins={[dayGridPlugin, timeGridPlugin]}
             events={`${process.env.REACT_APP_API_URL}/activities/getIMCEventsByDate`} 
             eventMouseEnter={handleMouseEnter}  
-            eventClick={handleEventClick}      
+            eventClick={handleEventClick}  
+            slotMinTime={'07:00:00'}
+            slotMaxTime={'21:00:00'}
           />
     </>
   )

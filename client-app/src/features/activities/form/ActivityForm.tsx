@@ -203,6 +203,7 @@ export default observer(function ActivityForm() {
         ),
       }),
     title: Yup.string().required("The title is required"),
+    description: Yup.string().required("Event Details are required"),
     start: Yup.string()
       .required()
       .nullable()
@@ -541,7 +542,6 @@ export default observer(function ActivityForm() {
         <div className="ui yellow message">
           <div className="header">
             You are not authorized to work with Hosting or Outsider Reports.
-          </div>
           <span style={{ paddingRight: "10px" }}>
             if you would like to work with reports you must first sign into your
             army 365 account. Please save all pending work before doing this.{" "}
@@ -553,6 +553,7 @@ export default observer(function ActivityForm() {
           >
             Log Into Army 365
           </Link>
+          </div>
         </div>
       )}
       <Formik
@@ -568,12 +569,12 @@ export default observer(function ActivityForm() {
 
             <MyTextInput
               name="title"
-              placeholder="*EventTitle (required field)"
+              placeholder="*Event Title (required field)"
             />
 
             <MyTextArea
               rows={3}
-              placeholder="Event Details / Description"
+              placeholder="*Event Details / Description (required field)"
               name="description"
             />
 
@@ -1884,11 +1885,8 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
-                        </SemanticForm.Group>
-                      </Grid.Column>
-                      <Grid.Column width={4} />
-                      <Grid.Column width={12}>
-                        <SemanticForm.Group inline>
+                
+           
                           <MySemanticCheckBox
                             name="copiedTocomplementary"
                             label="Complemenary Events"
@@ -1961,11 +1959,8 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
-                        </SemanticForm.Group>
-                      </Grid.Column>
-                      <Grid.Column width={4} />
-                      <Grid.Column width={12}>
-                        <SemanticForm.Group inline>
+               
+           
                           <MySemanticCheckBox
                             name="copiedTopksoi"
                             label="PKSOI Calendar"
@@ -2034,11 +2029,6 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
-                        </SemanticForm.Group>
-                      </Grid.Column>
-                      <Grid.Column width={4} />
-                      <Grid.Column width={12}>
-                        <SemanticForm.Group inline>
                           <MySemanticCheckBox
                             name="copiedTousahecFacilitiesUsage"
                             label="USAHEC Facilities Usage Calendar"
@@ -2178,7 +2168,7 @@ export default observer(function ActivityForm() {
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={3}>
-                      <strong>Hosting / Visitor Report:</strong>
+                      <strong>Hosting / Outsider Report:</strong>
                     </Grid.Column>
                     <Grid.Column width={13}>
                       <SemanticForm.Group inline>
@@ -2188,12 +2178,12 @@ export default observer(function ActivityForm() {
                           name="report"
                         />
                         <MySemanticRadioButton
-                          label="Hosting Report (BG (O7) and Above or Civilian SES Equivalent"
+                          label="Hosting Report - (BG (O7) and Above or Civilian SES Equivalent"
                           value="Hosting Report"
                           name="report"
                         />
                         <MySemanticRadioButton
-                          label="Outsiders Report - Important Visitors, O6 or Below"
+                          label="Outsiders Report"
                           value="Outsiders Report"
                           name="report"
                         />
@@ -2211,7 +2201,7 @@ export default observer(function ActivityForm() {
                         style={{ marginRight: "10px" }}
                       />
                       <Header.Content>
-                        {values.report} Information
+                        {values.report}
                       </Header.Content>
                     </Header>
                     <MyTextArea
@@ -2232,7 +2222,7 @@ export default observer(function ActivityForm() {
                               <SemanticForm.Group inline>
                                 <MySemanticCheckBox name="hostingReport.officeCallWithCommandant" />
                               </SemanticForm.Group>
-                              <i>If yes please coordinate with Ashley </i>
+                              <i>If yes please coordinate with Commandant's Executive assistant </i>
                             </Grid.Column>
                           </Grid.Row>
                         </Grid>
@@ -2556,12 +2546,17 @@ export default observer(function ActivityForm() {
                       />
                     )}
                     {values.report === "Hosting Report" && (
+                      <>
                       <MyTextArea
                         rows={3}
-                        placeholder="Travel Arrangement Details"
+                        placeholder="Provide details; if flying list airline, departure airport, arrival airport, arrival/departure time, flights etc."
                         name="hostingReport.travelArrangementDetails"
                         label="Travel Arrangement Details:"
                       />
+                      <a href="https://www.ihg.com/armyhotels/hotels/us/en/carlisle/zyija/hoteldetail" target="_blank">
+                      <Icon name='paperclip' style={{color: 'white'}}></Icon> <span  style={{color: 'white', textDecoration: 'underline' }}>  InterContinental Hotel Group (HG) Army Hotels Carlisle Barracks Info </span> 
+                        </a>
+                      </>
                     )}
                     {values.report === "Hosting Report" && (
                       <>
@@ -2745,7 +2740,7 @@ export default observer(function ActivityForm() {
 
                         <MyTextInput
                           name="hostingReport.outsiderReportDV"
-                          placeholder="Visiting DV: Enter the Rank and Names of the Distinguished Visitors (DV). Outsiders report is for COL and below"
+                          placeholder="Visiting DV: Enter the rank and bames of the distinguished visitors (DV). Outsiders Report is for important visitors, O6 and below"
                           label="Visiting DV: Enter the Rank and Names of the Distinguished Visitors (DV)"
                         />
 
@@ -2780,7 +2775,7 @@ export default observer(function ActivityForm() {
 
                         <MyTextArea
                           rows={3}
-                          placeholder="Flag Details:  (Describe type of flags and where to set up  e.g. US Army flag, USAWCflag, 2 star flag in Bliss Hall, etc.)"
+                          placeholder="Flag Details:  (Describe type of flags and where to set up  e.g. US Army flag, USAWC flag, 2 star flag in Bliss Hall, etc.)"
                           name="hostingReport.flagDetails"
                           label="Flag Details::  (Describe type of flags and where to set up.)"
                         />
@@ -2789,7 +2784,7 @@ export default observer(function ActivityForm() {
                     {values.report === "Hosting Report" && (
                       <MyTextArea
                         rows={3}
-                        placeholder="Gift Requirement"
+                        placeholder="Official Gift Exchange (Or speaker fift only for addressing the entire class)"
                         name="hostingReport.gift"
                         label="Gift Requirement:"
                       />
@@ -2812,8 +2807,7 @@ export default observer(function ActivityForm() {
                           <Grid.Column width={12}>
                             If Visitor is from a foreign country this will
                             e-mail the Security Office. If you have any
-                            questions, contact the Security Office (245-3233 /
-                            245 - 4188)
+                            questions, contact the Security Office (245-4440 / 245 - 4289)
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>

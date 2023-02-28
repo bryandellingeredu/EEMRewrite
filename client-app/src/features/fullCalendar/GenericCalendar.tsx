@@ -81,7 +81,9 @@ export default observer(function GenericCalendar() {
             plugins={[dayGridPlugin, timeGridPlugin]}
             events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/${id}`}
             eventClick={handleEventClick}
-            eventMouseEnter={handleMouseEnter}      
+            eventMouseEnter={handleMouseEnter} 
+            slotMinTime={'07:00:00'}
+            slotMaxTime={'21:00:00'}     
           />
         </div>
       }

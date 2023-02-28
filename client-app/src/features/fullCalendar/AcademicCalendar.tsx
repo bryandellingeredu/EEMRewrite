@@ -85,6 +85,8 @@ export default observer( function AcademicCalendar(){
         events={(info, successCallback) => getEvents(info, successCallback)}
         eventClick={handleEventClick}
         eventContent={renderEventContent} 
+        slotMinTime={'07:00:00'}
+        slotMaxTime={'21:00:00'}
       />
       </>
     )

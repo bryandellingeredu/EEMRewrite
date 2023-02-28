@@ -30,13 +30,14 @@ export default observer(function VTCCoordinatorTable() {
     };
 
     function createTableData(response: VTCCoordinator[], grooms: GraphRoom[] ){
-       const result =  grooms.map(graphRoom => {
-        return {
-          id: graphRoom.id,
-          displayName: graphRoom.displayName,
-          coordinators: response.filter(coordinator => coordinator.roomEmail === graphRoom.emailAddress)
-        };
-      });
+      const result =  grooms.filter(graphRoom => graphRoom.displayName.includes("VTC"))
+        .map(graphRoom => {
+          return {
+            id: graphRoom.id,
+            displayName: graphRoom.displayName,
+            coordinators: response.filter(coordinator => coordinator.roomEmail === graphRoom.emailAddress)
+          };
+        });
       setVTCCoordinatorTableData(result);
     }
    

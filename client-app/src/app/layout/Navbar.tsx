@@ -84,24 +84,22 @@ export default observer(function Navbar() {
               <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/activities`} text ="Today's Events"/>
               <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/deletedactivityTable`} text ="Recycle Bin / Deleted Activities"/>
             </Dropdown.Menu>    
-            </Dropdown>        
+            </Dropdown>   
+            <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/imccalendar`}>
+                Integrated Master Calendar (IMC)
+            </Menu.Item>     
               <Dropdown item text="Department Calendars" scrolling >
                 <Dropdown.Menu>
-                <Dropdown.Item
-                    text="Integrated Master Calendar (IMC)"
-                    as={Link}
-                    to={`${process.env.PUBLIC_URL}/imccalendar`}
-                  />
                     <Dropdown.Item
                     text="Student Academic"
                     as={Link}
                     to={`${process.env.PUBLIC_URL}/academiccalendar`}
                   />
-                  {categories.filter(x => x.routeName).map((category) => (
-                    <Dropdown.Item key={category.id}
-                     text={category.name}   as={Link} 
-                    to={`${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}  />
-                  ))}
+              {categories.filter(x => x.routeName && x.name !== "Other").map((category) => (
+                 <Dropdown.Item key={category.id}
+                  text={category.name}   as={Link} 
+                  to={`${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}  />
+                ))}
                 </Dropdown.Menu>
               </Dropdown>
                <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/roomCalendarLinks`}>

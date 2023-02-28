@@ -146,7 +146,7 @@ export default observer(function RoomPicker({
   return (
     <>
       {(loadingInitial || graphRoomStore.loadingInitial) && (
-        <LoadingComponent content="Loading Rooms" />
+        <LoadingComponent content="Loading Rooms, This Sometimes Takes Awhile..." />
       )}
       {!loadingInitial && !graphRoomStore.loadingInitial && (
         <Form.Field error={dirty && roomEmails.length < 1}>
