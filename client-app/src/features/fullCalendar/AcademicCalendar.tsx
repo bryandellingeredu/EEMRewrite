@@ -31,22 +31,38 @@ export default observer( function AcademicCalendar(){
       if(!categories.length) categoryStore.loadCategories();
      }, [categories.length, categoryStore])
 
-     function renderEventContent(info : any) {
-      if(info.view.type === 'dayGridMonth' && !info.event.allDay)
-      {
-     return (
-        <Popup
-         content={info.event.title}
-         header={info.event.allDay ? `${format(info.event.start, 'MM/dd')}` : 
-         `${format(info.event.start, 'h:mm aa')} - ${format(info.event.end, 'h:mm aa')}`}
-         trigger={
-            <Header size='tiny'
-            color={info.event.allDay ? 'yellow': 'blue'}
-             content={`${info.timeText} ${info.event.title}`}
-            style={{overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer'}}
-            />} />
-      )
-    }
+     function renderEventContent(info: any) {
+      try {
+        if (info.view.type === "dayGridMonth" && !info.event.allDay) {
+          return (
+            <Popup
+              content={info.event.title}
+              header={
+                info.event.allDay
+                  ? `${format(info.event.start, "MM/dd")}`
+                  : `${format(info.event.start, "h:mm aa")} - ${format(
+                      info.event.end,
+                      "h:mm aa"
+                    )}`
+              }
+              trigger={
+                <Header
+                  size="tiny"
+                  color={info.event.allDay ? "yellow" : "blue"}
+                  content={`${info.timeText} ${info.event.title}`}
+                  style={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    cursor: "pointer",
+                  }}
+                />
+              }
+            />
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
 
      return(

@@ -152,7 +152,7 @@ function handleAddIdToShowAvailabilityIndicatorList(id: string){
 
 
    
-         <Card.Group itemsPerRow={2}>           
+         <Card.Group itemsPerRow={3}>           
              {filteredGraphRooms.map(room => (
                 <RoomListItem
                  key={room.id}

@@ -167,6 +167,15 @@ export interface Activity{
     copiedTovisitsAndTours: boolean;
     copiedToweeklyPocket: boolean;
     copiedTosymposiumAndConferences: boolean;
+    cancelled: boolean;
+    cancelledReason : string
+    cancelledBy: string
+    cancelledAt: Date | null
+    createdBy: string
+    createdAt:  Date | null
+    lastUpdatedBy: string
+    lastUpdatedAt : Date | null
+
 
 
 }
@@ -334,6 +343,15 @@ export class ActivityFormValues{
     copiedTovisitsAndTours: boolean = false;
     copiedToweeklyPocket: boolean = false;
     copiedTosymposiumAndConferences: boolean = false;
+    cancelled: boolean = false;
+    cancelledReason : string = '';
+    cancelledBy: string = '';
+    cancelledAt: Date | null = null;
+    createdBy: string = '';
+    createdAt:  Date | null = null;
+    lastUpdatedBy: string = '';
+    lastUpdatedAt : Date | null = null;
+
 
 
     constructor(activity?: ActivityFormValues){
@@ -493,6 +511,15 @@ export class ActivityFormValues{
         this.copiedTovisitsAndTours = activity.copiedTovisitsAndTours;
         this.copiedToweeklyPocket = activity.copiedToweeklyPocket;
         this.copiedTosymposiumAndConferences = activity.copiedTosymposiumAndConferences;
+        this.cancelled = activity.cancelled;
+        this.cancelledReason = activity.cancelledReason;
+        this.cancelledBy  = activity.cancelledBy
+        this.cancelledAt = activity.cancelledAt;
+        this.createdBy = activity.createdBy;
+        this.createdAt = activity.createdAt;
+        this.lastUpdatedBy = activity.lastUpdatedBy;
+        this.lastUpdatedAt = activity.lastUpdatedAt;
+    
        } 
     }
 }

@@ -62,6 +62,13 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
 
+        [HttpPut("cancel/{id}")]
+        public async Task<IActionResult> CancelActivity(Guid id, CancelEventDTO cancelEventDTO)
+        {
+            cancelEventDTO.ActivityId = id;
+            return HandleResult(await Mediator.Send(new Cancel.Command { CancelEventDTO = cancelEventDTO }));
+        }
+
         [HttpPut("updateSeries/{id}")]
         public async Task<IActionResult> EditSeries(Guid id, Activity activity)
         {

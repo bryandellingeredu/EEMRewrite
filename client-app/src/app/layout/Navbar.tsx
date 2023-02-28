@@ -62,7 +62,7 @@ export default observer(function Navbar() {
   </div>
   <div>
     <Menu  inverted color="teal">
-      <Container>
+      <Container fluid>
         <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/`} header>
           <img src={`${process.env.PUBLIC_URL}/assets/logo.png`} alt="logo" style={{ marginRight: 10 }} />
           EEM
@@ -87,6 +87,16 @@ export default observer(function Navbar() {
             </Dropdown>        
               <Dropdown item text="Department Calendars" scrolling >
                 <Dropdown.Menu>
+                <Dropdown.Item
+                    text="Integrated Master Calendar (IMC)"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/imccalendar`}
+                  />
+                    <Dropdown.Item
+                    text="Student Academic"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/academiccalendar`}
+                  />
                   {categories.filter(x => x.routeName).map((category) => (
                     <Dropdown.Item key={category.id}
                      text={category.name}   as={Link} 
@@ -96,22 +106,7 @@ export default observer(function Navbar() {
               </Dropdown>
                <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/roomCalendarLinks`}>
               Room Calendars
-            </Menu.Item>
-              <Dropdown item text="IMC Calendars" >
-                <Dropdown.Menu>           
-                   <Dropdown.Item
-                    text="Integrated Master Calendar (IMC)"
-                    as={Link}
-                    to={`${process.env.PUBLIC_URL}/imccalendar`}
-                  />
-                  <Dropdown.Item
-                    text="Academic"
-                    as={Link}
-                    to={`${process.env.PUBLIC_URL}/academiccalendar`}
-                  />
-                
-                </Dropdown.Menu>
-              </Dropdown>           
+            </Menu.Item>        
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
               Rooms
             </Menu.Item>

@@ -34,10 +34,15 @@ namespace Application.Activities
 
 
 
-                var activities = await _context.Activities.Include(x => x.Organization).Include(x => x.Category).
-                    Where(x => DateTime.Compare(start, x.Start) <= 0).
-                    Where(x => DateTime.Compare(end, x.End) >= 0).
-                    Where(x => x.IMC == true || x.Category.IncludeInIMC == true).
+                var activities = await _context.Activities.Include(x => x.Organization).Include(x => x.Category)
+                       .Where(
+                                         x =>
+                                            (x.Start <= start && x.End <= end) ||
+                                            (x.Start >= start && x.End <= end) ||
+                                            (x.Start <= end && x.End >= end) ||
+                                            (x.Start <= start && x.End >= end)
+                                   ).
+                    Where(x => x.IMC == true).
                     Where(x => !x.LogicalDeleteInd)
                     .ToListAsync();
 

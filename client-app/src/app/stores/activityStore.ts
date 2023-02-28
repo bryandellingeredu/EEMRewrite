@@ -594,6 +594,14 @@ export default class ActivityStore {
     copiedTovisitsAndTours: false,
     copiedToweeklyPocket: false,
     copiedTosymposiumAndConferences: false,
+    cancelled: false,
+    cancelledReason : '',
+    cancelledBy: '',
+    cancelledAt:  null,
+    createdBy:  '',
+    createdAt: null,
+    lastUpdatedBy: '',
+    lastUpdatedAt : null
     }
     return activity;
   }

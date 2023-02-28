@@ -193,5 +193,11 @@ namespace Domain
         public bool CopiedTovisitsAndTours { get; set; }
         public bool CopiedToweeklyPocket { get; set; }
         public bool CopiedTosymposiumAndConferences {get; set;}
+        public bool Cancelled { get; set; }
+        public string CancelledReason { get; set; }
+        public string CancelledBy { get; set; }
+        public DateTime? CancelledAt { get; set; }
+
+
     }
 }

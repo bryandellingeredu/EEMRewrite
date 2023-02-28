@@ -71,7 +71,7 @@ function App() {
             <>
            
              <Navbar /> 
-            <Container style={{marginTop: '8em'}}>  
+            <Container style={{marginTop: '8em', paddingLeft: '10px', paddingRight: '10px'}} fluid>  
               <Switch>
                 <Route exact path={`${process.env.PUBLIC_URL}/loginBoth`} component={LoginBoth}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/activityTable`} component={activityTable}/>
@@ -98,6 +98,7 @@ function App() {
                   `${process.env.PUBLIC_URL}/manage/:id/:categoryId`,
                   `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries`,
                   `${process.env.PUBLIC_URL}/createActivityWithRoom/:roomid`,
+                  `${process.env.PUBLIC_URL}/copy/:id/:categoryId/:copy`,
                   ]} component={ActivityForm}/>
                 <Route key={location.key} exact path={[`${process.env.PUBLIC_URL}/createEmailGroupMember`, `${process.env.PUBLIC_URL}/manageEmailGroupMember/:id`]} component={EmailGroupForm}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />

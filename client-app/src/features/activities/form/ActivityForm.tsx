@@ -102,6 +102,7 @@ export default observer(function ActivityForm() {
   const { id } = useParams<{ id: string }>();
   const { roomid } = useParams<{ roomid: string }>();
   const { manageSeries } = useParams<{ manageSeries: string }>();
+  const { copy } = useParams<{ copy: string }>();
   const { categoryId } = useParams<{ categoryId: string }>();
   const [activity, setActivity] = useState<ActivityFormValues>(
     new ActivityFormValues()
@@ -257,25 +258,31 @@ export default observer(function ActivityForm() {
     }
     if (id) {
       loadActivity(id, categoryId).then((response) => {
+        if(copy && copy === 'true' && response && response.hostingReport) response.hostingReport = null;
+        if(copy && copy === 'true' && response && response.title) response.title = response.title + ' copied on ' + format(new Date(), 'MMMM d, yyyy h:mm aa')
+        if(copy && copy === 'true' && response && response.report) response.report = 'none';
+        if(copy && copy === 'true' && response && response.activityRooms) response.activityRooms = [];
+        if(copy && copy === 'true' && response && response.recurrenceInd) response.recurrenceInd = false;
+        if(copy && copy === 'true' && response && response.eventLookup) response.eventLookup = '';
         setActivity(new ActivityFormValues(response));
-        if (response?.attachmentLookup && response?.attachmentLookup > 0) {
+        if (response?.attachmentLookup && response?.attachmentLookup > 0 && (!copy || copy === 'false')) {
           setAttachment({
             id: response?.attachmentLookup,
             fileName: "",
             fileType: "",
           });
         }
-        if (response?.activityRooms && response.activityRooms.length > 0) {
+        if (response?.activityRooms && response.activityRooms.length > 0 && (!copy || copy === 'false')) {
           setRoomRequired(true);
           setRoomEmails(response.activityRooms.map((x) => x.email));
           setOriginalRoomEmails(response.activityRooms.map((x) => x.email));
         }
-        if (response?.recurrenceInd && response?.recurrence) {
+        if (response?.recurrenceInd && response?.recurrence  && (!copy || copy === 'false')) {
           setRecurrence(response.recurrence);
           setRecurrenceInd(true);
         }
 
-        if (response?.hostingReport?.guestItinerary) {
+        if (response?.hostingReport?.guestItinerary  && (!copy || copy === 'false')) {
           setEditorState(
             EditorState.createWithContent(
               convertFromRaw(
@@ -363,6 +370,8 @@ export default observer(function ActivityForm() {
       if (!armyProfile || !armyProfile?.mail) {
         activity.hostingReport = null;
       }
+      activity.createdAt = new Date();
+      activity.lastUpdatedAt = new Date();
       activity.recurrenceInd = recurrenceInd;
       activity.recurrence = recurrence;
       activity.roomEmails = roomRequired ? roomEmails : [];
@@ -391,7 +400,8 @@ export default observer(function ActivityForm() {
       activity.organizationId = activity.organizationId || null;
       activity.category = category;
       activity.organization = organization;
-      if (!activity.id) {
+      debugger;
+      if (!activity.id || (copy && copy === 'true' )) {
         let newActivity = {
           ...activity,
           id: category.name === "Academic Calendar" ? "" : uuid(),
@@ -1123,7 +1133,7 @@ export default observer(function ActivityForm() {
                 </Segment>
               </>
             )}
-            <Segment color="purple" inverted>
+            <Segment color="violet" inverted>
               <Grid>
                 <Grid.Row>
                   <Grid.Column width={2}>
@@ -2937,7 +2947,7 @@ export default observer(function ActivityForm() {
             )}
 
             <Button
-              disabled={submitting}
+              disabled={submitting || activity.cancelled}
               loading={submitting}
               floated="right"
               positive
@@ -2958,6 +2968,19 @@ export default observer(function ActivityForm() {
           </Form>
         )}
       </Formik>
+      {activity.createdBy && activity.createdAt && 
+      <Header as='h3'>
+    <Header.Subheader>
+      Created by {activity.createdBy} @ {format(new Date(activity.createdAt), 'MMMM d, yyyy h:mm aa')}
+    </Header.Subheader>
+    {activity.lastUpdatedBy && activity.lastUpdatedAt &&
+    <Header.Subheader>
+      <br/>
+      Last Updated by {activity.lastUpdatedBy} @ {format(new Date(activity.lastUpdatedAt), 'MMMM d, yyyy h:mm aa')}
+    </Header.Subheader>
+    }
+  </Header>
+}
     </Segment>
   );
 });
