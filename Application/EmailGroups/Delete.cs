@@ -17,7 +17,8 @@ namespace Application.EmailGroups
     {
         public class Command : IRequest<Result<Unit>>
         {
-            public Guid Id { get; set; }
+            public Guid MemberId { get; set; }
+            public Guid GroupId { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -31,20 +32,34 @@ namespace Application.EmailGroups
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var emailGroupMember = await _context.EmailGroupMembers.FindAsync(request.Id, cancellationToken);
-                if (emailGroupMember == null) return null;
-               var junctions = await _context.EmailGroupEmailGroupMemberJunctions.Where(x => x.EmailGroupMemberId == request.Id).ToListAsync();
-                if (junctions.Any())
+                var emailGroupMemberJunctions = await _context.EmailGroupEmailGroupMemberJunctions
+                    .Where(x => x.EmailGroupId == request.GroupId)
+                    .Where(x => x.EmailGroupMemberId == request.MemberId)
+                    .ToListAsync();
+
+
+                if (emailGroupMemberJunctions.Any())
                 {
-                    _context.EmailGroupEmailGroupMemberJunctions.RemoveRange(junctions);
-                }   
-                _context.EmailGroupMembers.Remove(emailGroupMember);
+                    _context.EmailGroupEmailGroupMemberJunctions.RemoveRange(emailGroupMemberJunctions);
+                }
+
                 var success = await _context.SaveChangesAsync() > 0;
+
+               var emailGroupEmailGroupMemberJunctions2 = await _context.EmailGroupEmailGroupMemberJunctions
+                    .Where(x => x.EmailGroupMemberId == request.MemberId)
+                    .ToListAsync();
+
+                if (!emailGroupEmailGroupMemberJunctions2.Any())
+                {
+                    var emailGroupMember = await _context.EmailGroupMembers.FindAsync(request.MemberId);
+                    _context.EmailGroupMembers.Remove(emailGroupMember);
+                    await _context.SaveChangesAsync();
+                }
+
                 if (success) return Result<Unit>.Success(Unit.Value);
                 return Result<Unit>.Failure("Problem deleting email group member");
             }
         }
-        
 
         }
 }

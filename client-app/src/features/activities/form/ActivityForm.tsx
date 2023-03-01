@@ -260,7 +260,7 @@ export default observer(function ActivityForm() {
     if (id) {
       loadActivity(id, categoryId).then((response) => {
         if(copy && copy === 'true' && response && response.hostingReport) response.hostingReport = null;
-        if(copy && copy === 'true' && response && response.title) response.title = response.title + ' copied on ' + format(new Date(), 'MMMM d, yyyy h:mm aa')
+        if(copy && copy === 'true' && response && response.title) response.title = response.title + ' Copied on - ' + format(new Date(), 'MMMM d, yyyy h:mm aa')
         if(copy && copy === 'true' && response && response.report) response.report = 'none';
         if(copy && copy === 'true' && response && response.activityRooms) response.activityRooms = [];
         if(copy && copy === 'true' && response && response.recurrenceInd) response.recurrenceInd = false;

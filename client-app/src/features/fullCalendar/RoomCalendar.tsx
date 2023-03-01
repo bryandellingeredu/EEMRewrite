@@ -134,7 +134,7 @@ isWheelChairAccessible: ''
       </Divider>
 
       <FullCalendar
-            initialView="timeGridWeek"
+            initialView="dayGridMonth"
             headerToolbar={{
               left: "prev,next",
               center: "title",

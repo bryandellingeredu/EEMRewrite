@@ -72,7 +72,7 @@ export default observer(function GenericCalendar() {
         <div>
           <GenericCalendarHeader id={id} />
           <FullCalendar
-            initialView="timeGridWeek"
+            initialView="dayGridMonth"
             headerToolbar={{
               left: "prev,next",
               center: "title",

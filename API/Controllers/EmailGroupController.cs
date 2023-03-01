@@ -19,10 +19,10 @@ namespace API.Controllers
          HandleResult(await Mediator.Send(new Details.Query { Id = id }));
 
         [Authorize(Roles = "admin")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("{memberid}/{groupid}")]
+        public async Task<IActionResult> Delete(Guid memberid, Guid groupid)
         {
-            return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+            return HandleResult(await Mediator.Send(new Delete.Command { MemberId = memberid , GroupId = groupid}));
         }
 
         [HttpGet("GetGroups")]
@@ -33,6 +33,11 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(EmailGroupMemberPostData emailGroupMemberPostData) =>
          HandleResult(await Mediator.Send(new Post.Command { EmailGroupMemberPostData = emailGroupMemberPostData }));
+
+        [Authorize(Roles = "admin")]
+        [HttpPost("addMemberToGroup")]
+      public async Task<IActionResult> AddMemberToGroup(EmailGroupMemberDTO emailGroupMemberDTO) =>
+    HandleResult(await Mediator.Send(new AddMemberToGroup.Command { EmailGroupMemberDTO = emailGroupMemberDTO }));
     }
 
 

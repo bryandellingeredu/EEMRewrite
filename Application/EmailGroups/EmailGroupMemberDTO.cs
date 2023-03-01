@@ -11,6 +11,7 @@ namespace Application.EmailGroups
         public Guid Id { get; set; }
         public string Email { get; set; }
         public string DisplayName { get; set; }
-        public List<EmailGroupDTO> EmailGroups { get; set; } 
+        public List<EmailGroupDTO> EmailGroups { get; set; }
+        public Guid GroupId { get; set; }
     }
 }

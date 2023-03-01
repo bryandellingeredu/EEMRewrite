@@ -22,6 +22,7 @@ import { RoomDelegate } from '../models/roomDelegate';
 import { VTCCoordinator } from '../models/vtcCoordinator';
 import { Attachment } from '../models/attachment';
 import { CSLCalendarLegend } from '../models/cslCalendarLegend';
+import { EmailGroupMemberDTO } from '../models/emailGroupMemberDTO';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -227,7 +228,8 @@ const EmailGroups ={
     list : () => axiosRequest.get<EmailGroup[]>('/emailGroup/GetGroups'),
     post : (data: EmailGroupMemberPostData) => axiosRequest.post<void>('/emailGroup', data),
     details: (id: string) => axiosRequest.get<EmailGroupMember>(`/emailGroup/${id}`),
-    delete: (id: string) => axiosRequest.del<void>(`/emailGroup/${id}`)
+    delete: (memberid: string, groupid: string) => axiosRequest.del<void>(`/emailGroup/${memberid}/${groupid}`),
+    create: (data : EmailGroupMemberDTO) => axiosRequest.post<void>('/emailGroup/addMemberToGroup', data),
 }
 
 const Attachments = {

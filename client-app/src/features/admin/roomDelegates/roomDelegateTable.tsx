@@ -120,11 +120,7 @@ export default observer(function RoomDelegateTable() {
       return acc;
     }, [] as { key: string; text: string; value: string }[])
     .sort((a, b) => {
-      const aWords = a.text.split(" ");
-      const bWords = b.text.split(" ");
-      const aLastWord = aWords[aWords.length - 1];
-      const bLastWord = bWords[bWords.length - 1];
-      return aLastWord.localeCompare(bLastWord);
+      return a.text.localeCompare(b.text);
     })}
   selection
   search
@@ -180,8 +176,7 @@ export default observer(function RoomDelegateTable() {
           .map((delegate, index2) => (
             <Table.Row
               key={delegate.id}
-              positive={(index1 + index2 + 1) % 2 === 0}
-              negative={(index1 + index2 + 1) % 2 !== 0}
+              positive={(index1 + 1) % 2 === 0} negative={(index1 + 1) % 2 !== 0}
             >
               <Table.Cell>{delegate.delegateDisplayName}</Table.Cell>
               <Table.Cell>{delegate.delegateEmail}</Table.Cell>

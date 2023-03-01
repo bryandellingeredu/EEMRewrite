@@ -1,253 +1,338 @@
 import { observer } from "mobx-react-lite";
 import { NavLink, useHistory, useParams } from "react-router-dom";
-import {
-  Button,
-  Divider,
-  Header,
-  Icon,
-  Form as SemanticForm,
-  Label,
-  Grid,
-  Segment
-} from "semantic-ui-react";
-import { EmailGroupMember } from "../../../app/models/emailGroupMember";
-import { useEffect, useState } from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import MyTextInput from "../../../app/common/form/MyTextInput";
-import MySemanticCheckBox from "../../../app/common/form/MySemanticCheckbox";
+import { Button, Confirm, Divider, Form, Header, Icon, Label, Message, Segment, SegmentGroup } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
-import LoadingComponent from "../../../app/layout/LoadingComponent";
-import * as Yup from "yup";
+import { Fragment, useEffect, useState } from "react";
 import agent from "../../../app/api/agent";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { Login, PeoplePicker } from "@microsoft/mgt-react";
 import { v4 as uuid } from "uuid";
-import { EmailGroupMemberPostData } from "../../../app/models/emailGroupMemberPostData";
 import { toast } from "react-toastify";
+import { Providers, ProviderState } from "@microsoft/mgt";
+import { EmailGroupMember } from "../../../app/models/emailGroupMember";
+import { EmailGroupMemberDTO } from "../../../app/models/emailGroupMemberDTO";
 
-interface Values {
-  id: string;
-  email: string;
-  displayName: string;
-  options: {};
+function useIsSignedIn(): [boolean] {
+  const [isSignedIn, setIsSignedIn] = useState(true);
+  useEffect(() => {
+    const updateState = () => {
+      const provider = Providers.globalProvider;
+      setIsSignedIn(provider && provider.state === ProviderState.SignedIn);
+    };
+
+    Providers.onProviderUpdated(updateState);
+    updateState();
+
+    return () => {
+      Providers.removeProviderUpdatedListener(updateState);
+    };
+  }, []);
+  return [isSignedIn];
+}
+
+interface PeoplePickerSelection {
+  selectedPeople: any[];
 }
 
 export default observer(function EmailGroupForm() {
+  const [isSignedIn] = useIsSignedIn();
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
-  const [emailGroupMember, setEmailGroupMember] = useState<EmailGroupMember>({
-    id: "",
-    email: "",
-    displayName: "",
-    emailGroups: [],
-  });
   const { emailGroupStore } = useStore();
-  const { emailGroups, loadEmailGroups } = emailGroupStore;
-  const [checkBoxOptions, setCheckBoxOptions] = useState({});
-  const [emailGroupMembers, setEmailGroupMembers] = useState<
-    EmailGroupMember[]
-  >([]);
-  const [noRolesError, setNoRolesError] = useState(false);
-  const [emailAlreadyUsed, setEmailAlreadyUsed] = useState(false);
+  const { emailGroups, loadEmailGroups} = emailGroupStore 
+  const [loading, setLoading] = useState(true);
+  const [emailGroupMembers, setEmailGroupMembers] = useState<EmailGroupMember[]>([]);
+  const [selectedPerson, setSelectedPerson] = useState<any>(null);
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [peoplePickerKey, setPeoplePickerKey] = useState(0);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
-  const getCheckboxOptions = () => {
-    return emailGroups.reduce((acc, curr) => {
-      acc[curr.id] = false;
-      return acc;
-    }, {} as { [key: string]: {} });
+  const handleDelete = async (memberid: string) => {
+    try {
+      setOpenConfirm(false);
+      setDeleting(true);
+      agent.EmailGroups.delete(memberid, id ).then(() => {
+        toast.success("Row has been deleted");
+        setDeleting(false);
+        setEmailGroupMembers(emailGroupMembers.filter((x) => x.id !== memberid));
+      });
+    } catch (error) {
+      console.log(error);
+      setDeleting(false);
+      toast.error("An error occured during deleting please try again");
+    }
+  };
+
+  const handleSelectionChanged = (event: any) => {
+    if (event.detail[0]) {
+      setDisplayName(event.detail[0].displayName);
+      setEmail(event.detail[0].scoredEmailAddresses[0].address);
+      setSelectedPerson(event.detail[0]);
+      setNameError(false);
+      setEmailError(false);
+    } else {
+      setDisplayName("");
+      setEmail("");
+      setSelectedPerson(null);
+    }
+  };
+
+  const handleDisplayNameInputChange = (event: any) => {
+    setDisplayName(event.target.value);
+    setNameError(false);
+  };
+
+  const handleEmailInputChange = (event: any) => {
+    setEmail(event.target.value);
+    setEmailError(false);
+  };
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    let error = false;
+    if (!displayName) {
+      error = true;
+      setNameError(true);
+    }
+    if (!email) {
+      error = true;
+      setEmailError(true);
+    }
+    if (!error) {
+      setSaving(true);
+      const emailGroupMember: EmailGroupMemberDTO= {
+        id: uuid(),
+        email,
+        displayName,
+        groupId: id,
+      };
+
+      agent.EmailGroups.create(emailGroupMember)
+        .then(() => {
+          setEmailGroupMembers(
+            [...emailGroupMembers,
+               {id: emailGroupMember.id,
+                email: emailGroupMember.email,
+                displayName: emailGroupMember.displayName,
+                emailGroups: [
+                  {id: emailGroupMember.groupId,
+                   name: emailGroups.find((x) => x.id === id)!.name
+                  }
+                  ]
+                }
+              ]);
+          setSelectedPerson(null);
+          setPeoplePickerKey(peoplePickerKey + 1);
+          setEmail("");
+          setDisplayName("");
+          toast.success(" Save Successfull");
+          setSaving(false);
+        })
+        .catch((error : any) => {
+          console.error(error);
+          toast.error(" Something Went Wrong During Save Please Try Again");
+          setSaving(false);
+        });
+    }
   };
 
   useEffect(() => {
     setLoading(true);
-    if (!emailGroups || emailGroups.length < 1) {
-      loadEmailGroups();
+    if (!emailGroups || emailGroups.length === 0) {
+      loadEmailGroups().then((groups) => {
+        agent.EmailGroups.getEmailGroupMembers()
+          .then((response) => {
+            setEmailGroupMembers(response);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error(error);
+            setLoading(false);
+          });
+      });
     } else {
-      if (id) {
-        agent.EmailGroups.details(id).then((member) => {
-          setEmailGroupMember({
-            id: member.id,
-            email: member.email,
-            displayName: member.displayName,
-            emailGroups: [],
-          });
-          const array1 = member.emailGroups.map((x) => x.id);
-          const array2 = emailGroups.map((x) => x.id);
-          let result: { [key: string]: boolean } = {};
-          array2.forEach((item) => {
-            result[item] = array1.includes(item);
-            setCheckBoxOptions(result);
-          });
+      agent.EmailGroups.getEmailGroupMembers()
+        .then((response) => {
+          setEmailGroupMembers(response);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
           setLoading(false);
         });
-      } else {
-        const options = getCheckboxOptions();
-        setCheckBoxOptions(options);
-        setLoading(false);
-      }
     }
-  }, [emailGroups]);
-
-  useEffect(() => {
-    agent.EmailGroups.getEmailGroupMembers()
-      .then((response) => {
-        setEmailGroupMembers(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }, []);
-
-  async function handleFormSubmit(values: Values) {
-    try {
-      setSaving(true);
-      setNoRolesError(false);
-      setEmailAlreadyUsed(false);
-      let error = false;
-      if (
-        !values.options ||
-        !Object.values(values.options).some((val) => val)
-      ) {
-        setNoRolesError(true);
-        setSaving(false);
-        error = true;
-      }
-      if (emailGroupMembers && emailGroupMembers.length > 0) {
-        const usedEmails = emailGroupMembers
-          .map((x) => x.email)
-          .filter((x) => x !== emailGroupMember.email);
-        if (
-          usedEmails
-            .map((x) => x.toLowerCase())
-            .includes(values.email.toLowerCase())
-        ) {
-          setEmailAlreadyUsed(true);
-          setSaving(false);
-          error = true;
-        }
-      }
-      if (!error) {
-        const data: EmailGroupMemberPostData = {
-          id: values.id || uuid(),
-          email: values.email,
-          displayName: values.displayName,
-          roleIds: Object.entries(values.options)
-            .filter(([key, value]) => value)
-            .map(([key, value]) => key),
-        };
-        await agent.EmailGroups.post(data);
-        toast.success(" Save Successfull");
-        setSaving(false);
-        history.push(`${process.env.PUBLIC_URL}/emailGroupTable`);
-      }
-    } catch (e) {
-      console.log(e);
-      toast.error("an error occured during save please try again");
-      setSaving(false);
-    }
-  }
-
+ 
   return (
     <>
       <Divider horizontal>
-        <Header as="h2">
-          <Icon name="group" />
-          {id ? "Edit" : "Create"} Email Group Member
-        </Header>
-      </Divider>
-      {loading && <LoadingComponent content="loading form..." />}
-      {!loading && (
-        <Formik
-          enableReinitialize
-          initialValues={{
-            id: emailGroupMember.id,
-            email: emailGroupMember.email,
-            displayName: emailGroupMember.displayName,
-            options: checkBoxOptions,
-          }}
-          onSubmit={(values) => handleFormSubmit(values)}
-          validationSchema={Yup.object({
-            displayName: Yup.string().required(),
-            email: Yup.string().required().email(),
-          })}
-        >
-          {({ handleSubmit, values }) => (
-            <Form
-              className="ui form error"
-              onSubmit={handleSubmit}
-              autoComplete="off"
-            >
-              <Header
-                as="h2"
-                content={
-                  id
-                    ? `Edit ${values.displayName}`
-                    : "Add a new Email Group User"
-                }
-                color="teal"
-                textAlign="center"
-              />
-              <MyTextInput name="displayName" placeholder="Display Name" />
-              <MyTextInput name="email" placeholder="Email" />
+            <Header as="h2">
+              <Icon name="configure" />
+              Manage Email Group
+            </Header>
+          </Divider>
 
-              {emailAlreadyUsed && (
-                <Label basic color="red">
-                  This email address is already in use, please use a different
-                  one or update the existing user
-                </Label>
-              )}
-
-              <Divider horizontal>
-                <Header as="h5">
-                  Choose What Email Groups the User Belongs To
-                </Header>
-              </Divider>
-
-               <Grid>
-                <Grid.Row>
-                {Object.keys(checkBoxOptions).map((checkboxOptionId) => (
-                  <Grid.Column width={4}  key={checkboxOptionId}>
-                  <MySemanticCheckBox
-                    name={`options.${checkboxOptionId}`}
-                    label={
-                      emailGroups.find((x) => x.id === checkboxOptionId)?.name
-                    }
-                 
-                  />
-                  </Grid.Column>
-                ))}
-                </Grid.Row>
-             </Grid>
-
-              {noRolesError && (
-                <Label basic color="red">
-                  You must select at least one role
-                </Label>
-              )}
-              <Segment clearing style={{backgroundColor: '#eaeaea', borderColor: '#eaeaea'}}>
+      {!isSignedIn && (
+        <>
+          <Message
+            size="massive"
+            warning
+            header="You Must Sign Into EDU"
+            content="To manage email groups you must have an edu account,
+        and you must signed in to your edu account."
+          />
+          <Login />
+        </>
+      )} 
+        {isSignedIn && loading && (
+        <LoadingComponent content="Loading Email Group Information" />
+      )}
+       {isSignedIn && !loading && 
+        <>
+      
+          <SegmentGroup>
+          <Segment clearing>
               <Button
-                icon
-                color="grey"
-                type="button"
-                floated="right"
+                floated="left"
                 as={NavLink}
                 to={`${process.env.PUBLIC_URL}/emailGroupTable`}
+                icon
+                labelPosition="left"
+                basic
+                color="teal"
+                size="large"
               >
-                {" "}
-                Cancel
+                <Icon name="backward" />
+                Back To Table
+              </Button>
+            </Segment>
+            
+            <Segment textAlign="center" color="teal">
+            <Header icon color="teal">
+                <Icon name="user" />
+                Members Of {" "}
+                {emailGroups.find((x) => x.id === id)?.name}
+              </Header>
+               
+               {emailGroupMembers.filter((x) => x.emailGroups.map(x => x.id).includes(id)).length > 0 &&
+                <Segment.Inline>
+                  {emailGroupMembers.filter(
+                      (x) => x.emailGroups.map(x => x.id).includes(id))
+                      .map((member) => (
+                      <Fragment key={uuid()}>
+                        <Button
+                          icon
+                          labelPosition="left"
+                          basic
+                          color="teal"
+                          size="large"
+                          onClick={() => setOpenConfirm(true)}
+                          loading={deleting}
+                        >
+                          <Icon name="x" color="red" />
+                          {member.displayName}
+                        </Button>
+                        <Confirm
+                          header="You are about to delete this group member"
+                          open={openConfirm}
+                          onCancel={() => setOpenConfirm(false)}
+                          onConfirm={() => handleDelete(member.id)}
+                        />
+                      </Fragment>
+                    ))}
+                </Segment.Inline>
+               }
+              {emailGroupMembers.filter((x) => x.emailGroups.map(x => x.id).includes(id)).length < 1 &&
+                <Message warning>
+                <Message.Header>
+                  {" "}
+                  {emailGroups.find((x) => x.id === id)?.name} Has no
+                  Members
+                </Message.Header>
+                <p>Would you like to Add a member?</p>
+              </Message>
+              }
+
+            </Segment>
+            <Segment color="teal" clearing>
+            <Header icon color="teal" textAlign="center">
+                <Icon name="plus" />
+                Add a New Group Member
+              </Header>
+              <Form onSubmit={handleSubmit}>
+              <Form.Field>
+              <label>
+                    Use the People Picker Below, or Type Your Own Values:
+                  </label>
+                  <PeoplePicker
+                    selectionMode="single"
+                    selectionChanged={handleSelectionChanged}
+                    key={peoplePickerKey}
+                  />
+              </Form.Field>
+              <Form.Field>
+                  <Form.Input
+                    placeholder="The Display Name for Group Member"
+                    value={displayName}
+                    onChange={handleDisplayNameInputChange}
+                    label="Group Member Name:"
+                    error={nameError}
+                  />
+                  {nameError && (
+                    <Label basic color="red">
+                      Group Member Name is Required
+                    </Label>
+                  )}
+                </Form.Field>
+                <Form.Field>
+                  <Form.Input
+                    placeholder="The Email for the Group Member"
+                    value={email}
+                    onChange={handleEmailInputChange}
+                    label="Group Member Email:"
+                    error={emailError}
+                  />
+                  {emailError && (
+                    <Label basic color="red">
+                      Group Member Email is Required
+                    </Label>
+                  )}
+                </Form.Field>
+                <Button
+                floated="left"
+                as={NavLink}
+                to={`${process.env.PUBLIC_URL}/emailGroupTable`}
+                icon
+                labelPosition="left"
+                basic
+                color="teal"
+                size="large"
+              >
+                <Icon name="backward" />
+                Back To Table
               </Button>
               <Button
-                disabled={saving}
-                loading={saving}
-                positive
-                content="Save"
-                type="submit"
-                floated="right"
-              />
-              </Segment>
-            </Form>
-          )}
-        </Formik>
-      )}
+                  type="submit"
+                  color="teal"
+                  floated="right"
+                  size='large'
+                  icon
+                labelPosition="right"
+                  loading={saving}
+                >
+                    <Icon name="add" />
+                  Add Group Member
+                </Button>
+              </Form>
+            </Segment>
+          </SegmentGroup>
+        </>
+       }
     </>
   );
 });

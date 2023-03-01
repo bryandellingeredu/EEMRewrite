@@ -10,64 +10,87 @@ import {
   Message,
   Table,
 } from "semantic-ui-react";
-import { Fragment, useEffect, useState } from "react";
+import {useEffect, useState, Fragment } from "react";
 import agent from "../../../app/api/agent";
 import { EmailGroupMember } from "../../../app/models/emailGroupMember";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { v4 as uuid } from "uuid";
+import { EmailGroup } from "../../../app/models/emailGroup";
 import { NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
+
+interface GroupEmailData {
+  id: string
+  name: string
+  emailGroupMembers: EmailGroupMember[]
+}
+
 
 export default observer(function EmailGroupTable() {
   const [loading, setLoading] = useState(true);
-  const [emailGroupMembers, setEmailGroupMembers] = useState<
-    EmailGroupMember[]
-  >([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState("");
+  const [emailGroupMembers, setEmailGroupMembers] = useState<  EmailGroupMember[]>([]);
+  const [groupEmailTableData, setGroupEmailTableData] = useState<GroupEmailData[]>([]);
   const { emailGroupStore } = useStore();
   const { emailGroups, loadEmailGroups, loadingInitial } = emailGroupStore;
+  const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedMember, setSelectedMember] = useState("");
+  const history = useHistory();
 
-  const handleDelete = async (id: string) => {
-    try {
-      setOpenConfirm(false);
-      setDeleting(true);
-      agent.EmailGroups.delete(id).then(() => {
-        toast.success("Row has been deleted");
-        setDeleting(false);
-        setEmailGroupMembers(emailGroupMembers.filter((x) => x.id !== id));
-      });
-    } catch (error) {
-      console.log(error);
-      setDeleting(false);
-      toast.error("An error occured during deleting please try again");
-    }
+  const handleCellClick = (groupId: string) => {
+    history.push(`${process.env.PUBLIC_URL}/manageEmailGroupForm/${groupId}`);
   };
+
+  function createTableData(response: EmailGroupMember[], groups: EmailGroup[] ){
+    const result =  groups.map(group => {
+     return {
+       id: group.id,
+       name: group.name,
+       emailGroupMembers: response
+       .filter(emailGroupMember => emailGroupMember.emailGroups
+        .map(x => x.id).includes(group.id))
+     };
+   });
+   setGroupEmailTableData(result);
+ }
+
 
   useEffect(() => {
     setLoading(true);
-    agent.EmailGroups.getEmailGroupMembers()
+    if(!emailGroups || emailGroups.length === 0){
+      loadEmailGroups().then((groups) => {
+        agent.EmailGroups.getEmailGroupMembers()
+         .then((response) => {
+          setEmailGroupMembers(response)
+          createTableData(response, groups)
+          setLoading(false);
+         })
+         .catch((error) => {
+          console.error(error);
+          setLoading(false);
+        });
+      });
+    } else {
+      agent.EmailGroups.getEmailGroupMembers()
       .then((response) => {
-        setEmailGroupMembers(response);
+        setEmailGroupMembers(response)
+        createTableData(response, emailGroups)
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         setLoading(false);
       });
+    }
   }, []);
 
-  useEffect(() => {
-    if (!emailGroups || emailGroups.length < 1) loadEmailGroups();
-    console.log("email groups");
-    console.log(emailGroups);
-  }, [emailGroups]);
-
-  const handleOnChange = (e: any, data: any) => {
+  
+  const handleOnGroupChange = (e: any, data: any) => {
     setSelectedGroup(data.value);
-    console.log(data.value);
+  }
+
+  const handleOnMemberChange = (e: any, data: any) => {
+    setSelectedMember(data.value);
   };
+
 
   return (
     <>
@@ -80,128 +103,102 @@ export default observer(function EmailGroupTable() {
 
       {loading && <LoadingComponent content="Loading Email Group Members..." />}
 
-      {!loading && (!emailGroupMembers || emailGroupMembers.length < 1) && (
-        <Message warning>
-          <Message.Header>No Data Found</Message.Header>
-          <p>There are no Email Group Members</p>
-          <p>
-            {" "}
-            Would you like to{" "}
-            <Button
-              as={NavLink}
-              to={`${process.env.PUBLIC_URL}/createEmailGroupMember`}
-              positive
-              content="Add an Email Group Member"
-            />
-          </p>
-        </Message>
-      )}
-
-      {!loading && emailGroupMembers && emailGroupMembers.length > 0 && (
-        <>
-          {emailGroups && emailGroups.length > 0 && (
-            <Dropdown
+      <Dropdown
               clearable
-              options={emailGroups.map((item, index) => ({
-                key: index + 1,
-                text: item.name,
-                value: item.id,
+              options={emailGroups.map((group) => ({
+                key: group.id,
+                text: group.name,
+                value: group.id,
               }))}
               selection
               search
               placeholder="Filter By Group"
-              onChange={handleOnChange}
+              onChange={handleOnGroupChange}
             />
-          )}
 
-          <Button
-            size="huge"
-            primary
-            floated="right"
-            style={{ marginBottom: "10px" }}
-            icon
-            labelPosition="left"
-            as={NavLink}
-            to={`${process.env.PUBLIC_URL}/createEmailGroupMember`}
-          >
-            <Icon name="user plus" />
-            Add A New Email Group Member{" "}
-          </Button>
-          <Table celled structured>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Display Name</Table.HeaderCell>
-                <Table.HeaderCell>Email</Table.HeaderCell>
-                <Table.HeaderCell>Groups</Table.HeaderCell>
-                <Table.HeaderCell></Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
+<Dropdown
+  clearable
+  options={emailGroupMembers
+    .reduce((acc, member) => {
+      if (!acc.find((item) => item.value === member.email)) {
+        acc.push({
+          key: member.email,
+          text: member.displayName,
+          value: member.email,
+        });
+      }
+      return acc;
+    }, [] as { key: string; text: string; value: string }[])
+    .sort((a, b) => {
+      return a.text.localeCompare(b.text);
+    })}
+  selection
+  search
+  placeholder="Filter By Delegate"
+  onChange={handleOnMemberChange}
+/>
 
-            <Table.Body>
-              {emailGroupMembers
-                .filter((x) =>
-                  selectedGroup
-                    ? x.emailGroups.map((y) => y.id).includes(selectedGroup)
-                    : 1 === 1
-                )
-                .map((emailGroupMember) => (
-                  <Fragment key={uuid()}>
-                    <Table.Row>
-                      <Table.Cell rowSpan={emailGroupMember.emailGroups.length}>
-                        {emailGroupMember.displayName}
-                      </Table.Cell>
-                      <Table.Cell rowSpan={emailGroupMember.emailGroups.length}>
-                        {emailGroupMember.email}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {emailGroupMember.emailGroups[0].name}
-                      </Table.Cell>
-                      <Table.Cell
-                        rowSpan={emailGroupMember.emailGroups.length}
+    <Table celled structured>
+      <Table.Header>
+        <Table.Row >
+          <Table.HeaderCell>Group</Table.HeaderCell>
+          <Table.HeaderCell>Display Name</Table.HeaderCell>
+          <Table.HeaderCell>Email</Table.HeaderCell>
+          <Table.HeaderCell></Table.HeaderCell>
+        </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {
+            groupEmailTableData
+            .filter((x) => selectedGroup ? x.id === selectedGroup : 1 === 1)
+            .filter((x) => selectedMember ? x.emailGroupMembers.map((y) => y.email)
+            .includes(selectedMember) : 1 === 1)
+            .map((group, index1) => (
+              <Fragment key={group.id}>
+                  <Table.Row positive={(index1 + 1) % 2 === 0} negative={(index1 + 1) % 2 !== 0}
+                  onClick={() => handleCellClick(group.id)}>
+                  <Table.Cell rowSpan={group.emailGroupMembers.length || 1} >
+                     {group.name} {index1 + 1}
+                  </Table.Cell>
+                  <Table.Cell>
+                   {group.emailGroupMembers && group.emailGroupMembers.length > 0 && group.emailGroupMembers[0].displayName}
+                  </Table.Cell>
+                  <Table.Cell>
+                   {group.emailGroupMembers && group.emailGroupMembers.length > 0 && group.emailGroupMembers[0].email}
+                  </Table.Cell>
+                  <Table.Cell
+                     rowSpan={group.emailGroupMembers.length || 1}
+                         positive={(index1 + 1) % 2 === 0} negative={(index1 + 1) % 2 !== 0}
                         textAlign="center"
                       >
-                        <Button
+                         <Button
+                         size='tiny'
+                         basic color={(index1 + 1) % 2 === 0 ? 'brown' : 'red'}
                           icon
-                          color="green"
                           type="button"
                           as={NavLink}
-                          to={`${process.env.PUBLIC_URL}/manageEmailGroupMember/${emailGroupMember.id}`}
+                          to={`${process.env.PUBLIC_URL}/manageEmailGroupForm/${group.id}`}
+
                         >
                           <Icon name="edit" />
                           Edit
-                        </Button>
-                        <Button
-                          icon
-                          color="red"
-                          type="button"
-                          onClick={() => setOpenConfirm(true)}
-                          loading={deleting}
-                        >
-                          <Icon name="delete" />
-                          Delete
-                        </Button>
-                        <Confirm
-                          header="You are about to delete this row"
-                          open={openConfirm}
-                          onCancel={() => setOpenConfirm(false)}
-                          onConfirm={() => handleDelete(emailGroupMember.id)}
-                        />
-                      </Table.Cell>
-                    </Table.Row>
-
-                    {emailGroupMember.emailGroups
-                      .filter((emailGroup, index) => index !== 0)
-                      .map((emailGroup) => (
-                        <Table.Row key={uuid()}>
-                          <Table.Cell>{emailGroup.name}</Table.Cell>
-                        </Table.Row>
-                      ))}
-                  </Fragment>
-                ))}
-            </Table.Body>
-          </Table>
-        </>
-      )}
+                       </Button>
+                        </Table.Cell>
+                  </Table.Row>
+                  {group.emailGroupMembers
+                    .filter((emailGroupMember, index2) => index2 !== 0)
+                    .map((emailGroupMember, index2) => (
+                      <Table.Row
+                        key={emailGroupMember.id}
+                        positive={(index1 + 1) % 2 === 0} negative={(index1 + 1) % 2 !== 0}
+                      >
+                         <Table.Cell>{emailGroupMember.displayName}</Table.Cell>
+                         <Table.Cell>{emailGroupMember.email}</Table.Cell>
+                      </Table.Row>
+                    ))}
+              </Fragment>
+            ))}        
+        </Table.Body>
+    </Table>     
     </>
-  );
-});
+)});

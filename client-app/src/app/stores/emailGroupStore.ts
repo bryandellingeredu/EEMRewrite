@@ -31,10 +31,10 @@ export default class EmailGroupStore {
              
             } finally  {
                 this.setLoadingInitial(false);
-                console.log('emailGroups')
+                return this.emailGroups;
             }
         } else {
-            console.log('emailGroups')
+          return this.emailGroups;
         }
       }
 

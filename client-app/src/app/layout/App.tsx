@@ -100,7 +100,7 @@ function App() {
                   `${process.env.PUBLIC_URL}/createActivityWithRoom/:roomid`,
                   `${process.env.PUBLIC_URL}/copy/:id/:categoryId/:copy`,
                   ]} component={ActivityForm}/>
-                <Route key={location.key} exact path={[`${process.env.PUBLIC_URL}/createEmailGroupMember`, `${process.env.PUBLIC_URL}/manageEmailGroupMember/:id`]} component={EmailGroupForm}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />
                 <Route path={`${process.env.PUBLIC_URL}/account/verifyEmail`} component={ConfirmEmail} />
