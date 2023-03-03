@@ -27,6 +27,7 @@ namespace Domain
         public string GuestName {get; set;}
         public string UniformOfGuest {get; set;}
         public string BioAttachedOrPending {get; set;}
+        public bool BioIsPendingNotificationSent {get; set;}
         public string TravelPartyAccomaniedBy {get; set;}
         public string GuestItinerary {get; set;}
         public bool GenerateItinerary {get; set;}

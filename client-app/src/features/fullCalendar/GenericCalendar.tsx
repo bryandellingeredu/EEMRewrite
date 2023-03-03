@@ -4,6 +4,7 @@ import LoadingComponent from "../../app/layout/LoadingComponent";
 import FullCalendar, { EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid"
+import interactionPlugin from "@fullcalendar/interaction";
 import { useHistory, useParams } from "react-router-dom";
 import { useCallback, useEffect} from "react";
 import GenericCalendarHeader from "./GenericCalendarHeader";
@@ -11,16 +12,25 @@ import { format } from 'date-fns';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import agent from "../../app/api/agent";
+import { v4 as uuid } from "uuid";
 
 export default observer(function GenericCalendar() {
   const { id } = useParams<{ id: string }>();
-  const { categoryStore } = useStore();
+  const { categoryStore, activityStore } = useStore();
   const { categories, loadingInitial } = categoryStore;
+  const {addCalendarEventParameters} = activityStore;
   const history = useHistory();
 
   const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     const category = categories.find(x => x.routeName === id);
     history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${category?.id}`);
+  }, [ categories, history]);
+
+  const handleDateClick = useCallback((info : any) => {
+    const category = categories.find(x => x.routeName === id);
+    const paramId = uuid();
+    addCalendarEventParameters({id: paramId, allDay: info.allDay, dateStr: info.dateStr, date:info.date, categoryId: category?.id || '', needRoom: false})
+    history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`);
   }, [ categories, history]);
 
   const  handleMouseEnter = async (arg : any) =>{
@@ -63,6 +73,8 @@ export default observer(function GenericCalendar() {
    if(!categories.length) categoryStore.loadCategories();
   }, [categories.length])
 
+
+
   return (
     <>
       {loadingInitial
@@ -78,9 +90,10 @@ export default observer(function GenericCalendar() {
               center: "title",
               right: "dayGridMonth,timeGridWeek,timeGridDay"
             }}
-            plugins={[dayGridPlugin, timeGridPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/${id}`}
             eventClick={handleEventClick}
+            dateClick={handleDateClick}
             eventMouseEnter={handleMouseEnter} 
             slotMinTime={'07:00:00'}
             slotMaxTime={'21:00:00'}     

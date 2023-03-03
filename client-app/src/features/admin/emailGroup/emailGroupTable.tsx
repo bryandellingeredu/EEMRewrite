@@ -158,7 +158,7 @@ export default observer(function EmailGroupTable() {
                   <Table.Row positive={(index1 + 1) % 2 === 0} negative={(index1 + 1) % 2 !== 0}
                   onClick={() => handleCellClick(group.id)}>
                   <Table.Cell rowSpan={group.emailGroupMembers.length || 1} >
-                     {group.name} {index1 + 1}
+                     {group.name}
                   </Table.Cell>
                   <Table.Cell>
                    {group.emailGroupMembers && group.emailGroupMembers.length > 0 && group.emailGroupMembers[0].displayName}

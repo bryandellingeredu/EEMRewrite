@@ -91,6 +91,7 @@ export default observer(function ActivityForm() {
     loadingInitial,
     uploadDocument,
     uploading,
+    calendarEventParameters
   } = activityStore;
   const { categoryOptions, categories, loadCategories } = categoryStore;
   const { eduGraphUser, loadEDUGraphUser, armyProfile } = graphUserStore;
@@ -101,6 +102,7 @@ export default observer(function ActivityForm() {
     graphRoomStore;
   const { id } = useParams<{ id: string }>();
   const { roomid } = useParams<{ roomid: string }>();
+  const { calendarid } = useParams<{ calendarid: string }>();
   const { manageSeries } = useParams<{ manageSeries: string }>();
   const { copy } = useParams<{ copy: string }>();
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -255,6 +257,21 @@ export default observer(function ActivityForm() {
         if (graphRoom && graphRooms.length > 0) {
           setRoomEmails(graphRoom.map((x) => x.emailAddress));
         }
+      }
+    }
+    if (calendarid) {
+      const calendarParameters = calendarEventParameters.find(
+        (x) => x.id === calendarid
+      )
+      if (!!calendarParameters){
+        let activityFormValue = new ActivityFormValues();
+        activityFormValue.allDayEvent = calendarParameters.allDay
+        activityFormValue.start = calendarParameters.date
+        if(calendarParameters.categoryId){
+          activityFormValue.categoryId = calendarParameters.categoryId
+        }  
+        setActivity(activityFormValue);
+        if(calendarParameters.needRoom)  setRoomRequired(true);
       }
     }
     if (id) {
@@ -1019,7 +1036,7 @@ export default observer(function ActivityForm() {
 
                       <MyTextArea
                         rows={3}
-                        placeholder="Bliss Hall A/V Spt Required"
+                        placeholder="You have selected the Bliss Hall Auditorium and you "
                         name="blissHallAVSptRequired"
                         label="Bliss Hall A/V Spt Required:"
                       />

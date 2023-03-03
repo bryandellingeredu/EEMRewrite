@@ -2,17 +2,28 @@
 import FullCalendar, { EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid"
+import interactionPlugin from "@fullcalendar/interaction";
 import { format } from "date-fns";
 import agent from "../../app/api/agent";
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import { useCallback} from "react";
 import { useHistory} from "react-router-dom";
+import { v4 as uuid } from "uuid";
+import { useStore } from "../../app/stores/store";
 
 export default function IMCCalendarWithoutAcademicEvents() {
   const history = useHistory();
+  const { activityStore } = useStore();
+  const {addCalendarEventParameters} = activityStore;
   const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${clickInfo.event.extendedProps.categoryId}`);
+  }, [ history]);
+
+  const handleDateClick = useCallback((info : any) => {
+    const paramId = uuid();
+    addCalendarEventParameters({id: paramId, allDay: info.allDay, dateStr: info.dateStr, date:info.date, categoryId: '', needRoom: false})
+    history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`);
   }, [ history]);
 
   const  handleMouseEnter = async (arg : any) =>{
@@ -60,10 +71,11 @@ export default function IMCCalendarWithoutAcademicEvents() {
               center: "title",
               right: "dayGridMonth,timeGridWeek,timeGridDay"
             }}
-            plugins={[dayGridPlugin, timeGridPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             events={`${process.env.REACT_APP_API_URL}/activities/getIMCEventsByDate`} 
             eventMouseEnter={handleMouseEnter}  
             eventClick={handleEventClick}  
+            dateClick={handleDateClick}
             slotMinTime={'07:00:00'}
             slotMaxTime={'21:00:00'}
           />

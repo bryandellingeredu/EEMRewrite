@@ -15,6 +15,7 @@ export interface HostingReport{
     guestName:	string
     uniformOfGuest:	string
 bioAttachedOrPending:	string
+bioIsPendingNotificationSent: boolean
 travelPartyAccomaniedBy:	string
 guestItinerary:	string
 generateItinerary:	boolean

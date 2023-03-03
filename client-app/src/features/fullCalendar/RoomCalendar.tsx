@@ -9,11 +9,13 @@ import { GraphRoom } from "../../app/models/graphRoom";
 import FullCalendar, { EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid"
+import interactionPlugin from "@fullcalendar/interaction";
 import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
+import { v4 as uuid } from "uuid";
 
 
 export default observer(function RoomCalendar() {
@@ -21,7 +23,7 @@ export default observer(function RoomCalendar() {
     const {graphRoomStore, activityStore, categoryStore} = useStore();
     const{loadingInitial, graphRooms, loadGraphRooms} = graphRoomStore;
     const { categories } = categoryStore;
-    const{ getActivityIdByRoom } = activityStore;
+    const{ getActivityIdByRoom, addCalendarEventParameters } = activityStore;
     const history = useHistory();
     const[graphRoom, setGraphRoom] = useState<GraphRoom>({
         address: {
@@ -46,6 +48,13 @@ videoDeviceName: '',
 displayDeviceName: '',
 isWheelChairAccessible: ''
     });
+
+    const handleDateClick = useCallback((info : any) => {
+      const category = categories.find(x => x.routeName === id);
+      const paramId = uuid();
+      addCalendarEventParameters({id: paramId, allDay: info.allDay, dateStr: info.dateStr, date:info.date, categoryId: '', needRoom: true})
+      history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`);
+    }, [ categories, history]);
 
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
       getActivityIdByRoom( clickInfo.event.title, clickInfo.event.startStr, clickInfo.event.endStr).then((activity) => {
@@ -140,8 +149,9 @@ isWheelChairAccessible: ''
               center: "title",
               right: "dayGridMonth,timeGridWeek,timeGridDay"
             }}
-            plugins={[dayGridPlugin, timeGridPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             eventClick={handleEventClick}
+            dateClick={handleDateClick}
             events={`${process.env.REACT_APP_API_URL}/roomEvents/${id}`}
             eventMouseEnter={handleMouseEnter}
             slotMinTime={'07:00:00'}

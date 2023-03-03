@@ -11,6 +11,7 @@ import { Category } from "../models/category";
 import { GraphLocation } from "../models/graphLocation";
 import { SearchFormValues } from "../models/searchFormValues";
 import { toast } from "react-toastify";
+import { CalendarEventParameters } from "../models/calendarEventParameters";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -19,10 +20,15 @@ export default class ActivityStore {
   loading = false;
   day = new Date();
   uploading = false;
+  calendarEventParametersRegistry = new Map<string, CalendarEventParameters>();
   
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  get calendarEventParameters() {
+    return Array.from(this.calendarEventParametersRegistry.values());
   }
 
   get activities() {
@@ -40,6 +46,10 @@ export default class ActivityStore {
         return activities;
       }, {} as { [key: string]: Activity[] })
     )
+  }
+
+  addCalendarEventParameters = (response: CalendarEventParameters) => {
+    this.calendarEventParametersRegistry.set(response.id, response);
   }
 
 

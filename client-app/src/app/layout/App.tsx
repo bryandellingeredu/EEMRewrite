@@ -98,6 +98,7 @@ function App() {
                   `${process.env.PUBLIC_URL}/manage/:id/:categoryId`,
                   `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries`,
                   `${process.env.PUBLIC_URL}/createActivityWithRoom/:roomid`,
+                  `${process.env.PUBLIC_URL}/createActivityWithCalendar/:calendarid`,
                   `${process.env.PUBLIC_URL}/copy/:id/:categoryId/:copy`,
                   ]} component={ActivityForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
