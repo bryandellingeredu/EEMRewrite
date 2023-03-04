@@ -202,7 +202,7 @@ export default class ActivityStore {
     })
     if (agent.IsEDUSignedIn() && 
     (
-      !searchParams.actionOfficer && !searchParams.organizationId &&
+      !searchParams.actionOfficer && !searchParams.organizationId && !searchParams.description &&
       (!searchParams.categoryIds || !searchParams.categoryIds.length || searchParams.categoryIds.includes(academicCategoryId))
     )
     ) {

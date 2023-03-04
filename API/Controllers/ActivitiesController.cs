@@ -50,7 +50,8 @@ namespace API.Controllers
 
         [HttpPost("listBySearchParams")]
         public async Task<IActionResult> ListBySearchParams(ActivitySearchParams data) =>
-            HandleResult(await Mediator.Send(new ListBySearchParams.Query { Title = data.Title, Start = data.Start, End = data.End, CategoryIds = data.CategoryIds, Location = data.Location, ActionOfficer=data.ActionOfficer, OrganizationId = data.OrganizationId }));
+            HandleResult(await Mediator.Send(
+                new ListBySearchParams.Query { Title = data.Title, Start = data.Start, End = data.End, CategoryIds = data.CategoryIds, Location = data.Location, ActionOfficer=data.ActionOfficer, OrganizationId = data.OrganizationId, Description = data.Description }));
 
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity) =>

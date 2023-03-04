@@ -251,7 +251,7 @@ export default observer(function ActivityTable(){
       </Table.Row>
       <Table.Row>
       <Table.HeaderCell>  <MyTextInput name='title'  placeholder="" /></Table.HeaderCell>
-      <Table.HeaderCell>  <MyTextInput name='title'  placeholder="" /></Table.HeaderCell>
+      <Table.HeaderCell>  <MyTextInput name='description'  placeholder="" /></Table.HeaderCell>
         <Table.HeaderCell>   <MyDateInput
                            isClearable
                            placeholderText="event starts after"

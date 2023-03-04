@@ -13,6 +13,7 @@ namespace Application.Activities
     {
         public class Query : IRequest<Result<List<Activity>>> {
             public string Title { get; set; }
+            public string Description {get; set;}
             public string Start { get; set; }
             public string End { get; set; }
             public string[] CategoryIds { get; set; }
@@ -46,6 +47,11 @@ namespace Application.Activities
                 if (!string.IsNullOrEmpty(request.Title))
                 {
                     query = query.Where(e => EF.Functions.Like(e.Title.ToLower(), "%" + request.Title.ToLower() + "%"));
+                }
+
+                 if (!string.IsNullOrEmpty(request.Description))
+                {
+                    query = query.Where(e => EF.Functions.Like(e.Description.ToLower(), "%" + request.Description.ToLower() + "%"));
                 }
 
                 if (!string.IsNullOrEmpty(request.ActionOfficer))
