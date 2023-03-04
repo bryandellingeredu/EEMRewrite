@@ -12,5 +12,9 @@ namespace Domain
         public string Start { get; set; }
         public string End { get; set; }
         public string[] CategoryIds { get; set; }
+        public string Location { get; set; }
+
+        public string ActionOfficer {get; set;}
+        public string OrganizationId {get; set;}
     }
 }

@@ -16,6 +16,9 @@ namespace Application.Activities
             public string Start { get; set; }
             public string End { get; set; }
             public string[] CategoryIds { get; set; }
+            public string Location { get; set; }    
+            public string ActionOfficer { get; set; }
+            public string OrganizationId { get; set; }
         }
         public class Handler : IRequestHandler<Query, Result<List<Activity>>>
         {
@@ -45,10 +48,22 @@ namespace Application.Activities
                     query = query.Where(e => EF.Functions.Like(e.Title.ToLower(), "%" + request.Title.ToLower() + "%"));
                 }
 
+                if (!string.IsNullOrEmpty(request.ActionOfficer))
+                {
+                    query = query.Where(e => e.ActionOfficer == request.ActionOfficer);
+                }
+
+                if (!string.IsNullOrEmpty(request.OrganizationId))
+                {
+                    Guid organizationId = Guid.Parse(request.OrganizationId);
+                    query = query.Where(e => e.OrganizationId == organizationId);
+                }
+
                 if (request.CategoryIds.Any())
                 {
                     query = query.Where(e => request.CategoryIds.ToList().Contains(e.CategoryId.ToString()));           
                 }
+
 
                 if (!string.IsNullOrEmpty(request.Start))
                 {
@@ -69,8 +84,15 @@ namespace Application.Activities
                 }
 
 
-
-                query = query.OrderBy(e => e.Start).Take(100);
+                if (string.IsNullOrEmpty(request.Location))
+                {
+                    query = query.OrderBy(e => e.Start).Take(100);
+                }
+                else
+                {
+                    query = query.OrderBy(e => e.Start);
+                }
+         
 
                 var activities = await query.ToListAsync();
 
@@ -111,27 +133,38 @@ namespace Application.Activities
                         {
                             foreach (var item in evt.Attendees.Where(x => allroomEmails.Contains(x.EmailAddress.Address)))
                             {
-
-                                newActivityRooms.Add(new ActivityRoom
-                                {
-                                    Id = index++,
-                                    Name = getName(item, allrooms),
-                                    Email = item.EmailAddress.Address
-                                });
+                           
+                                    newActivityRooms.Add(new ActivityRoom
+                                    {
+                                        Id = index++,
+                                        Name = getName(item, allrooms),
+                                        Email = item.EmailAddress.Address
+                                    });
                             }
                         }
-                        activity.ActivityRooms = newActivityRooms;
-
+                       if(!string.IsNullOrEmpty(activity.EventLookup))  activity.ActivityRooms = newActivityRooms;
                     }
+                }
+
+                if (!string.IsNullOrEmpty(request.Location))
+                {
+                    activities = activities.Where(activity =>
+                        activity.ActivityRooms != null && activity.ActivityRooms.Any()
+                        ? activity.ActivityRooms.Any(ar => ar.Name == request.Location)
+         :                  activity.PrimaryLocation == request.Location
+                    ).ToList();
                 }
 
                 return Result<List<Activity>>.Success(activities);
             }
             private string getName(Attendee item, IGraphServicePlacesCollectionPage allrooms)
             {
-                var room = allrooms.Where(x => x.AdditionalData["emailAddress"].ToString() == item.EmailAddress.Address).FirstOrDefault();
-                string name = room.DisplayName;
-                return name;
+            
+                    var room = allrooms.Where(x => x.AdditionalData["emailAddress"].ToString() == item.EmailAddress.Address).FirstOrDefault();
+                    string name = room.DisplayName;
+                    return name;
+          
+          
             }
         }
     }

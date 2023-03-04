@@ -6,12 +6,17 @@ using List = Application.Activities.List;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Routing;
 using System.Reflection;
+using Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
     {
-    
+        private readonly DataContext _context;
+
+        public ActivitiesController(DataContext context) => _context = context;
+
         [HttpGet]
         public async Task<IActionResult> GetActivities() =>
          HandleResult(await Mediator.Send(new List.Query()));
@@ -45,7 +50,7 @@ namespace API.Controllers
 
         [HttpPost("listBySearchParams")]
         public async Task<IActionResult> ListBySearchParams(ActivitySearchParams data) =>
-            HandleResult(await Mediator.Send(new ListBySearchParams.Query { Title = data.Title, Start = data.Start, End = data.End, CategoryIds = data.CategoryIds }));
+            HandleResult(await Mediator.Send(new ListBySearchParams.Query { Title = data.Title, Start = data.Start, End = data.End, CategoryIds = data.CategoryIds, Location = data.Location, ActionOfficer=data.ActionOfficer, OrganizationId = data.OrganizationId }));
 
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity) =>
@@ -108,5 +113,13 @@ namespace API.Controllers
             string end = Request.Query["end"];
             return HandleResult(await Mediator.Send(new GetIMCEventsByDate.Query { Start = start, End = end }));
         }
+
+    
+        [HttpGet("getLocations")]
+        public async Task<ActionResult> GetLocations() =>  Ok(await _context.Activities.Where(x => !String.IsNullOrEmpty(x.PrimaryLocation)).Select(x => x.PrimaryLocation).Distinct().ToListAsync());
+
+        [HttpGet("getActionOfficers")]
+        public async Task<ActionResult> GetActionOfficers() => Ok(await _context.Activities.Where(x => !String.IsNullOrEmpty(x.ActionOfficer)).OrderBy(x => x.ActionOfficer).Select(x => x.ActionOfficer).Distinct().ToListAsync());
+
     }
 }

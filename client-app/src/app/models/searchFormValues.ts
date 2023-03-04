@@ -3,4 +3,7 @@ export interface SearchFormValues{
     start : Date | null
     end : Date | null
     categoryIds: string[]
+    location: string
+    actionOfficer: string
+    organizationId: string 
   }

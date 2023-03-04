@@ -160,7 +160,9 @@ const Activities = {
     listPossibleByRecurrence: (recurrence: Recurrence) => axiosRequest.post<Activity[]>('/activities/listPossibleByRecurrence', recurrence),
     getByRoom: (title: string, start: string, end: string) => axiosRequest.get<Activity>(`/activities/getByRoom/${title}/${start}/${end}`),
     getRoomNames: (eventLookup: string, coordinatorEmail: string) => axiosRequest.get<string>(`/activities/getRoomNames/${eventLookup}/${coordinatorEmail}`),
-    getIMCEventsByDate: (start: string, end: string) => axiosRequest.get<CalendarEvent[]>(`/activities/getIMCEventsByDate?start=${start}&end=${end}`)
+    getIMCEventsByDate: (start: string, end: string) => axiosRequest.get<CalendarEvent[]>(`/activities/getIMCEventsByDate?start=${start}&end=${end}`),
+    getLocations: () => axiosRequest.get<string[]>('activities/getLocations'),
+    getActionOfficers: () => axiosRequest.get<string[]>('activities/getActionOfficers'),
 }
 
 const Categories = {

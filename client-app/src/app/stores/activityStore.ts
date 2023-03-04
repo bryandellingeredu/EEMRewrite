@@ -201,7 +201,10 @@ export default class ActivityStore {
       })
     })
     if (agent.IsEDUSignedIn() && 
-    (!searchParams.categoryIds || !searchParams.categoryIds.length || searchParams.categoryIds.includes(academicCategoryId))
+    (
+      !searchParams.actionOfficer && !searchParams.organizationId &&
+      (!searchParams.categoryIds || !searchParams.categoryIds.length || searchParams.categoryIds.includes(academicCategoryId))
+    )
     ) {
        const isMemberOfAcademicCalendar : boolean = await agent.GraphEvents.isInAcademicCalendarGroup();
        if(isMemberOfAcademicCalendar){
@@ -224,6 +227,13 @@ export default class ActivityStore {
             filter = filter + ` and contains(subject, \'${searchParams.title}\')`
           } else{
             filter = `contains(subject, \'${searchParams.title}\')`
+          }
+        }
+        if(searchParams.location){
+          if(filter){
+            filter = filter + ` and location/displayName eq \'${searchParams.location}\'`
+          } else{
+            filter = `location/displayName eq \'${searchParams.location}\'`
           }
         }
         if(filter){
