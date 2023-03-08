@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230306145503_calendars")]
+    partial class calendars
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,6 +235,9 @@ namespace Persistence.Migrations
                     b.Property<bool>("CopiedTovisitsAndTours")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("CopiedToweeklyPocket")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("CopyToUSAHECCalendar")
                         .HasColumnType("bit");
 
@@ -324,12 +330,6 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("MFP")
                         .HasColumnType("bit");
-
-                    b.Property<string>("MarketingCampaignCategory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MarketingProgram")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("MarketingRequest")
                         .HasColumnType("bit");

@@ -1,18 +1,36 @@
-import { Divider, Header, Icon } from "semantic-ui-react";
-import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap, faPeopleGroup, faHouseChimneyWindow, faCalendarWeek } from "@fortawesome/free-solid-svg-icons";
+import { Button, Divider, Header, Icon } from "semantic-ui-react";
+import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap, faPeopleGroup, faHouseChimneyWindow, faCalendarWeek, faClipboardUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
 import CSLLegend from "./CSLLegend";
+import { faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
+import { useStore } from "../../app/stores/store";
+import SyncCalendarInformation from "./SyncCalendarInformation";
 
 interface Props {
     id: string
 }
 
 export default function GenericCalendarHeader({id} : Props){
+  const { modalStore } = useStore();
+  const {openModal} = modalStore;
     return(
       <>
+       
+        <Button icon  floated="right" color='black' size='tiny'
+          onClick={() =>
+            openModal(
+              <SyncCalendarInformation
+                routeName={id}
+              />, 'large'
+            )
+          }
+        >
+      <Icon name='sync'/>
+       &nbsp; Sync To My Calendar
+    </Button>
     <Divider horizontal>
-      
+
     <Header as='h2'>
     {id === 'ssl' &&
      <>
@@ -20,10 +38,17 @@ export default function GenericCalendarHeader({id} : Props){
      SSL Calendar
    </>
       }
-    {id === 'weeklyPocket' &&
+ 
+         {id === 'battlerhythm' &&
      <>
-     <FontAwesomeIcon icon={faCalendarWeek} size='2x' style={{marginRight: '10px'}} />
-     Weekly Pocket Calendar
+     <FontAwesomeIcon icon={faCalendarCheck} size='2x' style={{marginRight: '10px'}} />
+     Battle Rhythm
+   </>
+      }
+    {id === 'staff' &&
+     <>
+     <FontAwesomeIcon icon={faClipboardUser} size='2x' style={{marginRight: '10px'}} />
+     Staff Calendar
    </>
       }
     {id === 'visitsAndTours' &&
@@ -35,7 +60,7 @@ export default function GenericCalendarHeader({id} : Props){
     {id === 'trainingAndMiscEvents' &&
      <>
      <FontAwesomeIcon icon={faChalkboardTeacher} size='2x' style={{marginRight: '10px'}} />
-     Training And Misc Events
+     Training
    </>
       }
     {id === 'ssiAndUsawcPress' &&
@@ -80,16 +105,10 @@ export default function GenericCalendarHeader({id} : Props){
           Garrison Calendar
         </>
       }
-    {id === 'complementary' &&
-        <>
-          <Icon name='star'  />
-          Complementary Events
-        </>
-      }
     {id === 'community' &&
-        <>Calendar
+        <>
           <Icon name='handshake'  />
-          Community Relations
+          Community Events (External)
         </>
       }
       {id === 'csl' &&
@@ -117,12 +136,6 @@ export default function GenericCalendarHeader({id} : Props){
           Holiday Calendar
         </>
       }
-      {id === 'chapel' &&
-        <>
-          <FontAwesomeIcon icon={faChurch} size='2x' style={{marginRight: '10px'}} />
-          Chapel Calendar
-        </>
-      }
        {id === 'commandGroup' &&
         <>
           <FontAwesomeIcon icon={faPersonMilitaryPointing} size='2x' style={{marginRight: '10px'}} />
@@ -144,7 +157,7 @@ export default function GenericCalendarHeader({id} : Props){
       {id === 'academic' &&
         <>
           <FontAwesomeIcon icon={faGraduationCap} size='2x' style={{marginRight: '10px'}} />
-          Academic IMC Event Calendar
+          Academic Calendar
         </>
       }
       

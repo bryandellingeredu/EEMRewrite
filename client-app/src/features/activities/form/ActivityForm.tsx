@@ -189,8 +189,12 @@ export default observer(function ActivityForm() {
     }
   };
 
+
+
   const validationSchema = Yup.object({
     communityEvent: Yup.boolean(),
+    categoryId: Yup.string(),
+
     checkedForOpsec: Yup.boolean()
       .when("communityEvent", {
         is: true,
@@ -198,6 +202,12 @@ export default observer(function ActivityForm() {
           "Review event details for pii and opsec and check the box "
         ),
       })
+       .when("copiedTocommunity", {
+        is: true,
+        then: Yup.boolean().isTrue(
+          "Review event details for pii and opsec and check the box "
+        ),
+      })   
       .when("mfp", {
         is: true,
         then: Yup.boolean().isTrue(
@@ -469,6 +479,7 @@ export default observer(function ActivityForm() {
     const { values, setFieldValue } = useFormikContext();
     const v = values as ActivityFormValues;
     useEffect(() => {
+
       if (v.end.getDate() !== v.start.getDate()) {
         setRecurrenceDisabled(true);
         setRecurrenceInd(false);
@@ -489,11 +500,11 @@ export default observer(function ActivityForm() {
         }
 
         const routeNames = [
+          { routeName: "battlerhythm", copiedTo: "copiedTobattlerhythm" },
+          { routeName: "staff", copiedTo: "copiedTostaff" },
           { routeName: "commandGroup", copiedTo: "copiedTocommandGroup" },
           { routeName: "academic", copiedTo: "copiedToacademic" },
           { routeName: "asep", copiedTo: "copiedToasep" },
-          { routeName: "chapel", copiedTo: "copiedTochapel" },
-          { routeName: "complementary", copiedTo: "copiedTocomplementary" },
           { routeName: "community", copiedTo: "copiedTocommunity" },
           { routeName: "csl", copiedTo: "copiedTocsl" },
           { routeName: "garrison", copiedTo: "copiedTogarrison" },
@@ -519,7 +530,6 @@ export default observer(function ActivityForm() {
             copiedTo: "copiedTousahecFacilitiesUsage",
           },
           { routeName: "visitsAndTours", copiedTo: "copiedTovisitsAndTours" },
-          { routeName: "weeklyPocket", copiedTo: "copiedToweeklyPocket" },
           {
             routeName: "symposiumAndConferences",
             copiedTo: "copiedTosymposiumAndConferences",
@@ -920,6 +930,7 @@ export default observer(function ActivityForm() {
               setRoomRequired={handleSetRoomRequired}
             />
 
+
             {!roomRequired && (
               <Grid>
                 <Grid.Row>
@@ -1161,7 +1172,7 @@ export default observer(function ActivityForm() {
                   <Grid.Column width={14}>
                     <MySelectInput
                       options={categoryOptions
-                        .filter((x: any) => x.text !== "Academic Calendar")
+                        .filter((x: any) => x.text !== "Student Calendar")
                         .sort((a: any, b: any) => {
                           if (a.text === "") {
                             return -1;
@@ -1179,69 +1190,7 @@ export default observer(function ActivityForm() {
               </Grid>
             </Segment>
 
-            {categories.find((x) => x.id === values.categoryId)?.name ===
-              "Weekly Pocket Calendar" && (
-              <Segment color="teal">
-                <Header as="h5" icon textAlign="center" color="teal">
-                  <Icon name="calendar" />
-                  <Header.Content>
-                    Weekly Pocket Calendar Information
-                  </Header.Content>
-                </Header>
-
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column width={4}>
-                      <strong>Pocket Cal Non Academic Event:</strong>
-                    </Grid.Column>
-                    <Grid.Column width={12}>
-                      <SemanticForm.Group inline>
-                        <MySemanticCheckBox name="pocketCalNonAcademicEvent" />
-                      </SemanticForm.Group>
-                      <i>For Teresa McGuirk Only</i>
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-                <Divider />
-
-                <MySelectInput
-                  options={Array.from({ length: 51 }, (_, i) => ({
-                  text: `${i - 1 >= 0 ? i - 1 : "Pre"} ${i}`,
-                  value: i.toString()
-                  }))}
-                  placeholder="Week"
-                  name="pocketCalWeek"
-                  label="Week:"
-                  />
-
-                <MyTextInput
-                  name="pocketCalLessonNumber"
-                  placeholder="Lesson Number"
-                  label="Lesson Number:"
-                />
-
-                <MyTextInput
-                  name="pocketCalPresenter"
-                  placeholder="Presenter"
-                  label="Presenter:"
-                />
-
-                <MyTextInput
-                  name="pocketCalPresenterOrg"
-                  placeholder="Presenter Org"
-                  label="Presenter Org:"
-                />
-
-                <MyTextArea
-                  rows={3}
-                  placeholder="Notes"
-                  name="pocketCalNotes"
-                  label="Notes:"
-                />
-
-                <hr color="#00b5ad" />
-              </Segment>
-            )}
+      
 
             {categories.find((x) => x.id === values.categoryId)?.name ===
               "Garrison Calendar" && (
@@ -1255,7 +1204,6 @@ export default observer(function ActivityForm() {
                   options={[
                     { text: "", value: "" },
                     { text: "ACS", value: "ACS" },
-                    { text: "Chapel", value: "Chapel" },
                     { text: "Command", value: "Command" },
                     { text: "CYC", value: "CYC" },
                     { text: "DES", value: "DES" },
@@ -1286,6 +1234,61 @@ export default observer(function ActivityForm() {
                   </Grid.Row>
                 </Grid>
                 <Divider />
+        
+              {values.marketingRequest &&
+              <>
+                <MySelectInput
+                  options={[
+                    { text: "", value: "" },
+                    { text: "Special Event", value: "Special Event" },
+                    { text: "Sale", value: "Sale" },
+                    { text: "Promotion", value: "Promotion" },
+                    { text: "Observance", value: "Observance" },
+                    { text: "Trip", value: "Trip" },
+                    { text: "Service", value: "Service" },
+                    {
+                      text: "Tournament",
+                      value: "Tournament",
+                    },
+                    { text: "League", value: "League" },
+                    { text: "Class", value: "Class" },
+                  ]}
+                  placeholder="Campaign Category"
+                  name="marketingCampaignCategory"
+                  label="Campaign Category:"
+                />
+
+                <MySelectInput
+                options={[
+                  { text: "", value: "" },
+                  { text: "ACS", value: "ACS" },
+                  { text: "Army Catering", value: "Army Catering" },
+                  { text: "BOSS", value: "BOSS" },
+                  { text: "Cafe Cumberland", value: "Cafe Cumberland" },
+                  { text: "CDC", value: "CDC" },
+                  { text: "FTIG Community Club", value: "FTIG Community Club" },
+                  {
+                    text: "FTIG Pool",
+                    value: "FTIG Pool",
+                  },
+                  { text: "FTIG Rec Center", value: "FTIG Rec Center" },
+                  { text: "Golf", value: "Golf" },
+                  { text: "Lodging", value: "Lodging" },
+                  { text: "LTS", value: "LTS" },
+                  { text: "LVCC", value: "LVCC" },
+                  { text: "Outdoor Rec", value: "Outdoor Rec" },
+                  { text: "SKIES", value: "SKIES" },
+                  { text: "Special Events", value: "Special Events" },
+                  { text: "Sports", value: "Sports" },
+                  { text: "Support Services", value: "Support Services" },
+                  { text: "YS", value: "YS" },
+                ]}
+                placeholder="Program"
+                name="marketingProgram"
+                label="Program:"
+              />
+              </>
+             }
 
                 <hr color="#f2711c" />
               </Segment>
@@ -1842,7 +1845,6 @@ export default observer(function ActivityForm() {
               "SSL Calendar",
               "USAHEC Calendar",
               "USAHEC Facilities Usage Calendar",
-              "Weekly Pocket Calendar",
               "CSL Calendar",
             ].includes(
               categories.find((x) => x.id === values.categoryId)?.name || ""
@@ -1870,9 +1872,17 @@ export default observer(function ActivityForm() {
                       <Grid.Column width={4} />
                       <Grid.Column width={12}>
                         <SemanticForm.Group inline>
+                        <MySemanticCheckBox
+                            name="copiedTobattlerhythm"
+                            label="Battle Rhythm"
+                            disabled={categories
+                              .filter((x) => x.routeName === "battlerhythm")
+                              .map((x) => x.id)
+                              .includes(currentCategoryId)}
+                          />
                           <MySemanticCheckBox
                             name="copiedToacademic"
-                            label="Academic IMC Event"
+                            label="Academic Calendar"
                             disabled={categories
                               .filter((x) => x.routeName === "academic")
                               .map((x) => x.id)
@@ -1886,14 +1896,7 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
-                          <MySemanticCheckBox
-                            name="copiedTochapel"
-                            label="Chapel"
-                            disabled={categories
-                              .filter((x) => x.routeName === "chapel")
-                              .map((x) => x.id)
-                              .includes(currentCategoryId)}
-                          />
+              
                           <MySemanticCheckBox
                             name="copiedTocommandGroup"
                             label="Command Group Calendar"
@@ -1903,24 +1906,10 @@ export default observer(function ActivityForm() {
                               .includes(currentCategoryId)}
                           />
                 
-           
-                          <MySemanticCheckBox
-                            name="copiedTocomplementary"
-                            label="Complemenary Events"
-                            disabled={categories
-                              .filter((x) => x.routeName === "complementary")
-                              .map((x) => x.id)
-                              .includes(currentCategoryId)}
-                          />
-
-                          <MySemanticCheckBox
-                            name="communityEvent"
-                            label="Community Event (External)"
-                          />
 
                           <MySemanticCheckBox
                             name="copiedTocommunity"
-                            label="Community Relations"
+                            label="Community Event (External)"
                             disabled={categories
                               .filter((x) => x.routeName === "community")
                               .map((x) => x.id)
@@ -2028,9 +2017,17 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
+                              <MySemanticCheckBox
+                            name="copiedTostaff"
+                            label="Staff Calendar"
+                            disabled={categories
+                              .filter((x) => x.routeName === "staff")
+                              .map((x) => x.id)
+                              .includes(currentCategoryId)}
+                          />
                           <MySemanticCheckBox
                             name="copiedTotrainingAndMiscEvents"
-                            label="Training And Misc Events"
+                            label="Training"
                             disabled={categories
                               .filter(
                                 (x) => x.routeName === "trainingAndMiscEvents"
@@ -2064,14 +2061,7 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
-                          <MySemanticCheckBox
-                            name="copiedToweeklyPocket"
-                            label="Weekly Pocket Calendar"
-                            disabled={categories
-                              .filter((x) => x.routeName === "weeklyPocket")
-                              .map((x) => x.id)
-                              .includes(currentCategoryId)}
-                          />
+                  
                         </SemanticForm.Group>
                       </Grid.Column>
                     </Grid.Row>
@@ -2080,11 +2070,13 @@ export default observer(function ActivityForm() {
                 </>
               )}
 
-            {(values.communityEvent || values.mfp) && (
+            {(values.communityEvent || values.mfp || values.copiedTocommunity ||  ["Community Event (External)"].includes(
+                categories.find((x) => x.id === values.categoryId)?.name || ""
+              )) && (
               <Segment inverted color="red">
+                <Header as={'h2'} content='You have selected Community Event and / or Military Spouse and Family Program so you must review the event details for OPSEC and PII. check box below when complete'/>
                 <MyCheckBox
                   name="checkedForOpsec"
-                  label="You selected Community Event and / or Military Spouse and Family Program so you must review the event details for OPSEC and PII. check this box when complete"
                 />
               </Segment>
             )}

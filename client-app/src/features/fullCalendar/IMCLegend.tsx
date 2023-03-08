@@ -20,7 +20,7 @@ export default observer(function IMCLegend() {
       {!loadingInitial &&
         <div>
         {categories.filter(x => x.imcColor && x.imcColor.length).map(category => (
-        <Label key={category.id} style={{backgroundColor: category.imcColor, color: 'white', marginBottom: '5px'}} content = {category.name} />
+        <Label key={category.id} style={{backgroundColor: category.imcColor, color: 'white', marginBottom: '5px'}} content = {category.name === 'Academic IMC Event'? 'Academic Event' : category.name} />
       ))}
       </div>
       }

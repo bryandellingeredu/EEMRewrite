@@ -3,7 +3,7 @@ import { Segment, Icon, Grid, List } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarWeek, faChalkboardTeacher, faCheck, faChurch, faComputer, faDove, faFax, faGraduationCap, faHashtag, faIdCard, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faShieldHalved, faSitemap, faSquareParking, faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faChalkboardTeacher, faCheck, faChurch, faClipboardUser, faComputer, faDove, faFax, faGraduationCap, faHashtag, faIdCard, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faShieldHalved, faSitemap, faSquareParking, faUserSecret } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
     activity: Activity
@@ -407,7 +407,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <Icon name='graduation' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={14}>
-                   Added to the Academic IMC Calendar
+                   Added to the Academic Calendar
                  </Grid.Column>
              </Grid>
  </Segment>
@@ -426,18 +426,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
  </Segment>
  }
 
-{activity.copiedTochapel &&
-             <Segment attached>
-             <Grid verticalAlign='middle'>
-                 <Grid.Column width={1}>
-                 <FontAwesomeIcon icon={faChurch} size='2x'  color='#00b5ad' />
-                 </Grid.Column>
-                 <Grid.Column width={14} style={{paddingLeft: '25px'}}>
-                   Added to the Chapel Calendar
-                 </Grid.Column>
-             </Grid>
- </Segment>
- }
+
 
 {activity.copiedTocommandGroup &&
              <Segment attached>
@@ -452,18 +441,6 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
  </Segment>
  }
 
-{activity.copiedTocomplementary &&
-             <Segment attached>
-             <Grid verticalAlign='middle'>
-                 <Grid.Column width={1}>
-                 <Icon name='star' size='large' color='teal' />
-                 </Grid.Column>
-                 <Grid.Column width={14}>
-                   Added to the Complementary Events Calendar
-                 </Grid.Column>
-             </Grid>
- </Segment>
- }
 
 {activity.copiedTocommunity &&
              <Segment attached>
@@ -472,7 +449,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <Icon name='handshake' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={14}>
-                   Added to the Community Relations Calendar
+                   Added  Community Events (External) Calendar
                  </Grid.Column>
              </Grid>
  </Segment>
@@ -589,7 +566,33 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <FontAwesomeIcon icon={faChalkboardTeacher} size='2x'  color='#00b5ad' />
                  </Grid.Column>
                  <Grid.Column width={14} style={{paddingLeft: '25px'}}>
-                   Added to Training & Misc Events Calendar
+                   Added to Training Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTobattlerhythm &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faCalendarCheck} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '25px'}}>
+                   Added to Battle Rhythm
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTostaff &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faClipboardUser} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '25px'}}>
+                   Added to Staff Calendar
                  </Grid.Column>
              </Grid>
  </Segment>
@@ -634,18 +637,6 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
  </Segment>
  }
 
-{activity.copiedToweeklyPocket &&
-             <Segment attached>
-             <Grid verticalAlign='middle'>
-                 <Grid.Column width={1}>
-                 <FontAwesomeIcon icon={faCalendarWeek} size='2x'  color='#00b5ad' />
-                 </Grid.Column>
-                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
-                   Added to the Weekly Pocket Calendar
-                 </Grid.Column>
-             </Grid>
- </Segment>
- }
 
 {activity.copiedTosymposiumAndConferences &&
              <Segment attached>
@@ -1157,6 +1148,36 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <Grid.Column width={14}>
                  <span style={{paddingLeft: '10px'}}>
                    Marketing Request
+                   </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.category.name  === 'Garrison Calendar' && activity.marketingRequest && activity.marketingCampaignCategory &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faCheck} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '10px'}}>
+                   Campaign Category: {activity.marketingCampaignCategory}
+                   </span>
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.category.name  === 'Garrison Calendar' && activity.marketingRequest && activity.marketingProgram &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faCheck} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '10px'}}>
+                   Program: {activity.marketingProgram}
                    </span>
                  </Grid.Column>
              </Grid>

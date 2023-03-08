@@ -22,7 +22,8 @@ constructor() {
     options.push({ text: ' ', value: this.categories.find(x => x.name === 'Other')?.id });
     this.categories.forEach(category => {
         if (category.name !== 'Other') {
-            options.push({ text: category.name, value: category.id });
+            options.push({ text: category.name === 'Academic Calendar' ? 'Student Calendar' :  category.name === 'Academic IMC Event' ? 'Academic Calendar' : category.name,
+            value: category.id });
         }
     });
     return options

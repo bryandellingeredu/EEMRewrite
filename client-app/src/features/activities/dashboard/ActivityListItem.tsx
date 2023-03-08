@@ -4,7 +4,7 @@ import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
 import { Activity } from "../../../app/models/activity";
 import { format } from "date-fns";
-import { faBahai, faBook, faBookOpenReader, faBuilding, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faHouseChimneyWindow, faO, faPeopleGroup, faPersonRifle, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBook, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faChalkboardTeacher, faChurch, faClipboardUser, faDove, faHouseChimneyWindow, faO, faPeopleGroup, faPersonRifle, faStar } from "@fortawesome/free-solid-svg-icons";
 import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { faTree } from "@fortawesome/free-solid-svg-icons";
@@ -36,22 +36,28 @@ export default function ActivityListItem({activity}:Props){
         <Segment>
           <Item.Group>       
             <Item>
+            {activity.category.name === 'Battle Rhythm' &&
+              <Label color='red'>
+                     <FontAwesomeIcon icon={faCalendarCheck} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'Staff Calendar' &&
+              <Label color='orange'>
+                     <FontAwesomeIcon icon={faClipboardUser} size='3x' />
+              </Label>
+             }
             {activity.category.name === 'SSL Calendar' &&
               <Label color='olive'>
                      <FontAwesomeIcon icon={faPersonRifle} size='3x' />
               </Label>
              }
-            {activity.category.name === 'Weekly Pocket Calendar' &&
-              <Label color='yellow'>
-                     <FontAwesomeIcon icon={faCalendar} size='3x' />
-              </Label>
-             }
+     
             {activity.category.name === 'Visits And Tours' &&
               <Label color='teal'>
                      <FontAwesomeIcon icon={faBus} size='3x' />
               </Label>
              }
-            {activity.category.name === 'Training And Misc Events' &&
+            {activity.category.name === 'Training' &&
               <Label color='red'>
                      <FontAwesomeIcon icon={faChalkboardTeacher} size='3x' />
               </Label>
@@ -91,12 +97,7 @@ export default function ActivityListItem({activity}:Props){
                      <FontAwesomeIcon icon={faBuilding} size='3x' />
               </Label>
              }
-            {activity.category.name === 'Complemenary Events' &&
-              <Label color='olive'>
-                     <FontAwesomeIcon icon={faStar} size='3x' />
-              </Label>
-             }
-            {activity.category.name === 'Community Relations' &&
+            {activity.category.name === 'Community Event (External)' &&
               <Label color='brown'>
                      <FontAwesomeIcon icon={faHandshake} size='3x' />
               </Label>
@@ -140,14 +141,7 @@ export default function ActivityListItem({activity}:Props){
                  <h1>ASP</h1>
                 </Label>
                } 
-              {activity.category.name === 'Chapel' && 
-           
-
-                <Label color='pink' >
-               <FontAwesomeIcon icon={faChurch}
-                size='3x' />
-               </Label>
-               }
+  
             {activity.category.name === 'Symposium and Conferences Calendar' && 
            <Label color='pink' >
           <FontAwesomeIcon icon={faPeopleGroup}
@@ -165,7 +159,7 @@ export default function ActivityListItem({activity}:Props){
                     <Item.Header as={Link} to={`${process.env.PUBLIC_URL}/activities/${activity.id}/${activity.categoryId}`}>
                     {activity.title}
                     </Item.Header> 
-                    <Item.Description> {activity.category.name}
+                    <Item.Description> {activity.category.name === 'Academic Calendar' ? 'Student Calendar' : activity.category.name === 'Academic IMC Event' ? 'Academic Calendar' : activity.category.name}
                     </Item.Description>                 
                 </Item.Content>
             </Item>

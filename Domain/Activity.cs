@@ -175,9 +175,7 @@ namespace Domain
         public bool CCRNotificationSent { get; set; }
         public bool CopiedToacademic { get; set; }
         public bool CopiedToasep { get; set; }
-        public bool CopiedTochapel { get; set; }
         public bool CopiedTocommandGroup { get; set; }
-        public bool CopiedTocomplementary { get; set; }
         public bool CopiedTocommunity { get; set; }
         public bool CopiedTocsl { get; set; }
         public bool CopiedTogarrison { get; set; }
@@ -191,12 +189,15 @@ namespace Domain
         public bool CopiedTousahec { get; set; }
         public bool CopiedTousahecFacilitiesUsage { get; set; }
         public bool CopiedTovisitsAndTours { get; set; }
-        public bool CopiedToweeklyPocket { get; set; }
         public bool CopiedTosymposiumAndConferences {get; set;}
+        public bool CopiedTobattlerhythm {get; set;}
+        public bool CopiedTostaff {get; set;}
         public bool Cancelled { get; set; }
         public string CancelledReason { get; set; }
         public string CancelledBy { get; set; }
         public DateTime? CancelledAt { get; set; }
+        public string MarketingCampaignCategory {get; set;}
+        public string MarketingProgram {get; set;}
 
 
     }

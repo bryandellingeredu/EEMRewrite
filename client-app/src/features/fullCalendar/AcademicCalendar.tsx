@@ -70,7 +70,7 @@ export default observer( function AcademicCalendar(){
     <Divider horizontal>
       <Header as='h2'>
         <Icon name='graduation cap' />
-        Academic Calendar
+        Student Calendar
       </Header>
     </Divider>
         <FullCalendar

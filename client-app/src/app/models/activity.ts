@@ -149,9 +149,7 @@ export interface Activity{
     ccrNotificationSent : boolean
     copiedToacademic: boolean;
     copiedToasep: boolean;
-    copiedTochapel: boolean;
     copiedTocommandGroup: boolean;
-    copiedTocomplementary: boolean;
     copiedTocommunity: boolean;
     copiedTocsl: boolean;
     copiedTogarrison: boolean;
@@ -165,8 +163,9 @@ export interface Activity{
     copiedTousahec: boolean;
     copiedTousahecFacilitiesUsage: boolean;
     copiedTovisitsAndTours: boolean;
-    copiedToweeklyPocket: boolean;
     copiedTosymposiumAndConferences: boolean;
+    copiedTobattlerhythm : boolean,
+    copiedTostaff: boolean,
     cancelled: boolean;
     cancelledReason : string
     cancelledBy: string
@@ -175,6 +174,8 @@ export interface Activity{
     createdAt:  Date | null
     lastUpdatedBy: string
     lastUpdatedAt : Date | null
+    marketingCampaignCategory : string
+    marketingProgram : string
 
 
 
@@ -325,9 +326,7 @@ export class ActivityFormValues{
     ccrNotificationSent : boolean = false
     copiedToacademic: boolean = false;
     copiedToasep: boolean = false;
-    copiedTochapel: boolean = false;
     copiedTocommandGroup: boolean = false;
-    copiedTocomplementary: boolean = false;
     copiedTocommunity: boolean = false;
     copiedTocsl: boolean = false;
     copiedTogarrison: boolean = false;
@@ -341,8 +340,9 @@ export class ActivityFormValues{
     copiedTousahec: boolean = false;
     copiedTousahecFacilitiesUsage: boolean = false;
     copiedTovisitsAndTours: boolean = false;
-    copiedToweeklyPocket: boolean = false;
     copiedTosymposiumAndConferences: boolean = false;
+    copiedTobattlerhythm : boolean = false;
+    copiedTostaff: boolean = false;
     cancelled: boolean = false;
     cancelledReason : string = '';
     cancelledBy: string = '';
@@ -351,6 +351,8 @@ export class ActivityFormValues{
     createdAt:  Date | null = null;
     lastUpdatedBy: string = '';
     lastUpdatedAt : Date | null = null;
+    marketingCampaignCategory : string = '';
+    marketingProgram : string = '';
 
 
 
@@ -493,9 +495,7 @@ export class ActivityFormValues{
         this.ccrNotificationSent = activity.ccrNotificationSent
         this.copiedToacademic = activity.copiedToacademic;
         this.copiedToasep = activity.copiedToasep;
-        this.copiedTochapel = activity.copiedTochapel;
         this.copiedTocommandGroup = activity.copiedTocommandGroup;
-        this.copiedTocomplementary = activity.copiedTocomplementary;
         this.copiedTocommunity = activity.copiedTocommunity;
         this.copiedTocsl = activity.copiedTocsl;
         this.copiedTogarrison = activity.copiedTogarrison;
@@ -509,8 +509,9 @@ export class ActivityFormValues{
         this.copiedTousahec = activity.copiedTousahec;
         this.copiedTousahecFacilitiesUsage = activity.copiedTousahecFacilitiesUsage;
         this.copiedTovisitsAndTours = activity.copiedTovisitsAndTours;
-        this.copiedToweeklyPocket = activity.copiedToweeklyPocket;
         this.copiedTosymposiumAndConferences = activity.copiedTosymposiumAndConferences;
+        this.copiedTobattlerhythm = activity.copiedTobattlerhythm
+        this.copiedTostaff = activity.copiedTostaff
         this.cancelled = activity.cancelled;
         this.cancelledReason = activity.cancelledReason;
         this.cancelledBy  = activity.cancelledBy
@@ -519,6 +520,8 @@ export class ActivityFormValues{
         this.createdAt = activity.createdAt;
         this.lastUpdatedBy = activity.lastUpdatedBy;
         this.lastUpdatedAt = activity.lastUpdatedAt;
+        this.marketingCampaignCategory = activity.marketingCampaignCategory
+        this.marketingProgram = activity.marketingProgram 
     
        } 
     }

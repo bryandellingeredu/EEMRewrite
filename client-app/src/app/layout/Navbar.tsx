@@ -91,13 +91,13 @@ export default observer(function Navbar() {
               <Dropdown item text="Department Calendars" scrolling >
                 <Dropdown.Menu>
                     <Dropdown.Item
-                    text="Student Academic"
+                    text="Student Calendar"
                     as={Link}
                     to={`${process.env.PUBLIC_URL}/academiccalendar`}
                   />
               {categories.filter(x => x.routeName && x.name !== "Other").map((category) => (
                  <Dropdown.Item key={category.id}
-                  text={category.name}   as={Link} 
+                  text={category.name === 'Academic IMC Event' ? 'Academic Calendar' : category.name}   as={Link} 
                   to={`${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}  />
                 ))}
                 </Dropdown.Menu>

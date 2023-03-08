@@ -596,9 +596,7 @@ export default class ActivityStore {
     ccrNotificationSent: false,
     copiedToacademic: false,
     copiedToasep: false,
-    copiedTochapel: false,
     copiedTocommandGroup: false,
-    copiedTocomplementary: false,
     copiedTocommunity: false,
     copiedTocsl: false,
     copiedTogarrison: false,
@@ -612,8 +610,9 @@ export default class ActivityStore {
     copiedTousahec: false,
     copiedTousahecFacilitiesUsage: false,
     copiedTovisitsAndTours: false,
-    copiedToweeklyPocket: false,
     copiedTosymposiumAndConferences: false,
+    copiedTobattlerhythm: false,
+    copiedTostaff: false,
     cancelled: false,
     cancelledReason : '',
     cancelledBy: '',
@@ -621,7 +620,9 @@ export default class ActivityStore {
     createdBy:  '',
     createdAt: null,
     lastUpdatedBy: '',
-    lastUpdatedAt : null
+    lastUpdatedAt : null,
+    marketingCampaignCategory : '',
+    marketingProgram :  ''
     }
     return activity;
   }

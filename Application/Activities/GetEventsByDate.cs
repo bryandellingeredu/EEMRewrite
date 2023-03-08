@@ -47,9 +47,7 @@ namespace Application.Activities
                                   
                          .Where(x => x.CategoryId == category.Id ||
                                       ((category.RouteName == "asep" && x.CopiedToasep) ||
-                                      (category.RouteName == "chapel" && x.CopiedTochapel) ||
                                       (category.RouteName == "commandGroup" && x.CopiedTocommandGroup) ||
-                                      (category.RouteName == "complementary" && x.CopiedTocomplementary) ||
                                       (category.RouteName == "community" && x.CopiedTocommunity) ||
                                       (category.RouteName == "csl" && x.CopiedTocsl) ||
                                       (category.RouteName == "garrison" && x.CopiedTogarrison) ||
@@ -63,8 +61,9 @@ namespace Application.Activities
                                       (category.RouteName == "usahec" && x.CopiedTousahec) ||
                                       (category.RouteName == "usahecFacilitiesUsage" && x.CopiedTousahecFacilitiesUsage) ||
                                       (category.RouteName == "visitsAndTours" && x.CopiedTovisitsAndTours) ||
-                                      (category.RouteName == "weeklyPocket" && x.CopiedToweeklyPocket) ||
                                       (category.RouteName == "symposiumAndConferences" && x.CopiedTosymposiumAndConferences) ||
+                                      (category.RouteName == "battlerhythm" && x.CopiedTobattlerhythm) ||
+                                      (category.RouteName == "staff" && x.CopiedTostaff) ||
                                       (category.RouteName == "militaryFamilyAndSpouseProgram" && x.MFP))).
                           Where(x => !x.LogicalDeleteInd)
                           .ToListAsync();
