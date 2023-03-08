@@ -1205,6 +1205,7 @@ export default observer(function ActivityForm() {
                     { text: "", value: "" },
                     { text: "ACS", value: "ACS" },
                     { text: "Command", value: "Command" },
+                    { text: "Chapel", value: "Chapel" },
                     { text: "CYC", value: "CYC" },
                     { text: "DES", value: "DES" },
                     { text: "DHR", value: "DHR" },
