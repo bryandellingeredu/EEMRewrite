@@ -578,7 +578,7 @@ export default class ActivityStore {
     additionalVTCInfo :	'',
     vtcStatus : '',
     attachmentLookup: null,
-    activityAttachmentGroupLookup: '',
+    activityAttachmentGroupLookup: null,
     logicalDeleteInd: false,
     deletedAt: null,
     deletedBy: '',

@@ -19,9 +19,11 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
 
     useEffect(() => {
         const fetchData = async () => {
+            if(activity.activityAttachmentGroupLookup){
             agent.Attachments.activityDetails(activity.activityAttachmentGroupLookup).then((response) => {
                 setActivityAttachments(response);
               });
+            }
         };
         if(activity.activityAttachmentGroupLookup && activity.activityAttachmentGroupLookup.length > 0)
         fetchData();

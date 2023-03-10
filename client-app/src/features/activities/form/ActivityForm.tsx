@@ -171,7 +171,6 @@ export default observer(function ActivityForm() {
 
     uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId)
       .then((response) => {
-        debugger;
         const activityAttachment: ActivityAttachment = {
           id: activityAttachmentId,
           activityAttachmentGroupId,
@@ -445,7 +444,7 @@ export default observer(function ActivityForm() {
       if(activityAttachments && activityAttachments.length > 0){
         activity.activityAttachmentGroupLookup = activityAttachmentGroupId;
       }else{
-        activity.activityAttachmentGroupLookup = '';
+        activity.activityAttachmentGroupLookup = null;
       }
       activity.createdAt = new Date();
       activity.lastUpdatedAt = new Date();
@@ -477,7 +476,6 @@ export default observer(function ActivityForm() {
       activity.organizationId = activity.organizationId || null;
       activity.category = category;
       activity.organization = organization;
-      debugger;
       if (!activity.id || (copy && copy === 'true' )) {
         let newActivity = {
           ...activity,
@@ -489,11 +487,17 @@ export default observer(function ActivityForm() {
                 `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
               )
             )
-          : createActivity(newActivity).then(() =>
-              history.push(
-                `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
-              )
+          : createActivity(newActivity)
+          .then(() => {
+            history.push(
+              `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
             );
+          })
+          .catch((error) => {
+            console.log(error);
+            toast.error('An error occurred while creating the activity');
+          });
+        
       } else {
         category.name === "Academic Calendar"
           ? updateGraphEvent({ ...activity, id: activity!.id }).then(() =>
