@@ -1,15 +1,32 @@
-
+import {useState, useEffect} from 'react'
+import { ActivityAttachment } from "../../../app/models/activityAttachment";
 import { Segment, Icon, Grid, List } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faChalkboardTeacher, faCheck, faChurch, faClipboardUser, faComputer, faDove, faFax, faGraduationCap, faHashtag, faIdCard, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faShieldHalved, faSitemap, faSquareParking, faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import agent from '../../../app/api/agent';
+import ActivityAttachmentSideBarComponent from './ActivityAttachmentSideBarComponent';
 
 interface Props {
     activity: Activity
 }
 
+
+
 export default observer(function ActivityDetailedSidebar ({activity}: Props) {
+    const [activityAttachments, setActivityAttachments] = useState<ActivityAttachment[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            agent.Attachments.activityDetails(activity.activityAttachmentGroupLookup).then((response) => {
+                setActivityAttachments(response);
+              });
+        };
+        if(activity.activityAttachmentGroupLookup && activity.activityAttachmentGroupLookup.length > 0)
+        fetchData();
+      }, []);
+
     return (
         <Segment.Group>
            {/* <Segment
@@ -1354,6 +1371,10 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                 </Grid>
             </Segment>
       }
+
+{activityAttachments.map((attachment) => (
+        <ActivityAttachmentSideBarComponent key={attachment.id} attachmentActivityId = {attachment.id} fileName = {attachment.fileName}  />
+     ))}
 
 </Segment.Group>
     )

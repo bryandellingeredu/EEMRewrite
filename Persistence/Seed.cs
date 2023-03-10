@@ -169,6 +169,7 @@ namespace Persistence
             {
                 var organizations = new List<Organization>
             {
+                new Organization {Name = "A/COM Outreach"},
                 new Organization {Name = "AHEC"},
                 new Organization {Name = "ASEP"},
                 new Organization {Name = "CSL"},

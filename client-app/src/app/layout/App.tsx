@@ -35,6 +35,7 @@ import vtcCoordinatorForm from '../../features/admin/vtcCoordinators/vtcCoordina
 import Itinerary from '../../features/reports/Itinerary';
 import DownloadBio from '../../features/reports/downloadBio';
 import HostingReport from '../../features/reports/hostingReport';
+import DownloadActivityAttachment from '../../features/reports/downloadActivityAttachment';
 
 function App() {
   const location = useLocation();
@@ -92,6 +93,7 @@ function App() {
                 <Route path={`${process.env.PUBLIC_URL}/activities/:id/:categoryId`} component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/itinerary/:id/:categoryId`} component={Itinerary}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/downloadbio/:id/:categoryId`} component={DownloadBio}/>
+                <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/downloadActivityAttachment/:id`} component={DownloadActivityAttachment}/>   
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/hostingReport/:id/:categoryId`} component={HostingReport}/>    
                 <Route key={location.key} exact path={[
                   `${process.env.PUBLIC_URL}/createActivity`,

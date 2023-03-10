@@ -82,5 +82,9 @@ mgt-login {
   }
   .hide-toolbar { display:none !important; }
 
+  .hover-underline:hover {
+    text-decoration: underline;
+  }
+
 
 

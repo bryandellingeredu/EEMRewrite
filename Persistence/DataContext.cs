@@ -18,13 +18,15 @@ namespace Persistence
         public DbSet<Location> Locations { get; set; }
         public DbSet<Recurrence> Recurrences { get; set; }
         public DbSet<HostingReport> HostingReports {get; set;}
-        public DbSet<Attachment> Attachments {get; set;}
+        public DbSet<Attachment> Attachments {get; set;} //this is only used for BIO
+        public DbSet<ActivityAttachment> ActivityAttachments {get; set;}
         public DbSet<RoomDelegate> RoomDelegates { get; set; }
         public DbSet<EmailGroup> EmailGroups { get; set; }
         public DbSet<EmailGroupMember> EmailGroupMembers { get; set; }
         public DbSet<EmailGroupEmailGroupMemberJunction> EmailGroupEmailGroupMemberJunctions {get; set;}
         public DbSet<CSLCalendarLegend> CSLCalendarLegends { get; set; }
         public DbSet<RoomVTCCoordinator> RoomVTCCoordinators {get; set;}
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)

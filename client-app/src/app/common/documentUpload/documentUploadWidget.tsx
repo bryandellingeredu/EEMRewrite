@@ -5,11 +5,12 @@ import {useState} from 'react'
 interface Props{
     loading: boolean;
     uploadDocument: (file: any) => void
+    color: string;
 }
 
 
 
-export default function DocumentUploadWidget({loading, uploadDocument}: Props){
+export default function DocumentUploadWidget({loading, uploadDocument,color}: Props){
     const [files, setFiles] = useState<any>([]);
 
     const handleUploadDocument = () =>{
@@ -20,15 +21,15 @@ export default function DocumentUploadWidget({loading, uploadDocument}: Props){
         <Grid>
             <Grid.Row>
             <Grid.Column width={4}>
-                <Header sub style={{color: 'white'}} content='Step 1 - Add Document' textAlign="center" />
+                <Header sub style={{color: color}} content='Step 1 - Add Document' textAlign="center" />
             </Grid.Column>
             <Grid.Column width={1} />
             <Grid.Column width={4}>
-                <Header sub style={{color: 'white'}} content='Document' textAlign="center" />
+                <Header sub style={{color: color}} content='Document' textAlign="center" />
             </Grid.Column>
             <Grid.Column width={1} />
             <Grid.Column width={4}>
-                <Header sub style={{color: 'white'}} content='Step 2 - Upload Document' textAlign="center" />
+                <Header sub style={{color: color}} content='Step 2 - Upload Document' textAlign="center" />
             </Grid.Column>
             </Grid.Row>
             <Grid.Row>
@@ -40,7 +41,7 @@ export default function DocumentUploadWidget({loading, uploadDocument}: Props){
             <Grid.Column width={4} >
                    {files && files.length > 0 && (
                     <div style={{marginTop: '20px'}}>
-                     <Header as='h2' icon style={{color: 'white'}} textAlign='center'>
+                     <Header as='h2' icon style={{color: color}} textAlign='center'>
                      <Icon name='file' />
                      {files[0].name.length > 20 ? files[0].name.substring(0, 17) + '...' : files[0].name}                 
                    </Header>

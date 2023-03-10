@@ -131,6 +131,7 @@ export interface Activity{
     additionalVTCInfo :	string
     vtcStatus :	string
     attachmentLookup : number | null
+    activityAttachmentGroupLookup : string
     logicalDeleteInd : boolean
     deletedBy: string
     deletedAt: Date | null
@@ -308,6 +309,7 @@ export class ActivityFormValues{
     additionalVTCInfo :	string = ''
     vtcStatus :	string = ''
     attachmentLookup : number | null = null
+    activityAttachmentGroupLookup : string = ''
     logicalDeleteInd : boolean = false
     deletedAt: Date | null = null
     deletedBy: string = ''
@@ -477,6 +479,7 @@ export class ActivityFormValues{
         this.additionalVTCInfo = activity.additionalVTCInfo
         this.vtcStatus = activity.vtcStatus
         this.attachmentLookup = activity.attachmentLookup
+        this.activityAttachmentGroupLookup = activity.activityAttachmentGroupLookup
         this.logicalDeleteInd = activity.logicalDeleteInd
         this.deletedAt = activity.deletedAt
         this.deletedBy = activity.deletedBy

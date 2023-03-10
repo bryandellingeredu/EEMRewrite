@@ -292,20 +292,20 @@ export default observer(function ActivityTable(){
                            name="categoryIds"
                         /></Table.HeaderCell>
          <Table.HeaderCell>
-         <Button.Group>
-                       <Button icon loading={submitting} color='violet' size='medium' type='submit' >
-                        <Icon name='search'/>
-                       </Button>
-                       <Button
-                icon
-                color='red'
-                size='medium'
-                type='button'
-                onClick={() => window.location.reload()}
-              >
-                <Icon name='x'/>
+         <Button.Group size='tiny'>
+            <Button animated  loading={submitting} color='violet' size='medium' type='submit' >
+                <Button.Content hidden>Search</Button.Content>
+                <Button.Content visible><Icon name='search'/></Button.Content>
               </Button>
-              <Button icon color='black' onClick={handleDownload}><Icon name='file excel'/></Button>
+
+          <Button color='red' type='button' onClick={() => window.location.reload() } animated>
+              <Button.Content hidden>Clear</Button.Content>
+              <Button.Content visible><Icon name='x'/></Button.Content>
+          </Button>
+          <Button animated color='black' onClick={handleDownload}>
+          <Button.Content hidden>Excel</Button.Content>
+          <Button.Content visible><Icon name='file excel'/></Button.Content>
+          </Button>
               </Button.Group>
          </Table.HeaderCell>
       </Table.Row>

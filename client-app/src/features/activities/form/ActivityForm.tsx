@@ -11,6 +11,7 @@ import {
   Grid,
   Divider,
   Label,
+  ButtonGroup,
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -51,6 +52,9 @@ import { toast } from "react-toastify";
 import { Countries } from "../../../app/models/countryList";
 import agent from "../../../app/api/agent";
 import RepeatingEventButton from "./RepeatingEventButton";
+import { ActivityAttachment } from "../../../app/models/activityAttachment";
+import UploadAttachmentModal from "./UploadAttachmentModal";
+import ActivityAttachmentComponent from "./ActivityAttachmentComponent";
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -81,6 +85,7 @@ export default observer(function ActivityForm() {
     commonStore,
     graphUserStore,
     graphRoomStore,
+    modalStore
   } = useStore();
   const {
     createGraphEvent,
@@ -90,8 +95,9 @@ export default observer(function ActivityForm() {
     loadActivity,
     loadingInitial,
     uploadDocument,
+    uploadActivityDocument,
     uploading,
-    calendarEventParameters
+    calendarEventParameters,
   } = activityStore;
   const { categoryOptions, categories, loadCategories } = categoryStore;
   const { eduGraphUser, loadEDUGraphUser, armyProfile } = graphUserStore;
@@ -100,6 +106,7 @@ export default observer(function ActivityForm() {
     organizationStore;
   const { graphRooms, loadGraphRooms, graphReservationParameters } =
     graphRoomStore;
+  const {openModal} = modalStore;
   const { id } = useParams<{ id: string }>();
   const { roomid } = useParams<{ roomid: string }>();
   const { calendarid } = useParams<{ calendarid: string }>();
@@ -150,7 +157,38 @@ export default observer(function ActivityForm() {
     fileType: "",
   });
 
-  function handleDocumentUpload(file: any) {
+  const [activityAttachments, setActivityAttachments] = useState<ActivityAttachment[]>([]);
+  const [activityAttachmentGroupId, setActivityAttachmentGroupId] = useState(uuid());
+
+  const deleteActivityAttachment = (activityAttachmentId : string) => {
+    setActivityAttachments(activityAttachments.filter(x => x.id !== activityAttachmentId));
+  }
+
+  function handleActivityDocumentUpload(file: any) {
+    const activityAttachmentId = uuid();
+    const fileName = file.name;
+    const fileType = file.type;
+
+    uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId)
+      .then((response) => {
+        debugger;
+        const activityAttachment: ActivityAttachment = {
+          id: activityAttachmentId,
+          activityAttachmentGroupId,
+          fileName,
+          fileType
+        };
+        setActivityAttachments([...activityAttachments, activityAttachment]);
+        toast.success(`${activityAttachment.fileName} successfully uploaded`);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(`Error uploading ${fileName}: ${error.message}`);
+      });
+  }
+
+
+  function handleBioDocumentUpload(file: any) {
     uploadDocument(file).then((response) => {
       setUploadDifferentBioIndicator(false);
       setAttachment(response);
@@ -300,6 +338,12 @@ export default observer(function ActivityForm() {
             fileType: "",
           });
         }
+        if (response?.activityAttachmentGroupLookup && response?.activityAttachmentGroupLookup.length > 0 && (!copy || copy === 'false')) {
+          setActivityAttachmentGroupId(response?.activityAttachmentGroupLookup);
+          agent.Attachments.activityDetails(response.activityAttachmentGroupLookup).then((response) => {
+            setActivityAttachments(response);
+          });
+        }
         if (response?.activityRooms && response.activityRooms.length > 0 && (!copy || copy === 'false')) {
           setRoomRequired(true);
           setRoomEmails(response.activityRooms.map((x) => x.email));
@@ -397,6 +441,11 @@ export default observer(function ActivityForm() {
       }
       if (!armyProfile || !armyProfile?.mail) {
         activity.hostingReport = null;
+      }
+      if(activityAttachments && activityAttachments.length > 0){
+        activity.activityAttachmentGroupLookup = activityAttachmentGroupId;
+      }else{
+        activity.activityAttachmentGroupLookup = '';
       }
       activity.createdAt = new Date();
       activity.lastUpdatedAt = new Date();
@@ -2445,8 +2494,9 @@ export default observer(function ActivityForm() {
                               </Grid.Column>
                               <Grid.Column width={12}>
                                 <DocumentUploadWidget
-                                  uploadDocument={handleDocumentUpload}
+                                  uploadDocument={handleBioDocumentUpload}
                                   loading={uploading}
+                                  color={'white'}
                                 />
                               </Grid.Column>
                             </Grid.Row>
@@ -2947,9 +2997,42 @@ export default observer(function ActivityForm() {
                       )}
                   </Segment>
                 )}
+              
               </>
             )}
-
+                    <Divider color="black" />
+                          <Grid>
+                            <Grid.Row>
+                              <Grid.Column width={1}>
+                                <strong>Attachments:</strong>
+                              </Grid.Column>
+                              <Grid.Column width={15}>
+                              <ButtonGroup>
+                              <Button animated='vertical'basic size='tiny' type='button'
+                               onClick={() =>
+                                openModal(
+                                  <UploadAttachmentModal
+                                  uploadDocument={handleActivityDocumentUpload}
+                                  loading={uploading}
+                                  color={'black'}
+                                  />, 'large'
+                                )
+                              }
+                              >
+                                <Button.Content hidden>Add File</Button.Content>
+                                <Button.Content visible>
+                                <Icon name='paperclip' size="large" />
+                                </Button.Content>
+                                </Button>
+                                {activityAttachments.map((attachment) => (
+                                    <ActivityAttachmentComponent key={attachment.id} attachmentActivityId = {attachment.id} fileName = {attachment.fileName} deleteActivityAttachment = {deleteActivityAttachment} />
+                                 ))}
+                                </ButtonGroup>
+                            
+                              </Grid.Column>
+                            </Grid.Row>
+                          </Grid>
+                          <Divider color="black" />
             <Button
               disabled={submitting || activity.cancelled}
               loading={submitting}

@@ -164,7 +164,7 @@ export default function SyncCalendarInformation({routeName} : Props){
           <Divider />
 
              <Header as="h4" >
-              Copy the iCal feed Url:  {`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}`}   <CopyToClipboard text={`${process.env.REACT_APP_API_URL}/SyncCalendar/${routeName}` } />
+              Copy the iCal feed Url:  {`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}`}   <CopyToClipboard text={`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}` } />
              </Header>
 
              <Tab panes={panes} />

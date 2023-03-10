@@ -75,6 +75,14 @@ namespace Application.Activities
                 {
                     activity.HostingReport.Activity = null;
                 }
+                if ( activity.ActivityAttachmentGroupLookup != null)
+                {
+                    var activityAttachments = _context.ActivityAttachments.Where(x => x.ActivityAttachmentGroupId == activity.ActivityAttachmentGroupLookup);
+                    if (!activityAttachments.Any())
+                    {
+                        activity.ActivityAttachmentGroupLookup = null;
+                    }
+                }
 
                 if (!string.IsNullOrEmpty(activity.EventLookup) && !string.IsNullOrEmpty(activity.CoordinatorEmail))
                 {

@@ -578,6 +578,7 @@ export default class ActivityStore {
     additionalVTCInfo :	'',
     vtcStatus : '',
     attachmentLookup: null,
+    activityAttachmentGroupLookup: '',
     logicalDeleteInd: false,
     deletedAt: null,
     deletedBy: '',
@@ -657,6 +658,25 @@ export default class ActivityStore {
       console.log(error);
       runInAction(() => {
         this.uploading = false;
+      })
+    }
+  }
+
+  uploadActivityDocument = async (file: any, activityAttachmentGroupId: string, activityAttachmentId: string) => {
+    this.uploading = true;
+    try{
+      const response = await agent.Uploads.uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId );
+      runInAction(() => {
+        this.uploading = false;
+        store.modalStore.closeModal();
+      })
+    } catch(error){
+      console.log(error);
+      runInAction(() => {
+        this.uploading = false;
+        toast.error('an error occured trying to upload your file')
+        store.modalStore.closeModal();
+        
       })
     }
   }

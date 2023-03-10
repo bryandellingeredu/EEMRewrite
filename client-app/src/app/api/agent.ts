@@ -23,6 +23,7 @@ import { VTCCoordinator } from '../models/vtcCoordinator';
 import { Attachment } from '../models/attachment';
 import { CSLCalendarLegend } from '../models/cslCalendarLegend';
 import { EmailGroupMemberDTO } from '../models/emailGroupMemberDTO';
+import { ActivityAttachment } from '../models/activityAttachment';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -221,8 +222,17 @@ const Uploads = {
         headers: {'Content-Type': 'multipart/form-data'}
       })
     },
-
-    downloadDocument: (id: number) => axiosRequest.get<any>(`upload/${id}`)
+    uploadActivityDocument: (file: any, activityAttachmentGroupId: string, activityAttachmentId : string) => {
+        let formData = new FormData();
+        formData.append('File', file);
+        formData.append('activityAttachmentGroupId', activityAttachmentGroupId );
+        formData.append('activityAttachmentId', activityAttachmentId  );
+        return axios.post('upload/addActivityAttachment', formData, {
+          headers: {'Content-Type': 'multipart/form-data'}
+        })
+      },
+    downloadDocument: (id: number) => axiosRequest.get<any>(`upload/${id}`),
+    downloadActivityDocument: (id: string) => axiosRequest.get<any>(`upload/ActivityAttachment/${id}`)
 }
 
 const EmailGroups ={
@@ -235,7 +245,10 @@ const EmailGroups ={
 }
 
 const Attachments = {
-    details: (id: number) => axiosRequest.get<Attachment>(`/upload/metadata/${id}`)
+    details: (id: number) => axiosRequest.get<Attachment>(`/upload/metadata/${id}`),
+    activityDetails: (activityGroupId: string) =>axiosRequest.get<ActivityAttachment[]>(`/upload/ActivityAttachmentsMetaData/${activityGroupId}`),
+    activityAttachmentDetails: (id: string) => axiosRequest.get<ActivityAttachment>(`/upload/ActivityAttachmentMetaData/${id}`),
+    deleteActvityAttachment: (id: string) => axiosRequest.del<void>(`/upload/deleteActivityAttachment/${id}`),
 }
 
 const CSLLegend = {
