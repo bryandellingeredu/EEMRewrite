@@ -15,7 +15,7 @@ namespace Application.HostingReports
         public DateTime End { get; set; }
         public string Location { get; set; }
         public string ActionOfficer { get; set; }
-        public string OrganizatonName { get; set; }
+        public string OrganizationName { get; set; }
         public string HostingReportStatus { get; set; }
         public string GuestRank { get; set; }
         public string GuestTitle { get; set; }

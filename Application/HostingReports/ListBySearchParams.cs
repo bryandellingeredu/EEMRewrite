@@ -175,7 +175,7 @@ namespace Application.HostingReports
                                 ? string.Join(", ", activity.ActivityRooms.Select(x => x.Name).ToArray())
                                  : activity.PrimaryLocation
                             : activity.PrimaryLocation,
-                        OrganizatonName = activity.Organization?.Name,
+                        OrganizationName = activity.Organization?.Name,
                         HostingReportStatus = activity.HostingReport.HostingReportStatus,
                         GuestRank = activity.HostingReport.GuestRank,
                         GuestTitle = activity.HostingReport.GuestTitle,
