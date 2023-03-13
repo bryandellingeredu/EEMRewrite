@@ -100,7 +100,7 @@ namespace Application.Activities
 
                 return Result<List<Activity>>.Success(activities);
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
 
                     throw;

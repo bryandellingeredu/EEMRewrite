@@ -178,7 +178,7 @@ namespace Application.Activities
 
                     return Result<Unit>.Success(Unit.Value);
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
 
                     throw;

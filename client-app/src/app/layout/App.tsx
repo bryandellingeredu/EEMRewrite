@@ -36,6 +36,7 @@ import Itinerary from '../../features/reports/Itinerary';
 import DownloadBio from '../../features/reports/downloadBio';
 import HostingReport from '../../features/reports/hostingReport';
 import DownloadActivityAttachment from '../../features/reports/downloadActivityAttachment';
+import HostingReportTable from '../../features/reports/hostingReportTable';
 
 function App() {
   const location = useLocation();
@@ -76,6 +77,7 @@ function App() {
               <Switch>
                 <Route exact path={`${process.env.PUBLIC_URL}/loginBoth`} component={LoginBoth}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/activityTable`} component={activityTable}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/hostingReportTable`} component={HostingReportTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/> 
                 <Route exact path={`${process.env.PUBLIC_URL}/roomDelegateTable`} component={RoomDelegateTable}/> 

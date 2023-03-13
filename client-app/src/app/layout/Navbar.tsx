@@ -108,6 +108,11 @@ export default observer(function Navbar() {
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
               Rooms
             </Menu.Item>
+            <Dropdown item text="Reports">
+            <Dropdown.Menu>
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportTable`} text ="Hosting Report List"/>
+            </Dropdown.Menu>
+            </Dropdown>
             {user && user.roles && user.roles.includes("admin") &&
             <Dropdown item text="Admin">
             <Dropdown.Menu>

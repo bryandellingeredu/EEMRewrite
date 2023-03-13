@@ -22,6 +22,21 @@ namespace API.Controllers
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "eemevents.csv");
         }
 
+        [AllowAnonymous]
+        [HttpPost("HostingReport")]
+        public IActionResult CsvHostingReport([FromBody] HostingReportCSVData[] csvDataList)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Title,Start,End,Location,Status,Rank,Title / Org,Lead Org, Action Officer, Created By");
+            foreach (var data in csvDataList)
+            {
+                var status = string.IsNullOrEmpty(data.HostingReportStatus) ? "Draft" : data.HostingReportStatus;
+                builder.AppendLine($"\"{data.Title}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{status}\",\"{data.GuestRank}\",\"{data.GuestTitle}\",\"{data.OrganizationName}\",\"{data.ActionOfficer}\",\"{data.CreatedBy}\"");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "hostingReports.csv");
+        }
+
 
 
 
@@ -36,5 +51,20 @@ namespace API.Controllers
             public string LeadOrg  {get; set;}
             public string SubCalendar  {get; set;}
         }
+
+           public class HostingReportCSVData
+          {
+            public string Title {get; set;}
+            public string Start  {get; set;}
+            public string End  {get; set;}
+            public string Location  {get; set;}
+            public string ActionOfficer  {get; set;}
+            public string OrganizationName  {get; set;}
+            public string HostingReportStatus  {get; set;}
+             public string GuestRank {get; set;}
+            public string GuestTitle {get; set;}
+            public string CreatedBy {get; set;}
+        }
+
     }
 }

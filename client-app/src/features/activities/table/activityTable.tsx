@@ -247,7 +247,14 @@ export default observer(function ActivityTable(){
         <Table.HeaderCell>Action Officer</Table.HeaderCell>
         <Table.HeaderCell>Lead Org</Table.HeaderCell>
         <Table.HeaderCell>Sub Calendar</Table.HeaderCell>
-        <Table.HeaderCell></Table.HeaderCell>
+        <Table.HeaderCell>
+          
+        <Button animated color='black' onClick={handleDownload}>
+          <Button.Content hidden>Excel</Button.Content>
+          <Button.Content visible><Icon name='file excel'/></Button.Content>
+          </Button>
+
+        </Table.HeaderCell>
       </Table.Row>
       <Table.Row>
       <Table.HeaderCell>  <MyTextInput name='title'  placeholder="" /></Table.HeaderCell>
@@ -292,21 +299,11 @@ export default observer(function ActivityTable(){
                            name="categoryIds"
                         /></Table.HeaderCell>
          <Table.HeaderCell>
-         <Button.Group size='tiny'>
+  
             <Button animated  loading={submitting} color='violet' size='medium' type='submit' >
                 <Button.Content hidden>Search</Button.Content>
                 <Button.Content visible><Icon name='search'/></Button.Content>
               </Button>
-
-          <Button color='red' type='button' onClick={() => window.location.reload() } animated>
-              <Button.Content hidden>Clear</Button.Content>
-              <Button.Content visible><Icon name='x'/></Button.Content>
-          </Button>
-          <Button animated color='black' onClick={handleDownload}>
-          <Button.Content hidden>Excel</Button.Content>
-          <Button.Content visible><Icon name='file excel'/></Button.Content>
-          </Button>
-              </Button.Group>
          </Table.HeaderCell>
       </Table.Row>
     </Table.Header>

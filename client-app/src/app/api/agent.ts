@@ -164,6 +164,7 @@ const Activities = {
     getIMCEventsByDate: (start: string, end: string) => axiosRequest.get<CalendarEvent[]>(`/activities/getIMCEventsByDate?start=${start}&end=${end}`),
     getLocations: () => axiosRequest.get<string[]>('activities/getLocations'),
     getActionOfficers: () => axiosRequest.get<string[]>('activities/getActionOfficers'),
+    getCreatedBy: () => axiosRequest.get<string[]>('activities/getCreatedBy'),
 }
 
 const Categories = {
@@ -255,6 +256,11 @@ const CSLLegend = {
     list: () => axiosRequest.get<CSLCalendarLegend[]>('/CSLCalendarLegend')
 }
 
+const HostingReports = {
+    getGuestTitles: () => axiosRequest.get<string[]>('/HostingReports/getGuestTitles'),
+    listBySearchParams: (data: any) => axiosRequest.post<any>('/hostingReports/listBySearchParams', data),
+}
+
 const agent = {
     Activities,
     Account,
@@ -272,6 +278,7 @@ const agent = {
     EmailGroups,
     Attachments,
     CSLLegend,
+    HostingReports,
 }
 
 export default agent;

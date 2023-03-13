@@ -122,5 +122,7 @@ namespace API.Controllers
         [HttpGet("getActionOfficers")]
         public async Task<ActionResult> GetActionOfficers() => Ok(await _context.Activities.Where(x => !String.IsNullOrEmpty(x.ActionOfficer)).OrderBy(x => x.ActionOfficer).Select(x => x.ActionOfficer).Distinct().ToListAsync());
 
+        [HttpGet("getCreatedBy")]
+        public async Task<ActionResult> GeCreatedBy() => Ok(await _context.Activities.Where(x => !String.IsNullOrEmpty(x.CreatedBy)).OrderBy(x => x.CreatedBy).Select(x => x.CreatedBy).Distinct().ToListAsync());
     }
 }
