@@ -259,6 +259,7 @@ const CSLLegend = {
 const HostingReports = {
     getGuestTitles: () => axiosRequest.get<string[]>('/HostingReports/getGuestTitles'),
     listBySearchParams: (data: any) => axiosRequest.post<any>('/hostingReports/listBySearchParams', data),
+    listForHostingReportPDF: () => axiosRequest.get<Activity[]>('/hostingReports/ListForHostingReportPDF'),
 }
 
 const agent = {

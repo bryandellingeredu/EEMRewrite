@@ -37,6 +37,7 @@ import DownloadBio from '../../features/reports/downloadBio';
 import HostingReport from '../../features/reports/hostingReport';
 import DownloadActivityAttachment from '../../features/reports/downloadActivityAttachment';
 import HostingReportTable from '../../features/reports/hostingReportTable';
+import hostingReportPDFWrapper from '../../features/reports/hostingReportPDFWrapper';
 
 function App() {
   const location = useLocation();
@@ -78,6 +79,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/loginBoth`} component={LoginBoth}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/activityTable`} component={activityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/hostingReportTable`} component={HostingReportTable}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} component={hostingReportPDFWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/> 
                 <Route exact path={`${process.env.PUBLIC_URL}/roomDelegateTable`} component={RoomDelegateTable}/> 
