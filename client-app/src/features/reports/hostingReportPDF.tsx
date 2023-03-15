@@ -1,12 +1,12 @@
 import { Card, Image, Header, Grid, Segment } from "semantic-ui-react";
-import { Activity } from "../../app/models/activity";
+import { Activity, ActivityFormValues } from "../../app/models/activity";
 import { format } from 'date-fns';
 import {  useEffect, useState } from "react";
 import { EditorState, convertFromRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 
 interface Props {
-    activity: Activity
+    activity: Activity | ActivityFormValues
   }
 
   export default function HostingReportPDF({activity} : Props){
@@ -85,7 +85,7 @@ interface Props {
                         <strong>Travel Party:</strong>
                     </Segment>
                     <Segment>
-                        {activity.hostingReport?.travelPartyAccomaniedBy}
+                        {activity.hostingReport?.travelPartyAccomaniedBy || 'N/A'}
                     </Segment>
                  </Segment.Group>
                 </Grid.Column>

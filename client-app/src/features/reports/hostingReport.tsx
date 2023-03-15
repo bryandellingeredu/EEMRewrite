@@ -81,6 +81,7 @@ export default observer(function HostingReport() {
         activity.hostingReport &&
         <>
          <HostingReportComponentToPrint ref={componentRef} activity={activity} />
+         <Divider />
         <Button
         color="brown"
         icon

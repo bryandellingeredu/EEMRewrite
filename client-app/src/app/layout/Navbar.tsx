@@ -111,7 +111,7 @@ export default observer(function Navbar() {
             <Dropdown item text="Reports">
             <Dropdown.Menu>
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportTable`} text ="Hosting Report List"/>
-            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} text ="Hosting Report (PDF)"/>
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} text ="Hosting Reports (PDF)"/>
             </Dropdown.Menu>
             </Dropdown>
             {user && user.roles && user.roles.includes("admin") &&

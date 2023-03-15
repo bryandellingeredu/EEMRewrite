@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { Activity } from "../../app/models/activity";
 import { toast } from "react-toastify";
 import { HostingReportPDFComponentToPrint } from "./hostingReportPDFComponentToPrint";
-import { Button, Icon } from "semantic-ui-react";
+import { Button, Divider, Icon } from "semantic-ui-react";
 import { useReactToPrint } from "react-to-print";
 
 
@@ -65,11 +65,13 @@ export default observer(function HostingReportPDFWrapper() {
           }
           {!loading && armyProfile && armyProfile.mail && hostingReports && hostingReports.length > 0 &&
             <>
-              <HostingReportPDFComponentToPrint ref={componentRef} hostingReports={hostingReports} />
-              <Button color="teal" icon labelPosition="left" onClick={handlePrint}>
+              <Button color="teal" icon labelPosition="left" onClick={handlePrint} size='huge'>
                 <Icon name="print" />
-                Print Or Save as PDF
+                Print Hosting Reports Or Save Reports as PDF
               </Button>
+              <Divider/>
+              <HostingReportPDFComponentToPrint ref={componentRef} hostingReports={hostingReports} />
+            
             </>
       
          }
