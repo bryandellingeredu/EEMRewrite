@@ -68,7 +68,9 @@ namespace Application.Activities
                           Where(x => !x.LogicalDeleteInd)
                           .ToListAsync();
 
-                var legend = await _context.CSLCalendarLegends.ToListAsync();
+                var cslLegend = await _context.CSLCalendarLegends.ToListAsync();
+                var usahecFacilitiesUsageLegend = await _context.USAHECFacilitiesUsageLegends.ToListAsync();
+                
 
                 List<FullCalendarEventDTO> fullCalendarEventDTOs = new List<FullCalendarEventDTO>();
 
@@ -81,7 +83,7 @@ namespace Application.Activities
                         Title = activity.Title,
                         Start = Helper.GetStringFromDateTime(activity.Start, activity.AllDayEvent),
                         End = Helper.GetStringFromDateTime(endDateForCalendar, activity.AllDayEvent),
-                        Color = GetColor(category, activity, legend),
+                        Color = GetColor(category, activity, cslLegend, usahecFacilitiesUsageLegend),
                         BorderColor = activity.IMC ? "#EE4B2B" : string.Empty,
                         AllDay = activity.AllDayEvent,
                         CategoryId = category.Id.ToString(),
@@ -102,12 +104,17 @@ namespace Application.Activities
             }
 
 
-            private string GetColor(Category category, Activity activity, List<CSLCalendarLegend> legendList)
+            private string GetColor(Category category, Activity activity, List<CSLCalendarLegend> cslLegendList, List<USAHECFacilitiesUsageLegend> usahecFacilitiesUsageLegend)
             {
                 var color = "blue";
                 if (category.RouteName == "csl" && !string.IsNullOrEmpty(activity.Type))
                 {
-                    var legend = legendList.FirstOrDefault(x => x.Name == activity.Type);
+                    var legend = cslLegendList.FirstOrDefault(x => x.Name == activity.Type);
+                    if (legend != null) color = legend.Color;
+                }
+
+                if (category.RouteName == "usahecFacilitiesUsage" && !string.IsNullOrEmpty(activity.USAHECFacilityReservationType)){
+                     var legend = usahecFacilitiesUsageLegend.FirstOrDefault(x => x.Name == activity.USAHECFacilityReservationType);
                     if (legend != null) color = legend.Color;
                 }
 

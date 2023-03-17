@@ -165,6 +165,31 @@ namespace Persistence
                 await context.CSLCalendarLegends.AddRangeAsync(cslCalendarLegends);
                 await context.SaveChangesAsync();
             }
+
+            
+            if(!context.USAHECFacilitiesUsageLegends.Any()){
+                var USAHECFacilitiesUsageLegends = new List<USAHECFacilitiesUsageLegend>{
+                    new USAHECFacilitiesUsageLegend{Name = "Army Heritage Center Foundation", Color = "#D7C8A0"},
+                    new USAHECFacilitiesUsageLegend{Name = "Education", Color = "#5E973F"},
+                    new USAHECFacilitiesUsageLegend{Name = "General", Color = "#AB8D00"},
+                    new USAHECFacilitiesUsageLegend{Name = "Government", Color = "#3F3D2E"},
+                    new USAHECFacilitiesUsageLegend{Name = "Holiday", Color = "#7D86F6"},
+                    new USAHECFacilitiesUsageLegend{Name = "Maintenance", Color = "#DD8381"},
+                    new USAHECFacilitiesUsageLegend{Name = "MHINAF", Color = "#E88800"},
+                    new USAHECFacilitiesUsageLegend{Name = "Non/Profit", Color = "#BC64E6"},
+                    new USAHECFacilitiesUsageLegend{Name = "Public Event", Color = "#E75AFF"},
+                    new USAHECFacilitiesUsageLegend{Name = "Scouts", Color = "#4C00FF"},
+                    new USAHECFacilitiesUsageLegend{Name = "Training", Color = "#7f00ff"},
+                    new USAHECFacilitiesUsageLegend{Name = "U.S. Army", Color = "#EE4B2B"},
+                    new USAHECFacilitiesUsageLegend{Name = "U.S. Army War College", Color = "#F6BE00"},
+                    new USAHECFacilitiesUsageLegend{Name = "USAHEC Meeting", Color = "#e28743"},
+                    new USAHECFacilitiesUsageLegend{Name = "Veteran", Color = "#154c79"},
+
+                };
+                await context.USAHECFacilitiesUsageLegends.AddRangeAsync(USAHECFacilitiesUsageLegends);
+                await context.SaveChangesAsync();
+            }
+
             if (!context.Organizations.Any())
             {
                 var organizations = new List<Organization>

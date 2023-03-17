@@ -5,6 +5,8 @@ import {
   Button,
   Container,
   Dropdown,
+  DropdownDivider,
+  DropdownHeader,
   Image,
   Menu,
 } from "semantic-ui-react";
@@ -88,7 +90,7 @@ export default observer(function Navbar() {
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/imccalendar`}>
                 Integrated Master Calendar (IMC)
             </Menu.Item>     
-              <Dropdown item text="Department Calendars" scrolling >
+              <Dropdown item text="Calendars" scrolling >
                 <Dropdown.Menu>
                     <Dropdown.Item
                     text="Student Calendar"
@@ -110,8 +112,18 @@ export default observer(function Navbar() {
             </Menu.Item>
             <Dropdown item text="Reports">
             <Dropdown.Menu>
-            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportTable`} text ="Hosting Report List"/>
-            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} text ="Hosting Reports (PDF)"/>
+            
+            <Dropdown.Header icon='tags' content='Hosting Reports' />
+            <DropdownDivider/>
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportTable`} text ="Hosting Report List"
+             label={{ color: 'red', empty: true, circular: true }}/>
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} text ="Hosting Reports (PDF)"
+            label={{ color: 'red', empty: true, circular: true }}/>
+            <DropdownDivider/>
+            <Dropdown.Header icon='tags' content='USAHEC Reports' />
+            <DropdownDivider/>
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper`} text ="USAHEC Meeting Summary By Location"
+            label={{ color: 'black', empty: true, circular: true }}/>
             </Dropdown.Menu>
             </Dropdown>
             {user && user.roles && user.roles.includes("admin") &&

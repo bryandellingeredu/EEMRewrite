@@ -25,6 +25,7 @@ namespace Persistence
         public DbSet<EmailGroupMember> EmailGroupMembers { get; set; }
         public DbSet<EmailGroupEmailGroupMemberJunction> EmailGroupEmailGroupMemberJunctions {get; set;}
         public DbSet<CSLCalendarLegend> CSLCalendarLegends { get; set; }
+         public DbSet<USAHECFacilitiesUsageLegend> USAHECFacilitiesUsageLegends { get; set; }
         public DbSet<RoomVTCCoordinator> RoomVTCCoordinators {get; set;}
 
 

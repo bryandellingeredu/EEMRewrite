@@ -37,6 +37,21 @@ namespace API.Controllers
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "hostingReports.csv");
         }
 
+        [AllowAnonymous]
+        [HttpPost("USAHECFacilitiesUsageReport")]
+        public IActionResult CsvFacilitiesUsageHostingReport([FromBody] USAHECFacilitiesUsageReportCSVData[] csvDataList)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Title,Start,End,Room/s, Action Officer, Created By");
+            foreach (var data in csvDataList)
+            {
+                builder.AppendLine($"\"{data.Title}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.ActionOfficer}\",\"{data.CreatedBy}\"");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "USAHECFacilitiesUsageReport.csv");
+        }
+
+
 
 
 
@@ -64,6 +79,16 @@ namespace API.Controllers
              public string GuestRank {get; set;}
             public string GuestTitle {get; set;}
             public string CreatedBy {get; set;}
+        }
+
+        public class USAHECFacilitiesUsageReportCSVData
+        {
+            public string Title { get; set; }
+            public string Start { get; set; }
+            public string End { get; set; }
+            public string Location { get; set; }
+            public string ActionOfficer { get; set; }
+            public string CreatedBy { get; set; }
         }
 
     }

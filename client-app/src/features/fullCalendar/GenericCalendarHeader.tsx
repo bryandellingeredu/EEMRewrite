@@ -3,6 +3,7 @@ import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faCh
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
 import CSLLegend from "./CSLLegend";
+import USAHECFacilitiesUsageLegend from "./USAHECFacilitiesUsageLegend";
 import { faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
 import { useStore } from "../../app/stores/store";
 import SyncCalendarInformation from "./SyncCalendarInformation";
@@ -165,6 +166,7 @@ export default function GenericCalendarHeader({id} : Props){
   </Divider>
 
     {id === 'csl' && <CSLLegend />}
+    {id === 'usahecFacilitiesUsage' && <USAHECFacilitiesUsageLegend />}
     </>
     )
 }

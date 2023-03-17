@@ -24,6 +24,7 @@ import { Attachment } from '../models/attachment';
 import { CSLCalendarLegend } from '../models/cslCalendarLegend';
 import { EmailGroupMemberDTO } from '../models/emailGroupMemberDTO';
 import { ActivityAttachment } from '../models/activityAttachment';
+import { USAHECFacilitiesUsageLegend } from '../models/usahecFacilitiesUsageLegend';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -256,6 +257,14 @@ const CSLLegend = {
     list: () => axiosRequest.get<CSLCalendarLegend[]>('/CSLCalendarLegend')
 }
 
+const USAHECFacilitiesUsageCalendarLegend = {
+    list: () => axiosRequest.get<USAHECFacilitiesUsageLegend[]>('/USAHECFacilitiesUsageLegend')
+} 
+
+const USAHECReports = {
+    listBySearchParams: (data: any) => axiosRequest.post<any>('/USAHECFacilitiesUsage/listBySearchParams', data),
+}
+
 const HostingReports = {
     getGuestTitles: () => axiosRequest.get<string[]>('/HostingReports/getGuestTitles'),
     listBySearchParams: (data: any) => axiosRequest.post<any>('/hostingReports/listBySearchParams', data),
@@ -279,7 +288,9 @@ const agent = {
     EmailGroups,
     Attachments,
     CSLLegend,
+    USAHECFacilitiesUsageCalendarLegend,
     HostingReports,
+    USAHECReports
 }
 
 export default agent;

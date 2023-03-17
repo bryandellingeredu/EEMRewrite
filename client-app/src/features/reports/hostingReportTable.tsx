@@ -15,6 +15,7 @@ import { v4 as uuid } from "uuid";
 import { toast } from "react-toastify";
 import HostingReportRow from "./hostingReportRow";
 
+
 interface SearchFormValues{
     title: string
     start : Date | null
@@ -129,6 +130,7 @@ export default observer(function HostingReportTable(){
         }}
       
         function handleFormSubmit(values : SearchFormValues ) {
+          setSubmitting(true);
           setSearched(true);
           setLoadingSearchData(true)
           console.log(values);
@@ -136,6 +138,7 @@ export default observer(function HostingReportTable(){
           
           (async () => {
             await loadData(data, false);
+            setSubmitting(false);
           })();
         }
 

@@ -7,14 +7,14 @@ using Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 
-namespace Application.HostingReports
+ namespace Application.USAHECReports
 {
     public class ListBySearchParams
     {
-        public class Query : IRequest<Result<List<HostingReportTableDTO>>> {
-          public HostingReportTableSearchParams searchParams { get; set; }
+        public class Query : IRequest<Result<List<USAHECFacilitiesUsageDTO>>> {
+            public USAHECFacilitiesUsageSearchParams searchParams { get; set; }
         }
-        public class Handler : IRequestHandler<Query, Result<List<HostingReportTableDTO>>>
+        public class Handler : IRequestHandler<Query, Result<List<USAHECFacilitiesUsageDTO>>>
         {
             private readonly DataContext _context;
             private readonly IConfiguration _config;
@@ -24,7 +24,7 @@ namespace Application.HostingReports
                 _context = context;
                 _config = config;
             }
-            public async Task<Result<List<HostingReportTableDTO>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<USAHECFacilitiesUsageDTO >>> Handle(Query request, CancellationToken cancellationToken)
             {
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
@@ -33,10 +33,10 @@ namespace Application.HostingReports
 
                 var query = _context.Activities
                    .Include(c => c.Category)
-                   .Include(o => o.Organization)
-                   .Include(h => h.HostingReport)
+                   .Where(x => x.CopiedTousahecFacilitiesUsage)
                    .Where(x => !x.LogicalDeleteInd)
-                   .Where(h =>h.HostingReport != null)  
+                   .Where(x => !string.IsNullOrEmpty(x.EventLookup))
+                   .Where(x => !string.IsNullOrEmpty(x.CoordinatorEmail))
                    .AsQueryable();
 
                 if (!string.IsNullOrEmpty(request.searchParams.Title))
@@ -54,26 +54,6 @@ namespace Application.HostingReports
                     query = query.Where(e => e.CreatedBy == request.searchParams.CreatedBy);
                 }
 
-                if (!string.IsNullOrEmpty(request.searchParams.OrganizatonId))
-                {
-                    Guid organizationId = Guid.Parse(request.searchParams.OrganizatonId);
-                    query = query.Where(e => e.OrganizationId == organizationId);
-                }
-
-                if (!string.IsNullOrEmpty(request.searchParams.GuestRank))
-                {
-                    query = query.Where(e => e.HostingReport.GuestRank == request.searchParams.GuestRank);
-                }
-
-                if (!string.IsNullOrEmpty(request.searchParams.GuestTitle))
-                {
-                    query = query.Where(e => e.HostingReport.GuestTitle == request.searchParams.GuestTitle);
-                }
-
-                if (!string.IsNullOrEmpty(request.searchParams.HostingReportStatus))
-                {
-                    query = query.Where(e => e.HostingReport.HostingReportStatus == request.searchParams.HostingReportStatus);
-                }
 
 
                 if (!string.IsNullOrEmpty(request.searchParams.Start))
@@ -94,17 +74,8 @@ namespace Application.HostingReports
                     query = query.Where(e => e.End <= end);
                 }
 
-
-                if (string.IsNullOrEmpty(request.searchParams.Location))
-                {
-                    query = query.OrderBy(e => e.Start).Take(100);
-                }
-                else
-                {
                     query = query.OrderBy(e => e.Start);
-                }
-         
-
+                
                 var activities = await query.ToListAsync();
 
                 foreach (var activity in activities)
@@ -120,8 +91,7 @@ namespace Application.HostingReports
                         activity.Recurrence.Activities = null;
                     }
 
-                    if (!string.IsNullOrEmpty(activity.EventLookup) && !string.IsNullOrEmpty(activity.CoordinatorEmail))
-                    {
+         
                         string coordinatorEmail = activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
                             ? activity.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
                         Event evt;
@@ -154,36 +124,24 @@ namespace Application.HostingReports
                             }
                         }
                        if(!string.IsNullOrEmpty(activity.EventLookup))  activity.ActivityRooms = newActivityRooms;
-                    }
+                    
                 }
 
                 if (!string.IsNullOrEmpty(request.searchParams.Location))
                 {
                     activities = activities.Where(activity =>
-                        activity.ActivityRooms != null && activity.ActivityRooms.Any()
-                        ? activity.ActivityRooms.Any(ar => ar.Name == request.searchParams.Location)
-         :                  activity.PrimaryLocation == request.searchParams.Location
+                        activity.ActivityRooms != null && activity.ActivityRooms.Any() && activity.ActivityRooms.Any(ar => ar.Name == request.searchParams.Location)
                     ).ToList();
                 }
 
-                List<HostingReportTableDTO> reportList = new List<HostingReportTableDTO>();
-                 reportList = activities
-                     .GroupBy(a => a.Title)
-                     .Select(g => g.OrderBy(a => a.Start).First())
-                    .Select(activity => new HostingReportTableDTO
-                     {
+                List<USAHECFacilitiesUsageDTO> reportList = new List<USAHECFacilitiesUsageDTO>();
+                 reportList = activities.Where(x => x.ActivityRooms.Any())
+                    .Select(activity => new USAHECFacilitiesUsageDTO
+                    {
                         Title = activity.Title,
                         Start = activity.Start,
                         End = activity.End,
-                         Location = activity.ActivityRooms.Any()
-                            ? activity.ActivityRooms.Select(x => x.Name).Any()
-                                ? string.Join(", ", activity.ActivityRooms.Select(x => x.Name).ToArray())
-                                 : activity.PrimaryLocation
-                            : activity.PrimaryLocation,
-                        OrganizationName = activity.Organization?.Name,
-                        HostingReportStatus = activity.HostingReport.HostingReportStatus,
-                        GuestRank = activity.HostingReport.GuestRank,
-                        GuestTitle = activity.HostingReport.GuestTitle,
+                        Location = string.Join(", ", activity.ActivityRooms.Select(x => x.Name.Replace(',', ';')).ToArray()),
                         CreatedBy = activity.CreatedBy,
                         AllDayEvent = activity.AllDayEvent,
                         Id= activity.Id,
@@ -192,7 +150,7 @@ namespace Application.HostingReports
                         })
                          .ToList();
 
-                return Result<List<HostingReportTableDTO>>.Success(reportList);
+                return Result<List<USAHECFacilitiesUsageDTO>>.Success(reportList);
             }
             private string getName(Attendee item, IGraphServicePlacesCollectionPage allrooms)
             {    

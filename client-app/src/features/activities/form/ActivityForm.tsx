@@ -1399,6 +1399,7 @@ export default observer(function ActivityForm() {
                       value: "Army Heritage Center Foundation",
                     },
                     { text: "Education", value: "Education" },
+                    { text: "General", value: "General" },
                     { text: "Government", value: "Government" },
                     { text: "Holiday", value: "Holiday" },
                     { text: "Maintenance", value: "Maintenance" },
