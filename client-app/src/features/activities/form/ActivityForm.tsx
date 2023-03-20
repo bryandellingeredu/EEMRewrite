@@ -55,6 +55,8 @@ import RepeatingEventButton from "./RepeatingEventButton";
 import { ActivityAttachment } from "../../../app/models/activityAttachment";
 import UploadAttachmentModal from "./UploadAttachmentModal";
 import ActivityAttachmentComponent from "./ActivityAttachmentComponent";
+import SubCalendarInformation from "./SubCalendarInformation";
+import CUIWarningModal from "./CUIWarningModal";
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -106,7 +108,7 @@ export default observer(function ActivityForm() {
     organizationStore;
   const { graphRooms, loadGraphRooms, graphReservationParameters } =
     graphRoomStore;
-  const {openModal} = modalStore;
+  const {openModal, closeModal} = modalStore;
   const { id } = useParams<{ id: string }>();
   const { roomid } = useParams<{ roomid: string }>();
   const { calendarid } = useParams<{ calendarid: string }>();
@@ -119,6 +121,8 @@ export default observer(function ActivityForm() {
   const [recurrence, setRecurrence] = useState<Recurrence>(
     new RecurrenceFormValues()
   );
+  const [cuiWarningHasBeenDisplayed, setCUIWarningHasBeenDisplayed] = useState(false);
+
   const [submitting, setSubmitting] = useState(false);
   const [attachBioError, setAttachBioError] = useState(false);
   const [attachNoAttachmentError, setAttachNoAttachmentError] = useState(false);
@@ -162,6 +166,11 @@ export default observer(function ActivityForm() {
 
   const deleteActivityAttachment = (activityAttachmentId : string) => {
     setActivityAttachments(activityAttachments.filter(x => x.id !== activityAttachmentId));
+  }
+
+   const handleCUIWarningHasBeenDisplayed = () => {
+    closeModal();
+    setCUIWarningHasBeenDisplayed(true);
   }
 
   function handleActivityDocumentUpload(file: any) {
@@ -532,7 +541,14 @@ export default observer(function ActivityForm() {
     const { values, setFieldValue } = useFormikContext();
     const v = values as ActivityFormValues;
     useEffect(() => {
-
+      if(!cuiWarningHasBeenDisplayed && !v.checkedForOpsec && 
+         (v.communityEvent || v.mfp || v.copiedTocommunity ||  ["Community Event (External)"]
+         .includes(categories.find((x) => x.id === v.categoryId)?.name || "")
+         )){
+          openModal(
+            <CUIWarningModal handleCUIWarningHasBeenDisplayed={handleCUIWarningHasBeenDisplayed}/>, 'large'
+           )
+         }
       if (v.end.getDate() !== v.start.getDate()) {
         setRecurrenceDisabled(true);
         setRecurrenceInd(false);
@@ -644,6 +660,7 @@ export default observer(function ActivityForm() {
       >
         {({ handleSubmit, isSubmitting, values }) => (
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
+
             <FormObserver />
             <ScrollToFieldError />
 
@@ -1215,14 +1232,27 @@ export default observer(function ActivityForm() {
                 </Segment>
               </>
             )}
-            <Segment color="violet" inverted>
+            <Segment color="orange" inverted>
               <Grid>
                 <Grid.Row>
+                  
                   <Grid.Column width={2}>
-                    <div style={{ paddingTop: "15px" }} />
-                    Sub Calendar:
+                    <div style={{ paddingTop: "10px" }} />
+                    <Button icon inverted color='blue' size='tiny' circular
+                    type="button"
+                    onClick={() =>
+                      openModal(
+                        <SubCalendarInformation/>, 'large'
+                      )
+                    }
+                    >
+                      <Icon name='info' />
+                    </Button>
+                    <span> Sub Calendar: </span>
+                  
                   </Grid.Column>
-                  <Grid.Column width={14}>
+                  
+                  <Grid.Column width={13}>
                     <MySelectInput
                       options={categoryOptions
                         .filter((x: any) => x.text !== "Student Calendar")
@@ -2125,6 +2155,8 @@ export default observer(function ActivityForm() {
                 </>
               )}
 
+         
+
             {(values.communityEvent || values.mfp || values.copiedTocommunity ||  ["Community Event (External)"].includes(
                 categories.find((x) => x.id === values.categoryId)?.name || ""
               )) && (
@@ -2242,7 +2274,7 @@ export default observer(function ActivityForm() {
                           name="report"
                         />
                         <MySemanticRadioButton
-                          label="Hosting Report - (BG (O7) and Above or Civilian SES Equivalent"
+                          label="Hosting Report - BG (O7) and Above or Civilian SES Equivalent"
                           value="Hosting Report"
                           name="report"
                         />

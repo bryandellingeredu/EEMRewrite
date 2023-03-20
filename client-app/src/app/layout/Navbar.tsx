@@ -52,9 +52,9 @@ export default observer(function Navbar() {
 
   return (
     <div style={{position: "fixed", top: 0, width: "100%", zIndex: 999}}>
-   <div style={{backgroundColor: isSignedIn && armyProfile && armyProfile.mail  ?  "black" :
+   <div style={{backgroundColor: isSignedIn && armyProfile && armyProfile.mail  ?  "#502b85" :
     isSignedIn ? "green" :
-    armyProfile && armyProfile.mail ? "#cd5700": "red",
+    armyProfile && armyProfile.mail ? "#502b85": "red",
     height: "25px", display: "flex", justifyContent: "center", alignItems: "center"}}>
     <p style={{color: "white", margin: 0, padding: "0 10px"}}>
     {isSignedIn && armyProfile && armyProfile.mail  ?  "Logged on with both .edu and CAC - CUI Authorized" :
