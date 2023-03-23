@@ -152,6 +152,7 @@ const Activities = {
     details: (id: string) => axiosRequest.get<Activity>(`/activities/${id}`),
     create: (activity: Activity) => axiosRequest.post<void>('/activities', activity),
     update: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/${id}`, activity),
+    cancelRoomReservations: (id: string) => axiosRequest.put<void>(`/activities/cancelRoomReservations/${id}`, {}),
     cancel: ( id: string, reason: string,) => axiosRequest.put<void>(`/activities/cancel/${id}`, {activityId: id, reason}),
     updateSeries: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/updateSeries/${id}`, activity),
     delete: (id: string) =>  axiosRequest.del<void>(`/activities/${id}`),

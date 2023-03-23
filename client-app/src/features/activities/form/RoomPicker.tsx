@@ -44,6 +44,7 @@ export default observer(function RoomPicker({
   const [dirty, setDirty] = useState<boolean>(false);
 
   const onChange = (selectedOptions: any) => {
+    debugger;
     const values = selectedOptions.map((item: Option) => item.value);
     setRoomEmails(values);
   };

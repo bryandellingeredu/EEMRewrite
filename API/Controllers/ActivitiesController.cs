@@ -80,7 +80,12 @@ namespace API.Controllers
         {
             activity.Id = id;
             return HandleResult(await Mediator.Send(new EditSeries.Command { Activity = activity }));
+
         }
+
+        [HttpPut("cancelRoomReservations/{id}")]
+        public async Task<ActionResult<Activity>> CancelRoomReservations(Guid id) =>
+          HandleResult(await Mediator.Send(new CancelRoomReservations.Command { Id = id }));
 
         [HttpPut("restore/{id}")]
         public async Task<ActionResult<Activity>> RestoreActivity(Guid id) =>

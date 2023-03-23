@@ -134,6 +134,43 @@ export default observer(function ActivityForm() {
   const [uploadDifferentBioIndicator, setUploadDifferentBioIndicator] =
     useState(false);
   const [currentCategoryId, setCurrentCategoryId] = useState(categoryId);
+  const [cancellingRooms, setCancellingRooms] =
+  useState(false);
+
+  const [popupStartOpen, setPopupStartOpen] =useState(false);
+  const [popupEndOpen, setPopupEndOpen] =useState(false);
+  const [removeEventLookup, setRemoveEventLookup] = useState(false);
+
+  const handleStartOpen = () => {
+    setPopupStartOpen(true);
+  }
+
+  const handleEndOpen = () => {
+    setPopupEndOpen(true);
+  }
+
+
+
+  const handleCancelRoomReservations =() => {
+    setCancellingRooms(true);
+    agent.Activities.cancelRoomReservations(id)
+    .then(() => {
+      setRemoveEventLookup(true);
+      setRoomRequired(false);
+      setRoomEmails([]);
+      setOriginalRoomEmails([]);
+      setCancellingRooms(false);
+      setPopupStartOpen(false);
+      setTimeout(function() {
+        setRoomRequired(true);
+      }, 1000);
+    }).catch((error) => {
+      console.log(error);
+      toast.error('error cancelling room reservations');
+      setPopupStartOpen(false);
+      setPopupEndOpen(false);
+    });
+  }
 
   const handleSetRoomRequired = () => setRoomRequired(!roomRequired);
   const handleUploadDifferentBioClick = () =>
@@ -485,6 +522,7 @@ export default observer(function ActivityForm() {
       activity.organizationId = activity.organizationId || null;
       activity.category = category;
       activity.organization = organization;
+      if(removeEventLookup) activity.eventLookup = '';
       if (!activity.id || (copy && copy === 'true' )) {
         let newActivity = {
           ...activity,
@@ -704,6 +742,8 @@ export default observer(function ActivityForm() {
 
                 <Grid.Column>
                   <Popup
+                       open={popupStartOpen}
+                       onOpen={handleStartOpen}
                     trigger={
                       <SemanticForm.Field>
                         <label>*Start:</label>
@@ -720,19 +760,33 @@ export default observer(function ActivityForm() {
                     }
                   >
                     <Popup.Header>
+                    <Button
+            floated="right"
+            icon
+            size="mini"
+            color="black"
+            compact
+            onClick={() => setPopupStartOpen(false)}
+          >
+            <Icon name="close" />
+          </Button>
                       Why can't I change the start date?
                     </Popup.Header>
                     <Popup.Content>
+               
                       This event has a current room reservation. To change the
-                      start date you must first cancel the room reservation. To
-                      do this choose "no room required" and save your work. you
-                      will then be able to change the start date and reserve a
-                      room.
+                      start date you must first cancel the room reservation. 
+                         <Divider />
+                      <Button type='button' primary onClick={handleCancelRoomReservations} loading={cancellingRooms}>
+                        Cancel Room Reservation
+                      </Button> 
                     </Popup.Content>
                   </Popup>
                 </Grid.Column>
                 <Grid.Column>
                   <Popup
+                   open={popupEndOpen}
+                   onOpen={handleEndOpen}
                     trigger={
                       <SemanticForm.Field>
                         <label>*End:</label>
@@ -749,14 +803,25 @@ export default observer(function ActivityForm() {
                     }
                   >
                     <Popup.Header>
+                    <Button
+            floated="right"
+            icon
+            size="mini"
+            color="black"
+            compact
+            onClick={() => setPopupEndOpen(false)}
+          >
+            <Icon name="close" />
+          </Button>
                       Why can't I change the end date?
                     </Popup.Header>
                     <Popup.Content>
                       This event has a current room reservation. To change the
-                      end date you must first cancel the room reservation. To do
-                      this choose "no room required" and save your work. you
-                      will then be able to change the end date and reserve a
-                      room.
+                      end date you must first cancel the room reservation.
+                      <Divider />
+                      <Button type='button' primary onClick={handleCancelRoomReservations} loading={cancellingRooms}>
+                        Cancel Room Reservation
+                      </Button>
                     </Popup.Content>
                   </Popup>
                 </Grid.Column>
