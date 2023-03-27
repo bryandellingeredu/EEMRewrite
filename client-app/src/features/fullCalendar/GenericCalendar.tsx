@@ -6,8 +6,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction";
 import { useHistory, useParams } from "react-router-dom";
-import { useCallback, useEffect} from "react";
 import GenericCalendarHeader from "./GenericCalendarHeader";
+import {useState, useEffect, useCallback} from 'react';
 import { format } from 'date-fns';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
@@ -21,6 +21,19 @@ export default observer(function GenericCalendar() {
   const { categories, loadingInitial } = categoryStore;
   const {addCalendarEventParameters} = activityStore;
   const history = useHistory();
+  const [height, setHeight] = useState(window.innerHeight - 100);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setHeight(window.innerHeight - 200);
+    };
+  
+    window.addEventListener("resize", handleResize);
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     const category = categories.find(x => x.routeName === id);
@@ -85,6 +98,7 @@ export default observer(function GenericCalendar() {
         <div>
           <GenericCalendarHeader id={id} />
           <FullCalendar
+            height= {height}
             initialView="dayGridMonth"
             headerToolbar={{
               left: "prev,next",

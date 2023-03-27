@@ -25,6 +25,9 @@ export default observer(function RoomCalendar() {
     const { categories } = categoryStore;
     const{ getActivityIdByRoom, addCalendarEventParameters } = activityStore;
     const history = useHistory();
+    const [height, setHeight] = useState(window.innerHeight - 100);
+
+  
     const[graphRoom, setGraphRoom] = useState<GraphRoom>({
         address: {
             city: '',
@@ -111,7 +114,17 @@ isWheelChairAccessible: ''
       }
   }
 
- 
+  useEffect(() => {
+    const handleResize = () => {
+      setHeight(window.innerHeight - 100);
+    };
+  
+    window.addEventListener("resize", handleResize);
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
     
   useEffect(() => {
     if(!graphRooms.length){
@@ -143,6 +156,7 @@ isWheelChairAccessible: ''
       </Divider>
 
       <FullCalendar
+            height={height}
             initialView="dayGridMonth"
             headerToolbar={{
               left: "prev,next",

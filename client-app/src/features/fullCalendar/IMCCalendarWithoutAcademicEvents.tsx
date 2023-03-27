@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import agent from "../../app/api/agent";
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import { useCallback} from "react";
+import { useCallback, useState, useEffect} from "react";
 import { useHistory} from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { useStore } from "../../app/stores/store";
@@ -19,6 +19,19 @@ export default function IMCCalendarWithoutAcademicEvents() {
   const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${clickInfo.event.extendedProps.categoryId}`);
   }, [ history]);
+  const [height, setHeight] = useState(window.innerHeight - 200);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setHeight(window.innerHeight - 100);
+    };
+  
+    window.addEventListener("resize", handleResize);
+  
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleDateClick = useCallback((info : any) => {
     const paramId = uuid();
@@ -65,6 +78,7 @@ export default function IMCCalendarWithoutAcademicEvents() {
     <>
     
           <FullCalendar
+           height={height}
             initialView="timeGridWeek"
             headerToolbar={{
               left: "prev,next",

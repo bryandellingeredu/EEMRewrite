@@ -90,6 +90,10 @@ mgt-login {
     page-break-after: always;
   }
 
+  .fc-event-title {
+    font-size: larger;
+  }
+
 
 
 
