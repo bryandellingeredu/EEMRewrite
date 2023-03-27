@@ -73,7 +73,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "postbuild": "rimraf .../API/wwwroot && move build ../API/wwwroot",
+    "postbuild": "rimraf /Q .../API/wwwroot && move build ../API/wwwroot",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

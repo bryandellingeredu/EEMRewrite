@@ -272,6 +272,10 @@ const HostingReports = {
     listForHostingReportPDF: () => axiosRequest.get<Activity[]>('/hostingReports/ListForHostingReportPDF'),
 }
 
+const Calendars = {
+    listBySearchParams: (data: any, id: string) => axiosRequest.post<any>(`/calendar/listBySearchParams/${id}`, data),
+}
+
 const agent = {
     Activities,
     Account,
@@ -291,7 +295,8 @@ const agent = {
     CSLLegend,
     USAHECFacilitiesUsageCalendarLegend,
     HostingReports,
-    USAHECReports
+    USAHECReports,
+    Calendars 
 }
 
 export default agent;

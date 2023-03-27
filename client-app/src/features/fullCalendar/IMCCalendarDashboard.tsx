@@ -7,6 +7,7 @@ import IMCCalendarWithoutAcademicEvents from "./IMCCalendarWithoutAcademicEvents
 import IMCLegend from "./IMCLegend";
 import SyncCalendarInformation from "./SyncCalendarInformation";
 import { useStore } from "../../app/stores/store";
+import GenericCalendarTable from "./GenericCalendarTable";
 
 
   
@@ -35,6 +36,7 @@ export default observer(function IMCCalendarDashboard(){
   </Divider>
   <IMCLegend />
   <IMCCalendarWithoutAcademicEvents/> 
+  <GenericCalendarTable id={'imc'} />
     </>
     )
 })

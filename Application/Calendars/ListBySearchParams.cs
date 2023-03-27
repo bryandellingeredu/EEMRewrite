@@ -1,4 +1,4 @@
-﻿using  System.Linq;
+﻿
 using Application.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,14 +7,15 @@ using Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 
-namespace Application.HostingReports
+namespace Application.Calendars
 {
     public class ListBySearchParams
     {
-        public class Query : IRequest<Result<List<HostingReportTableDTO>>> {
-          public HostingReportTableSearchParams searchParams { get; set; }
+        public class Query : IRequest<Result<List<CalendarTableDTO>>> {
+          public CalendarTableSearchParams searchParams { get; set; }
+          public string Id { get; set; }    
         }
-        public class Handler : IRequestHandler<Query, Result<List<HostingReportTableDTO>>>
+        public class Handler : IRequestHandler<Query, Result<List<CalendarTableDTO>>>
         {
             private readonly DataContext _context;
             private readonly IConfiguration _config;
@@ -24,7 +25,7 @@ namespace Application.HostingReports
                 _context = context;
                 _config = config;
             }
-            public async Task<Result<List<HostingReportTableDTO>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<CalendarTableDTO>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
@@ -32,11 +33,8 @@ namespace Application.HostingReports
                 var allrooms = await GraphHelper.GetRoomsAsync();
 
                 var query = _context.Activities
-                   .Include(c => c.Category)
                    .Include(o => o.Organization)
-                   .Include(h => h.HostingReport)
                    .Where(x => !x.LogicalDeleteInd)
-                   .Where(h =>h.HostingReport != null)  
                    .AsQueryable();
 
                 if (!string.IsNullOrEmpty(request.searchParams.Title))
@@ -49,10 +47,6 @@ namespace Application.HostingReports
                     query = query.Where(e => e.ActionOfficer == request.searchParams.ActionOfficer);
                 }
 
-                if (!string.IsNullOrEmpty(request.searchParams.CreatedBy))
-                {
-                    query = query.Where(e => e.CreatedBy == request.searchParams.CreatedBy);
-                }
 
                 if (!string.IsNullOrEmpty(request.searchParams.OrganizatonId))
                 {
@@ -60,21 +54,7 @@ namespace Application.HostingReports
                     query = query.Where(e => e.OrganizationId == organizationId);
                 }
 
-                if (!string.IsNullOrEmpty(request.searchParams.GuestRank))
-                {
-                    query = query.Where(e => e.HostingReport.GuestRank == request.searchParams.GuestRank);
-                }
-
-                if (!string.IsNullOrEmpty(request.searchParams.GuestTitle))
-                {
-                    query = query.Where(e => e.HostingReport.GuestTitle == request.searchParams.GuestTitle);
-                }
-
-                if (!string.IsNullOrEmpty(request.searchParams.HostingReportStatus))
-                {
-                    query = query.Where(e => e.HostingReport.HostingReportStatus == request.searchParams.HostingReportStatus);
-                }
-
+   
 
                 if (!string.IsNullOrEmpty(request.searchParams.Start))
                 {
@@ -94,6 +74,92 @@ namespace Application.HostingReports
                     query = query.Where(e => e.End <= end);
                 }
 
+                if (request.Id == "imc")
+                {
+                    query = query.Where(e => e.IMC);
+                }
+                if (request.Id == "academic")
+                {
+                    query = query.Where(e => e.CopiedToacademic);
+                }
+                if (request.Id == "asep")
+                {
+                    query = query.Where(e => e.CopiedToasep);
+                }
+                if (request.Id == "commandGroup")
+                {
+                    query = query.Where(e => e.CopiedTocommandGroup);
+                }
+                if (request.Id == "community")
+                {
+                    query = query.Where(e => e.CopiedTocommunity);
+                }
+                if (request.Id == "csl")
+                {
+                    query = query.Where(e => e.CopiedTocsl);
+                }
+                if (request.Id == "garrison")
+                {
+                    query = query.Where(e => e.CopiedTogarrison);
+                }
+                if (request.Id == "generalInterest")
+                {
+                    query = query.Where(e => e.CopiedTogeneralInterest);
+                }
+                if (request.Id == "holiday")
+                {
+                    query = query.Where(e => e.CopiedToholiday);
+                }
+                if (request.Id == "pksoi")
+                {
+                    query = query.Where(e => e.CopiedTopksoi);
+                }
+                if (request.Id == "socialEventsAndCeremonies")
+                {
+                    query = query.Where(e => e.CopiedTosocialEventsAndCeremonies);
+                }
+                if (request.Id == "ssiAndUsawcPress")
+                {
+                    query = query.Where(e => e.CopiedTossiAndUsawcPress);
+                }
+                if (request.Id == "ssl")
+                {
+                    query = query.Where(e => e.CopiedTossl);
+                }
+                if (request.Id == "trainingAndMiscEvents")
+                {
+                    query = query.Where(e => e.CopiedTotrainingAndMiscEvents);
+                }
+                if (request.Id == "usahec")
+                {
+                    query = query.Where(e => e.CopiedTousahec);
+                }
+                if (request.Id == "usahecFacilitiesUsage")
+                {
+                    query = query.Where(e => e.CopiedTousahecFacilitiesUsage);
+                }
+                if (request.Id == "visitsAndTours")
+                {
+                    query = query.Where(e => e.CopiedTovisitsAndTours);
+                }
+                if (request.Id == "symposiumAndConferences")
+                {
+                    query = query.Where(e => e.CopiedTosymposiumAndConferences);
+                }
+                if (request.Id == "militaryFamilyAndSpouseProgram")
+                {
+                    query = query.Where(e => e.MFP);
+                }
+                if (request.Id == "battlerhythm")
+                {
+                    query = query.Where(e => e.CopiedTobattlerhythm);
+                }
+                if (request.Id == "staff")
+                {
+                    query = query.Where(e => e.CopiedTostaff);
+                }
+
+
 
                 if (string.IsNullOrEmpty(request.searchParams.Location))
                 {
@@ -109,7 +175,6 @@ namespace Application.HostingReports
 
                 foreach (var activity in activities)
                 {
-                    activity.Category.Activities = null;
                     if (activity.Organization != null)
                     {
                         activity.Organization.Activities = null;
@@ -166,33 +231,27 @@ namespace Application.HostingReports
                     ).ToList();
                 }
 
-                List<HostingReportTableDTO> reportList = new List<HostingReportTableDTO>();
-                 reportList = activities
-                     .GroupBy(a => a.Title)
-                     .Select(g => g.OrderBy(a => a.Start).First())
-                    .Select(activity => new HostingReportTableDTO
-                     {
-                        Title = activity.Title,
-                        Start = activity.Start,
-                        End = activity.End,
-                        Location = activity.ActivityRooms?.Any() == true
+                List<CalendarTableDTO> reportList = new List<CalendarTableDTO>();
+                reportList = activities
+   .Select(activity => new CalendarTableDTO
+   {
+       Title = activity.Title,
+       Start = activity.Start,
+       End = activity.End,
+       Location = activity.ActivityRooms?.Any() == true
          ? activity.ActivityRooms.Select(x => x.Name).Any()
               ? string.Join(", ", activity.ActivityRooms.Select(x => x.Name).ToArray())
               : activity.PrimaryLocation
          : activity.PrimaryLocation,
-                        OrganizationName = activity.Organization?.Name,
-                        HostingReportStatus = activity.HostingReport.HostingReportStatus,
-                        GuestRank = activity.HostingReport.GuestRank,
-                        GuestTitle = activity.HostingReport.GuestTitle,
-                        CreatedBy = activity.CreatedBy,
-                        AllDayEvent = activity.AllDayEvent,
-                        Id= activity.Id,
-                        CategoryId= activity.CategoryId,
-                        ActionOfficer=activity.ActionOfficer,
-                        })
-                         .ToList();
+          OrganizationName = activity.Organization?.Name,
+           AllDayEvent = activity.AllDayEvent,
+           Id= activity.Id,
+           CategoryId= activity.CategoryId,
+           ActionOfficer=activity.ActionOfficer,
+   })
+   .ToList();
 
-                return Result<List<HostingReportTableDTO>>.Success(reportList);
+                return Result<List<CalendarTableDTO>>.Success(reportList);
             }
             private string getName(Attendee item, IGraphServicePlacesCollectionPage allrooms)
             {    

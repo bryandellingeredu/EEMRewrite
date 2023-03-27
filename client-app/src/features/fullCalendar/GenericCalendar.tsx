@@ -13,6 +13,7 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import agent from "../../app/api/agent";
 import { v4 as uuid } from "uuid";
+import GenericCalendarTable from "./GenericCalendarTable";
 
 export default observer(function GenericCalendar() {
   const { id } = useParams<{ id: string }>();
@@ -98,7 +99,10 @@ export default observer(function GenericCalendar() {
             slotMinTime={'07:00:00'}
             slotMaxTime={'21:00:00'}     
           />
+           <GenericCalendarTable id={id} />
+           
         </div>
+        
       }
     </>
   )

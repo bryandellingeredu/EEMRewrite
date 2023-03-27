@@ -37,6 +37,20 @@ namespace API.Controllers
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "hostingReports.csv");
         }
 
+         [AllowAnonymous]
+        [HttpPost("GenericCalendar")]
+        public IActionResult GenericCalendar([FromBody] GenericCalendarCSVData[] csvDataList)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Title,Start,End,Location,Action Officer,Lead Org");
+            foreach (var data in csvDataList)
+            {
+                builder.AppendLine($"\"{data.Title}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.ActionOfficer}\",\"{data.OrganizationName}\"");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "calendar.csv");
+        }
+
         [AllowAnonymous]
         [HttpPost("USAHECFacilitiesUsageReport")]
         public IActionResult CsvFacilitiesUsageHostingReport([FromBody] USAHECFacilitiesUsageReportCSVData[] csvDataList)
@@ -65,6 +79,17 @@ namespace API.Controllers
             public string ActionOfficer  {get; set;}
             public string LeadOrg  {get; set;}
             public string SubCalendar  {get; set;}
+        }
+
+             public class GenericCalendarCSVData
+          {
+            public string Title {get; set;}
+            public string Start  {get; set;}
+            public string End  {get; set;}
+            public string Location  {get; set;}
+            public string ActionOfficer  {get; set;}
+            public string LeadOrg  {get; set;}
+             public string OrganizationName  {get; set;}
         }
 
            public class HostingReportCSVData
