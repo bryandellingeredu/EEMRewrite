@@ -3,7 +3,7 @@ import { Divider, Header, Popup } from "semantic-ui-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPeopleRoof } from "@fortawesome/free-solid-svg-icons";
 import { useStore } from "../../app/stores/store";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { GraphRoom } from "../../app/models/graphRoom";
 import FullCalendar, { EventClickArg } from "@fullcalendar/react";
@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import { v4 as uuid } from "uuid";
+import Pikaday from "pikaday";
 
 
 export default observer(function RoomCalendar() {
@@ -125,6 +126,27 @@ isWheelChairAccessible: ''
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+   const calendarRef = useRef<FullCalendar>(null);
+
+   useEffect(() => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      // Initialize Pikaday
+      const picker = new Pikaday({
+        field: document.querySelector(".fc-datepicker-button") as HTMLElement,
+        format: "YYYY-MM-DD",
+        onSelect: function (dateString) {
+          picker.gotoDate(new Date(dateString));
+          calendarApi.gotoDate(new Date(dateString));
+        },
+      });
+  
+      return () => {
+        picker.destroy();
+      };
+    }
+  }, [calendarRef])
     
   useEffect(() => {
     if(!graphRooms.length){
@@ -156,12 +178,18 @@ isWheelChairAccessible: ''
       </Divider>
 
       <FullCalendar
+            ref={calendarRef}
             height={height}
             initialView="dayGridMonth"
             headerToolbar={{
               left: "prev,next",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay"
+              right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay"
+            }}
+            customButtons={{
+              datepicker: {
+              text: "go to date",
+            },
             }}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             eventClick={handleEventClick}

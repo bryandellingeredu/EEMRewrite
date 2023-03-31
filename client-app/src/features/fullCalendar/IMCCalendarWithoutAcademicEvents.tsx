@@ -1,43 +1,83 @@
 
-import FullCalendar, { EventClickArg } from "@fullcalendar/react";
+import FullCalendar, {EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid"
+import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { format } from "date-fns";
 import agent from "../../app/api/agent";
-import tippy from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
-import { useCallback, useState, useEffect} from "react";
-import { useHistory} from "react-router-dom";
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
+import { useCallback, useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { useStore } from "../../app/stores/store";
+import Pikaday from "pikaday";
 
-export default function IMCCalendarWithoutAcademicEvents() {
+export default function IMCCalendarWithoutAcademicEvents(this: any) {
   const history = useHistory();
   const { activityStore } = useStore();
-  const {addCalendarEventParameters} = activityStore;
-  const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-    history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${clickInfo.event.extendedProps.categoryId}`);
-  }, [ history]);
+  const { addCalendarEventParameters } = activityStore;
+  const handleEventClick = useCallback(
+    (clickInfo: EventClickArg) => {
+      history.push(
+        `${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${clickInfo.event.extendedProps.categoryId}`
+      );
+    },
+    [history]
+  );
   const [height, setHeight] = useState(window.innerHeight - 200);
+
+  const calendarRef = useRef<FullCalendar>(null);
 
   useEffect(() => {
     const handleResize = () => {
       setHeight(window.innerHeight - 100);
     };
-  
+
     window.addEventListener("resize", handleResize);
-  
+
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  const handleDateClick = useCallback((info : any) => {
-    const paramId = uuid();
-    addCalendarEventParameters({id: paramId, allDay: info.allDay, dateStr: info.dateStr, date:info.date, categoryId: '', needRoom: false})
-    history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`);
-  }, [ history]);
+  useEffect(() => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      // Initialize Pikaday
+      const picker = new Pikaday({
+        field: document.querySelector(".fc-datepicker-button") as HTMLElement,
+        format: "YYYY-MM-DD",
+        onSelect: function (dateString) {
+          debugger;
+          picker.gotoDate(new Date(dateString));
+          calendarApi.gotoDate(new Date(dateString));
+        },
+      });
+  
+      return () => {
+        picker.destroy();
+      };
+    }
+  },[calendarRef]);
+
+  const handleDateClick = useCallback(
+    (info: any) => {
+      const paramId = uuid();
+      addCalendarEventParameters({
+        id: paramId,
+        allDay: info.allDay,
+        dateStr: info.dateStr,
+        date: info.date,
+        categoryId: "",
+        needRoom: false,
+      });
+      history.push(
+        `${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`
+      );
+    },
+    [addCalendarEventParameters, history]
+  );
 
   const  handleMouseEnter = async (arg : any) =>{
     var content = `<p> 
@@ -74,25 +114,33 @@ export default function IMCCalendarWithoutAcademicEvents() {
   }
 }
 
+
+
   return (
     <>
-    
-          <FullCalendar
-           height={height}
-            initialView="timeGridWeek"
-            headerToolbar={{
-              left: "prev,next",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay"
-            }}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            events={`${process.env.REACT_APP_API_URL}/activities/getIMCEventsByDate`} 
-            eventMouseEnter={handleMouseEnter}  
-            eventClick={handleEventClick}  
-            dateClick={handleDateClick}
-            slotMinTime={'07:00:00'}
-            slotMaxTime={'21:00:00'}
-          />
+   
+   <FullCalendar
+      ref={calendarRef}
+      height={height}
+      initialView="timeGridWeek"
+      headerToolbar={{
+        left: "prev,next",
+        center: "title",
+        right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay",
+      }}
+      customButtons={{
+        datepicker: {
+          text: "go to date",
+        },
+      }}
+      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+      events={`${process.env.REACT_APP_API_URL}/activities/getIMCEventsByDate`}
+      eventMouseEnter={handleMouseEnter}
+      eventClick={handleEventClick}
+      dateClick={handleDateClick}
+      slotMinTime={"07:00:00"}
+      slotMaxTime={"21:00:00"}
+    />
     </>
   )
 }

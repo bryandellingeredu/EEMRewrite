@@ -7,13 +7,14 @@ import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction";
 import { useHistory, useParams } from "react-router-dom";
 import GenericCalendarHeader from "./GenericCalendarHeader";
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect, useCallback, useRef} from 'react';
 import { format } from 'date-fns';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import agent from "../../app/api/agent";
 import { v4 as uuid } from "uuid";
 import GenericCalendarTable from "./GenericCalendarTable";
+import Pikaday from "pikaday";
 
 export default observer(function GenericCalendar() {
   const { id } = useParams<{ id: string }>();
@@ -34,6 +35,29 @@ export default observer(function GenericCalendar() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+
+     const calendarRef = useRef<FullCalendar>(null);
+
+
+  useEffect(() => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      // Initialize Pikaday
+      const picker = new Pikaday({
+        field: document.querySelector(".fc-datepicker-button") as HTMLElement,
+        format: "YYYY-MM-DD",
+        onSelect: function (dateString) {
+          picker.gotoDate(new Date(dateString));
+          calendarApi.gotoDate(new Date(dateString));
+        },
+      });
+  
+      return () => {
+        picker.destroy();
+      };
+    }
+  },[calendarRef]);
 
   const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     const category = categories.find(x => x.routeName === id);
@@ -98,13 +122,19 @@ export default observer(function GenericCalendar() {
         <div>
           <GenericCalendarHeader id={id} />
           <FullCalendar
+           ref={calendarRef}
             height= {height}
             initialView="dayGridMonth"
             headerToolbar={{
               left: "prev,next",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay"
+              right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay",
             }}
+              customButtons={{
+                datepicker: {
+                text: "go to date",
+                },
+              }}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/${id}`}
             eventClick={handleEventClick}
