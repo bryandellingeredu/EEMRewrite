@@ -63,27 +63,54 @@ constructor() {
     }
   }
 
+  roomAssets: { [emailAddress: string]: { picURL: string; thumbURL: string } } = {
+    'BlissHallTestAuditorium@armywarcollege.edu': {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/BlissHallThumb.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/BlissHall.jpg`
+    },
+    'Test_Room_1@armywarcollege.edu': {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/CherbourgThumb.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Cherbourg.jpg`
+    },
+    'ReynoldsTheater@armywarcollege.edu': {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/ReynoldsThumb.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Reynolds_Theater.jpg`
+    },
+    'Test_Room_2@armywarcollege.edu': {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/RidgewayHallThumb.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Ridgway_Hall_Conf_Rm.jpg`
+    },
+    'UptonHallTestConfRoom@armywarcollege.edu': {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/UptonAuditoriumThumb.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/UptonAuditoriumThumb.jpg`
+    }
+  };
+
   loadGraphRooms = async () => {
     if (!this.graphRoomRegistry.size) {
-        this.setLoadingInitial(true); 
-        try{
-            const axiosResponse : GraphRoom[] = await agent.GraphRooms.list();
-            runInAction(() => {
-            axiosResponse.forEach(response => {
-                this.graphRoomRegistry.set(response.id, response);
-              })   
-            })          
-        } catch (error) {
-          console.log(error);
-         
-        } finally  {
-            this.setLoadingInitial(false);
-            return this.graphRooms;
-        }
-    } else {
+      this.setLoadingInitial(true);
+      try {
+        const axiosResponse: GraphRoom[] = await agent.GraphRooms.list();
+        runInAction(() => {
+          axiosResponse.forEach(response => {
+            const assets = this.roomAssets[response.emailAddress];
+            if (assets) {
+              response.picURL = assets.picURL;
+              response.thumbURL = assets.thumbURL;
+            }
+            this.graphRoomRegistry.set(response.id, response);
+          });
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.setLoadingInitial(false);
         return this.graphRooms;
+      }
+    } else {
+      return this.graphRooms;
     }
-  }
+  };
 
   setLoadingInitial = (state: boolean) => this.loadingInitial = state;
 }

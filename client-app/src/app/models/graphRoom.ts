@@ -16,4 +16,6 @@ audioDeviceName: string
 videoDeviceName: string,
 displayDeviceName: string,
 isWheelChairAccessible: string,
+thumbURL: string,
+picURL: string
 }

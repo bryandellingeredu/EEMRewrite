@@ -1,10 +1,11 @@
 import { observer } from "mobx-react-lite";
-import { Button, Card, Divider, Grid, Header, Icon, Label, Segment } from "semantic-ui-react";
+import { Button, Card, Divider, Grid, Header, Icon, Label, Segment, Image } from "semantic-ui-react";
 import { GraphRoom } from "../../app/models/graphRoom";
 import RoomAvailability from "./RoomAvailability";
 import { useStore } from "../../app/stores/store";
 import { useEffect } from 'react';
 import LoadingComponent from "../../app/layout/LoadingComponent";
+import RoomPictureModal from "./RoomPictureModal";
 
 interface Props{
     room: GraphRoom
@@ -15,8 +16,9 @@ interface Props{
 export default observer (function RoomListItem(
   {room, showAvailabilityIndicatorList, addIdToShowAvailabilityIndicatorList } : Props) {
 
-    const {graphRoomStore} = useStore();
+    const {graphRoomStore, modalStore} = useStore();
     const{ roomDelegates, loadingInitial, loadRoomDelegates} = graphRoomStore;
+    const {openModal} = modalStore;
 
     useEffect(() => {
       if(!roomDelegates || roomDelegates.length < 1) loadRoomDelegates(); 
@@ -29,7 +31,12 @@ export default observer (function RoomListItem(
             <Label as='a' color='green' ribbon='right'>
               Capacity: {room.capacity}
             </Label>
-              <Card.Header style={{marginTop: '5px'}}>{room.displayName}</Card.Header>
+              <Card.Header style={{marginTop: '5px'}}>
+              {room.thumbURL && <Image floated='left' size='small' src={room.thumbURL}
+               onClick={() => openModal(<RoomPictureModal url={room.picURL}/>, 'large')}
+              />}    
+              {room.displayName}
+              </Card.Header>
               {room.address &&
               <Card.Meta>
                 {room.address.street} {room.address.city} 

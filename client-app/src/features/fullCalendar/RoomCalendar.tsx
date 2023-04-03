@@ -50,7 +50,9 @@ label: '',
 audioDeviceName: '',
 videoDeviceName: '',
 displayDeviceName: '',
-isWheelChairAccessible: ''
+isWheelChairAccessible: '',
+thumbURL: '',
+picURL: '',
     });
 
     const handleDateClick = useCallback((info : any) => {
