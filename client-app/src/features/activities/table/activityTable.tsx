@@ -167,20 +167,30 @@ export default observer(function ActivityTable(){
     setSearchedTableData([]);
     setThereIsNoMoreData(true);
     setDay(new Date());
-    getActivitiesBySearchParams(values).then((activities) =>{
+    const sanitizedValues = Object.entries(values).reduce<SearchFormValues>((acc, [key, value]) => {
+      if (typeof value === 'string') {
+        const cleanedValue = value.replace(/`/g, '');
+        acc[key as keyof SearchFormValues] = cleanedValue as any;
+      } else {
+        acc[key as keyof SearchFormValues] = value;
+      }
+      return acc;
+    }, {} as SearchFormValues);
+    getActivitiesBySearchParams(sanitizedValues).then((activities) =>{
+      if (activities){
       let searchedTableDataArray : TableData[] = [];
       activities!.forEach((activity) =>{
         let newTableData : TableData = {
-          id: activity.id,
-          categoryId: activity.categoryId,
-          title: activity.title,
-          description: activity.description,
+          id: activity.id || '',
+          categoryId: activity.categoryId || '',
+          title: activity.title || '',
+          description: activity.description || '',
           start: activity.allDayEvent ?  format(activity.start, 'MM/dd' ) : format(activity.start, 'MM/dd h:mma' ),
           end: activity.allDayEvent ?  format(activity.end, 'MM/dd' ) : format(activity.end, 'MM/dd h:mma' ),
-          actionOfficer: activity.actionOfficer,
+          actionOfficer: activity.actionOfficer || '',
           leadOrg: activity.organization?.name || '',
-          subCalendar: activity.category.name,
-          location: activity.activityRooms && activity.activityRooms.length > 0 ? activity.activityRooms.map(x => x.name).join(', ') : activity.primaryLocation,
+          subCalendar: activity.category.name || '',
+          location: activity.activityRooms && activity.activityRooms.length > 0 ? activity.activityRooms.map(x => x.name).join(', ') : activity.primaryLocation || '',
           startAsDate: activity.start,
           endAsDate: activity.end
         }
@@ -208,6 +218,7 @@ export default observer(function ActivityTable(){
 
 
       setSubmitting(false);
+    }
     })
   }
  

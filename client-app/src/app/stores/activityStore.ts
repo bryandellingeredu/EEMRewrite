@@ -237,7 +237,13 @@ export default class ActivityStore {
           }
         }
         if(filter){
-            graphResponse = await(agent.GraphEvents.listForCalendarUsingFilter(filter))
+            try{
+              graphResponse = await(agent.GraphEvents.listForCalendarUsingFilter(filter))
+            }
+            catch (error){
+              graphResponse = [];
+            }
+           
         } else {
           const start = store.commonStore.convertDateToGraph(store.commonStore.addDays(new Date(), -10), true, false);
           const end = store.commonStore.convertDateToGraph(store.commonStore.addDays(new Date(), 10), true, true);

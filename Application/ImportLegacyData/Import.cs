@@ -6,7 +6,10 @@ using Persistence;
 using Domain;
 using System.Globalization;
 using CsvHelper;
-
+using Microsoft.Extensions.Configuration;
+using Microsoft.Graph;
+using System.ComponentModel;
+using Application.Activities;
 
 namespace Application.ImportLegacyData
 {
@@ -20,15 +23,20 @@ namespace Application.ImportLegacyData
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
+            private readonly IConfiguration _config;
 
             public Handler(
-             DataContext context)
+             DataContext context, IConfiguration config)
             {
                 _context = context;
+                _config = config;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
+                Settings s = new Settings();
+                var settings = s.LoadSettings(_config);
+                GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                 List<LegacyEEMData> eemDataList = new List<LegacyEEMData>();
                 var buildDir = "C:\\Users\\Bryan.Dellinger.Apps\\Documents\\EEMRewriteEDU\\EEMRewrite\\Application\\ImportLegacyData";
                 using (var reader = new StreamReader(buildDir + "\\LegacyEEMData.csv"))
@@ -49,7 +57,7 @@ namespace Application.ImportLegacyData
                     // Insert the new organizations into context.Organizations
                     foreach (var newOrg in newOrgs)
                     {
-                        var organization = new Organization { Name = newOrg };
+                        var organization = new Domain.Organization { Name = newOrg };
                         _context.Organizations.Add(organization);
                     }
 
@@ -120,8 +128,77 @@ namespace Application.ImportLegacyData
                    await _context.Activities.AddRangeAsync(activities);
 
                     await _context.SaveChangesAsync();
+                    var targetLocations = new List<string>
+                    {
+                         "collins hall - test room",
+                         "armstrong hall - g8 conf rm - bldg 314, conf rm (vtc)",
+                         "reynolds theater"
+                     };
 
-                    return Result<Unit>.Success(Unit.Value);
+                    var activitiesWithRooms = activities.Where(x => targetLocations.Any(location => x.PrimaryLocation.ToLowerInvariant().Contains(location.ToLowerInvariant()))).ToList();
+                    string coordinatorEmail = GraphHelper.GetEEMServiceAccount();
+
+                    foreach (var a in activitiesWithRooms)
+                    {
+                        List<string> roomEmails = new List<string>();
+
+                        if (a.PrimaryLocation.ToLowerInvariant().Contains("collins hall - test room"))
+                        {
+                            roomEmails.Add("TestRoom5@armywarcollege.edu");
+                        }
+
+                        if (a.PrimaryLocation.ToLowerInvariant().Contains("armstrong hall - g8 conf rm - bldg 314, conf rm (vtc)"))
+                        {
+                            roomEmails.Add("ArmstrongHallTestRoom1@armywarcollege.edu");
+                        }
+
+                        if (a.PrimaryLocation.ToLowerInvariant().Contains("reynolds theater"))
+                        {
+                            roomEmails.Add("ReynoldsTheater@armywarcollege.edu");
+                        }
+                        string startDateAsString = a.Start.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                        string endDateAsString = a.End.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                        if (a.AllDayEvent)
+                        {
+                            DateTime startDate = DateTime.ParseExact(startDateAsString, "yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                            DateTime endDate = DateTime.ParseExact(endDateAsString, "yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                            startDate = startDate.Date;
+                            endDate = endDate.AddDays(1).Date;
+                            startDateAsString = startDate.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                            endDateAsString = endDate.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                        }
+                        //create outlook event
+                        GraphEventDTO graphEventDTO = new GraphEventDTO
+                        {
+                            EventTitle = a.Title,
+                            EventDescription = a.Description,
+                            Start = startDateAsString,
+                            End = endDateAsString,
+                            RoomEmails = roomEmails.ToArray(),
+                            RequesterEmail = coordinatorEmail,
+                            RequesterFirstName = "EEMServiceAccount",
+                            RequesterLastName = "EEMServiceAccount",
+                            IsAllDay = a.AllDayEvent,
+                            UserEmail = coordinatorEmail
+                        };
+                        try
+                        {
+                            Event evt = await GraphHelper.CreateEvent(graphEventDTO);
+                            var activityToUpdate = await _context.Activities.FindAsync(a.Id);
+                            if (activityToUpdate != null) { 
+                                activityToUpdate.EventLookup= evt.Id;
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            var exc = e;
+                            //throw;
+                        }
+                    }
+
+
+                        return Result<Unit>.Success(Unit.Value);
                 }
                         
             }
