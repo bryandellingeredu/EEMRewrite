@@ -140,10 +140,12 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                                 ))}   
                                 { (!activity.activityRooms || activity.activityRooms.length <= 0) && activity.primaryLocation &&
                                     <p>{activity.primaryLocation}</p>
-                                }                                 
+                                }
+                                {activity.category.name !== 'Other' &&                                
                                 <p>
                                     <strong>{activity.category.name === 'Academic Calendar' ? 'Student Calendar' : activity.category.name === 'Academic IMC Event' ? 'Academic Calendar' : activity.category.name}</strong>
                                 </p>
+                                }
 
                                 { activity.category.name != "Academic Calendar" && activity.organization && activity.organization?.name &&
                                   <p>

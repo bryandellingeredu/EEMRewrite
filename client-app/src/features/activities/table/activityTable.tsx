@@ -349,7 +349,14 @@ export default observer(function ActivityTable(){
                <Table.Cell>{item.location}</Table.Cell>
                <Table.Cell>{item.actionOfficer}</Table.Cell>
                <Table.Cell>{item.leadOrg}</Table.Cell>
-               <Table.Cell>{item.subCalendar === 'Academic Calendar' ? 'Student Calendar' : item.subCalendar === 'Academic IMC Event' ? 'Academic Calendar' : item.subCalendar}</Table.Cell>
+               <Table.Cell>
+                {
+                  item.subCalendar === 'Academic Calendar' ? 'Student Calendar' :
+                  item.subCalendar === 'Academic IMC Event' ? 'Academic Calendar' :
+                  item.subCalendar === 'Other' ? '' :
+                  item.subCalendar
+                }
+              </Table.Cell>
                <Table.Cell></Table.Cell>
           </Table.Row>
         ))}
@@ -384,7 +391,14 @@ export default observer(function ActivityTable(){
                <Table.Cell>{item.location}</Table.Cell>
                <Table.Cell>{item.actionOfficer}</Table.Cell>
                <Table.Cell>{item.leadOrg}</Table.Cell>
-               <Table.Cell>{item.subCalendar === 'Academic Calendar' ? 'Student Calendar' : item.subCalendar  === 'Academic IMC Event' ? 'Academic Calendar' : item.subCalendar}</Table.Cell>
+               <Table.Cell>
+                {
+                  item.subCalendar === 'Academic Calendar' ? 'Student Calendar' :
+                  item.subCalendar === 'Academic IMC Event' ? 'Academic Calendar' :
+                  item.subCalendar === 'Other' ? '' :
+                  item.subCalendar
+                }
+              </Table.Cell>
                <Table.Cell></Table.Cell>
           </Table.Row>
         ))}
