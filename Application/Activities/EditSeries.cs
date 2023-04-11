@@ -104,7 +104,16 @@ namespace Application.Activities
                         {
                             // delete graph event we will make new ones
                             var coordinatorEmail = item.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? item.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
-                            await GraphHelper.DeleteEvent(item.EventLookup, coordinatorEmail);
+                            try
+                            {
+                                await GraphHelper.DeleteEvent(item.EventLookup, coordinatorEmail);
+                            }
+                            catch (Exception)
+                            {
+
+                                item.EventLookup = string.Empty;
+                            }
+                           
                         }
                     }
                    
@@ -131,6 +140,18 @@ namespace Application.Activities
                             a.RecurrenceId = request.Activity.Recurrence.Id;
                         }
 
+                        var coordinatorEmail = a.CoordinatorEmail;
+                        var coordinatorFirstName = a.CoordinatorFirstName;
+                        var coordinatorLastName = a.CoordinatorLastName;
+
+                        if(string.IsNullOrEmpty(coordinatorEmail) || !coordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]))
+                        {
+                            coordinatorEmail = GraphHelper.GetEEMServiceAccount();
+                            coordinatorFirstName = "EEMServiceAccount";
+                            coordinatorLastName = "EEMServiceAccount";
+
+                        }
+
                         if (!string.IsNullOrEmpty(a.CoordinatorEmail))
                         {
                             //create outlook event
@@ -141,9 +162,9 @@ namespace Application.Activities
                                 Start = a.StartDateAsString,
                                 End = a.EndDateAsString,
                                 RoomEmails = a.RoomEmails,
-                                RequesterEmail = a.CoordinatorEmail,
-                                RequesterFirstName = a.CoordinatorFirstName,
-                                RequesterLastName = a.CoordinatorLastName,
+                                RequesterEmail = coordinatorEmail,
+                                RequesterFirstName = coordinatorFirstName,
+                                RequesterLastName = coordinatorLastName,
                                 IsAllDay = a.AllDayEvent,
                                 UserEmail = user.Email
                             };
@@ -178,7 +199,7 @@ namespace Application.Activities
 
                     return Result<Unit>.Success(Unit.Value);
                 }
-                catch (Exception )
+                catch (Exception ex )
                 {
 
                     throw;
