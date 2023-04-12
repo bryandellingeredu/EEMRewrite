@@ -12,6 +12,7 @@ import { useHistory } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { useStore } from "../../app/stores/store";
 import Pikaday from "pikaday";
+import { EventApi } from '@fullcalendar/react';
 
 export default function IMCCalendarWithoutAcademicEvents(this: any) {
   const history = useHistory();
@@ -114,6 +115,19 @@ export default function IMCCalendarWithoutAcademicEvents(this: any) {
   }
 }
 
+function addIconToEvent(event: EventApi, el: HTMLElement) {
+  const iconName = 'repeat';
+
+  // Create an element for the icon
+  const iconElement = `<i class="icon ${iconName} event-icon"></i>`;
+
+  // Find the event content element and insert the icon in it
+  const contentElement = el.querySelector('.fc-event-main-frame');
+  if (contentElement) {
+    (contentElement as HTMLElement).style.position = 'relative';
+    contentElement.insertAdjacentHTML('beforeend', iconElement);
+  }
+}
 
 
   return (
@@ -140,6 +154,11 @@ export default function IMCCalendarWithoutAcademicEvents(this: any) {
       dateClick={handleDateClick}
       slotMinTime={"07:00:00"}
       slotMaxTime={"21:00:00"}
+      eventDidMount={({ event, el }) => {
+        if (event.extendedProps.recurring) {
+          addIconToEvent(event, el);
+        }
+      }}
     />
     </>
   )

@@ -25,5 +25,6 @@ namespace Application.GraphSchedules
         public string CoordinatorEmail { get;  set; }
         public string EventLookup { get;  set; }
         public string CategoryName { get; set; }
+        public bool Recurring {get; set;}
     }
 }

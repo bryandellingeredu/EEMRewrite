@@ -94,6 +94,10 @@ mgt-login {
     font-size: larger;
   }
 
-
+  .event-icon {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+  }
 
 
