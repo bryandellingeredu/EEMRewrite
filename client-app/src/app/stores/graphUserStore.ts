@@ -15,8 +15,8 @@ export default class GraphUserStore {
     armyMsalConfig = {
       auth: {
           // 'Application (client) ID' of app registration in Azure portal - this value is a GUID
-          //clientId: "780198a8-aa95-4d15-82b9-bbdf17c13bad",
-          clientId: "6308648b-7eb4-4c66-ac8d-58f535afa06b",
+          clientId: "780198a8-aa95-4d15-82b9-bbdf17c13bad",
+          //clientId: "6308648b-7eb4-4c66-ac8d-58f535afa06b",
           // Full directory URL, in the form of https://login.microsoftonline.com/<tenant-id>
           authority: "https://login.microsoftonline.com/common",
           // Full redirect URL, in form of http://localhost:3000
