@@ -46,13 +46,6 @@ function App() {
   const query = new URLSearchParams(location.search);
 
   useEffect(() => {
-    const currentUrl = window.location.href;
-    if (currentUrl === 'https://apps.armywarcollege.edu/eem') {
-      window.location.replace('https://apps.armywarcollege.edu/eem/');
-    }
-  }, []);
-
-  useEffect(() => {
     const id = query.get('id');
     const categoryId = query.get('categoryid');
     if(id && categoryId){
