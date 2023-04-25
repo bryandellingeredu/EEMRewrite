@@ -15,10 +15,11 @@ export default class GraphUserStore {
     armyMsalConfig = {
       auth: {
           // 'Application (client) ID' of app registration in Azure portal - this value is a GUID
-          clientId: "780198a8-aa95-4d15-82b9-bbdf17c13bad",
-          //clientId: "6308648b-7eb4-4c66-ac8d-58f535afa06b",
-          // Full directory URL, in the form of https://login.microsoftonline.com/<tenant-id>
-          authority: "https://login.microsoftonline.com/common",
+         // clientId: "780198a8-aa95-4d15-82b9-bbdf17c13bad",  //onrobhoss
+         clientId: "47fa12ca-2cff-4175-9446-9ab5dd51b022",  // cac
+
+         // authority: "https://login.microsoftonline.com/common",
+         authority: "https://login.microsoftonline.com/fae6d70f-954b-4811-92b6-0530d6f84c43",
           // Full redirect URL, in form of http://localhost:3000
           redirectUri: process.env.REDIRECT_URI_ARMY,
       },
@@ -28,7 +29,8 @@ export default class GraphUserStore {
       },   
   };
   graphConfig = {
-    graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
+   // graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
+    graphMeEndpoint: "https://dod-graph.microsoft.us/v1.0/me",
   };
   loginRequest = {
     scopes: ["User.Read"]
@@ -44,6 +46,7 @@ armyProfile : GraphUser | null = null;
 
       getArmy365Token = async() =>{
         try{
+        debugger;
         const account = this.myMSALObj.getAccountByUsername(this.armyUserName);
         let request : any = this.armyMsalConfig;
         request.account = account;
@@ -77,6 +80,7 @@ armyProfile : GraphUser | null = null;
       } 
 
       callArmyMSGraph = async () => {
+        debugger;
         const headers = new Headers();
         const bearer = `Bearer ${this.armyToken}`;
     
@@ -90,6 +94,7 @@ armyProfile : GraphUser | null = null;
         console.log('request made to Graph API at: ' + new Date().toString());
     
         try {
+          debugger;
             const response = await fetch(this.graphConfig.graphMeEndpoint, options);
             const jsonResponse = await response.json();
             this.setArmyProfile(jsonResponse);
@@ -105,7 +110,7 @@ armyProfile : GraphUser | null = null;
 
      getAndSetArmyProfile : any = async() =>{
       try{
-        
+        debugger;
         await this.getArmy365Token();
        const response = await this.callArmyMSGraph();
        return response;
@@ -119,6 +124,7 @@ armyProfile : GraphUser | null = null;
      }
 
      signIntoArmy365 = async () => {
+      debugger;
       this.setLoadingSignIntoArmy365(true);
       try{
         await this.signInArmy();
@@ -146,6 +152,7 @@ armyProfile : GraphUser | null = null;
       signInArmy = async() =>{
         this.setLoadingArmy(true);
         try {
+          debugger;
           const loginResponse = await this.myMSALObj.loginPopup(this.loginRequest);
           if (loginResponse !== null) {
             this.setArmyUserName(loginResponse!.account!.username);
