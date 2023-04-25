@@ -135,7 +135,7 @@ namespace Persistence
     new Category { Name = "Training", RouteName = "trainingAndMiscEvents", IMCColor = "#966b05", IncludeInIMC = true },
     new Category { Name = "USAHEC Calendar", RouteName = "usahec", IMCColor = "#32C61A" },
     new Category { Name = "USAHEC Facilities Usage Calendar", RouteName = "usahecFacilitiesUsage", IMCColor = "#5f9c91" },
-    new Category { Name = "Visits And Tours", RouteName = "visitsAndTours", IMCColor = "#a89448" },
+    new Category { Name = "Visits And Tours", RouteName = "visitsAndTours", IMCColor = "#a9a9a9" },
     new Category { Name = "Symposium and Conferences Calendar", RouteName = "symposiumAndConferences", IMCColor = "#8B008B" },
     new Category { Name = "Military Family and Spouse Program", RouteName = "militaryFamilyAndSpouseProgram", IMCColor = "#584a66" },
     new Category { Name = "Battle Rhythm", RouteName = "battlerhythm", IMCColor = "#FF5E00", IncludeInIMC = true  },

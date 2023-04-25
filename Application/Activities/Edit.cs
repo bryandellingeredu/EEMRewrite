@@ -112,8 +112,19 @@ namespace Application.Activities
                   shouldGraphEventsBeRegenerated
                 )
                 {
-                    await GraphHelper.DeleteEvent(request.Activity.EventLookup, request.Activity.CoordinatorEmail);
+                    try
+                    {
+                        await GraphHelper.DeleteEvent(request.Activity.EventLookup, request.Activity.CoordinatorEmail);
+                    }
+                    catch (Exception)
+                    {
+
+                        request.Activity.EventLookup = string.Empty;
+                        activity.EventLookup = string.Empty;
+                    }
+                   
                 }
+
 
                 //create new graph event
                 if (

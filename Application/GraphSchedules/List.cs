@@ -93,8 +93,11 @@ namespace Application.GraphSchedules
 
                     foreach (var item in result)
                      {
-                         item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free);
-                     } 
+                        if (item.ScheduleItems != null)
+                        {
+                            item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free);
+                        }
+                    } 
 
                     return Result<List<ScheduleInformation>>.Success(result);
                 }
@@ -108,7 +111,10 @@ namespace Application.GraphSchedules
                     }
                     foreach (var item in scheduleInformationList)
                     {
-                        item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free);
+                        if (item.ScheduleItems != null)
+                        {
+                            item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free);
+                        }
                     }
                     return Result<List<ScheduleInformation>>.Success(scheduleInformationList);
                 }              

@@ -46,6 +46,7 @@ export const history = createBrowserHistory();
  //redirectUri: 'http://localhost/eem/',
  //redirectUri: 'https://dev13.armywarcollege.army.mil/eem/',
 
+
 Providers.globalProvider = new Msal2Provider({
   clientId:  process.env.REACT_APP_CLIENT_ID!,
   authority: `https://login.microsoftonline.com/${process.env.REACT_APP_TENANT_ID}`,

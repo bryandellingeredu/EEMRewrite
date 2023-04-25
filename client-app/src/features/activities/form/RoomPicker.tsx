@@ -124,7 +124,7 @@ export default observer(function RoomPicker({
 
 
   function getIsDisabled(start: Date, end: Date, scheduledItems: GraphScheduleItem[]){
-    if (scheduledItems.length < 1) return false;
+    if (!scheduledItems || scheduledItems.length < 1) return false;
     let result = false;
     scheduledItems.forEach((item) =>{
       const itemStart = new Date(item.start.dateTime);
