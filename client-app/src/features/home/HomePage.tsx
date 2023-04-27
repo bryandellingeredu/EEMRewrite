@@ -77,8 +77,9 @@ export default observer(function HomePage(){
         <>
           <Divider inverted />
 
-          <Grid columns={3} divided >
+          <Grid columns={2} divided >
           <Grid.Row>
+            {/*
             <Grid.Column>
             <Header as='h2' icon>
               <Grid columns={2}>
@@ -101,12 +102,13 @@ export default observer(function HomePage(){
                   Sign In 
                 </Button>
             </Grid.Column>
+      */}
             <Grid.Column>
             <Header as='h2' icon>
             <Icon name='graduation cap' style={{color: 'white'}} />
             <span style={{color: 'white'}}>Login EDU</span>
             <Header.Subheader>
-            <span style={{color: 'orange'}}>I only have an EDU Account.</span>
+            <span style={{color: 'orange'}}>Login with your edu account.</span>
             </Header.Subheader>
             </Header>
             {loading && <LoadingComponent content="logging in..." /> }
@@ -117,17 +119,19 @@ export default observer(function HomePage(){
               />}
             </Grid.Column>
             <Grid.Column>
-            <Header as='h2' icon>
+            <Header as='h2' icon  style={{paddingTop: '3px'}}>
             <Icon name='id badge' style={{color: 'white'}} />
             <span style={{color: 'white'}}>Login Army 365</span>
             <Header.Subheader>
-            <span style={{color: 'orange'}}>I only have a CAC.</span>
+            <span style={{color: 'orange'}}>login with your CAC.</span>
             </Header.Subheader>
             </Header>
+            <div>
             <Button style={{backgroundColor: '#004080', color:'white'}} size='big' onClick={signInArmyUser} type='button'>
                   <Icon name='user outline' style={{color: 'white'}}/>
                   Sign In 
                 </Button>
+                </div>
             </Grid.Column>        
           </Grid.Row>
           </Grid>

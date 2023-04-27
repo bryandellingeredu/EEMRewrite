@@ -144,12 +144,14 @@ export default observer(function Navbar() {
                 />
                 <Dropdown pointing="top left" text={user?.displayName}>
                   <Dropdown.Menu>
+                    {/*
                     <Dropdown.Item
                       as={Link}
                       to={`${process.env.PUBLIC_URL}/profile/${user?.userName}`}
                       text="My Profile"
                       icon="user"
                     />
+                   */}
                     <Dropdown.Item
                       onClick={logout}
                       text="Logout"

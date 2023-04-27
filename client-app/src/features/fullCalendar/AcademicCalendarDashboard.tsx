@@ -41,8 +41,7 @@ export default observer(function AcademicCalendarDashboard(){
          header='You Must Sign Into EDU'
          content='To view the student calendar you must have an edu account,
          you must be a member of the academic calendar group,
-        and you must sign in to your edu account.'/>
-        <Login/> 
+        and you must sign in to your edu account. Please Logout and then sign in to the EEM with edu account'/>
        </>
      }
     </>
