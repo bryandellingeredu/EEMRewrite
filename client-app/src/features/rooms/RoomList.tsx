@@ -131,7 +131,7 @@ function handleAddIdToShowAvailabilityIndicatorList(id: string){
 
                 <Grid.Column width={1} style={{marginTop: '20px'}}>
                   <MySemanticCheckBox
-                  label='vtc'
+                  label='svtc'
                   name='vtc'
                   />       
                 </Grid.Column>

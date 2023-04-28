@@ -12,6 +12,7 @@ import {
   Divider,
   Label,
   ButtonGroup,
+  Modal
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -101,6 +102,7 @@ export default observer(function ActivityForm() {
     uploading,
     calendarEventParameters,
   } = activityStore;
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const { categoryOptions, categories, loadCategories } = categoryStore;
   const { eduGraphUser, loadEDUGraphUser, armyProfile } = graphUserStore;
   const { locationOptions, loadLocations } = locationStore;
@@ -152,6 +154,7 @@ export default observer(function ActivityForm() {
 
 
   const handleCancelRoomReservations =() => {
+    setConfirmModalOpen(false);
     setCancellingRooms(true);
     agent.Activities.cancelRoomReservations(id)
     .then(() => {
@@ -663,6 +666,30 @@ export default observer(function ActivityForm() {
     return null;
   };
 
+  const renderConfirmModal = () => (
+    <Modal
+      size="mini"
+      open={confirmModalOpen}
+      onClose={() => setConfirmModalOpen(false)}
+    >
+      <Modal.Header>Cancel Room Reservation</Modal.Header>
+      <Modal.Content>
+        <p>Are you sure you want to cancel this room reservation?</p>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button negative onClick={() => setConfirmModalOpen(false)}>
+          No
+        </Button>
+        <Button
+          positive
+          onClick={handleCancelRoomReservations}
+        >
+          Yes
+        </Button>
+      </Modal.Actions>
+    </Modal>
+  );
+
   return (
     <Segment clearing>
       <Header
@@ -777,9 +804,11 @@ export default observer(function ActivityForm() {
                       This event has a current room reservation. To change the
                       start date you must first cancel the room reservation. 
                          <Divider />
-                      <Button type='button' primary onClick={handleCancelRoomReservations} loading={cancellingRooms}>
+                      <Button type='button' primary
+                        onClick={() => {setConfirmModalOpen(true);}} loading={cancellingRooms}>
                         Cancel Room Reservation
                       </Button> 
+                      {renderConfirmModal()}
                     </Popup.Content>
                   </Popup>
                 </Grid.Column>
@@ -816,12 +845,15 @@ export default observer(function ActivityForm() {
                       Why can't I change the end date?
                     </Popup.Header>
                     <Popup.Content>
+               
                       This event has a current room reservation. To change the
-                      end date you must first cancel the room reservation.
-                      <Divider />
-                      <Button type='button' primary onClick={handleCancelRoomReservations} loading={cancellingRooms}>
+                      end date you must first cancel the room reservation. 
+                         <Divider />
+                      <Button type='button' primary
+                        onClick={() => {setConfirmModalOpen(true);}} loading={cancellingRooms}>
                         Cancel Room Reservation
-                      </Button>
+                      </Button> 
+                      {renderConfirmModal()}
                     </Popup.Content>
                   </Popup>
                 </Grid.Column>
