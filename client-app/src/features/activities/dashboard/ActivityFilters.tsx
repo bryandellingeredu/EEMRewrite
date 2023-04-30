@@ -1,11 +1,20 @@
 import { Calendar } from "react-calendar";
-import { Header, Menu } from "semantic-ui-react";
+import { useState } from "react";
 
 interface Props {
-    setFilterDate: (date: Date) => void
-}
-export default function ActivityFilters({setFilterDate} : Props){
-    return(
-        <Calendar onChange={(date : Date) => setFilterDate(date)}/>
-    )
-}
+    setFilterDate: (date: Date) => void;
+    selectedDate: Date;
+  }
+  
+  export default function ActivityFilters({ setFilterDate, selectedDate }: Props) {
+    const handleDateChange = (date: Date) => {
+      setFilterDate(date);
+    };
+  
+    return (
+      <Calendar
+        value={selectedDate}
+        onChange={(date: Date) => handleDateChange(date)}
+      />
+    );
+  }
