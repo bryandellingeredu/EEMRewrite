@@ -1124,9 +1124,12 @@ export default observer(function ActivityForm() {
               </Grid>
             )}
 
-            {roomRequired && (
-              <>
-                <Segment color="purple">
+          
+                <Segment color="purple"   style={{
+      position: roomRequired ? "static" : "absolute",
+      zIndex: roomRequired ? "auto" : -1,
+      opacity: roomRequired ? 1 : 0,
+    }}>
                   <Header as="h5" textAlign="center">
                     <FontAwesomeIcon
                       icon={faPeopleRoof}
@@ -1327,8 +1330,10 @@ export default observer(function ActivityForm() {
 
                   <hr color="purple" />
                 </Segment>
-              </>
-            )}
+           
+
+
+
             <Segment color="orange" inverted>
               <Grid>
                 <Grid.Row>
