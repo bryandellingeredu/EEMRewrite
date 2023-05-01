@@ -11,6 +11,7 @@ bookingType: string
 tags: string[]
 building: string
 floorNumber: number | null,
+floorLabel: string,
 label: string
 audioDeviceName: string
 videoDeviceName: string,

@@ -115,7 +115,7 @@ export default observer (function RoomListItem(
                     </Grid.Column>
                     <Grid.Column width={14}>
                         <p>{room.building} 
-                          {room.floorNumber &&  <span> floor {room.floorNumber}</span>} </p>
+                          {room.floorLabel &&  <span> floor {room.floorLabel}</span>} </p>
                     </Grid.Column>
                 </Grid>
             </Segment>

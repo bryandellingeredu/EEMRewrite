@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { Button, Card, Divider, Grid, Icon, Input, Segment } from "semantic-ui-react";
+import { Button, Card, Divider, Grid, Icon, Form as SemanticForm, Input, Segment } from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
 import RoomListItem from "./RoomListItem";
 import { useState, useEffect } from 'react';
@@ -14,6 +14,15 @@ interface SearchFormValues{
   maxCapacity: string
   isWheelChairAccessible: boolean
   vtc: boolean
+  building: string,
+  floorLabel: string,
+  byod: boolean,
+  casting: boolean,
+  commercial: boolean,
+  individualStudy: boolean,
+  nipr: boolean,
+  vtcMSTeams: boolean,
+  wireless: boolean
 }
 
 export default observer (function RoomList() {
@@ -40,6 +49,15 @@ function handleAddIdToShowAvailabilityIndicatorList(id: string){
       if(values.maxCapacity) filteredGraphRooms = filteredGraphRooms.filter(x => parseInt(values.maxCapacity) >= parseInt(x.capacity || '1000') );
       if(values.isWheelChairAccessible) filteredGraphRooms = filteredGraphRooms.filter(x => x.isWheelChairAccessible);
       if(values.vtc) filteredGraphRooms = filteredGraphRooms.filter(x => x.displayName.toLowerCase().includes('vtc'));
+      if(values.building) filteredGraphRooms = filteredGraphRooms.filter(x => x.building === values.building);
+      if(values.floorLabel) filteredGraphRooms = filteredGraphRooms.filter(x => x.floorLabel === values.floorLabel);
+      if(values.byod) filteredGraphRooms = filteredGraphRooms.filter(x => x.tags.some(tag => tag.includes('BYOD')));
+      if(values.casting) filteredGraphRooms = filteredGraphRooms.filter(x => x.tags.some(tag => tag.includes('Casting')));
+      if(values.commercial) filteredGraphRooms = filteredGraphRooms.filter(x => x.tags.some(tag => tag.includes('Commercial')));
+      if(values.individualStudy) filteredGraphRooms = filteredGraphRooms.filter(x => x.tags.some(tag => tag.includes('Individual Study')));
+      if(values.nipr) filteredGraphRooms = filteredGraphRooms.filter(x => x.tags.some(tag => tag.includes('NIPR')));
+      if(values.vtcMSTeams) filteredGraphRooms = filteredGraphRooms.filter(x => x.tags.some(tag => tag.includes('MS Teams')));
+      if(values.wireless) filteredGraphRooms = filteredGraphRooms.filter(x => x.tags.some(tag => tag.includes('Wireless')));
       setFilteredGraphRooms(filteredGraphRooms);    
   }
 
@@ -54,7 +72,8 @@ function handleAddIdToShowAvailabilityIndicatorList(id: string){
     return (
       <>
       <Formik
-      initialValues={{id: '', minCapacity: '', maxCapacity: '', isWheelChairAccessible: false, vtc: false}}
+      initialValues={{id: '', minCapacity: '', maxCapacity: '', isWheelChairAccessible: false, vtc: false, building: '', floorLabel: '', byod: false,
+      casting: false, commercial: false, individualStudy: false, nipr: false, vtcMSTeams: false, wireless:false}}
       onSubmit={(values) => handleFormSubmit(values)}
     >
    {({handleSubmit}) => (
@@ -63,7 +82,7 @@ function handleAddIdToShowAvailabilityIndicatorList(id: string){
                  <Grid verticalAlign='middle'>
                    <Grid.Row>
                
-                     <Grid.Column width={5}>
+                     <Grid.Column width={3}>
                      <MySelectInput
                   options={
                     [{text: '', value: ''}].concat(graphRooms
@@ -80,7 +99,52 @@ function handleAddIdToShowAvailabilityIndicatorList(id: string){
                 
                 </Grid.Column>
 
-                <Grid.Column width={3}>
+                <Grid.Column width={2}>
+                <MySelectInput
+  options={
+    Array.from(
+      new Set(
+        graphRooms
+          .filter(item => item.building !== null)
+          .map(item => item.building)
+      )
+    )
+    .sort((a, b) => a.localeCompare(b))
+    .map(building => ({
+      text: building,
+      value: building
+    }))
+  }
+  placeholder="Building"
+  name="building"
+  label="Building"
+/>
+</Grid.Column>
+
+
+  <Grid.Column width={2}>
+                <MySelectInput
+  options={
+    Array.from(
+      new Set(
+        graphRooms
+          .filter(item => item.floorLabel !== null)
+          .map(item => item.floorLabel)
+      )
+    )
+    .sort((a, b) => a.localeCompare(b))
+    .map(floorLabel => ({
+      text: floorLabel,
+      value: floorLabel
+    }))
+  }
+  placeholder="Floor"
+  name="floorLabel"
+  label="Floor"
+/>
+</Grid.Column>
+
+                <Grid.Column width={2}>
                      <MySelectInput
                   options={
                     [
@@ -101,7 +165,7 @@ function handleAddIdToShowAvailabilityIndicatorList(id: string){
                 
                 </Grid.Column>
 
-                <Grid.Column width={3}>
+                <Grid.Column width={2}>
                      <MySelectInput
                   options={
                     [
@@ -121,19 +185,52 @@ function handleAddIdToShowAvailabilityIndicatorList(id: string){
                 />
                </Grid.Column>
 
-                <Grid.Column width={2} style={{marginTop: '20px'}}>
-                  <MySemanticCheckBox
-                  label='wheelchair'
-                  name='isWheelChairAccessible'
-                  />   
-                      
-                </Grid.Column>
+              
 
-                <Grid.Column width={1} style={{marginTop: '20px'}}>
+                <Grid.Column width={4} style={{marginTop: '20px'}}>
+                <SemanticForm.Group inline>
+                <MySemanticCheckBox
+                  label='BYOD'
+                  name='byod'
+                  /> 
+                   <MySemanticCheckBox
+                  label='Casting'
+                  name='casting'
+                  /> 
+                 <MySemanticCheckBox
+                  label='Commercial'
+                  name='commercial'
+                  /> 
+                   </SemanticForm.Group>
+                   <SemanticForm.Group inline>
+                   <MySemanticCheckBox
+                  label='Individual Study'
+                  name='individualStudy'
+                  /> 
+                <MySemanticCheckBox
+                  label='NIPR'
+                  name='nipr'
+                  />  
                   <MySemanticCheckBox
-                  label='svtc'
+                  label='SVTC'
                   name='vtc'
-                  />       
+                  /> 
+                 </SemanticForm.Group>  
+                 <SemanticForm.Group inline> 
+                 <MySemanticCheckBox
+                  label='VTC(MS Teams)'
+                  name='vtcMSTeams'
+                  />    
+                    <MySemanticCheckBox
+                  label='Wheelchair'
+                  name='isWheelChairAccessible'
+                  />  
+                       <MySemanticCheckBox
+                  label='Wireless'
+                  name='wireless'
+                  />  
+               
+                  </SemanticForm.Group>    
                 </Grid.Column>
                   
                     <Grid.Column width={1}>
