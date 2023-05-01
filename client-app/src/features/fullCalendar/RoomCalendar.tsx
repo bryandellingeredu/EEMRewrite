@@ -59,7 +59,7 @@ picURL: '',
       const category = categories.find(x => x.routeName === id);
       const paramId = uuid();
 
-       const currentDate = new Date();
+       const currentDate = info.date;
       let formattedDate = "";
       let adjustedDate = "";
       

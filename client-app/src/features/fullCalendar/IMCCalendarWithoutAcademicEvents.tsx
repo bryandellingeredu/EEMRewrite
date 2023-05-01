@@ -65,7 +65,7 @@ export default function IMCCalendarWithoutAcademicEvents(this: any) {
   const handleDateClick = useCallback(
     (info: any) => {
       const paramId = uuid();
-      const currentDate = new Date();
+      const currentDate = info.date;
       let formattedDate = "";
       let adjustedDate = "";
       
