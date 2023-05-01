@@ -1,4 +1,4 @@
-import Select from "react-select";
+import Select  from "react-select";
 import makeAnimated from "react-select/animated";
 import { Form, Label } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
@@ -15,6 +15,11 @@ interface Option {
   label: string;
   value: string;
   isDisabled: boolean;
+}
+
+interface OptionType {
+  value: string;
+  label: string;
 }
 
 interface Props {
@@ -42,9 +47,13 @@ export default observer(function RoomPicker({
     { label: "", value: "", isDisabled: false },
   ]);
   const [dirty, setDirty] = useState<boolean>(false);
+  const [selectedBuilding, setSelectedBuilding] = useState('');
+
+  const handleBuildingChange = (selectedOption: OptionType | null) => {
+    setSelectedBuilding(selectedOption ? selectedOption.value : '');
+  };
 
   const onChange = (selectedOptions: any) => {
-    debugger;
     const values = selectedOptions.map((item: Option) => item.value);
     setRoomEmails(values);
   };
@@ -150,6 +159,34 @@ export default observer(function RoomPicker({
         <LoadingComponent content="Loading Rooms, This Sometimes Takes Awhile..." />
       )}
       {!loadingInitial && !graphRoomStore.loadingInitial && (
+    
+
+
+      <>
+      {roomEmails.length < 1 && 
+      <Form.Field>
+        <label> Filter By Building</label>
+        <Select
+  name="building"
+  placeholder="filter rooms by building"
+  isClearable
+  onChange={(e) => handleBuildingChange(e)}
+  options={Array.from(
+    new Set(
+      graphRoomStore.graphRooms
+        .filter(room => room.building !== null)
+        .map(room => room.building)
+    )
+  )
+    .map(building => ({
+      value: building,
+      label: building,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label))}
+/>
+      </Form.Field>
+}
+
         <Form.Field error={dirty && roomEmails.length < 1}>
           <label>Room/s:</label>
           <Select
@@ -160,7 +197,16 @@ export default observer(function RoomPicker({
             onChange={(e) => onChange(e)}
             onBlur={() => setDirty(true)}
             placeholder="select rooms (you may select more than one)"
-            options={roomOptions}
+            //options={roomOptions}
+            options={
+              selectedBuilding
+                ? roomOptions.filter(option =>
+                    graphRoomStore.graphRooms.some(
+                      room => room.building === selectedBuilding && room.displayName === option.label
+                    )
+                  )
+                : roomOptions
+            }
             //closeMenuOnSelect={false}
             components={animatedComponents}
             isMulti
@@ -171,7 +217,10 @@ export default observer(function RoomPicker({
             </Label>
           )}
         </Form.Field>
-      )}
+        </>
+      ) 
+      
+      }
     </>
   );
 });
