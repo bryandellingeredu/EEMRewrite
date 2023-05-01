@@ -183,6 +183,16 @@ picURL: '',
     }
   }, [loadGraphRooms, graphRooms.length, id])
 
+  const eventDidMount = (info : any) => {
+    const eventColor = info.event.backgroundColor;
+    const eventDot = info.el.querySelector('.fc-daygrid-event-dot');
+  
+    if (eventDot) {
+      eventDot.style.borderColor = eventColor;
+    }
+  };
+  
+
     return(
         <>
         {loadingInitial
@@ -218,6 +228,7 @@ picURL: '',
             eventMouseEnter={handleMouseEnter}
             slotMinTime={'07:00:00'}
             slotMaxTime={'21:00:00'}
+            eventDidMount={eventDidMount}
             //eventContent={renderEventContent}  
           />
       </>
