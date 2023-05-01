@@ -58,7 +58,25 @@ picURL: '',
     const handleDateClick = useCallback((info : any) => {
       const category = categories.find(x => x.routeName === id);
       const paramId = uuid();
-      addCalendarEventParameters({id: paramId, allDay: info.allDay, dateStr: info.dateStr, date:info.date, categoryId: '', needRoom: true})
+
+       const currentDate = new Date();
+      let formattedDate = "";
+      let adjustedDate = "";
+      
+      if (info.allDay) {
+        currentDate.setHours(currentDate.getHours() + 1);
+        currentDate.setMinutes(0);
+        currentDate.setSeconds(0);
+        adjustedDate = currentDate.toISOString();
+        formattedDate = adjustedDate;
+      } else {
+        adjustedDate = info.date.toISOString();
+        formattedDate = info.dateStr;
+      }
+      
+
+
+      addCalendarEventParameters({id: paramId, allDay: false, dateStr: formattedDate, date:new Date(adjustedDate), categoryId: '', needRoom: true})
       history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`);
     }, [ categories, history]);
 

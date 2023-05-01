@@ -65,11 +65,26 @@ export default function IMCCalendarWithoutAcademicEvents(this: any) {
   const handleDateClick = useCallback(
     (info: any) => {
       const paramId = uuid();
+      const currentDate = new Date();
+      let formattedDate = "";
+      let adjustedDate = "";
+      
+      if (info.allDay) {
+        currentDate.setHours(currentDate.getHours() + 1);
+        currentDate.setMinutes(0);
+        currentDate.setSeconds(0);
+        adjustedDate = currentDate.toISOString();
+        formattedDate = adjustedDate;
+      } else {
+        adjustedDate = info.date.toISOString();
+        formattedDate = info.dateStr;
+      }
+      
       addCalendarEventParameters({
         id: paramId,
-        allDay: info.allDay,
-        dateStr: info.dateStr,
-        date: info.date,
+        allDay: false,
+        dateStr: formattedDate,
+        date: new Date(adjustedDate),
         categoryId: "",
         needRoom: false,
       });
