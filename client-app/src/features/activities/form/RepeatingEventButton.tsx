@@ -2,6 +2,7 @@ import { Button, Form, Icon, Popup } from "semantic-ui-react";
 import RecurrenceInformation from "./RecurrenceInformation";
 import { useStore } from "../../../app/stores/store";
 import { Recurrence } from "../../../app/models/recurrence";
+import RecurrenceMessage from "../recurrenceMessage/RecurrenceMessage";
 
 interface Props{
     id: string
@@ -95,6 +96,9 @@ export default function RepeatingEventButton(
                     {!recurrenceInd && <Icon name="square outline" />}
                   </Button>
             </Form.Field>
+           }
+           {recurrenceInd && recurrence &&
+           <RecurrenceMessage values={recurrence} weeklyRepeatType={recurrence.weeklyRepeatType} monthlyDayType={recurrence.monthlyDayType} monthlyRepeatType={recurrence.monthlyRepeatType} />
            }
        </>
     )
