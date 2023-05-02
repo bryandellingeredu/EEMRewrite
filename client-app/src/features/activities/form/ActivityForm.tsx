@@ -2264,7 +2264,7 @@ export default observer(function ActivityForm() {
             )}
 
             {(values.mfp ||
-              ["ASEP Calendar"].includes(
+              ["Military Family and Spouse Program"].includes(
                 categories.find((x) => x.id === values.categoryId)?.name || ""
               )) && (
               <MySelectInput
