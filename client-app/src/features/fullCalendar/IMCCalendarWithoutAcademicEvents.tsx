@@ -70,7 +70,7 @@ export default function IMCCalendarWithoutAcademicEvents(this: any) {
       let adjustedDate = "";
       
       if (info.allDay) {
-        currentDate.setHours(currentDate.getHours() + 1);
+        currentDate.setHours(new Date().getHours() + 1);
         currentDate.setMinutes(0);
         currentDate.setSeconds(0);
         adjustedDate = currentDate.toISOString();

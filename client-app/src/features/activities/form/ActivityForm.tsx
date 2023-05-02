@@ -1357,7 +1357,7 @@ export default observer(function ActivityForm() {
                   <Grid.Column width={13}>
                     <MySelectInput
                       options={categoryOptions
-                        .filter((x: any) => x.text !== "Student Calendar")
+                        .filter((x: any) => x.text !== "Student Calendar" && x.text !== "Staff Calendar")
                         .sort((a: any, b: any) => {
                           if (a.text === "") {
                             return -1;
@@ -1379,7 +1379,7 @@ export default observer(function ActivityForm() {
 
             {categories.find((x) => x.id === values.categoryId)?.name ===
               "Garrison Calendar" && (
-              <Segment color="orange">
+                <Segment style={{ backgroundColor: "#FFFCE9" }} >
                 <Header as="h5" icon textAlign="center" color="orange">
                   <Icon name="building" />
                   <Header.Content>Garrison Information</Header.Content>
@@ -1482,7 +1482,7 @@ export default observer(function ActivityForm() {
 
             {categories.find((x) => x.id === values.categoryId)?.name ===
               "SSL Calendar" && (
-              <Segment color="green">
+                <Segment style={{ backgroundColor: "#98FFFE" }} >
                 <Header as="h5" icon textAlign="center" color="green">
                   <FontAwesomeIcon
                     icon={faPersonRifle}
@@ -1511,7 +1511,7 @@ export default observer(function ActivityForm() {
 
             {categories.find((x) => x.id === values.categoryId)?.name ===
               "USAHEC Facilities Usage Calendar" && (
-              <Segment color="pink">
+              <Segment style={{backgroundColor: '#FFF2D7'}}>
                 <Header as="h5" icon textAlign="center" color="pink">
                   <FontAwesomeIcon
                     icon={faBookOpenReader}
@@ -1559,7 +1559,7 @@ export default observer(function ActivityForm() {
 
             {categories.find((x) => x.id === values.categoryId)?.name ===
               "USAHEC Calendar" && (
-              <Segment color="purple">
+              <Segment style={{backgroundColor: '#F9ECFE'}}>
                 <Header as="h5" icon textAlign="center" color="purple">
                   <Icon name="book" />
                   <Header.Content>USAHEC Information</Header.Content>
@@ -1615,7 +1615,7 @@ export default observer(function ActivityForm() {
 
             {categories.find((x) => x.id === values.categoryId)?.name ===
               "CSL Calendar" && (
-              <Segment color="blue">
+                <Segment style={{ backgroundColor: "#E8FBFF" }} >
                 <Header as="h5" icon textAlign="center" color="blue">
                   <Icon name="copyright" />
                   <Header.Content>CSL Information</Header.Content>
@@ -2204,14 +2204,7 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
-                              <MySemanticCheckBox
-                            name="copiedTostaff"
-                            label="Staff Calendar"
-                            disabled={categories
-                              .filter((x) => x.routeName === "staff")
-                              .map((x) => x.id)
-                              .includes(currentCategoryId)}
-                          />
+                            
                           <MySemanticCheckBox
                             name="copiedTotrainingAndMiscEvents"
                             label="Training"

@@ -120,7 +120,7 @@ namespace Persistence
                 {
      new Category{Name = "Academic Calendar"},
     new Category { Name = "Academic IMC Event", RouteName = "academic", IMCColor = "#0184ff", IncludeInIMC = true },
-    new Category { Name = "ASEP Calendar", RouteName = "asep", IncludeInIMC = true, IMCColor = "#FF0021" },
+    new Category { Name = "ASEP Calendar", RouteName = "asep",  IMCColor = "#FF0021" },
     new Category { Name = "Command Group Calendar", RouteName = "commandGroup", IMCColor = "#FFC300", IncludeInIMC = true },
     new Category { Name = "Community Event (External)", RouteName = "community", IMCColor = "#0000FF" },
     new Category { Name = "CSL Calendar", RouteName = "csl", IMCColor = "#586e87" },
@@ -129,16 +129,16 @@ namespace Persistence
     new Category { Name = "Holiday Calendar", RouteName = "holiday", IMCColor = "#8B0000", IncludeInIMC = true },
     new Category { Name = "Other", RouteName = "other", IMCColor = "#966b05" },
     new Category { Name = "PKSOI Calendar", RouteName = "pksoi", IMCColor = "#a89448" },
-    new Category { Name = "Social Events And Ceremonies", RouteName = "socialEventsAndCeremonies", IMCColor = "#6B8E23" },
+    new Category { Name = "Social Events And Ceremonies", RouteName = "socialEventsAndCeremonies", IMCColor = "#6B8E23", IncludeInIMC = true },
     new Category { Name = "SSI And USAWC Press Calendar", RouteName = "ssiAndUsawcPress", IMCColor = "#FF00A1" },
     new Category { Name = "SSL Calendar", RouteName = "ssl", IMCColor = "#228B22" },
     new Category { Name = "Training", RouteName = "trainingAndMiscEvents", IMCColor = "#966b05", IncludeInIMC = true },
     new Category { Name = "USAHEC Calendar", RouteName = "usahec", IMCColor = "#32C61A" },
     new Category { Name = "USAHEC Facilities Usage Calendar", RouteName = "usahecFacilitiesUsage", IMCColor = "#5f9c91" },
-    new Category { Name = "Visits And Tours", RouteName = "visitsAndTours", IMCColor = "#a9a9a9" },
+    new Category { Name = "Visits And Tours", RouteName = "visitsAndTours", IMCColor = "#a9a9a9", IncludeInIMC = true },
     new Category { Name = "Symposium and Conferences Calendar", RouteName = "symposiumAndConferences", IMCColor = "#8B008B" },
     new Category { Name = "Military Family and Spouse Program", RouteName = "militaryFamilyAndSpouseProgram", IMCColor = "#584a66" },
-    new Category { Name = "Battle Rhythm", RouteName = "battlerhythm", IMCColor = "#FF5E00", IncludeInIMC = true  },
+    new Category { Name = "Battle Rhythm", RouteName = "battlerhythm", IMCColor = "#FF5E00" },
     new Category { Name = "Staff Calendar", RouteName = "staff", IMCColor = "#483C32", IncludeInIMC = true  },
             };
                 await context.Categories.AddRangeAsync(categories);
