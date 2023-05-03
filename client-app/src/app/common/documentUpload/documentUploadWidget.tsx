@@ -1,21 +1,43 @@
 import { Button, Grid, Header, Icon } from "semantic-ui-react";
 import DocumentUploadWidgetDropzone from "./documentUploadWidgetDropzone";
 import {useState} from 'react'
+import { ActivityAttachment } from "../../models/activityAttachment";
+import { toast } from "react-toastify"; // Import the toast package
+
+
 
 interface Props{
     loading: boolean;
     uploadDocument: (file: any) => void
     color: string;
+    activityAttachments?: ActivityAttachment[]
 }
 
 
 
-export default function DocumentUploadWidget({loading, uploadDocument,color}: Props){
+export default function DocumentUploadWidget({loading, uploadDocument,color,  activityAttachments = []}: Props){
     const [files, setFiles] = useState<any>([]);
 
-    const handleUploadDocument = () =>{
-        uploadDocument(files[0]);
-    }
+    const handleUploadDocument = () => {
+        if (
+          activityAttachments.some(
+            (attachment) => attachment.fileName === files[0].name
+          )
+        ) {
+          toast.error('A file with the same name already exists. Please delete the existing file first.', {
+            position: "top-center",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            });
+        } else {
+          uploadDocument(files[0]);
+        }
+      };
 
     return (
         <Grid>

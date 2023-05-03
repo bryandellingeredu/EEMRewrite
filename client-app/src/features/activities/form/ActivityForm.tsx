@@ -3147,6 +3147,7 @@ export default observer(function ActivityForm() {
                                   uploadDocument={handleActivityDocumentUpload}
                                   loading={uploading}
                                   color={'black'}
+                                  activityAttachments = {activityAttachments}
                                   />, 'large'
                                 )
                               }

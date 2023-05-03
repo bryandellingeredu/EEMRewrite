@@ -1,5 +1,6 @@
 import  {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
+import { toast } from 'react-toastify';
 import { Header, Icon } from 'semantic-ui-react';
 
 interface Props{
@@ -22,10 +23,22 @@ export default function DocumentUploadWidgetDropzone({setFiles}: Props) {
     }
 
     const onDrop = useCallback((acceptedFiles: any) => {
-        console.log(acceptedFiles[0]);
+        if (acceptedFiles.length > 1) {
+            toast.error('You may only upload one attachment at a time.', {
+                position: "top-center",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                });
+        } else {
         setFiles(acceptedFiles.map((file: any) => Object.assign(file, {
             preview: URL.createObjectURL(file)
         })))
+    }
     }, [setFiles])
 
 

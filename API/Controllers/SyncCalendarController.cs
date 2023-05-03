@@ -53,8 +53,8 @@ namespace API.Controllers
             writer.WriteLine("END:DAYLIGHT");
             writer.WriteLine("END:VTIMEZONE");
 
-            DateTime startDateLimit = DateTime.UtcNow.AddMonths(-2);
-            DateTime endDateLimit = DateTime.UtcNow.AddMonths(12);
+            DateTime startDateLimit = DateTime.UtcNow.AddMonths(-1);
+            DateTime endDateLimit = DateTime.UtcNow.AddMonths(1);
 
 
 
@@ -147,10 +147,10 @@ namespace API.Controllers
                     writer.WriteLine($"DTSTART;TZID=America/New_York:{activity.Start.ToString("yyyyMMddTHHmmss")}");
                     writer.WriteLine($"DTEND;TZID=America/New_York:{activity.End.ToString("yyyyMMddTHHmmss")}");
                 }
-                writer.WriteLine($"LOCATION:{await GetLocation(activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms)}");
+                WriteLineWithEllipsis(writer, $"LOCATION:{await GetLocation(activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms)}");
                 writer.WriteLine("SEQUENCE:0");
-                writer.WriteLine($"SUMMARY:{activity.Title}");
-                writer.WriteLine($"DESCRIPTION:{activity.Description}");
+                WriteLineWithEllipsis(writer, $"SUMMARY:{activity.Title.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
+                WriteLineWithEllipsis(writer, $"DESCRIPTION:{activity.Description.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
                 writer.WriteLine("TRANSP:OPAQUE");
                 writer.WriteLine($"UID:{activity.Id}");
                 writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:BUSY");
@@ -249,7 +249,7 @@ namespace API.Controllers
 
             if (string.IsNullOrEmpty(eventLookup))
             {
-                return primaryLocation;
+                return primaryLocation.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
             }
 
             Event evt;
@@ -260,7 +260,8 @@ namespace API.Controllers
             catch (Exception)
             {
                 evt = new Event();
-                return primaryLocation;
+
+                return primaryLocation.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
             }
 
             List<string> rooms = new List<string>();
@@ -281,7 +282,16 @@ namespace API.Controllers
                 location = string.Join(", ", rooms);
             }
 
-            return location;
+            return location.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+        }
+
+        private void WriteLineWithEllipsis(StringWriter writer, string line)
+        {
+            if (line.Length > 75)
+            {
+                line = line.Substring(0, 72) + "...";
+            }
+            writer.WriteLine(line);
         }
     } 
 }
