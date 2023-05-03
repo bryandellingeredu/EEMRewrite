@@ -114,17 +114,52 @@
               .GetAsync();
         }
 
-        public static Task<ICalendarGetScheduleCollectionPage> GetScheduleAsync(ScheduleRequestDTO scheduleRequestDTO)
+        /*     public static Task<ICalendarGetScheduleCollectionPage> GetScheduleAsync(ScheduleRequestDTO scheduleRequestDTO)
+             {
+                 EnsureGraphForAppOnlyAuth();
+                 _ = _appClient ??
+                   throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+                 return _appClient.Users[scheduleRequestDTO.Schedules[0]].Calendar
+                   .GetSchedule(scheduleRequestDTO.Schedules, scheduleRequestDTO.EndTime, scheduleRequestDTO.StartTime, scheduleRequestDTO.AvailabilityViewInterval)
+                   .Request()
+                   .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
+                   .PostAsync();
+             }  */
+
+        public static async Task<ICalendarGetScheduleCollectionPage> GetScheduleAsync(ScheduleRequestDTO scheduleRequestDTO)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
               throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
-            return _appClient.Users[scheduleRequestDTO.Schedules[0]].Calendar
-              .GetSchedule(scheduleRequestDTO.Schedules, scheduleRequestDTO.EndTime, scheduleRequestDTO.StartTime, scheduleRequestDTO.AvailabilityViewInterval)
-              .Request()
-              .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
-              .PostAsync();
+            var scheduleGroups = scheduleRequestDTO.Schedules.SplitIntoGroups(100);
+            var scheduleTasks = new List<Task<ICalendarGetScheduleCollectionPage>>();
+            foreach (var scheduleGroup in scheduleGroups)
+            {
+                var scheduleRequest = new ScheduleRequestDTO
+                {
+                    Schedules = scheduleGroup,
+                    StartTime = scheduleRequestDTO.StartTime,
+                    EndTime = scheduleRequestDTO.EndTime,
+                    AvailabilityViewInterval = scheduleRequestDTO.AvailabilityViewInterval
+                };
+                scheduleTasks.Add(_appClient.Users[scheduleGroup[0]].Calendar
+                  .GetSchedule(scheduleRequest.Schedules, scheduleRequest.EndTime, scheduleRequest.StartTime, scheduleRequest.AvailabilityViewInterval)
+                  .Request()
+                  .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
+                  .PostAsync());
+            }
+            var results = await Task.WhenAll(scheduleTasks);
+            var combinedResult = new CalendarGetScheduleCollectionPage();
+            foreach (var result in results)
+            {
+                foreach (var schedule in result)
+                {
+                    combinedResult.Add(schedule);
+                }
+            }
+            return combinedResult;
         }
 
         public static async Task<Event> CreateEvent(GraphEventDTO graphEventDTO)
