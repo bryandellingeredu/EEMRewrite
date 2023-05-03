@@ -50,37 +50,34 @@ export default observer(function RoomCalendarLinks() {
 
       {!loadingInitial && (
         <CardGroup itemsPerRow={4}>
-          {graphRoomsByBuilding.sort((a, b) => {
-            if (a[0] < b[0]) {
-            return -1;
-             }
-             if (a[0] > b[0]) {
-                return 1;
-             }
-                return 0;
-            }).map(
-            ([building, rooms]) =>
-              building && (
-                <Card key={building}>
-                  <Card.Content>
-                    <Card.Header> {building}</Card.Header>
-                    <Menu vertical fluid>
-                      {rooms.sort((a, b) => {
-                        if(a.displayName < b.displayName) { return -1; }
-                        if(a.displayName > b.displayName) { return 1; }
-                        return 0;
-                    }).map((room) => (
-                        <Menu.Item
-                          as={NavLink}
-                          to={`${process.env.PUBLIC_URL}/roomcalendar/${room.id}`}
-                          content={room.displayName}
-                        />
-                      ))}
-                    </Menu>
-                  </Card.Content>
-                </Card>
-              )
-          )}
+         {graphRoomsByBuilding.sort((a, b) => {
+    return a[1].length - b[1].length;
+}).map(([building, rooms]) =>
+  building && (
+    <Card key={building}>
+      <Card.Content>
+        <Card.Header> {building}</Card.Header>
+        <Menu vertical fluid>
+          {rooms.sort((a, b) => {
+            if (a.displayName < b.displayName) {
+              return -1;
+            }
+            if (a.displayName > b.displayName) {
+              return 1;
+            }
+            return 0;
+          }).map((room) => (
+            <Menu.Item
+              as={NavLink}
+              to={`${process.env.PUBLIC_URL}/roomcalendar/${room.id}`}
+              content={room.displayName}
+            />
+          ))}
+        </Menu>
+      </Card.Content>
+    </Card>
+  )
+)}
         </CardGroup>
       )}
     </>

@@ -174,7 +174,7 @@
               .GetAsync();
 
             // get the rooms
-            var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
+            var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room") + "?$top=200";
             var placesRequest = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
 
             List<Attendee> attendees = new List<Attendee>();
