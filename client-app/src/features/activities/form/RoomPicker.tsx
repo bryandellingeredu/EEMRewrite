@@ -1,10 +1,9 @@
 import Select  from "react-select";
 import makeAnimated from "react-select/animated";
-import { Form, Label } from "semantic-ui-react";
+import { Form, Input, Label } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import { useState, useEffect } from "react";
 import { useStore } from "../../../app/stores/store";
-import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { Recurrence } from "../../../app/models/recurrence";
 import agent from "../../../app/api/agent";
 import { GraphScheduleItem } from "../../../app/models/graphScheduleItem";
@@ -154,11 +153,9 @@ export default observer(function RoomPicker({
   }
 
   return (
-    <>
-      {(loadingInitial || graphRoomStore.loadingInitial) && (
-        <LoadingComponent content="Loading Rooms, This Sometimes Takes Awhile..." />
-      )}
-      {!loadingInitial && !graphRoomStore.loadingInitial && (
+
+ 
+
     
 
 
@@ -187,6 +184,15 @@ export default observer(function RoomPicker({
       </Form.Field>
 }
 
+{
+  (loadingInitial || graphRoomStore.loadingInitial ) &&
+  <Form.Field>
+    <label>Room/s:</label>
+    <Input loading icon='user' iconPosition='left' placeholder='Loading Rooms this can sometimes take awhile...' value='' style={{ cursor: 'not-allowed' }} />
+  </Form.Field>
+}
+
+{!(loadingInitial || graphRoomStore.loadingInitial) && 
         <Form.Field error={dirty && roomEmails.length < 1}>
           <label>Room/s:</label>
           <Select
@@ -217,10 +223,9 @@ export default observer(function RoomPicker({
             </Label>
           )}
         </Form.Field>
-        </>
-      ) 
-      
       }
-    </>
+        </>
+
+
   );
 });
