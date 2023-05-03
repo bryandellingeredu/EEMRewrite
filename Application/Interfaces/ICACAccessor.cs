@@ -11,6 +11,6 @@ namespace Application.Interfaces
     public interface ICACAccessor
     {
         bool IsCACAuthenticated();
-        CACInfoDTO GetCacInfo();
+        string GetCacInfo();
     }
 }

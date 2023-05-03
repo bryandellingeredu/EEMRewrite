@@ -1,4 +1,4 @@
-import { Button, Divider, Header, Icon, List, Tab } from "semantic-ui-react";
+import { Button, Divider, Header, Icon, List, Message, Tab } from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
 import {useState} from 'react';
 import { FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -168,6 +168,13 @@ export default function SyncCalendarInformation({routeName} : Props){
              </Header>
 
              <Tab panes={panes} />
+
+             <Message warning>
+    <Message.Header>Key Points: Syncing IMC or Organizational Calendar with Your Personal Calendar</Message.Header>
+    <p>When you synchronize your personal calendar with the IMC or an organizational calendar, be aware that you will be importing a large volume of data. This may lead to a significant increase in the data within your personal calendar.</p>
+    <p>It's important to note that your personal calendar will display only the essential event details: title, location, description, and date/time. You will not have access to any other information about the event.</p>
+    <p>The synchronization process covers a two-month period, including events occurring one month prior and one month ahead.</p>
+  </Message>
     
     </>
     )};

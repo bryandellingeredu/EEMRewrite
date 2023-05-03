@@ -5,14 +5,19 @@ import {useState} from 'react';
 
 interface Props{
     handleCUIWarningHasBeenDisplayed: () => void
+    showHeader: boolean
+    cuiButtonClicked: boolean
+    opsecButtonClicked: boolean
 }
 
 
-export default function CUIWarningModal({handleCUIWarningHasBeenDisplayed} : Props){
+export default function CUIWarningModal({handleCUIWarningHasBeenDisplayed, showHeader, cuiButtonClicked, opsecButtonClicked} : Props){
     const [showCUIInfo, setShowCUIInfo] = useState(false);
     const [showGuidelines, setShowGuidelines] = useState(false);
     return (
       <>
+         {showHeader && 
+         <>
           <Divider horizontal>
             <Header as="h2">
                 <Icon name='warning' color='yellow' />     
@@ -43,6 +48,7 @@ export default function CUIWarningModal({handleCUIWarningHasBeenDisplayed} : Pro
             You MUST check the 'Checked For OPSEC' checkbox also or you will not be able to save the event.
             </h3>
             </Segment>
+         
             <Segment>
                 {!showCUIInfo && 
                 <Button basic color='blue' onClick={() => setShowCUIInfo(true)}>Show More Information About CUI </Button>
@@ -58,8 +64,10 @@ export default function CUIWarningModal({handleCUIWarningHasBeenDisplayed} : Pro
                }
             </Segment>
          </SegmentGroup>
+         </>
+         }
        
-       { showCUIInfo && 
+       { (showCUIInfo || cuiButtonClicked) && 
        <SegmentGroup>
             <Segment>
                <Header as={'h1'} textAlign='center' content = 'Controlled Unclassified Information (CUI) Event' />            
@@ -118,7 +126,7 @@ export default function CUIWarningModal({handleCUIWarningHasBeenDisplayed} : Pro
        </SegmentGroup>
        }
 
-{ showGuidelines && 
+{ (showGuidelines || opsecButtonClicked) && 
   <SegmentGroup>
       <Segment>
                <Header as={'h1'} textAlign='center' content = 'OPSEC Guidelines for USAWC Calendar Addition' />            

@@ -587,7 +587,7 @@ export default observer(function ActivityForm() {
          .includes(categories.find((x) => x.id === v.categoryId)?.name || "")
          )){
           openModal(
-            <CUIWarningModal handleCUIWarningHasBeenDisplayed={handleCUIWarningHasBeenDisplayed}/>, 'large'
+            <CUIWarningModal handleCUIWarningHasBeenDisplayed={handleCUIWarningHasBeenDisplayed} showHeader={true} cuiButtonClicked={false} opsecButtonClicked={false}/>, 'large'
            )
          }
       if (v.end.getDate() !== v.start.getDate()) {
@@ -2260,6 +2260,26 @@ export default observer(function ActivityForm() {
                 <MyCheckBox
                   name="checkedForOpsec"
                 />
+                    <Button icon inverted  
+                    type="button"
+                    onClick={() =>
+                      openModal(
+                        <CUIWarningModal handleCUIWarningHasBeenDisplayed={handleCUIWarningHasBeenDisplayed} showHeader={false} cuiButtonClicked={true} opsecButtonClicked={false}/>, 'large'
+                      )
+                    }
+                    >
+                      Show More Information about CUI
+                    </Button>
+                    <Button icon inverted 
+                    type="button"
+                    onClick={() =>
+                      openModal(
+                        <CUIWarningModal handleCUIWarningHasBeenDisplayed={handleCUIWarningHasBeenDisplayed} showHeader={false} cuiButtonClicked={false} opsecButtonClicked={true}/>, 'large'
+                      )
+                    }
+                    >
+                      Show OPSEC Guidelines for USAWC Calendar Addition
+                    </Button>
               </Segment>
             )}
 

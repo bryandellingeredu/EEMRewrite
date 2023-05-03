@@ -42,14 +42,16 @@ namespace Application.Activities
             private readonly IMapper _mapper;
             private readonly IConfiguration _config;
             private readonly IUserAccessor _userAccessor;
+            private readonly ICACAccessor _cacAccessor;
 
             public Handler(
-                DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor)
+                DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor  cacAccessor)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
                 _userAccessor = userAccessor;
+                _cacAccessor = cacAccessor;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -85,6 +87,12 @@ namespace Application.Activities
                          if(activity.HostingReport != null && activity.HostingReport.Departure != null){
                                activity.HostingReport.Departure = TimeZoneInfo.ConvertTime(activity.HostingReport.Departure.Value, TimeZoneInfo.Local);
                         }
+                        if (activity.HostingReport != null && ! string.IsNullOrEmpty(_cacAccessor.GetCacInfo()))   // if you are creating a hosting report always use the army user not the edu user
+                        {
+                            activity.CoordinatorEmail = _cacAccessor.GetCacInfo();
+                            user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _cacAccessor.GetCacInfo());
+                        }
+
                         activities.Add(activity);
                     }
 

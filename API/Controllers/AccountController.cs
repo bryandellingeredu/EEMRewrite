@@ -43,6 +43,7 @@ namespace API.Controllers
         }
 
 
+        /*
         [AllowAnonymous]
         [HttpPost("signInCACUser")]
         public async Task<ActionResult<UserDto>> LoginCac()
@@ -59,7 +60,7 @@ namespace API.Controllers
               
             }
 
-            CACInfoDTO cac = _cacAccessor.GetCacInfo();
+           CACInfoDTO cac = _cacAccessor.GetCacInfo();
 
             var user = await _userManager.FindByEmailAsync(cac.TempEmail);
             if (user == null)
@@ -110,7 +111,7 @@ namespace API.Controllers
 
             }
 
-        }
+        } */
 
 
 
