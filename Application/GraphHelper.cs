@@ -95,7 +95,11 @@
             _ = _appClient ??
               throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
             var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
-            var placesRequest = new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
+            var options = new List<Option>
+    {
+        new QueryOption("$top", "200")
+    };
+            var placesRequest = new GraphServicePlacesCollectionRequest(roomUrl, _appClient, options).GetAsync();
             return placesRequest;
         }
 
