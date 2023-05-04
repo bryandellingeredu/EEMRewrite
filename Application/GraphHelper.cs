@@ -144,14 +144,38 @@
                     EndTime = scheduleRequestDTO.EndTime,
                     AvailabilityViewInterval = scheduleRequestDTO.AvailabilityViewInterval
                 };
-                var scheduleResult = await _appClient.Users[scheduleGroup[0]].Calendar
-                  .GetSchedule(scheduleRequest.Schedules, scheduleRequest.EndTime, scheduleRequest.StartTime, scheduleRequest.AvailabilityViewInterval)
-                  .Request()
-                  .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
-                  .PostAsync();
-                foreach (var schedule in scheduleResult)
+
+                int retries = 3;
+                bool success = false;
+                while (retries > 0 && !success)
                 {
-                    combinedResult.Add(schedule);
+                    try
+                    {
+                        var scheduleResult = await _appClient.Users[scheduleGroup[0]].Calendar
+                          .GetSchedule(scheduleRequest.Schedules, scheduleRequest.EndTime, scheduleRequest.StartTime, scheduleRequest.AvailabilityViewInterval)
+                          .Request()
+                          .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
+                          .PostAsync();
+
+                        foreach (var schedule in scheduleResult)
+                        {
+                            combinedResult.Add(schedule);
+                        }
+
+                        success = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        retries--;
+                        if (retries > 0)
+                        {
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to get schedule after 3 attempts.", ex);
+                        }
+                    }
                 }
             }
             return combinedResult;
