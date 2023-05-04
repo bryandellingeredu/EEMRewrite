@@ -18,6 +18,7 @@ import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
+import { ValidationError } from 'yup';
 import MyTextArea from "../../../app/common/form/MyTextArea";
 import MySelectInput from "../../../app/common/form/MySelectInput";
 import MyDateInput from "../../../app/common/form/MyDateInput";
@@ -280,7 +281,11 @@ export default observer(function ActivityForm() {
   const validationSchema = Yup.object({
     communityEvent: Yup.boolean(),
     categoryId: Yup.string(),
-    
+    primaryLocation: Yup.string()
+    .when('$roomRequired', {
+      is: false,
+      then: Yup.string().required("Primary Location is required"),
+    }),    
     checkedForOpsec: Yup.boolean()
       .when("communityEvent", {
         is: true,
@@ -702,6 +707,20 @@ export default observer(function ActivityForm() {
     </Modal>
   );
 
+  function yupToFormErrors(yupError: ValidationError) {
+    let errors: Record<string, string> = {};
+  
+    if (yupError.inner) {
+      for (let error of yupError.inner) {
+        if (error.path && !errors[error.path]) {
+          errors[error.path] = error.message;
+        }
+      }
+    }
+  
+    return errors;
+  }
+
   return (
     <Segment clearing>
       <Header
@@ -729,12 +748,25 @@ export default observer(function ActivityForm() {
           </div>
         </div>
       )}
-      <Formik
-        enableReinitialize
-        validationSchema={validationSchema}
-        initialValues={activity}
-        onSubmit={(values) => handleFormSubmit(values)}
-      >
+<Formik
+  enableReinitialize
+  initialValues={activity}
+  onSubmit={(values) => handleFormSubmit(values)}
+  validate={(values) => {
+    try {
+      validationSchema.validateSync(values, {
+        context: { roomRequired },
+        abortEarly: false,
+      });
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        return yupToFormErrors(error);
+      }
+      throw error;
+    }
+  }}
+>
+  
         {({ handleSubmit, isSubmitting, values }) => (
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
 
