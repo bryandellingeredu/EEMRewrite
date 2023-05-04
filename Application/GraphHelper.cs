@@ -134,7 +134,7 @@
               throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             var scheduleGroups = scheduleRequestDTO.Schedules.SplitIntoGroups(100);
-            var scheduleTasks = new List<Task<ICalendarGetScheduleCollectionPage>>();
+            var combinedResult = new CalendarGetScheduleCollectionPage();
             foreach (var scheduleGroup in scheduleGroups)
             {
                 var scheduleRequest = new ScheduleRequestDTO
@@ -144,24 +144,18 @@
                     EndTime = scheduleRequestDTO.EndTime,
                     AvailabilityViewInterval = scheduleRequestDTO.AvailabilityViewInterval
                 };
-                scheduleTasks.Add(_appClient.Users[scheduleGroup[0]].Calendar
+                var scheduleResult = await _appClient.Users[scheduleGroup[0]].Calendar
                   .GetSchedule(scheduleRequest.Schedules, scheduleRequest.EndTime, scheduleRequest.StartTime, scheduleRequest.AvailabilityViewInterval)
                   .Request()
                   .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
-                  .PostAsync());
-            }
-            var results = await Task.WhenAll(scheduleTasks);
-            var combinedResult = new CalendarGetScheduleCollectionPage();
-            foreach (var result in results)
-            {
-                foreach (var schedule in result)
+                  .PostAsync();
+                foreach (var schedule in scheduleResult)
                 {
                     combinedResult.Add(schedule);
                 }
             }
             return combinedResult;
         }
-
         public static async Task<Event> CreateEvent(GraphEventDTO graphEventDTO)
         {
             EnsureGraphForAppOnlyAuth();

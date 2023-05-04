@@ -280,7 +280,7 @@ export default observer(function ActivityForm() {
   const validationSchema = Yup.object({
     communityEvent: Yup.boolean(),
     categoryId: Yup.string(),
-
+    
     checkedForOpsec: Yup.boolean()
       .when("communityEvent", {
         is: true,
@@ -305,12 +305,18 @@ export default observer(function ActivityForm() {
     start: Yup.string()
       .required()
       .nullable()
-      .test("startBeforeEnd", "Start must be before End", function () {
-        return new Date(this.parent.start) < new Date(this.parent.end);
+      .test("startBeforeEnd", "Start must be before or same as End", function () {
+        return new Date(this.parent.start) <= new Date(this.parent.end);
       }),
     end: Yup.string().required().nullable(),
     actionOfficer: Yup.string().required(),
     actionOfficerPhone: Yup.string().required(),
+    vtc: Yup.boolean(),
+    distantTechPhoneNumber: Yup.string()
+      .when("vtc", {
+        is: true,
+        then: Yup.string().required("Distant Tech Phone Number MUST be provided"),
+      }),
   });
 
   useEffect(() => {
@@ -581,6 +587,8 @@ export default observer(function ActivityForm() {
   const FormObserver: React.FC = () => {
     const { values, setFieldValue } = useFormikContext();
     const v = values as ActivityFormValues;
+    const oneDayInMs = 24 * 60 * 60 * 1000;
+    const fiftyNineDaysInMs = 59 * oneDayInMs;
     useEffect(() => {
       if(!cuiWarningHasBeenDisplayed && !v.checkedForOpsec && 
          (v.communityEvent || v.mfp || v.copiedTocommunity ||  ["Community Event (External)"]
@@ -598,6 +606,10 @@ export default observer(function ActivityForm() {
       }
       if (v.end < v.start) {
         setFieldValue("end", new Date(v.start.getTime() + 30 * 60000));
+      } else if (v.end.getTime() === v.start.getTime()) {
+        setFieldValue("end", new Date(v.start.getTime() + 15 * 60000));
+      } else if (v.end.getTime() - v.start.getTime() > fiftyNineDaysInMs) {
+        setFieldValue("end", new Date(v.start.getTime() + fiftyNineDaysInMs));
       }
 
       if (currentCategoryId !== v.categoryId) {
@@ -1230,7 +1242,7 @@ export default observer(function ActivityForm() {
                     .includes("VTC") && (
                     <MyCheckBox
                       name="vtc"
-                      label="VTC: (allow 30 minute set up time)"
+                      label="SVTC: (allow 30 minute set up time)"
                     />
                   )}
 
@@ -1254,13 +1266,13 @@ export default observer(function ActivityForm() {
                           ]}
                           placeholder="N/A"
                           name="vtcClassification"
-                          label="VTC Classification: (If you don't know the VTC type leave this field blank)"
+                          label="SVTC Classification: (If you don't know the SVTC type leave this field blank)"
                         />
 
                         <MyTextInput
                           name="distantTechPhoneNumber"
-                          placeholder="Distant Tech Phone Number"
-                          label="Distant Tech Phone Number:"
+                          placeholder="Distant Tech Phone Number MUST be provided"
+                          label="Distant Tech Phone Number MUST be provided:"
                         />
 
                         <MyTextInput
@@ -1272,13 +1284,13 @@ export default observer(function ActivityForm() {
                         <MyTextInput
                           name="dialInNumber"
                           placeholder="Dial-In Number"
-                          label="Dial-In Number: (to be entered by VTC Tech if applicable, DO NOT ENTER SIPRNET IP)"
+                          label="Dial-In Number: (to be entered by SVTC Tech if applicable, DO NOT ENTER SIPRNET IP)"
                         />
 
                         <MyTextInput
                           name="siteIDDistantEnd"
                           placeholder="Site-ID Distant End"
-                          label="Site-ID Distant End: (to be entered by VTC Tech if applicable, DO NOT ENTER SIPRNET IP)"
+                          label="Site-ID Distant End: (to be entered by SVTC Tech if applicable, DO NOT ENTER SIPRNET IP)"
                         />
 
                         <Grid>
@@ -1308,9 +1320,9 @@ export default observer(function ActivityForm() {
 
                         <MyTextArea
                           rows={3}
-                          placeholder="Additional VTC Info"
+                          placeholder="Additional SVTC Info"
                           name="additionalVTCInfo"
-                          label="Additional VTC Info: (Display presentation across vtc - MUST attach presentation (e.g. Powerpoint, Word, PDF)"
+                          label="Additional SVTC Info: (Display presentation across svtc - MUST attach presentation (e.g. Powerpoint, Word, PDF)"
                         />
                         {id && id.length > 0 && (
                           <MySelectInput
@@ -1320,9 +1332,9 @@ export default observer(function ActivityForm() {
                               { text: "Confirmed", value: "Confirmed" },
                               { text: "Cancelled", value: "Cancelled" },
                             ]}
-                            placeholder="VTC Status"
+                            placeholder="SVTC Status"
                             name="vtcStatus"
-                            label="VTC Status: (for VTC Coordinators ONLY)"
+                            label="SVTC Status: (for SVTC Coordinators ONLY)"
                           />
                         )}
                       </Segment>
@@ -1630,7 +1642,7 @@ export default observer(function ActivityForm() {
                     { text: "Leave", value: "Leave" },
                     { text: "TDY", value: "TDY" },
                     { text: "Holiday", value: "Holiday" },
-                    { text: "VTC", value: "VTC" },
+                    { text: "SVTC", value: "VTC" },
                     { text: "Task", value: "Task" },
                     { text: "Farewell", value: "Farewell" },
                     { text: "Highlight", value: "Highlight" },
@@ -1786,7 +1798,7 @@ export default observer(function ActivityForm() {
                         />
                         <MySemanticCheckBox
                           name="automationVTC"
-                          label="VTC (3 day notice)"
+                          label="SVTC (3 day notice)"
                         />
                         <MySemanticCheckBox
                           name="automationTaping"

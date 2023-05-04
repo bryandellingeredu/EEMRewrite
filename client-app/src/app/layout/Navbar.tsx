@@ -59,7 +59,14 @@ export default observer(function Navbar() {
     <p style={{color: "white", margin: 0, padding: "0 10px"}}>
     {isSignedIn && armyProfile && armyProfile.mail  ?  "Logged on with both .edu and CAC - CUI Authorized" :
     isSignedIn ? "Logged on .edu - No PII or CUI Authorized" :
-    armyProfile && armyProfile.mail ? "Logged on with CAC - CUI Authorized": "You are not logged onto the EEM"}
+    armyProfile && armyProfile.mail ? "Logged on with CAC - CUI Authorized": "Your CAC Session has expired please "}
+    { !isSignedIn && !(armyProfile && armyProfile.mail) &&  <Link
+            to={`${process.env.PUBLIC_URL}/authenticatetoarmy`}
+            className="ui primary button mini" style={{marginLeft: '5px'}}
+          >
+            Log into Army 365 again
+          </Link>
+      }
     </p>
   </div>
   <div>
