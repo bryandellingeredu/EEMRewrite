@@ -42,16 +42,16 @@ namespace Application.Activities
             private readonly IMapper _mapper;
             private readonly IConfiguration _config;
             private readonly IUserAccessor _userAccessor;
-            private readonly ICACAccessor _cacAccessor;
+            private readonly ICACAccessor _cacAccessor;  //new
 
             public Handler(
-                DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor  cacAccessor)
+                DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
                 _userAccessor = userAccessor;
-                _cacAccessor = cacAccessor;
+                _cacAccessor = cacAccessor; 
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -81,18 +81,14 @@ namespace Application.Activities
                     {
                         Activity activity = new Activity();
                         _mapper.Map(request.Activity, activity);
-                        if(activity.HostingReport != null && activity.HostingReport.Arrival != null){
-                               activity.HostingReport.Arrival = TimeZoneInfo.ConvertTime(activity.HostingReport.Arrival.Value, TimeZoneInfo.Local);
-                        }
-                         if(activity.HostingReport != null && activity.HostingReport.Departure != null){
-                               activity.HostingReport.Departure = TimeZoneInfo.ConvertTime(activity.HostingReport.Departure.Value, TimeZoneInfo.Local);
-                        }
-                        if (activity.HostingReport != null && ! string.IsNullOrEmpty(_cacAccessor.GetCacInfo()))   // if you are creating a hosting report always use the army user not the edu user
+                        if (activity.HostingReport != null && activity.HostingReport.Arrival != null)
                         {
-                            activity.CoordinatorEmail = _cacAccessor.GetCacInfo();
-                            user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _cacAccessor.GetCacInfo());
+                            activity.HostingReport.Arrival = TimeZoneInfo.ConvertTime(activity.HostingReport.Arrival.Value, TimeZoneInfo.Local);
                         }
-
+                        if (activity.HostingReport != null && activity.HostingReport.Departure != null)
+                        {
+                            activity.HostingReport.Departure = TimeZoneInfo.ConvertTime(activity.HostingReport.Departure.Value, TimeZoneInfo.Local);
+                        }
                         activities.Add(activity);
                     }
 
@@ -146,10 +142,10 @@ namespace Application.Activities
                         {
                             if (string.IsNullOrEmpty(a.CoordinatorEmail) ||
                                 !a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]))
-                            {                          
-                                    a.CoordinatorEmail = user.Email;
-                                    a.CoordinatorFirstName= user.DisplayName;
-                                    a.CoordinatorLastName = String.Empty;
+                            {
+                                a.CoordinatorEmail = user.Email;
+                                a.CoordinatorFirstName = user.DisplayName;
+                                a.CoordinatorLastName = String.Empty;
                             }
                             a.CreatedBy = user.Email;
                             a.CreatedAt = DateTime.Now;
@@ -161,14 +157,24 @@ namespace Application.Activities
                         a.HostingReport = null;
                         _context.Activities.Add(a);
 
-                 
+               
+
+
 
                         var result = await _context.SaveChangesAsync() > 0;
                         WorkflowHelper workflowHelper = new WorkflowHelper(a, settings, _context);
-                        await   workflowHelper.SendNotifications();
+                        await workflowHelper.SendNotifications();
 
+                        if (request.Activity.HostingReport! != null && !string.IsNullOrEmpty(_cacAccessor.GetCacInfo()))   // if you are creating a hosting report always use the army user not the edu user
+                        {
+                            var cacUser = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _cacAccessor.GetCacInfo());
+                            var cacActivity = await _context.Activities.FindAsync(a.Id);
+                            cacActivity.CoordinatorEmail = _cacAccessor.GetCacInfo();
+                            cacActivity.CreatedBy = cacUser.Email;
+                            await _context.SaveChangesAsync();
+                        }
 
-                        if (request.Activity.HostingReport != null )
+                        if (request.Activity.HostingReport != null)
                         {
                             HostingReport hostingReport = request.Activity.HostingReport;
                             hostingReport.Id = Guid.Empty;
@@ -192,13 +198,13 @@ namespace Application.Activities
                     }
                     return Result<Unit>.Success(Unit.Value);
                 }
-                catch (Exception )
+                catch (Exception)
                 {
 
                     throw;
                 }
             }
-          
+
         }
     }
 }

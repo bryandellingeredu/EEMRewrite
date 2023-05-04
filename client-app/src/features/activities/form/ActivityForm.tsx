@@ -1272,10 +1272,12 @@ export default observer(function ActivityForm() {
                     .map((x) => x.displayName)
                     .join(",")
                     .includes("VTC") && (
+                      <Segment inverted color="brown">
                     <MyCheckBox
                       name="vtc"
                       label="SVTC: (allow 30 minute set up time)"
                     />
+                    </ Segment>
                   )}
 
                   {graphRooms

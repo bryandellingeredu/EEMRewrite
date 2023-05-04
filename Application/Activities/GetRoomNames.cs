@@ -60,20 +60,24 @@ namespace Application.Activities
                 {
                     foreach (var item in evt.Attendees.Where(x => allroomEmails.Contains(x.EmailAddress.Address)))
                     {
-
-                        newActivityRooms.Add(new ActivityRoom
+                        string roomStatus = await getRoomStatus(new ScheduleRequestDTO
                         {
-                            Id = index++,
-                            Name = getName(item, allrooms),
-                            Email = item.EmailAddress.Address,
-                            Status = await getRoomStatus(new ScheduleRequestDTO
-                            {
-                                Schedules = new List<string> { item.EmailAddress.Address },
-                                StartTime = ConvertToEST(evt.Start),
-                                EndTime = ConvertToEST(evt.End),
-                                AvailabilityViewInterval = 15
-                            })
+                            Schedules = new List<string> { item.EmailAddress.Address },
+                            StartTime = ConvertToEST(evt.Start),
+                            EndTime = ConvertToEST(evt.End),
+                            AvailabilityViewInterval = 15
                         });
+
+                        if (roomStatus != "Free")
+                        {
+                            newActivityRooms.Add(new ActivityRoom
+                            {
+                                Id = index++,
+                                Name = getName(item, allrooms),
+                                Email = item.EmailAddress.Address,
+                                Status = roomStatus
+                            });
+                        }
                     }
                 }
 

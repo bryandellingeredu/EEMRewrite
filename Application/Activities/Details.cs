@@ -110,24 +110,28 @@ namespace Application.Activities
                     List<ActivityRoom> newActivityRooms = new List<ActivityRoom>();
                     int index = 0;
 
-                   if(evt !=null && evt.Attendees !=null)
+                    if (evt != null && evt.Attendees != null)
                     {
                         foreach (var item in evt.Attendees.Where(x => allroomEmails.Contains(x.EmailAddress.Address)))
                         {
-
-                            newActivityRooms.Add(new ActivityRoom
+                            string roomStatus = await getRoomStatus(new ScheduleRequestDTO
                             {
-                                Id = index++,
-                                Name = getName(item, allrooms),
-                                Email = item.EmailAddress.Address,
-                                Status = await getRoomStatus(new ScheduleRequestDTO
-                                {
-                                    Schedules = new List<string> { item.EmailAddress.Address },
-                                    StartTime = getDateTimeTimeZone(activity.Start),
-                                    EndTime = getDateTimeTimeZone(activity.End),
-                                    AvailabilityViewInterval = 15
-                                })
+                                Schedules = new List<string> { item.EmailAddress.Address },
+                                StartTime = getDateTimeTimeZone(activity.Start),
+                                EndTime = getDateTimeTimeZone(activity.End),
+                                AvailabilityViewInterval = 15
                             });
+
+                            if (roomStatus != "Free")
+                            {
+                                newActivityRooms.Add(new ActivityRoom
+                                {
+                                    Id = index++,
+                                    Name = getName(item, allrooms),
+                                    Email = item.EmailAddress.Address,
+                                    Status = roomStatus
+                                });
+                            }
                         }
                     }
 
