@@ -69,8 +69,11 @@ namespace Application.ImportLegacyData
 
                     var titles = await _context.Activities.Select(x => x.Title).Distinct().ToListAsync();   
 
-                    List<Activity> activities = new List<Activity>();   
-                    foreach (var item in eemDataList.Where(x => !string.IsNullOrEmpty(x.Title)).Where(x => x.Start >= DateTime.Today).Where(x => !titles.Contains(x.Title)))
+                    List<Activity> activities = new List<Activity>();
+                    foreach (var item in eemDataList
+             .Where(x => !string.IsNullOrEmpty(x.Title))
+             .Where(x => x.Start >= DateTime.Today.AddMonths(-1))
+             .Where(x => !titles.Contains(x.Title)))
                     {
                         activities.Add(new Activity
                         {
@@ -125,7 +128,19 @@ namespace Application.ImportLegacyData
                         }); 
                     }
 
-                   await _context.Activities.AddRangeAsync(activities);
+                    foreach (var activity in activities)
+                    {
+                        foreach (var item in RoomData.Data.Values)
+                        {
+                            if (activity.PrimaryLocation.Equals(item["OldDisplayName"], StringComparison.OrdinalIgnoreCase))
+                            {
+                                activity.PrimaryLocation = item["Email"];
+                                break;
+                            }
+                        }
+                    }
+
+                    await _context.Activities.AddRangeAsync(activities);
 
                     await _context.SaveChangesAsync();
                     var targetLocations = new List<string>
@@ -142,7 +157,7 @@ namespace Application.ImportLegacyData
                     {
                         List<string> roomEmails = new List<string>();
 
-                        if (a.PrimaryLocation.ToLowerInvariant().Contains("collins hall - test room"))
+                  /*      if (a.PrimaryLocation.ToLowerInvariant().Contains("collins hall - test room"))
                         {
                             roomEmails.Add("TestRoom5@armywarcollege.edu");
                         }
@@ -155,7 +170,7 @@ namespace Application.ImportLegacyData
                         if (a.PrimaryLocation.ToLowerInvariant().Contains("reynolds theater"))
                         {
                             roomEmails.Add("ReynoldsTheater@armywarcollege.edu");
-                        }
+                        }*/
                         string startDateAsString = a.Start.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
                         string endDateAsString = a.End.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
                         if (a.AllDayEvent)
@@ -168,6 +183,7 @@ namespace Application.ImportLegacyData
                             endDateAsString = endDate.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
                         }
                         //create outlook event
+                    /*   
                         GraphEventDTO graphEventDTO = new GraphEventDTO
                         {
                             EventTitle = a.Title,
@@ -180,13 +196,13 @@ namespace Application.ImportLegacyData
                             RequesterLastName = "EEMServiceAccount",
                             IsAllDay = a.AllDayEvent,
                             UserEmail = coordinatorEmail
-                        };
+                        };*/
                         try
                         {
-                            Event evt = await GraphHelper.CreateEvent(graphEventDTO);
+                      //      Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                             var activityToUpdate = await _context.Activities.FindAsync(a.Id);
                             if (activityToUpdate != null) { 
-                                activityToUpdate.EventLookup= evt.Id;
+                            //    activityToUpdate.EventLookup= evt.Id;
                                 await _context.SaveChangesAsync();
                             }
                         }
@@ -195,7 +211,9 @@ namespace Application.ImportLegacyData
                             var exc = e;
                             //throw;
                         }
+                        
                     }
+                        
 
 
                         return Result<Unit>.Success(Unit.Value);

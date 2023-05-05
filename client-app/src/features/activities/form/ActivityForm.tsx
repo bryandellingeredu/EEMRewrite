@@ -128,6 +128,7 @@ export default observer(function ActivityForm() {
 
   const [submitting, setSubmitting] = useState(false);
   const [attachBioError, setAttachBioError] = useState(false);
+  const [distantTechError, setDistantTechError] = useState(false);
   const [attachNoAttachmentError, setAttachNoAttachmentError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [recurrenceDisabled, setRecurrenceDisabled] = useState<boolean>(false);
@@ -316,12 +317,6 @@ export default observer(function ActivityForm() {
     end: Yup.string().required().nullable(),
     actionOfficer: Yup.string().required(),
     actionOfficerPhone: Yup.string().required(),
-    vtc: Yup.boolean(),
-    distantTechPhoneNumber: Yup.string()
-      .when("vtc", {
-        is: true,
-        then: Yup.string().required("Distant Tech Phone Number MUST be provided"),
-      }),
   });
 
   useEffect(() => {
@@ -383,6 +378,7 @@ export default observer(function ActivityForm() {
     }
     if (id) {
       loadActivity(id, categoryId).then((response) => {
+        if (response && !response.report) response.report = "none" ;
         if(copy && copy === 'true' && response && response.hostingReport) response.hostingReport = null;
         if(copy && copy === 'true' && response && response.title) response.title = response.title + ' Copied on - ' + format(new Date(), 'MMMM d, yyyy h:mm aa')
         if(copy && copy === 'true' && response && response.report) response.report = 'none';
@@ -439,8 +435,22 @@ export default observer(function ActivityForm() {
 
   function handleFormSubmit(activity: ActivityFormValues) {
     let hostingReportError = false;
+    let distantTechErrorIndicator = false;
+    setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
+
+    if (activity.vtc && !activity.distantTechPhoneNumber){
+      setDistantTechError(true);
+      distantTechErrorIndicator = true;
+      const distantTechAnchor = document.getElementById("distantTechAnchor");
+      if (distantTechAnchor) {
+        distantTechAnchor.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
     if (
       activity.report === "Hosting Report" &&
       armyProfile &&
@@ -473,7 +483,7 @@ export default observer(function ActivityForm() {
         }
       }
     }
-    if (!hostingReportError) {
+    if (!hostingReportError && !distantTechErrorIndicator) {
       setSubmitting(true);
       if (!activity.categoryId)
         activity.categoryId = categories.find((x) => x.name === "Other")!.id;
@@ -754,13 +764,29 @@ export default observer(function ActivityForm() {
   onSubmit={(values) => handleFormSubmit(values)}
   validate={(values) => {
     try {
+      debugger;
       validationSchema.validateSync(values, {
         context: { roomRequired },
         abortEarly: false,
       });
     } catch (error) {
+      debugger;
       if (error instanceof ValidationError) {
         return yupToFormErrors(error);
+      }
+      else{
+        if(error instanceof Object){
+        toast.error(error.toString(), {
+          position: "top-center",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          });
+        }
       }
       throw error;
     }
@@ -1272,7 +1298,7 @@ export default observer(function ActivityForm() {
                     .map((x) => x.displayName)
                     .join(",")
                     .includes("VTC") && (
-                      <Segment inverted color="brown">
+                      <Segment style={{backgroundColor: '#F5EAF2'}}>
                     <MyCheckBox
                       name="vtc"
                       label="SVTC: (allow 30 minute set up time)"
@@ -1286,7 +1312,7 @@ export default observer(function ActivityForm() {
                     .join(",")
                     .includes("VTC") &&
                     values.vtc && (
-                      <Segment inverted color="brown">
+                      <Segment style={{backgroundColor: '#F5EAF2'}}>
                         <MySelectInput
                           options={[
                             { text: "N/A", value: "" },
@@ -1305,9 +1331,17 @@ export default observer(function ActivityForm() {
 
                         <MyTextInput
                           name="distantTechPhoneNumber"
-                          placeholder="Distant Tech Phone Number MUST be provided"
-                          label="Distant Tech Phone Number MUST be provided:"
+                          placeholder="Distant Tech Phone Number"
+                          label="Distant Tech Phone Number be provided:"
                         />
+                          <p><i id="distantTechAnchor">Distant Tech Phone Number MUST be provided</i></p>
+                                {distantTechError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      Enter a Distant Tech Phone Number
+                                    </Label>
+                                  </p>
+                                )}
 
                         <MyTextInput
                           name="requestorPOCContactInfo"
@@ -2449,8 +2483,8 @@ export default observer(function ActivityForm() {
                   </Grid.Row>
                 </Grid>
 
-                {values.report !== "none" && (
-                  <Segment inverted color="teal">
+                {values.report && values.report !== "none" && (
+                  <Segment style={{backgroundColor: '#ECFFE9'}}>
                     <Header as="h5" icon textAlign="center">
                       <FontAwesomeIcon
                         icon={faFileLines}
@@ -2694,7 +2728,7 @@ export default observer(function ActivityForm() {
                                 <DocumentUploadWidget
                                   uploadDocument={handleBioDocumentUpload}
                                   loading={uploading}
-                                  color={'white'}
+                                  color={'black'}
                                 />
                               </Grid.Column>
                             </Grid.Row>
@@ -2811,7 +2845,7 @@ export default observer(function ActivityForm() {
                         name="hostingReport.travelArrangementDetails"
                         label="Travel Arrangement Details:"
                       />
-                      <a href="https://www.ihg.com/armyhotels/hotels/us/en/carlisle/zyija/hoteldetail" target="_blank">
+                      <a href="https://www.ihg.com/armyhotels/hotels/us/en/carlisle/zyjia/hoteldetail?cm_mmc=PS-IHGArmy-G%20B-AMER-%5BUSA%5D-Army-Americas-%5BE%5D-PA%20-%20Carlisle%20Barracks-ihg%20army%20hotel%20carlisle%20barracks&gad=1&gclid=Cj0KCQjw0tKiBhC6ARIsAAOXutl1ZGsVHTCpJcbqW1V9_qV6HHRPPIqNiO1q_mQQxE90IaXogiRhjz0aAtSSEALw_wcB" target="_blank">
                       <Icon name='paperclip' style={{color: 'white'}}></Icon> <span  style={{color: 'white', textDecoration: 'underline' }}>  InterContinental Hotel Group (HG) Army Hotels Carlisle Barracks Info </span> 
                         </a>
                       </>
@@ -3047,7 +3081,7 @@ export default observer(function ActivityForm() {
                         label="Gift Requirement:"
                       />
                     )}
-                    <Segment color="yellow" inverted>
+                    <Segment style={{backgroundColor: '#FFF9A6'}}>
                       <Divider color="black" />
                       <Grid>
                         <Grid.Row>
