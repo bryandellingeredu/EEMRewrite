@@ -25,7 +25,7 @@ namespace API.Controllers
        public async Task<IActionResult> GetDeletedActivities() =>
       HandleResult(await Mediator.Send(new ListDeleted.Query()));
 
-
+        [AllowAnonymous]
         [HttpGet("getByDay/{day}")]
         public async Task<IActionResult> GetActivities(string day)
         {

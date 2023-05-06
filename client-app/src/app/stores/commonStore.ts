@@ -8,6 +8,7 @@ export default class CommonStore{
     appLoaded = false;
     redirectId = '';
     redirectCategoryId = '';
+    redirectToPage = '';
 
     constructor() {
         makeAutoObservable(this);
@@ -41,6 +42,10 @@ export default class CommonStore{
 
     setRedirectCategoryId = (categoryId: string) =>{
         this.redirectCategoryId = categoryId;
+    }
+
+    setRedirectToPage = (redirectToPage: string) => {
+        this.redirectToPage = redirectToPage
     }
 
     convertDateToGraph = (dt: Date, isAllDay: boolean, isEndDt: boolean): string => {

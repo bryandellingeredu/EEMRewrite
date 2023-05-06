@@ -48,6 +48,10 @@ function App() {
   useEffect(() => {
     const id = query.get('id');
     const categoryId = query.get('categoryid');
+    const redirecttopage = query.get('redirecttopage');
+    if(redirecttopage){
+      commonStore.setRedirectToPage(redirecttopage)
+    }
     if(id && categoryId){
       commonStore.setRedirectId(id);
       commonStore.setRedirectCategoryId(categoryId);

@@ -6,7 +6,6 @@ import { Link, useHistory } from "react-router-dom";
 import { Container, Header, Segment, Image, Button, Divider, Label, Grid, Icon } from "semantic-ui-react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
-import ValidationErrors from "../errors/ValidationErrors";
 import { useEffect } from 'react';
 import { toast } from "react-toastify";
 
@@ -15,7 +14,7 @@ export default observer(function HomePage(){
     const history = useHistory();
     const {userStore, graphUserStore, commonStore} = useStore();
     const {loadEDUGraphUser, armyProfile} = graphUserStore;
-    const {redirectId, redirectCategoryId} = commonStore;
+    const {redirectId, redirectCategoryId, redirectToPage} = commonStore;
     const {signInEDUGraphUser, signInArmyUser, loadingInitial, errors} = userStore;
     const [loading, setLoading] = useState<boolean>(false);
     const loginCompleted = () => {
@@ -27,6 +26,14 @@ export default observer(function HomePage(){
           }
         });
       };
+
+      useEffect(() => {
+        if(redirectToPage && userStore.isLoggedIn){
+          history.push(`${process.env.PUBLIC_URL}/${redirectToPage}`)
+        } else if (userStore.isLoggedIn && armyProfile){
+          history.push(`${process.env.PUBLIC_URL}/${redirectToPage}`)
+        } 
+      }, [redirectToPage, userStore.isLoggedIn, armyProfile ])
 
       useEffect(() => {
         if(redirectId && redirectCategoryId && userStore.isLoggedIn){
