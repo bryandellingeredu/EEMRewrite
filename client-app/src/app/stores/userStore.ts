@@ -31,9 +31,10 @@ export default class UserStore {
             runInAction(() =>  this.user = user)
             if(store.commonStore.redirectId && store.commonStore.redirectCategoryId){
                 history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
-            }else{
-               // history.push(`${process.env.PUBLIC_URL}/activityTable`);
-            } 
+            }
+            if(store.commonStore.redirectToPage){
+                history.push(`${process.env.PUBLIC_URL}/${store.commonStore.redirectToPage}`)
+            }
            
             store.modalStore.closeModal();
             this.user = user;
@@ -95,7 +96,12 @@ export default class UserStore {
             this.setLoadingInitial(false);
             if(store.commonStore.redirectId && store.commonStore.redirectCategoryId){
                 history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
-            }else{
+            }
+            else if(store.commonStore.redirectToPage){
+                debugger;
+                history.push(`${process.env.PUBLIC_URL}/${store.commonStore.redirectToPage}`);
+            }
+         else{
                 history.push(`${process.env.PUBLIC_URL}/activityTable`);
             } 
         }catch(errors){
@@ -127,7 +133,12 @@ export default class UserStore {
             runInAction(() =>  this.user = user)
             if(store.commonStore.redirectId && store.commonStore.redirectCategoryId){
                 history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
-            }else{
+            }
+            else if(store.commonStore.redirectToPage){
+                debugger;
+                history.push(`${process.env.PUBLIC_URL}/${store.commonStore.redirectToPage}`);
+            }
+            else{
                 history.push(`${process.env.PUBLIC_URL}/activityTable`);
             } 
             }
@@ -156,6 +167,10 @@ export default class UserStore {
         runInAction(() =>  this.user = user)
         if(store.commonStore.redirectId && store.commonStore.redirectCategoryId){
             history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
+        }
+        if(store.commonStore.redirectToPage){
+            debugger;
+            history.push(`${process.env.PUBLIC_URL}/${store.commonStore.redirectToPage}`);
         }
         //history.push(`${process.env.PUBLIC_URL}/activityTable`);
       } catch(error){
