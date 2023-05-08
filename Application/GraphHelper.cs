@@ -283,6 +283,44 @@
 
         }
 
+        public static async Task DeleteRoomCalendarEvents(string roomEmail)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+
+            // Get all events from the room calendar
+            var roomEvents = await GetRoomEvents(roomEmail);
+            foreach (var roomEvent in roomEvents)
+            {
+                try
+                {
+                    await _appClient.Users[roomEmail].Events[roomEvent.Id]
+                     .Request()
+                      .DeleteAsync();
+                }
+                catch (Exception ex)
+                {
+                    // if something goes wrong deleting the event try the next one
+
+                }
+            }
+        }
+
+        public static async Task<Event[]> GetRoomEvents(string roomEmail)
+        {
+            var events = await _appClient.Users[roomEmail].CalendarView
+              .Request(new List<Option>
+              {
+              new QueryOption("startDateTime", DateTimeOffset.UtcNow.ToString("o")),
+              new QueryOption("endDateTime", DateTimeOffset.UtcNow.AddYears(1).ToString("o"))
+              })
+              .GetAsync();
+
+            return events.CurrentPage.ToArray();
+        }
+
         public static async Task SendEmail(string[] emails, string subject, string body)
         {
             EnsureGraphForAppOnlyAuth();

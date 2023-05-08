@@ -8,9 +8,29 @@ import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
 import { useEffect } from 'react';
 import { toast } from "react-toastify";
+import { Providers, ProviderState } from "@microsoft/mgt";
+
+function useIsEduSignedIn(): [boolean] {
+  const [isSEduignedIn, setIsSEduignedIn] = useState(false);
+  useEffect(() => {
+    const updateState = () => {
+      const provider = Providers.globalProvider;
+      setIsSEduignedIn(provider && provider.state === ProviderState.SignedIn);
+    };
+
+    Providers.onProviderUpdated(updateState);
+    updateState();
+
+    return () => {
+      Providers.removeProviderUpdatedListener(updateState);
+    };
+  }, []);
+  return [isSEduignedIn];
+}
 
 
 export default observer(function HomePage(){
+    const [isEduSignedIn] = useIsEduSignedIn();
     const history = useHistory();
     const {userStore, graphUserStore, commonStore} = useStore();
     const {loadEDUGraphUser, armyProfile} = graphUserStore;
@@ -64,7 +84,7 @@ export default observer(function HomePage(){
     </Button>
      }
 
-     {userStore.isLoggedIn && !armyProfile &&
+     {userStore.isLoggedIn && !armyProfile && isEduSignedIn &&
      <>
       <Header as ='h3' inverted content = 'You are signed into your edu account. '/>
       <Header as ='h3' inverted content =  'Would you also like to sign into your army 365 account?' />
@@ -79,8 +99,12 @@ export default observer(function HomePage(){
                 </Button>
     </>
      }
+
+{/*
+    <p>Logged into EEM: { userStore.isLoggedIn ? 'true' : 'false'}   Logged into Army: { armyProfile ? 'true' : 'false'}  Logged into EDU: { isEduSignedIn ? 'true' : 'false'}  </p>
+*/}
            
-      {!userStore.isLoggedIn && 
+      {(!userStore.isLoggedIn || (!armyProfile && !isEduSignedIn))  && 
         <>
           <Divider inverted />
 

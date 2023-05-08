@@ -49,7 +49,7 @@ export default function HostingReportRow({item} : Props){
          <Table.Cell>
            {renderTextWithPopup(item.actionOfficer)}
          </Table.Cell>     
-         <Table.Cell colspan='2'>
+         <Table.Cell colSpan='2'>
            {renderTextWithPopup(item.createdBy)}
          </Table.Cell>
    </Table.Row> 

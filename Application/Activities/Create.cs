@@ -154,14 +154,24 @@ namespace Application.Activities
                         a.CreatedBy = user.Email;
                         a.CreatedAt = DateTime.Now;
 
-                        a.HostingReport = null;
+                       // a.HostingReport = null;
                         _context.Activities.Add(a);
-
-               
-
-
-
                         var result = await _context.SaveChangesAsync() > 0;
+
+                        if (request.Activity.HostingReport != null)
+                        {
+                            var activityWithHostingReport = await _context.Activities.FindAsync(a.Id);
+                            var hostingReport = activityWithHostingReport.HostingReport;
+                            if (hostingReport != null)
+                            {
+                                activityWithHostingReport.HostingReport = null;
+                                _context.HostingReports.Remove(hostingReport);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+
+
+
                         WorkflowHelper workflowHelper = new WorkflowHelper(a, settings, _context);
                         await workflowHelper.SendNotifications();
 
@@ -198,7 +208,7 @@ namespace Application.Activities
                     }
                     return Result<Unit>.Success(Unit.Value);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
                     throw;
