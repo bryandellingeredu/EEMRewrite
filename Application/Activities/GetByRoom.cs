@@ -38,36 +38,40 @@ namespace Application.Activities
                 .Include(x => x.Category)
                 .Where(x => !x.LogicalDeleteInd)
                 .Where(x => x.Title == request.Title).ToListAsync();
-                if (!activities.Any())
-                {
-                    var titleArray = request.Title.Split("- Requested by:");
-                    var title = titleArray[0];
-                    activities = await _context.Activities.Where(x => x.Title == title).ToListAsync();
-                }
-
+                var multipleActivities = new List<Activity>();
                 if (activities.Any())
                 {
                     if (activities.Count == 1)
                     {
                         activity = activities.First();
-                    } else
-                    {       
+                    }
+                    else
+                    {
                         DateTime start = Helper.GetDateTimeFromRequest(request.Start);
                         DateTime end = Helper.GetDateTimeFromRequest(request.End);
-                        activities = activities.Where(x => DateTime.Compare(x.Start, start) == 0).ToList();
-                        if (activities.Count == 1)
+
+                        // Look for the title where the date is anytime between the start date at midnight and the end date plus a day
+                        var dateRangeActivities = activities.Where(x => x.Start.Date >= start.Date && x.End.Date <= end.Date).ToList();
+
+                        if (dateRangeActivities.Count == 1)
                         {
-                            activity = activities.First();
-                        } else
+                            activity = dateRangeActivities.First();
+                        }
+                        else
                         {
-                            activities = activities.Where(x => DateTime.Compare(x.End, end) == 0).ToList();
+                            // If there is still more than one, do the exact match
+                            activities = dateRangeActivities.Where(x => DateTime.Compare(x.Start, start) == 0 && DateTime.Compare(x.End, end) == 0).ToList();
                             if (activities.Count == 1)
                             {
                                 activity = activities.First();
                             }
+                            else if (dateRangeActivities.Any()) // If the exact match returns none, return the first one from the date range check
+                            {
+                                activity = dateRangeActivities.First();
+                            }
                         }
                     }
-                };
+                }
 
                 if (activity.Organization != null)
                 {

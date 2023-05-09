@@ -67,6 +67,10 @@ export default observer(function RoomCalendarLinks() {
       setGraphRoomsByBuilding(getGroupedGraphRooms());
   }, [loadGraphRooms, graphRooms.length]);
 
+  useEffect(() => {
+    setFilteredRooms(graphRooms);
+  }, [graphRooms]);
+
 
 
   return (
@@ -78,7 +82,7 @@ export default observer(function RoomCalendarLinks() {
           Room Calendars
         </Header>
       </Divider>
-      <div  style={{ position: 'absolute', top: 0, right: 0, minWidth: '500px' }}>
+      <div  style={{ position: 'absolute', top: 0, left: 0, minWidth: '500px' }}>
       <Select
         
         name="rooms"

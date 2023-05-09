@@ -434,6 +434,7 @@ export default observer(function ActivityForm() {
   }, [isSignedIn, graphRooms]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
+    debugger;
     let hostingReportError = false;
     let distantTechErrorIndicator = false;
     setDistantTechError(false);
@@ -613,17 +614,17 @@ export default observer(function ActivityForm() {
             <CUIWarningModal handleCUIWarningHasBeenDisplayed={handleCUIWarningHasBeenDisplayed} showHeader={true} cuiButtonClicked={false} opsecButtonClicked={false}/>, 'large'
            )
          }
-      if (v.end.getDate() !== v.start.getDate()) {
+      if ((v.end && v.start) && v.end.getDate() !== v.start.getDate()) {
         setRecurrenceDisabled(true);
         setRecurrenceInd(false);
       } else {
         setRecurrenceDisabled(false);
       }
-      if (v.end < v.start) {
+      if ((v.end && v.start) && v.end < v.start) {
         setFieldValue("end", new Date(v.start.getTime() + 30 * 60000));
-      } else if (v.end.getTime() === v.start.getTime()) {
+      } else if ((v.end && v.start) && v.end.getTime() === v.start.getTime()) {
         setFieldValue("end", new Date(v.start.getTime() + 15 * 60000));
-      } else if (v.end.getTime() - v.start.getTime() > fiftyNineDaysInMs) {
+      } else if ((v.end && v.start) && v.end.getTime() - v.start.getTime() > fiftyNineDaysInMs) {
         setFieldValue("end", new Date(v.start.getTime() + fiftyNineDaysInMs));
       }
 
