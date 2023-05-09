@@ -259,15 +259,27 @@ namespace Application.Activities
 
         public static DateTime GetDateTimeFromRequest(string dateAsString)
         {
-            var myArray = dateAsString.Split('T');
-            var dateArray = myArray[0].Split('-');
-            var timeArray = myArray[1].Split(':');
-            int year = Int32.Parse(dateArray[0]);     
-            int month = Int32.Parse(dateArray[1]);
-            int day = Int32.Parse(dateArray[2]);
-            int hour = Int32.Parse(timeArray[0]);
-            int minute = Int32.Parse(timeArray[1]);
-            DateTime dateTime = new DateTime(year, month, day, hour, minute, 0);
+            DateTime dateTime;
+
+            if (DateTime.TryParse(dateAsString, out dateTime))
+            {
+                // Date only, set the time to midnight
+                dateTime = dateTime.Date;
+            }
+            else
+            {
+                // Date and time
+                var myArray = dateAsString.Split('T');
+                var dateArray = myArray[0].Split('-');
+                var timeArray = myArray[1].Split(':');
+                int year = Int32.Parse(dateArray[0]);
+                int month = Int32.Parse(dateArray[1]);
+                int day = Int32.Parse(dateArray[2]);
+                int hour = Int32.Parse(timeArray[0]);
+                int minute = Int32.Parse(timeArray[1]);
+                dateTime = new DateTime(year, month, day, hour, minute, 0);
+            }
+
             return dateTime;
         }
 
