@@ -632,7 +632,7 @@ export default observer(function ActivityForm() {
           .filter((x) => x.includeInIMC)
           .map((x) => x.id)
           .includes(v.categoryId);
-        if (v.imc !== isIncludedInIMC) {
+        if (v.imc !== isIncludedInIMC && !(id && id.length))  {
           setFieldValue("imc", isIncludedInIMC);
         }
 
@@ -799,17 +799,7 @@ export default observer(function ActivityForm() {
             <FormObserver />
             <ScrollToFieldError />
 
-            <MyTextInput
-              name="title"
-              placeholder="*Event Title (required field)"
-            />
-
-            <MyTextArea
-              rows={3}
-              placeholder="*Event Details / Description (required field)"
-              name="description"
-            />
-
+         
             {id && originalRoomEmails && originalRoomEmails.length > 0 && (
               <Grid columns={4}>
                 <Grid.Column>
@@ -1143,6 +1133,18 @@ export default observer(function ActivityForm() {
                   <Divider />
                 </>
               )}
+
+             <MyTextInput
+              name="title"
+              placeholder="*Event Title (required field)"
+            />
+
+            <MyTextArea
+              rows={3}
+              placeholder="*Event Details / Description (required field) DO NOT ENTER CUI IN THIS FIELD"
+              name="description"
+            />
+
 
             <SemanticForm.Group widths="equal">
               <MySelectInput

@@ -35,6 +35,18 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(new DeleteEvents.Command { Email = email }));
         }
+
+        [AllowAnonymous]
+        [HttpGet("deleteAllEvents")]
+        public async Task<IActionResult> DeleteAllEvents()
+        {
+            if (!_environment.IsDevelopment())
+            {
+                return Unauthorized(); // Return an unauthorized response if the environment is not local
+            }
+
+            return HandleResult(await Mediator.Send(new DeleteAllEvents.Command { } ));
+        }
     }
 }
 

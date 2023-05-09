@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 using System.ComponentModel;
 using Application.Activities;
+using System.Text.RegularExpressions;
 
 namespace Application.ImportLegacyData
 {
@@ -72,19 +73,20 @@ namespace Application.ImportLegacyData
                     List<Activity> activities = new List<Activity>();
                     foreach (var item in eemDataList
              .Where(x => !string.IsNullOrEmpty(x.Title))
-             .Where(x => x.Start >= DateTime.Today.AddMonths(-1))
+             .Where(x => x.Start >= DateTime.Today.AddMonths(-2))
+             .Where(x => (x.End - x.Start).TotalDays <= 60)
              .Where(x => !titles.Contains(x.Title)))
                     {
                         activities.Add(new Activity
                         {
-                            Title = item.Title,
+                            Title = RemoveSpecialCharactersAndHtmlTags(item.Title),
                             Start = item.Start,
                             End = item.End,
                             OrganizationId = organizations.Where(x => x.Name == item.LeadOrg).FirstOrDefault()?.Id,
                             CategoryId = GetCategoryId(item.SubCalendar, categories),
                             ActionOfficer = item.ActionOfficer,
                             ActionOfficerPhone = item.ActionOfficerPhone,
-                            Description = item.EventDetails,
+                            Description = RemoveSpecialCharactersAndHtmlTags(item.EventDetails),
                             PrimaryLocation = !string.IsNullOrEmpty(item.Resources) ? item.Resources : item.Location,
                             AllDayEvent = item.AllDayEvent || item.Start.Date != item.End.Date,
                             IMC = GetIMC(item.IMC, item.SubCalendar),
@@ -153,7 +155,7 @@ namespace Application.ImportLegacyData
                         bool exceptionOccurred = false;
                         foreach (var item in RoomData.Data.Values)
                         {
-                            if (a.PrimaryLocation.Equals(item["Email"], StringComparison.OrdinalIgnoreCase) && item["Email"] == "Bldg650CollinsHallB037SVTC@armywarcollege.edu")
+                            if (a.PrimaryLocation.Equals(item["Email"], StringComparison.OrdinalIgnoreCase) && a.Start > DateTime.Now)  
                             {
                                 List<string> roomEmails = new List<string>();
                                 roomEmails.Add(item["Email"]);
@@ -213,8 +215,24 @@ namespace Application.ImportLegacyData
             private bool GetIMC(bool iMC, string subCalendar) => iMC || new List<string> {
                 "Academic Calendar", "ASEP Calendar", "Command Group Calendar", "Garrison Calendar", "Chapel", "General Interest",
                 "Holiday Calendar", "Training & Misc Events" }.Contains(subCalendar);
-            
 
+            public static string RemoveSpecialCharactersAndHtmlTags(string input)
+            {
+                if (string.IsNullOrEmpty(input))
+                {
+                    return string.Empty;
+                }
+
+                // Remove HTML tags
+                var regexHtml = new Regex("<.*?>", RegexOptions.Compiled);
+                var withoutHtml = regexHtml.Replace(input, string.Empty);
+
+                // Remove special characters
+                var regexSpecial = new Regex("[^a-zA-Z0-9 _-]", RegexOptions.Compiled);
+                var cleaned = regexSpecial.Replace(withoutHtml, string.Empty);
+
+                return cleaned;
+            }
 
             private Guid GetCategoryId(string subCalendar, List<Category> categories)
             {
