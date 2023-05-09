@@ -316,7 +316,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
      </Button>
 
         <Button color='purple'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}/true`}>
-            Update Entiire Series
+            Update Entire Series
         </Button>
         <Button  color='orange'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
                     Update Just This Event
