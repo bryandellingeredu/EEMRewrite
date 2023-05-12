@@ -8,7 +8,6 @@ using System.Globalization;
 using CsvHelper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
-using System.ComponentModel;
 using Application.Activities;
 using System.Text.RegularExpressions;
 
@@ -70,6 +69,7 @@ namespace Application.ImportLegacyData
 
                     var titles = await _context.Activities.Select(x => x.Title).Distinct().ToListAsync();   
 
+
                     List<Activity> activities = new List<Activity>();
                     foreach (var item in eemDataList
              .Where(x => !string.IsNullOrEmpty(x.Title))
@@ -130,17 +130,7 @@ namespace Application.ImportLegacyData
                         }); 
                     }
 
-                    foreach (var activity in activities)
-                    {
-                        foreach (var item in RoomData.Data.Values)
-                        {
-                            if (activity.PrimaryLocation.Equals(item["OldDisplayName"], StringComparison.OrdinalIgnoreCase))
-                            {
-                                activity.PrimaryLocation = item["Email"];
-                                break;
-                            }
-                        }
-                    }
+               
 
                     await _context.Activities.AddRangeAsync(activities);
 
@@ -153,61 +143,79 @@ namespace Application.ImportLegacyData
                     foreach (var a in activities)
                     {
                         bool exceptionOccurred = false;
+                        List<string> roomEmails = new List<string>();
+
                         foreach (var item in RoomData.Data.Values)
                         {
-                            if (a.PrimaryLocation.Equals(item["Email"], StringComparison.OrdinalIgnoreCase) && a.Start > DateTime.Now)  
+                            var oldDisplayName = item["OldDisplayName"];
+                            var primaryLocation = a.PrimaryLocation;
+                            var email = item["Email"];
+                            if (!string.IsNullOrEmpty(oldDisplayName) &&
+                                primaryLocation.IndexOf(oldDisplayName, StringComparison.OrdinalIgnoreCase) >= 0
+                                && a.Start > DateTime.Now)
                             {
-                                List<string> roomEmails = new List<string>();
-                                roomEmails.Add(item["Email"]);
-                                 string startDateAsString = a.Start.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
-                                string endDateAsString = a.End.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
-                                    if (a.AllDayEvent)
-                                         {
-                                            DateTime startDate = DateTime.ParseExact(startDateAsString, "yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
-                                            DateTime endDate = DateTime.ParseExact(endDateAsString, "yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
-                                            startDate = startDate.Date;
-                                            endDate = endDate.AddDays(1).Date;
-                                            startDateAsString = startDate.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
-                                            endDateAsString = endDate.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
-                                        }
-                                    GraphEventDTO graphEventDTO = new GraphEventDTO
-                                       {
-                                            EventTitle = a.Title,
-                                            EventDescription = a.Description,
-                                            Start = startDateAsString,
-                                            End = endDateAsString,
-                                            RoomEmails = roomEmails.ToArray(),
-                                            RequesterEmail = coordinatorEmail,
-                                            RequesterFirstName = "EEMServiceAccount",
-                                             RequesterLastName = "EEMServiceAccount",
-                                            IsAllDay = a.AllDayEvent,
-                                             UserEmail = coordinatorEmail
-                                      };
-                                      try
-                                        {
-                                            Event evt = await GraphHelper.CreateEvent(graphEventDTO);
-                                            var activityToUpdate = await _context.Activities.FindAsync(a.Id);
-                                            if (activityToUpdate != null) { 
-                                                activityToUpdate.EventLookup= evt.Id;
-                                                await _context.SaveChangesAsync();
-                                            }
-                                             break;
-                                        }
-                                        catch (Exception e)
-                                        {
-                                           var exc = e;
-                                          exceptionOccurred = true; // Set the flag to true
-                                         break;
-                                }
+                                roomEmails.Add(email);
                             }
                         }
+
+                        if (roomEmails.Count > 0)
+                        {
+                            if (roomEmails.Count > 1)
+                            {
+                                var x = "y";
+                            }
+                            string startDateAsString = a.Start.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                            string endDateAsString = a.End.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+
+                            if (a.AllDayEvent)
+                            {
+                                DateTime startDate = DateTime.ParseExact(startDateAsString, "yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                                DateTime endDate = DateTime.ParseExact(endDateAsString, "yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                                startDate = startDate.Date;
+                                endDate = endDate.AddDays(1).Date;
+                                startDateAsString = startDate.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                                endDateAsString = endDate.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
+                            }
+
+                            GraphEventDTO graphEventDTO = new GraphEventDTO
+                            {
+                                EventTitle = a.Title,
+                                EventDescription = a.Description,
+                                Start = startDateAsString,
+                                End = endDateAsString,
+                                RoomEmails = roomEmails.ToArray(),
+                                RequesterEmail = coordinatorEmail,
+                                RequesterFirstName = "EEMServiceAccount",
+                                RequesterLastName = "EEMServiceAccount",
+                                IsAllDay = a.AllDayEvent,
+                                UserEmail = coordinatorEmail
+                            };
+
+                            try
+                            {
+                                Event evt = await GraphHelper.CreateEvent(graphEventDTO);
+                                var activityToUpdate = await _context.Activities.FindAsync(a.Id);
+                                if (activityToUpdate != null)
+                                {
+                                    activityToUpdate.EventLookup = evt.Id;
+                                    await _context.SaveChangesAsync();
+                                    Console.WriteLine($"Room {string.Join(", ", graphEventDTO.RoomEmails)}, {a.Title}, {a.Start}");
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                var exc = e;
+                                exceptionOccurred = true; // Set the flag to true
+                            }
+                        }
+
                         if (exceptionOccurred) // Check if an exception occurred
                         {
                             continue; // Continue with the next 'a' in activities
                         }
                     }
 
-                     return Result<Unit>.Success(Unit.Value);
+                    return Result<Unit>.Success(Unit.Value);
                 }
                         
             }

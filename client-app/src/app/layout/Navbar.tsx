@@ -95,7 +95,7 @@ export default observer(function Navbar() {
             </Dropdown.Menu>    
             </Dropdown>   
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/imccalendar`}>
-                Integrated Master Calendar (IMC)
+                IMC
             </Menu.Item>     
               <Dropdown item text="Calendars" scrolling >
                 <Dropdown.Menu>
@@ -117,9 +117,9 @@ export default observer(function Navbar() {
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
               Rooms
             </Menu.Item>
+
             <Dropdown item text="Reports">
-            <Dropdown.Menu>
-            
+            <Dropdown.Menu>            
             <Dropdown.Header icon='tags' content='Hosting Reports' />
             <DropdownDivider/>
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportTable`} text ="Hosting Report List"
@@ -133,6 +133,30 @@ export default observer(function Navbar() {
             label={{ color: 'black', empty: true, circular: true }}/>
             </Dropdown.Menu>
             </Dropdown>
+
+            <Dropdown item text="Feedback and Links">
+            <Dropdown.Menu>            
+            <Dropdown.Header icon='comments' content='Provide Feedback and Report Problems' />
+            <DropdownDivider/>
+            <Dropdown.Item>
+            <a href="https://apps.armywarcollege.edu/home/feedback.cfm" target="_blank" rel="noopener noreferrer">
+                 <span style={{ color: 'black' }}>Feedback</span>
+            </a>
+            </Dropdown.Item>
+          
+            <DropdownDivider/>
+            <Dropdown.Header icon='paperclip' content='Links' />
+            <DropdownDivider/>
+            <Dropdown.Item>
+            <a href="https://apps.armywarcollege.edu"  rel="noopener noreferrer">
+                 <span style={{ color: 'black' }}>Main Landing Page</span>
+            </a>
+            </Dropdown.Item>
+            </Dropdown.Menu>
+            </Dropdown>
+
+
+
             {user && user.roles && user.roles.includes("admin") &&
             <Dropdown item text="Admin">
             <Dropdown.Menu>
