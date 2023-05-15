@@ -5,7 +5,7 @@ import { useStore } from "../../../app/stores/store";
 import { Fragment, useEffect, useState } from "react";
 import agent from "../../../app/api/agent";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { Login, PeoplePicker } from "@microsoft/mgt-react";
+import { Login, PeoplePicker, UserType } from "@microsoft/mgt-react";
 import { v4 as uuid } from "uuid";
 import { toast } from "react-toastify";
 import { Providers, ProviderState } from "@microsoft/mgt";
@@ -273,6 +273,7 @@ export default observer(function EmailGroupForm() {
                     selectionMode="single"
                     selectionChanged={handleSelectionChanged}
                     key={peoplePickerKey}
+                    userType={UserType.user}
                   />
               </Form.Field>
               <Form.Field>
