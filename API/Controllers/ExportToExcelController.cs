@@ -37,7 +37,22 @@ namespace API.Controllers
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "hostingReports.csv");
         }
 
-         [AllowAnonymous]
+        [AllowAnonymous]
+        [HttpPost("OutsiderReport")]
+        public IActionResult CsvOutsiderReport([FromBody] OutsiderReportCSVData[] csvDataList)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Title,Start,End,Location,Action Officer,Status,Directorate,Engagement,USAWC Graduate,Visiting DV, Number of People");
+            foreach (var data in csvDataList)
+            {
+                var status = string.IsNullOrEmpty(data.HostingReportStatus) ? "Draft" : data.HostingReportStatus;
+                builder.AppendLine($"\"{data.Title}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.ActionOfficer}\",\"{status}\",\"{data.OutsiderReportDirectorate}\",\"{data.OutsiderReportEngagement}\",\"{data.OutsiderReportUSAWCGraduate}\",\"{data.OutsiderReportDV}\",\"{data.OutsiderReportNumOfPeople}\"");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "outsiderReports.csv");
+        }
+
+        [AllowAnonymous]
         [HttpPost("GenericCalendar")]
         public IActionResult GenericCalendar([FromBody] GenericCalendarCSVData[] csvDataList)
         {
@@ -104,6 +119,21 @@ namespace API.Controllers
              public string GuestRank {get; set;}
             public string GuestTitle {get; set;}
             public string CreatedBy {get; set;}
+        }
+
+        public class OutsiderReportCSVData
+        {
+            public string Title { get; set; }
+            public string Start { get; set; }
+            public string End { get; set; }
+            public string Location { get; set; }
+            public string ActionOfficer { get; set; }
+            public string HostingReportStatus { get; set; }
+            public string OutsiderReportDirectorate { get; set; }
+            public string OutsiderReportEngagement { get; set; }
+            public string OutsiderReportUSAWCGraduate { get; set; }
+            public string OutsiderReportDV { get; set; }
+            public string OutsiderReportNumOfPeople { get; set; }
         }
 
         public class USAHECFacilitiesUsageReportCSVData

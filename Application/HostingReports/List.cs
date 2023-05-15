@@ -19,7 +19,13 @@ namespace Application.HostingReports
             public async Task<Result<List<HostingReport>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var hostingReports = await _context.HostingReports
-                  .ToListAsync(cancellationToken);
+                     .Join(_context.Activities,
+                       hr => hr.ActivityId,
+                        a => a.Id,
+                        (hr, a) => new { HostingReport = hr, Activity = a })
+                     .Where(joined => joined.Activity.Report == "Hosting Report")
+                    .Select(joined => joined.HostingReport)
+                    .ToListAsync(cancellationToken);
 
                 return Result<List<HostingReport>>.Success(hostingReports);
             }

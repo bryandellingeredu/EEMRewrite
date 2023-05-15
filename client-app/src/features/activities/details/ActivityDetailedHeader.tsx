@@ -268,7 +268,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
     }
     </ButtonGroup>      
  </Segment>
-        {activity.report && activity.report !== 'none' && 
+        {activity.report && activity.report === 'Hosting Report' && 
         <Segment>
             <Grid>
                  <Grid.Column width={1}>

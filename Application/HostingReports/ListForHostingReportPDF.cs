@@ -39,6 +39,7 @@ namespace Application.HostingReports
                 var start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
 
               var activities = await _context.Activities
+                      .Where(a => a.Report == "Hosting Report")
                     .Include(h => h.HostingReport)
                     .Include(o => o.Organization)
                     .Where(x => x.Start >= start)

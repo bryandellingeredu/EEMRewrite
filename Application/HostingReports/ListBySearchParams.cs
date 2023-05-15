@@ -32,11 +32,13 @@ namespace Application.HostingReports
                 var allrooms = await GraphHelper.GetRoomsAsync();
 
                 var query = _context.Activities
+                    .Where(a => a.Report == "Hosting Report")
                    .Include(c => c.Category)
                    .Include(o => o.Organization)
                    .Include(h => h.HostingReport)
                    .Where(x => !x.LogicalDeleteInd)
                    .Where(h =>h.HostingReport != null)  
+               
                    .AsQueryable();
 
                 if (!string.IsNullOrEmpty(request.searchParams.Title))

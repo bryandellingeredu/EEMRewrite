@@ -31,13 +31,15 @@ interface Props {
 
     return(
         <Card color='black' style={{ fontFamily: 'sans-serif' }}>
-            <Card.Header>
-                <Header size='huge' textAlign="center" color={"brown"}>
-                <Image  src={`${process.env.PUBLIC_URL}/assets/armylogo.png`} size='medium'/>
-                    THE UNITED STATES ARMY WAR COLLEGE
-                </Header>
-                
-            </Card.Header>
+        <Card.Header>
+    <Header size='huge' textAlign="center" color={"brown"} style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        <Image src={`${process.env.PUBLIC_URL}/assets/armylogo-90-dark.svg`} size='small' />
+        <div style={{marginTop: '5px'}}>
+            THE UNITED STATES ARMY WAR COLLEGE
+        </div>
+        <Image src={`${process.env.PUBLIC_URL}/assets/armylogo-90-dark.svg`} size='small' />
+    </Header>
+</Card.Header>   
             <Card.Content >
             <Grid columns={3} divided>
                 <Grid.Row stretched>

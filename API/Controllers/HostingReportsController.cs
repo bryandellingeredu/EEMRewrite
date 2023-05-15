@@ -55,7 +55,18 @@ namespace API.Controllers
             }
             return Unauthorized();
         }
-         
+
+        [HttpPost("listOutsiderBySearchParams")]
+        public async Task<IActionResult> ListOutsiderBySearchParams(OutsiderReportTableSearchParams data)
+        {
+            if (_cacAccessor.IsCACAuthenticated())
+            {
+                return HandleResult(await Mediator.Send(
+              new ListOutsiderBySearchParams.Query { searchParams = data }));
+            }
+            return Unauthorized();
+        }
+
 
         [HttpGet("getGuestTitles")]
         public async Task<ActionResult> getGuestTitles()

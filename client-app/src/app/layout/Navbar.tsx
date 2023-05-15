@@ -126,6 +126,8 @@ export default observer(function Navbar() {
              label={{ color: 'red', empty: true, circular: true }}/>
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} text ="Hosting Reports (PDF)"
             label={{ color: 'red', empty: true, circular: true }}/>
+             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/outsiderReportTable`} text ="Outsider Report List"
+             label={{ color: 'red', empty: true, circular: true }}/>
             <DropdownDivider/>
             <Dropdown.Header icon='tags' content='USAHEC Reports' />
             <DropdownDivider/>
