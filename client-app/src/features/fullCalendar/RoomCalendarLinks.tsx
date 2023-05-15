@@ -63,12 +63,13 @@ export default observer(function RoomCalendarLinks() {
 
   useEffect(() => {
     if (!graphRooms.length) loadGraphRooms();
-    if (graphRooms && graphRooms.length)
-      setGraphRoomsByBuilding(getGroupedGraphRooms());
   }, [loadGraphRooms, graphRooms.length]);
 
-  useEffect(() => {
-    setFilteredRooms(graphRooms);
+useEffect(() => {
+    if (graphRooms.length > 0) {
+      setFilteredRooms(graphRooms);
+      setGraphRoomsByBuilding(getGroupedGraphRooms());
+    }
   }, [graphRooms]);
 
 

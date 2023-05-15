@@ -14,7 +14,7 @@ namespace Application.HostingReports
         public string Location { get; set; }
         public string ActionOfficer { get; set; }
         public string OrganizatonId { get; set; }
-        public string HostingReportStatus { get; set; }
+        public string OutsiderReportStatus { get; set; }
         public string CreatedBy { get; set; }
         public string OutsiderReportDirectorate { get; set; }
         public string OutsiderReportEngagement { get; set; }

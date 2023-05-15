@@ -59,9 +59,9 @@ namespace Application.HostingReports
 
 
 
-                if (!string.IsNullOrEmpty(request.searchParams.HostingReportStatus))
+                if (!string.IsNullOrEmpty(request.searchParams.OutsiderReportStatus))
                 {
-                    query = query.Where(e => e.HostingReport.HostingReportStatus == request.searchParams.HostingReportStatus);
+                    query = query.Where(e => e.HostingReport.OutsiderReportStatus == request.searchParams.OutsiderReportStatus);
                 }
 
                 if (!string.IsNullOrEmpty(request.searchParams.OutsiderReportDirectorate))
@@ -195,7 +195,7 @@ namespace Application.HostingReports
              : activity.PrimaryLocation
         : activity.PrimaryLocation,
                        OrganizationName = activity.Organization?.Name,
-                       HostingReportStatus = activity.HostingReport.HostingReportStatus,
+                       OutsiderReportStatus = activity.HostingReport.OutsiderReportStatus,
                        OutsiderReportDirectorate = activity.HostingReport.OutsiderReportDirectorate,
                        OutsiderReportEngagement =activity.HostingReport.OutsiderReportEngagement,
                        OutsiderReportUSAWCGraduate = activity.HostingReport.OutsiderReportUSAWCGraduate,

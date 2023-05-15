@@ -10,7 +10,7 @@ interface TableData{
     location: string
     actionOfficer: string
     organizationName: string
-    hostingReportStatus: string
+    outsiderReportStatus: string
     createdBy: string
     outsiderReportDirectorate : string
     outsiderReportEngagement : string
@@ -43,7 +43,7 @@ export default function OutsiderReportRow({item} : Props){
          <Table.Cell>
            {renderTextWithPopup(item.location)}
          </Table.Cell>
-         <Table.Cell>{item.hostingReportStatus || 'Draft'}</Table.Cell>
+         <Table.Cell>{item.outsiderReportStatus || 'Draft'}</Table.Cell>
          <Table.Cell>
            {renderTextWithPopup(item.actionOfficer)}
          </Table.Cell>  

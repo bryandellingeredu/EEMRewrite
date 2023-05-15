@@ -45,7 +45,7 @@ namespace API.Controllers
             builder.AppendLine("Title,Start,End,Location,Action Officer,Status,Directorate,Engagement,USAWC Graduate,Visiting DV, Number of People");
             foreach (var data in csvDataList)
             {
-                var status = string.IsNullOrEmpty(data.HostingReportStatus) ? "Draft" : data.HostingReportStatus;
+                var status = string.IsNullOrEmpty(data.OutsiderReportStatus) ? "Draft" : data.OutsiderReportStatus;
                 builder.AppendLine($"\"{data.Title}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.ActionOfficer}\",\"{status}\",\"{data.OutsiderReportDirectorate}\",\"{data.OutsiderReportEngagement}\",\"{data.OutsiderReportUSAWCGraduate}\",\"{data.OutsiderReportDV}\",\"{data.OutsiderReportNumOfPeople}\"");
             }
 
@@ -128,7 +128,7 @@ namespace API.Controllers
             public string End { get; set; }
             public string Location { get; set; }
             public string ActionOfficer { get; set; }
-            public string HostingReportStatus { get; set; }
+            public string OutsiderReportStatus { get; set; }
             public string OutsiderReportDirectorate { get; set; }
             public string OutsiderReportEngagement { get; set; }
             public string OutsiderReportUSAWCGraduate { get; set; }

@@ -22,7 +22,7 @@ interface SearchFormValues{
   end : Date | null | string
   location: string
   actionOfficer: string
-  hostingReportStatus: string
+  outsiderReportStatus: string
   outsiderReportDirectorate: string,
   outsiderReportEngagement: string,
   outsiderReportUSAWCGraduate: string,
@@ -39,7 +39,7 @@ interface TableData{
     location: string
     actionOfficer: string
     organizationName: string
-    hostingReportStatus: string
+    outsiderReportStatus: string
     createdBy: string
     outsiderReportDirectorate : string
     outsiderReportEngagement : string
@@ -54,7 +54,7 @@ interface TableData{
     end : string
     location: string
     actionOfficer: string
-    hostingReportStatus: string
+    outsiderReportStatus: string
     outsiderReportDirectorate: string
     outsiderReportEngagement: string
     outsiderReportUSAWCGraduate: string
@@ -84,7 +84,7 @@ export default observer(function OutsiderReportTable(){
                 end: '',
                 location: '',
                 actionOfficer: '',
-                hostingReportStatus: '',
+                outsiderReportStatus: '',
                 outsiderReportDirectorate: '',
                 outsiderReportEngagement: '',
                 outsiderReportUSAWCGraduate: '',
@@ -108,7 +108,7 @@ export default observer(function OutsiderReportTable(){
               end: item.allDayEvent ?  format(new Date(item.end), 'MM/dd' ) : format(new Date(item.end), 'MM/dd h:mma' ),
               actionOfficer: item.actionOfficer,
               organizationName: item.organizationName,
-              hostingReportStatus: item.hostingReportStatus,
+              outsiderReportStatus: item.outsiderReportStatus,
               location: item.location,
               createdBy: item.createdBy,
               outsiderReportDirectorate: item.outsiderReportDirectorate,
@@ -146,9 +146,9 @@ export default observer(function OutsiderReportTable(){
           let data: CSVData[] = [];
 
             data = tableData.map((
-              { title,start,end,location,actionOfficer,hostingReportStatus,outsiderReportDirectorate, outsiderReportEngagement,
+              { title,start,end,location,actionOfficer,outsiderReportStatus,outsiderReportDirectorate, outsiderReportEngagement,
                 outsiderReportUSAWCGraduate, outsiderReportDV, outsiderReportNumOfPeople }) => {
-              return { title,start,end,location,actionOfficer,hostingReportStatus,outsiderReportDirectorate, outsiderReportEngagement,
+              return { title,start,end,location,actionOfficer,outsiderReportStatus,outsiderReportDirectorate, outsiderReportEngagement,
                 outsiderReportUSAWCGraduate, outsiderReportDV, outsiderReportNumOfPeople };
             });
           
@@ -209,7 +209,7 @@ initialValues={{title: '',
                end: null,
                location: '',
                actionOfficer: '',
-               hostingReportStatus: '',
+               outsiderReportStatus: '',
                outsiderReportDirectorate: '',
                outsiderReportEngagement: '',
                outsiderReportUSAWCGraduate: '',
@@ -284,7 +284,7 @@ initialValues={{title: '',
                               value: "Exec Services Approved",
                             },
                           ]}
-                          name="hostingReportStatus"
+                          name="outsiderReportStatus"
                           placeholder=""
                         />
                     </Table.HeaderCell>
