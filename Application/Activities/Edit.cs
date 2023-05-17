@@ -60,6 +60,21 @@ namespace Application.Activities
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
 
+                try
+                {
+                    var oldActivity = _context.Activities.AsNoTracking().FirstOrDefault(a => a.Id == request.Activity.Id);
+                    if(oldActivity != null)
+                    {
+                        request.Activity.CoordinatorEmail = oldActivity.CoordinatorEmail;
+                    }
+       
+                }
+                catch (Exception)
+                {
+
+                   // do nothing
+                }
+
                 if (
                      (
                      string.IsNullOrEmpty(request.Activity.CoordinatorEmail) ||
@@ -152,7 +167,7 @@ namespace Application.Activities
                 {
                     activity.EventLookup = originalEventLookup;
                 }
-                if (activity.CoordinatorEmail == GraphHelper.GetEEMServiceAccount())
+                if (activity.CoordinatorEmail == GraphHelper.GetEEMServiceAccount() && shouldGraphEventsBeRegenerated)
                 {
 
                     activity.CoordinatorEmail = user.Email;
@@ -197,8 +212,9 @@ namespace Application.Activities
 
                 if (!string.IsNullOrEmpty(originalEventLookup) && !string.IsNullOrEmpty(originalCoordinatorEmail))
                 {
+                    var oldActivity = _context.Activities.AsNoTracking().First(a => a.Id == activity.Id);
 
-                    string coordinatorEmail = activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
+                    string coordinatorEmail = oldActivity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
                         ? activity.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
                     Event evt;
                     try
@@ -207,8 +223,27 @@ namespace Application.Activities
                     }
                     catch (Exception)
                     {
-                        activity.EventLookup = string.Empty;
-                        evt = new Event();
+
+                        try
+                        {
+                            evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), originalEventLookup);
+                        }
+                        catch (Exception)
+                        {
+
+                            try
+                            {
+                           
+                                evt = await GraphHelper.GetEventAsync(activity.CoordinatorEmail, originalEventLookup);
+
+                            }
+                            catch (Exception)
+                            {
+
+                                activity.EventLookup = string.Empty;
+                                evt = new Event();
+                            }
+                        }
                     }
 
 
