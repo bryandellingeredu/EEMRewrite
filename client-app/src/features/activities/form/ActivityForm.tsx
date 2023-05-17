@@ -168,6 +168,7 @@ export default observer(function ActivityForm() {
       setPopupStartOpen(false);
       setTimeout(function() {
         setRoomRequired(true);
+        window.location.reload();
       }, 1000);
     }).catch((error) => {
       console.log(error);

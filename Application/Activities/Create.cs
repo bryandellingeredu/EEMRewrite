@@ -110,7 +110,7 @@ namespace Application.Activities
                             a.CoordinatorLastName = "EEMServiceAccount";
                         }
 
-                        if (!string.IsNullOrEmpty(a.CoordinatorEmail) &&
+                        if (!string.IsNullOrEmpty(a.CoordinatorEmail) && a.RoomEmails.Any() &&
                             a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]))
                         {
                             //create outlook event

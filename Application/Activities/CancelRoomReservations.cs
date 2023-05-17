@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Persistence;
 using System;
@@ -28,12 +29,14 @@ namespace Application.Activities
             private readonly DataContext _context;
             private readonly IMapper _mapper;
             private readonly IConfiguration _config;
+            private readonly IUserAccessor _userAccessor;
 
             public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
+                _userAccessor = userAccessor;
 
             }
 
@@ -54,6 +57,12 @@ namespace Application.Activities
                     try
                     {
                         await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail);
+                        activity.EventLookup= null;
+                        var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
+                        activity.LastUpdatedBy = user.Email;
+                        activity.LastUpdatedAt = DateTime.Now;
+                        await _context.SaveChangesAsync();
+
                     }
                     catch (Exception)
                     {

@@ -180,7 +180,8 @@ namespace Application.Activities
 
             private async Task<bool> GetShouldGraphEventsBeRegenerated(Activity activity, DateTime originalStart, DateTime originalEnd, string originalEventLookup, string originalCoordinatorEmail, bool originalAllDayEvent, string[] roomEmails)
             {
-                if (!roomEmails.Any()) return true; 
+                if (!roomEmails.Any()) return false;
+                if (roomEmails.Any() && string.IsNullOrEmpty(originalEventLookup)) return true;
                 if (activity.Start != originalStart)
                 {
                     return true;
