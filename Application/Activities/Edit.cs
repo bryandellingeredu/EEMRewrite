@@ -203,7 +203,7 @@ namespace Application.Activities
                     Event evt;
                     try
                     {
-                        evt = await GraphHelper.GetEventAsync(originalCoordinatorEmail, originalEventLookup);
+                        evt = await GraphHelper.GetEventAsync(coordinatorEmail, originalEventLookup);
                     }
                     catch (Exception)
                     {
