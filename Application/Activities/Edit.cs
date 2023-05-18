@@ -130,12 +130,24 @@ namespace Application.Activities
                     try
                     {
                         await GraphHelper.DeleteEvent(request.Activity.EventLookup, request.Activity.CoordinatorEmail);
+                        request.Activity.EventLookup = string.Empty;
+                        activity.EventLookup = string.Empty;
                     }
                     catch (Exception)
                     {
+                        try
+                        {
+                            await GraphHelper.DeleteEvent(request.Activity.EventLookup, GraphHelper.GetEEMServiceAccount());
+                            request.Activity.EventLookup = string.Empty;
+                            activity.EventLookup = string.Empty;
+                        }
+                        catch (Exception)
+                        {
 
-                        request.Activity.EventLookup = string.Empty;
-                        activity.EventLookup = string.Empty;
+                            request.Activity.EventLookup = string.Empty;
+                            activity.EventLookup = string.Empty;
+                        }
+                    
                     }
                    
                 }
@@ -147,6 +159,8 @@ namespace Application.Activities
                           && shouldGraphEventsBeRegenerated
                    )
                 {
+                  
+
                     GraphEventDTO graphEventDTO = new GraphEventDTO
                     {
                         EventTitle = request.Activity.Title,
@@ -154,9 +168,9 @@ namespace Application.Activities
                         Start = request.Activity.StartDateAsString,
                         End = request.Activity.EndDateAsString,
                         RoomEmails = request.Activity.RoomEmails,
-                        RequesterEmail = request.Activity.CoordinatorEmail,
-                        RequesterFirstName = request.Activity.CoordinatorFirstName,
-                        RequesterLastName = request.Activity.CoordinatorLastName,
+                        RequesterEmail =user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
+                        RequesterFirstName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
+                        RequesterLastName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
                         IsAllDay = request.Activity.AllDayEvent,
                         UserEmail = user.Email
                     };

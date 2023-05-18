@@ -41,7 +41,24 @@ namespace Application.Activities
                   !string.IsNullOrEmpty(activity.CoordinatorEmail)
                 )
                 {
-                    await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail);
+                    try
+                    {
+                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail);
+                    }
+                    catch (Exception)
+                    {
+
+                        try
+                        {
+                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount());
+                        }
+                        catch (Exception)
+                        {
+
+                            //event does not exist
+                        }
+                    }
+                  
                 }
                 activity.EventLookup = null;
                 activity.LogicalDeleteInd = true;

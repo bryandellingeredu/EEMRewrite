@@ -107,11 +107,21 @@ namespace Application.Activities
                             try
                             {
                                 await GraphHelper.DeleteEvent(item.EventLookup, coordinatorEmail);
+                                item.EventLookup = string.Empty;
                             }
                             catch (Exception)
                             {
+                                try
+                                {
+                                    await GraphHelper.DeleteEvent(item.EventLookup, GraphHelper.GetEEMServiceAccount());
+                                    item.EventLookup = string.Empty;
+                                }
+                                catch (Exception)
+                                {
 
-                                item.EventLookup = string.Empty;
+                                    item.EventLookup = string.Empty;
+                                }
+                                
                             }
                            
                         }
@@ -162,23 +172,19 @@ namespace Application.Activities
                                 Start = a.StartDateAsString,
                                 End = a.EndDateAsString,
                                 RoomEmails = a.RoomEmails,
-                                RequesterEmail = coordinatorEmail,
-                                RequesterFirstName = coordinatorFirstName,
-                                RequesterLastName = coordinatorLastName,
+                                RequesterEmail = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
+                                RequesterFirstName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
+                                RequesterLastName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
                                 IsAllDay = a.AllDayEvent,
                                 UserEmail = user.Email
                             };
                             Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                             a.EventLookup = evt.Id;
-                        }
-
-
-                        if (a.CoordinatorEmail == GraphHelper.GetEEMServiceAccount())
-                        {
                             a.CoordinatorEmail = user.Email;
                             a.CoordinatorFirstName = user.DisplayName;
                             a.CoordinatorLastName = String.Empty;
                         }
+
 
                        a.LastUpdatedBy = user.Email;
                        a.LastUpdatedAt = DateTime.Now;

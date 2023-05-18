@@ -126,8 +126,17 @@ namespace Application.Activities
                         }
                         catch (Exception)
                         {
-                            activity.EventLookup = string.Empty;
-                            evt = new Event();
+                            try
+                            {
+                                evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), activity.EventLookup);
+                            }
+                            catch (Exception)
+                            {
+
+                                activity.EventLookup = string.Empty;
+                                evt = new Event();
+                            }
+                           
                         }
 
                         var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();

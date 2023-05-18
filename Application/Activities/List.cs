@@ -60,9 +60,16 @@ namespace Application.Activities
                         }
                         catch (Exception)
                         {
-
-                            evt = new Event();
-                            activity.EventLookup = string.Empty;
+                            try
+                            {
+                                evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), activity.EventLookup);
+                            }
+                            catch (Exception)
+                            {
+                                evt = new Event();
+                                activity.EventLookup = string.Empty;
+                            }
+                           
                         }
 
                         var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();

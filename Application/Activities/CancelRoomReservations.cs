@@ -66,8 +66,21 @@ namespace Application.Activities
                     }
                     catch (Exception)
                     {
+                        try
+                        {
+                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount());
+                            activity.EventLookup = null;
+                            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
+                            activity.LastUpdatedBy = user.Email;
+                            activity.LastUpdatedAt = DateTime.Now;
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (Exception)
+                        {
 
-                        //event does not exist
+                            //event does not exist
+                        }
+
                     }
                    
                 }

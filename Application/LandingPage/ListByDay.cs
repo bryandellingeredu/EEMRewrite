@@ -74,7 +74,16 @@ namespace Application.LandingPage
                 }
                 catch (Exception)
                 {
-                    return primaryLocation;
+                    try
+                    {
+                        evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), eventLookup);
+                    }
+                    catch (Exception)
+                    {
+
+                        return primaryLocation;
+                    }
+                   
                 }
                 var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();
                 List<ActivityRoom> newActivityRooms = new List<ActivityRoom>();
