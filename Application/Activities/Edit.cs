@@ -75,21 +75,7 @@ namespace Application.Activities
                    // do nothing
                 }
 
-                if (
-                     (
-                     string.IsNullOrEmpty(request.Activity.CoordinatorEmail) ||
-                     !request.Activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
-                     ) &&
-                     (
-                     request.Activity.RoomEmails.Any() ||
-                     !string.IsNullOrEmpty(request.Activity.EventLookup)
-                     )
-                    )
-                {
-                    request.Activity.CoordinatorEmail = GraphHelper.GetEEMServiceAccount();
-                    request.Activity.CoordinatorFirstName = "EEMServiceAccount";
-                    request.Activity.CoordinatorLastName = "EEMServiceAccount";
-                }
+             
 
                 var activity = await _context.Activities.FindAsync(request.Activity.Id);
                 if (activity == null) return null;
@@ -119,6 +105,23 @@ namespace Application.Activities
 
                 bool shouldGraphEventsBeRegenerated = await GetShouldGraphEventsBeRegenerated(
                     activity, originalStart, originalEnd, originalEventLookup, originalCoordinatorEmail, originalAllDayEvent, request.Activity.RoomEmails);
+
+                if (
+                  (
+                  string.IsNullOrEmpty(request.Activity.CoordinatorEmail) ||
+                  !request.Activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
+                  ) &&
+                  (
+                  request.Activity.RoomEmails.Any() ||
+                  !string.IsNullOrEmpty(request.Activity.EventLookup)
+                  ) &&
+                  shouldGraphEventsBeRegenerated
+                 )
+                {
+                    request.Activity.CoordinatorEmail = GraphHelper.GetEEMServiceAccount();
+                    request.Activity.CoordinatorFirstName = "EEMServiceAccount";
+                    request.Activity.CoordinatorLastName = "EEMServiceAccount";
+                }
 
                 //delete any old graph events we will make new ones
                 if (

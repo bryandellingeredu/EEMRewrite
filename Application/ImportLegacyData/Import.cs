@@ -71,6 +71,7 @@ namespace Application.ImportLegacyData
 
 
                     List<Activity> activities = new List<Activity>();
+                    List<Activity> existingActivities = await _context.Activities.AsNoTracking().Where(x => !x.LogicalDeleteInd).ToListAsync();
                     foreach (var item in eemDataList
              .Where(x => !string.IsNullOrEmpty(x.Title))
              .Where(x => x.Start >= DateTime.Today.AddMonths(-2))
@@ -129,8 +130,54 @@ namespace Application.ImportLegacyData
                            CoordinatorLastName="Legacy Data"
                         }); 
                     }
+                    var index = 0;
+                    foreach (var item in activities)
+                    {
+                        index++;
+                        var activityToDelete = existingActivities.Where(x => RemoveSpecialCharactersAndHtmlTags(x.Title) == item.Title && x.Start.Date == item.Start.Date).FirstOrDefault();
+                        if (activityToDelete != null && !string.IsNullOrEmpty(activityToDelete.EventLookup) && activityToDelete.Start > DateTime.Now)
+                        {
+                            try
+                            {
+                                var x = "y";
+        //                        await GraphHelper.DeleteEvent(activityToDelete.EventLookup, GraphHelper.GetEEMServiceAccount());
+                            }
+                            catch (Exception)
+                            {
 
-               
+                                try
+                                {
+                                    if(!string.IsNullOrEmpty(activityToDelete.CoordinatorEmail))
+                                    await GraphHelper.DeleteEvent(activityToDelete.EventLookup, activityToDelete.CoordinatorEmail);
+                                }
+                                catch (Exception)
+                                {
+
+                                    //event does not exist
+                                }
+                            }
+                        }
+
+                        if (activityToDelete != null){
+                            try
+                            {
+                                var a = await _context.Activities.FindAsync(activityToDelete.Id);
+                                var h = await _context.HostingReports.AsNoTracking().Where(x => x.ActivityId == activityToDelete.Id).FirstOrDefaultAsync();
+                                if (h == null)
+                                {
+                                    _context.Activities.Remove(a);
+                                    await _context.SaveChangesAsync();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                var x = "y";
+                                // could not delete keep going
+                            }
+                           
+                        }
+                    }
+                 
 
                     await _context.Activities.AddRangeAsync(activities);
 
@@ -177,7 +224,7 @@ namespace Application.ImportLegacyData
                                 endDateAsString = endDate.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
                             }
 
-                            GraphEventDTO graphEventDTO = new GraphEventDTO
+                       /*     GraphEventDTO graphEventDTO = new GraphEventDTO
                             {
                                 EventTitle = a.Title,
                                 EventDescription = a.Description,
@@ -189,9 +236,9 @@ namespace Application.ImportLegacyData
                                 RequesterLastName = "EEMServiceAccount",
                                 IsAllDay = a.AllDayEvent,
                                 UserEmail = coordinatorEmail
-                            };
+                            }; */
 
-                            try
+                      /*      try
                             {
                                 Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                                 var activityToUpdate = await _context.Activities.FindAsync(a.Id);
@@ -206,7 +253,7 @@ namespace Application.ImportLegacyData
                             {
                                 var exc = e;
                                 exceptionOccurred = true; // Set the flag to true
-                            }
+                            }*/
                         }
 
                         if (exceptionOccurred) // Check if an exception occurred
