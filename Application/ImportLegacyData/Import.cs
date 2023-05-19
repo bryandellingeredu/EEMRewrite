@@ -7,9 +7,8 @@ using Domain;
 using System.Globalization;
 using CsvHelper;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Graph;
-using Application.Activities;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace Application.ImportLegacyData
 {
@@ -34,6 +33,7 @@ namespace Application.ImportLegacyData
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
+                string filePath = @"C:\Users\Bryan.Dellinger.Apps\Documents\EEMRewriteEDU\EEMRewrite\Application\result.txt";
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
@@ -70,15 +70,15 @@ namespace Application.ImportLegacyData
                     var titles = await _context.Activities.Select(x => x.Title).Distinct().ToListAsync();   
 
 
-                    List<Activity> activities = new List<Activity>();
-                    List<Activity> existingActivities = await _context.Activities.AsNoTracking().Where(x => !x.LogicalDeleteInd).ToListAsync();
+                    List<Domain.Activity> activities = new List<Domain.Activity>();
+                    List<Domain.Activity> existingActivities = await _context.Activities.AsNoTracking().Where(x => !x.LogicalDeleteInd).ToListAsync();
                     foreach (var item in eemDataList
              .Where(x => !string.IsNullOrEmpty(x.Title))
              .Where(x => x.Start >= DateTime.Today.AddMonths(-2))
              .Where(x => (x.End - x.Start).TotalDays <= 60)
              .Where(x => !titles.Contains(x.Title)))
                     {
-                        activities.Add(new Activity
+                        activities.Add(new Domain.Activity
                         {
                             Title = RemoveSpecialCharactersAndHtmlTags(item.Title),
                             Start = item.Start,
@@ -133,7 +133,9 @@ namespace Application.ImportLegacyData
                     var index = 0;
                     foreach (var item in activities)
                     {
-                        index++;
+                        string logMessage = string.Empty;
+                        logMessage =$"{DateTime.Now}: Looking at Activity '{item.Title}' starting at '{item.Start}'  index: {index} .\n";
+                        Debug.WriteLine(logMessage);
                         var activityToDelete = existingActivities.Where(x => RemoveSpecialCharactersAndHtmlTags(x.Title) == item.Title && x.Start.Date == item.Start.Date).FirstOrDefault();
                         if (activityToDelete != null && !string.IsNullOrEmpty(activityToDelete.EventLookup) && activityToDelete.Start > DateTime.Now)
                         {
@@ -167,15 +169,25 @@ namespace Application.ImportLegacyData
                                 {
                                     _context.Activities.Remove(a);
                                     await _context.SaveChangesAsync();
+                                    // Write to the text file after successful deletion
+                                    File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was deleted successfully.\n");
+                                    Debug.WriteLine($"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was deleted successfully.\n");
+                                }
+                                else
+                                {
+                                    File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it has a hosting report.\n");
+                                    Debug.WriteLine($"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it has a hosting report.\n");
                                 }
                             }
                             catch (Exception ex)
                             {
-                                var x = "y";
+                                File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it had an error.\n");
+                                Debug.WriteLine($"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it had an error.\n");
                                 // could not delete keep going
                             }
-                           
+
                         }
+                    
                     }
                  
 
@@ -189,6 +201,8 @@ namespace Application.ImportLegacyData
 
                     foreach (var a in activities)
                     {
+                        File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{a.Title}' starting at '{a.Start}'  with id {a.Id} was inserted.\n");
+                        Debug.WriteLine($"{DateTime.Now}: Activity '{a.Title}' starting at '{a.Start}'  with id {a.Id} was inserted.\n");
                         bool exceptionOccurred = false;
                         List<string> roomEmails = new List<string>();
 

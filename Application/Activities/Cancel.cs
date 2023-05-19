@@ -62,7 +62,6 @@ namespace Application.Activities
                             // event does not exist
                         }
                     }
-                    await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail);
                 }
                 activity.EventLookup = null;
                 activity.CancelledBy = user.Email;
