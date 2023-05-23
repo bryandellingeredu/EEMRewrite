@@ -1,0 +1,146 @@
+5/21/2023 7:38:35 AM: Activity 'Strategic Landpower Symposium ' starting at '5/8/2023 8:00:00 AM' was deleted successfully.
+5/21/2023 7:38:37 AM: Activity 'John Gurchik Ridgway Conf Rm' starting at '5/10/2023 10:30:00 AM' was deleted successfully.
+5/21/2023 7:39:05 AM: Activity 'LTC Paulus TEAMS w GEN FLYNN' starting at '5/11/2023 1:45:00 PM' was deleted successfully.
+5/21/2023 7:39:14 AM: Activity 'USAHEC  CIO Meeting' starting at '5/15/2023 11:00:00 AM' was deleted successfully.
+5/21/2023 7:40:00 AM: Activity 'Perspectives Lecture Series featuring Dr Thomas Guglielmo Divisions A New History of Race and Americas World War II Military' starting at '5/17/2023 6:00:00 PM' was deleted successfully.
+5/21/2023 7:40:48 AM: Activity 'NSSR 3 Debriefs' starting at '5/19/2023 1:00:00 PM' was deleted successfully.
+5/21/2023 7:40:51 AM: Activity 'Curriculum Course Brief to the Dean DEP 2302  2303  NSPSTWS' starting at '5/19/2023 12:30:00 PM' was deleted successfully.
+5/21/2023 7:41:00 AM: Activity 'DASDUSA USATIAG Comeback SVTC' starting at '5/19/2023 2:45:00 PM' was deleted successfully.
+5/21/2023 7:41:11 AM: Activity 'Vet Caf                                                               ' starting at '5/20/2023 8:00:00 AM' was deleted successfully.
+5/21/2023 7:41:14 AM: Activity 'MG Barbano Visit Italy ' starting at '5/22/2023 12:00:00 AM' was not  deleted  it has a hosting report.
+5/21/2023 7:42:24 AM: Activity 'RDML English USN Visit to Support LM2207 Elective' starting at '5/24/2023 10:30:00 AM' was not  deleted  it has a hosting report.
+5/21/2023 7:42:28 AM: Activity 'Billy McElrath Retirement Ceremony Ridgway' starting at '5/24/2023 11:00:00 AM' was deleted successfully.
+5/21/2023 7:43:25 AM: Activity 'ASAP Financial Warfare' starting at '5/30/2023 7:30:00 AM' was deleted successfully.
+5/21/2023 7:43:29 AM: Activity 'ARCENT TTX Workshop  CDC' starting at '5/30/2023 8:00:00 AM' was deleted successfully.
+5/21/2023 7:43:40 AM: Activity 'Gurchick - G8 AMOPCFGFEBS Training' starting at '5/30/2023 10:00:00 AM' was deleted successfully.
+5/21/2023 7:44:23 AM: Activity 'BalticsSCS Matrix Game Training' starting at '6/1/2023 8:00:00 AM' was deleted successfully.
+5/21/2023 7:45:02 AM: Activity 'LTC AJ Sullivan PromotionReception' starting at '6/2/2023 11:00:00 AM' was deleted successfully.
+5/21/2023 7:45:06 AM: Activity 'Army Vet Core Birthday Event W COL Schlanser' starting at '6/3/2023 3:00:00 PM' was deleted successfully.
+5/21/2023 7:45:23 AM: Activity 'NSS Week Commandants Welcome' starting at '6/5/2023 9:00:00 AM' was deleted successfully.
+5/21/2023 7:45:34 AM: Activity 'CANUS Army Reserve General Officer Advisory Board' starting at '6/6/2023 12:00:00 AM' was deleted successfully.
+5/21/2023 7:46:05 AM: Activity 'DE2300 Hotwash FRC FI Synch' starting at '6/8/2023 9:00:00 AM' was deleted successfully.
+5/21/2023 7:47:43 AM: Activity 'Civilian Education System Course MTT' starting at '6/19/2023 7:00:00 AM' was deleted successfully.
+5/21/2023 7:48:15 AM: Activity 'Civilian Education System Course MTT' starting at '6/26/2023 7:00:00 AM' was deleted successfully.
+5/21/2023 7:50:56 AM: Activity 'Strategic Landpower Symposium ' starting at '5/8/2023 8:00:00 AM'  with id 0996afc1-bcf8-4c73-77f6-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'John Gurchik Ridgway Conf Rm' starting at '5/10/2023 10:30:00 AM'  with id 7e3f4cb4-790d-40a0-77f7-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Oral Comp Exam' starting at '5/11/2023 8:00:00 AM'  with id 8c5d419a-0bfe-46bb-77f8-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Oral Comps Exam' starting at '5/11/2023 8:30:00 AM'  with id d9fea0a4-01a0-40db-77f9-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Comp Exam' starting at '5/11/2023 8:30:00 AM'  with id 6b571bb8-9b21-4745-77fa-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Wargaming Fellow Interviews' starting at '5/11/2023 10:00:00 AM'  with id 9baa66c6-8893-43ac-77fb-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'CANUS Advisory Board IPR' starting at '5/11/2023 11:00:00 AM'  with id 4dd030bf-425f-45d0-77fc-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'LTC Paulus TEAMS w GEN FLYNN' starting at '5/11/2023 1:45:00 PM'  with id dc00fa81-5edf-48c4-77fd-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Digitization contract mtg CCR' starting at '5/15/2023 9:00:00 AM'  with id 2a60ffec-4c99-4f71-77fe-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'USAHEC  CIO Meeting' starting at '5/15/2023 11:00:00 AM'  with id e5c7ebb3-ac8a-436d-77ff-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'USA  VCSA FTE Savings-CommandSMC Discussion SVTC' starting at '5/15/2023 2:00:00 PM'  with id 6f7595dd-747f-42bf-7800-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Italian Visit Brief Dry Run' starting at '5/15/2023 3:00:00 PM'  with id bfe7c5eb-b5ff-4c83-7801-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'B037- FSP McLaughlin' starting at '5/16/2023 9:00:00 AM'  with id 392602dc-2f8a-4bf2-7802-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Talk for NARFE' starting at '5/16/2023 12:00:00 PM'  with id 0628aa9f-c3f3-41d2-7803-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'CIPI WG Ridgway' starting at '5/17/2023 1:30:00 PM'  with id e2219e01-06d4-4182-7804-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Environmental Security Forum 2' starting at '5/17/2023 2:00:00 PM'  with id 69958ed9-7644-4c45-7805-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'USAWC Foundation Scholarship recipient ceremony' starting at '5/17/2023 3:00:00 PM'  with id c1c5b097-6be1-4de8-7806-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Perspectives Lecture Series featuring Dr Thomas Guglielmo Divisions A New History of Race and Americas World War II Military' starting at '5/17/2023 6:00:00 PM'  with id b552d90d-6f00-4e37-7807-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Reserve for Abby' starting at '5/18/2023 8:30:00 AM'  with id 24548b6b-5f01-48be-7808-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Triangle Rm -  MDA Concept Development Workshop' starting at '5/18/2023 8:50:00 AM'  with id cb8cbe0d-91e6-43b5-7809-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Vietnam Veterans Engagement' starting at '5/18/2023 11:30:00 AM'  with id 34744b45-3489-4858-780a-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'DV visit prep' starting at '5/18/2023 3:00:00 PM'  with id b2f29ee3-4510-435d-780b-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'B030-WF2255 Strategic Intelligence for Leaders' starting at '5/19/2023 8:00:00 AM'  with id 3c224df4-9bf9-426b-780c-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'JWASP Team Blue' starting at '5/19/2023 9:00:00 AM'  with id 6fe50aa6-4c46-45a2-780d-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Leadership meeting w Dr McDougall' starting at '5/19/2023 11:00:00 AM'  with id a83b0c55-43e7-40f7-780e-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'NSSR 3 Debriefs' starting at '5/19/2023 11:30:00 AM'  with id ea70ae00-2013-48bd-780f-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Curriculum Course Brief to the Dean DEP 2302  2303  NSPSTWS' starting at '5/19/2023 1:00:00 PM'  with id 36043d7a-b8ab-4121-7810-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'SVTC with JS J7 re JP1 solarium' starting at '5/19/2023 1:00:00 PM'  with id 2c624b64-f6a7-44b1-7811-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'DASDUSA USATIAG Comeback SVTC' starting at '5/19/2023 2:45:00 PM'  with id 642fab2d-3eec-46f8-7812-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Ops Check for COESPU Visit ' starting at '5/19/2023 4:00:00 PM'  with id b3f99d17-7960-491c-7813-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Vet Caf                                                               ' starting at '5/20/2023 8:00:00 AM'  with id 547db0e1-f35e-43a4-7814-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'MG Barbano Visit Italy ' starting at '5/22/2023 12:00:00 AM'  with id 46422fdc-96d1-4868-7815-08db59f1a20a was inserted.
+5/21/2023 7:50:56 AM: Activity 'Cyber Elective' starting at '5/22/2023 10:00:00 AM'  with id 60d995b6-814c-4978-7816-08db59f1a20a was inserted.
+5/21/2023 7:51:01 AM: Activity 'SSI Title 10 Hiring Panel Meeting Room' starting at '5/22/2023 10:00:00 AM'  with id 34fae23c-b291-4fac-7817-08db59f1a20a was inserted.
+5/21/2023 7:51:03 AM: Activity 'Arctic Wargame Planning' starting at '5/22/2023 1:00:00 PM'  with id 8077e01e-bb8c-45ce-7818-08db59f1a20a was inserted.
+5/21/2023 7:51:04 AM: Activity 'DAS Deputies ASL Review Council DARC' starting at '5/22/2023 1:00:00 PM'  with id b474b1e9-9a87-4c76-7819-08db59f1a20a was inserted.
+5/21/2023 7:51:13 AM: Activity 'Rodney CCR' starting at '5/22/2023 3:00:00 PM'  with id 9f634b6f-40ed-4f3f-781a-08db59f1a20a was inserted.
+5/21/2023 7:51:14 AM: Activity 'MICC' starting at '5/23/2023 7:30:00 AM'  with id 70c49f3a-ae3d-4f14-781b-08db59f1a20a was inserted.
+5/21/2023 7:51:15 AM: Activity 'Welcome Expo info mtg CCR' starting at '5/23/2023 3:30:00 PM'  with id a5f7178a-6968-4793-781c-08db59f1a20a was inserted.
+5/21/2023 7:51:17 AM: Activity 'ARCENT SETUP' starting at '5/24/2023 12:00:00 AM'  with id e2ed9455-0adf-489a-781d-08db59f1a20a was inserted.
+5/21/2023 7:51:17 AM: Activity 'Wargaming Elective - Build the Force' starting at '5/24/2023 8:00:00 AM'  with id 5d1212fe-f64d-44c0-781e-08db59f1a20a was inserted.
+5/21/2023 7:51:18 AM: Activity 'LTC Hercik SVTC with FORSCOM G3' starting at '5/24/2023 9:30:00 AM'  with id 53e76fe1-e28e-4985-781f-08db59f1a20a was inserted.
+5/21/2023 7:51:20 AM: Activity 'RDML English USN Visit to Support LM2207 Elective' starting at '5/24/2023 10:30:00 AM'  with id efc88f77-7c3f-4198-7820-08db59f1a20a was inserted.
+5/21/2023 7:51:20 AM: Activity 'Billy McElrath Retirement Ceremony Ridgway' starting at '5/24/2023 11:00:00 AM'  with id b56599f1-9c6b-4318-7821-08db59f1a20a was inserted.
+5/21/2023 7:51:21 AM: Activity 'Title 10 Interview Job talk and Presentation Chair of China Landpower Studies Center' starting at '5/24/2023 12:30:00 PM'  with id 7fa3e154-a1eb-46fe-7822-08db59f1a20a was inserted.
+5/21/2023 7:51:22 AM: Activity 'GraduationNSS WeekMeet Your Army IPR' starting at '5/24/2023 12:30:00 PM'  with id 69b3f0fd-b14d-4885-7823-08db59f1a20a was inserted.
+5/21/2023 7:51:24 AM: Activity 'Early Graduation' starting at '5/24/2023 2:00:00 PM'  with id 29252792-0db8-4b06-7824-08db59f1a20a was inserted.
+5/21/2023 7:51:26 AM: Activity 'ECC Meeting Announcement  VCSA  SOEH SEC Annual Meeting ' starting at '5/24/2023 2:15:00 PM'  with id 5d4a14aa-d7e7-4590-7825-08db59f1a20a was inserted.
+5/21/2023 7:51:27 AM: Activity 'Greta Meeting ' starting at '5/25/2023 8:30:00 AM'  with id 164acfde-3f0e-4d52-7826-08db59f1a20a was inserted.
+5/21/2023 7:51:29 AM: Activity 'CL2242 Warfighting in the Space Domain' starting at '5/25/2023 8:30:00 AM'  with id 518fb457-bd3a-4c53-7827-08db59f1a20a was inserted.
+5/21/2023 7:51:30 AM: Activity 'Lunch with LTG Ashley' starting at '5/25/2023 11:30:00 AM'  with id 1312bf86-5950-4639-7828-08db59f1a20a was inserted.
+5/21/2023 7:51:32 AM: Activity 'ASAP Financial Warfare' starting at '5/30/2023 7:30:00 AM'  with id bf6df11d-bace-4823-7829-08db59f1a20a was inserted.
+5/21/2023 7:51:33 AM: Activity 'ARCENT TTX Workshop  CDC' starting at '5/30/2023 8:00:00 AM'  with id 1bc81f38-a9a6-446e-782a-08db59f1a20a was inserted.
+5/21/2023 7:51:35 AM: Activity 'Systems Thinking Assessment Focus Groups' starting at '5/30/2023 8:00:00 AM'  with id 0be36877-4426-41ac-782b-08db59f1a20a was inserted.
+5/21/2023 7:51:37 AM: Activity 'Gurchick - G8 AMOPCFGFEBS Training' starting at '5/30/2023 10:00:00 AM'  with id 959f0c0f-56c1-4074-782c-08db59f1a20a was inserted.
+5/21/2023 7:51:38 AM: Activity 'Vics Farewell Get-Together' starting at '5/30/2023 10:00:00 AM'  with id f08be4a6-abed-4149-782d-08db59f1a20a was inserted.
+5/21/2023 7:51:38 AM: Activity 'DMSPO Brown Bag w Dean' starting at '5/30/2023 11:30:00 AM'  with id cad7242f-b232-4582-782e-08db59f1a20a was inserted.
+5/21/2023 7:51:40 AM: Activity 'Systems Thinking Assessment Focus Groups' starting at '5/31/2023 8:00:00 AM'  with id 3cc1f305-03cf-4d91-782f-08db59f1a20a was inserted.
+5/21/2023 7:51:41 AM: Activity 'SSI Leaders Synch' starting at '5/31/2023 8:30:00 AM'  with id 5df6d069-838d-4684-7830-08db59f1a20a was inserted.
+5/21/2023 7:51:43 AM: Activity 'DSW All Hands Meeting ' starting at '5/31/2023 9:00:00 AM'  with id deb8815b-1326-4acd-7831-08db59f1a20a was inserted.
+5/21/2023 7:51:44 AM: Activity 'BLDG 651 Deconfliction MTG' starting at '5/31/2023 2:00:00 PM'  with id 2c0ff004-8953-454b-7832-08db59f1a20a was inserted.
+5/21/2023 7:51:46 AM: Activity 'BalticsSCS Matrix Game Training' starting at '6/1/2023 8:00:00 AM'  with id 3d5c9d8f-9513-4967-7833-08db59f1a20a was inserted.
+5/21/2023 7:51:47 AM: Activity 'AFRICOM Wargame SVTC' starting at '6/1/2023 9:00:00 AM'  with id ec768515-0522-4a68-7834-08db59f1a20a was inserted.
+5/21/2023 7:51:47 AM: Activity 'Deleted Deputies Committee' starting at '6/1/2023 11:00:00 AM'  with id e0a8749d-b713-428e-7835-08db59f1a20a was inserted.
+5/21/2023 7:51:47 AM: Activity 'CDR Rooney Frocking Ceremony' starting at '6/1/2023 12:00:00 PM'  with id a60c5e1d-b338-4bfb-7836-08db59f1a20a was inserted.
+5/21/2023 7:51:49 AM: Activity 'Industry Day for SEG Modernization' starting at '6/1/2023 1:00:00 PM'  with id 527e6953-340b-4fc5-7837-08db59f1a20a was inserted.
+5/21/2023 7:51:51 AM: Activity 'E  I 3-year plan CCR' starting at '6/2/2023 10:30:00 AM'  with id 0efbf1be-807d-4c07-7838-08db59f1a20a was inserted.
+5/21/2023 7:51:52 AM: Activity 'LTC AJ Sullivan PromotionReception' starting at '6/2/2023 11:00:00 AM'  with id fec62f24-24b1-4dee-7839-08db59f1a20a was inserted.
+5/21/2023 7:51:54 AM: Activity 'Army Vet Core Birthday Event W COL Schlanser' starting at '6/3/2023 3:00:00 PM'  with id 83f1e309-756d-403a-783a-08db59f1a20a was inserted.
+5/21/2023 7:51:55 AM: Activity 'NSS Icebreaker' starting at '6/4/2023 5:00:00 PM'  with id baaf1a8b-43e6-46b8-783b-08db59f1a20a was inserted.
+5/21/2023 7:51:56 AM: Activity 'Cancelled Vet Cafe D-Day' starting at '6/5/2023 8:00:00 AM'  with id 4a931e93-ebbe-4f62-783c-08db59f1a20a was inserted.
+5/21/2023 7:51:56 AM: Activity 'NSS Week Commandants Welcome' starting at '6/5/2023 9:00:00 AM'  with id 264fa9cc-5c71-42de-783d-08db59f1a20a was inserted.
+5/21/2023 7:51:58 AM: Activity 'International Fellows Luncheon' starting at '6/5/2023 12:00:00 PM'  with id 01a7b29d-51ab-4015-783e-08db59f1a20a was inserted.
+5/21/2023 7:51:59 AM: Activity 'CANUS Army Reserve General Officer Advisory Board' starting at '6/6/2023 12:00:00 AM'  with id c7971977-63ee-49ef-783f-08db59f1a20a was inserted.
+5/21/2023 7:52:01 AM: Activity 'Records Management Assessment' starting at '6/6/2023 12:00:00 AM'  with id 915ef2b7-c86c-4578-7840-08db59f1a20a was inserted.
+5/21/2023 7:52:01 AM: Activity 'Resident Graduation Working Rehearsal ' starting at '6/6/2023 1:30:00 PM'  with id 762facd0-b653-41d7-7841-08db59f1a20a was inserted.
+5/21/2023 7:52:01 AM: Activity 'Deleted Academic Board Meeting Battle Rhythm' starting at '6/6/2023 2:00:00 PM'  with id 4e4e2ad5-262c-4b25-7842-08db59f1a20a was inserted.
+5/21/2023 7:52:02 AM: Activity 'Resident Graduation COSDCOM Walk Through 1400' starting at '6/7/2023 1:30:00 PM'  with id 013b96c3-a1b8-45f6-7843-08db59f1a20a was inserted.
+5/21/2023 7:52:02 AM: Activity 'DE2300 Hotwash FRC FI Synch' starting at '6/8/2023 9:00:00 AM'  with id 01d703ec-9569-4faa-7844-08db59f1a20a was inserted.
+5/21/2023 7:52:04 AM: Activity 'Resident Graduation Commandant Walk Through 1400' starting at '6/8/2023 1:30:00 PM'  with id 635b8e70-f849-49db-7845-08db59f1a20a was inserted.
+5/21/2023 7:52:04 AM: Activity 'Chili Cookoff' starting at '6/9/2023 7:00:00 AM'  with id fc52f7ad-0c10-4a0c-7846-08db59f1a20a was inserted.
+5/21/2023 7:52:04 AM: Activity 'Deputy Provost Hiring Events' starting at '6/12/2023 8:00:00 AM'  with id e2b204a3-1182-4394-7847-08db59f1a20a was inserted.
+5/21/2023 7:52:05 AM: Activity 'Deputy Provost Hiring Events' starting at '6/12/2023 8:00:00 AM'  with id 00b48de0-1a98-49a2-7848-08db59f1a20a was inserted.
+5/21/2023 7:52:07 AM: Activity 'Board of Visitors Virtual Event' starting at '6/13/2023 12:00:00 AM'  with id f27b5bcc-5bdd-42e7-7849-08db59f1a20a was inserted.
+5/21/2023 7:52:07 AM: Activity 'Deputy Provost Hiring Events' starting at '6/13/2023 8:00:00 AM'  with id 3e60a5e4-b573-467a-784a-08db59f1a20a was inserted.
+5/21/2023 7:52:08 AM: Activity 'Deputy Provost Hiring Events' starting at '6/13/2023 8:00:00 AM'  with id ccaaf878-911d-420d-784b-08db59f1a20a was inserted.
+5/21/2023 7:52:09 AM: Activity 'Deleted Civilian Education System Course MTT ' starting at '6/14/2023 12:00:00 AM'  with id 4cdd22a6-aecf-4566-784c-08db59f1a20a was inserted.
+5/21/2023 7:52:09 AM: Activity 'Deputy Provost Hiring Events' starting at '6/14/2023 8:00:00 AM'  with id 5f2ac4b6-121c-4082-784d-08db59f1a20a was inserted.
+5/21/2023 7:52:10 AM: Activity 'Deputy Provost Hiring Events' starting at '6/14/2023 8:00:00 AM'  with id 168fffe7-4ab9-4d6a-784e-08db59f1a20a was inserted.
+5/21/2023 7:52:12 AM: Activity 'USAWC COOP Exercise' starting at '6/15/2023 12:00:00 AM'  with id d03de452-b2da-4871-784f-08db59f1a20a was inserted.
+5/21/2023 7:52:12 AM: Activity 'Deleted Civilian Education System Course MTT ' starting at '6/15/2023 12:00:00 AM'  with id 953d8f55-28d1-494b-7850-08db59f1a20a was inserted.
+5/21/2023 7:52:12 AM: Activity 'Real Property Planning Board' starting at '6/15/2023 2:00:00 PM'  with id dfcdab32-4b95-4dc4-7851-08db59f1a20a was inserted.
+5/21/2023 7:52:14 AM: Activity 'Deleted Civilian Education System Course MTT ' starting at '6/16/2023 12:00:00 AM'  with id cd986ae1-16cb-4182-7852-08db59f1a20a was inserted.
+5/21/2023 7:52:14 AM: Activity 'Civilian Education System Course MTT' starting at '6/19/2023 7:00:00 AM'  with id a8fed080-e5b8-4927-7853-08db59f1a20a was inserted.
+5/21/2023 7:52:15 AM: Activity 'Deleted Civilian Education System Course MTT' starting at '6/20/2023 7:00:00 AM'  with id f0496a72-c0c0-4aaa-7854-08db59f1a20a was inserted.
+5/21/2023 7:52:15 AM: Activity 'Deleted Civilian Education System Course MTT' starting at '6/21/2023 7:00:00 AM'  with id eb1b120b-b286-43ff-7855-08db59f1a20a was inserted.
+5/21/2023 7:52:15 AM: Activity 'Deleted Civilian Education System Course MTT' starting at '6/22/2023 7:00:00 AM'  with id 47ebe796-f4e1-48db-7856-08db59f1a20a was inserted.
+5/21/2023 7:52:15 AM: Activity 'Deleted Civilian Education System Course MTT' starting at '6/23/2023 7:00:00 AM'  with id d5470fc8-8840-437b-7857-08db59f1a20a was inserted.
+5/21/2023 7:52:15 AM: Activity 'Civilian Education System Course MTT' starting at '6/26/2023 7:00:00 AM'  with id 06decb76-20a4-4d2d-7858-08db59f1a20a was inserted.
+5/21/2023 7:52:16 AM: Activity 'Deleted Civilian Education System Course MTT' starting at '6/27/2023 7:00:00 AM'  with id a28f0fd9-48f1-4914-7859-08db59f1a20a was inserted.
+5/21/2023 7:52:16 AM: Activity 'Deleted Civilian Education System Course MTT' starting at '6/28/2023 7:00:00 AM'  with id 6896000c-221e-4cd9-785a-08db59f1a20a was inserted.
+5/21/2023 7:52:16 AM: Activity 'Deleted Civilian Education System Course MTT' starting at '6/29/2023 7:00:00 AM'  with id a428f29c-7bc3-4652-785b-08db59f1a20a was inserted.
+5/21/2023 7:52:16 AM: Activity 'Deleted Civilian Education System Course MTT' starting at '6/30/2023 7:00:00 AM'  with id 2bba5ccc-cceb-4ff2-785c-08db59f1a20a was inserted.
+5/21/2023 7:52:16 AM: Activity 'Exercise AAR' starting at '6/30/2023 11:00:00 AM'  with id e9f48eca-b1ba-4170-785d-08db59f1a20a was inserted.
+5/21/2023 7:52:17 AM: Activity 'STAFFDEL Command Brief' starting at '7/14/2023 12:00:00 PM'  with id 086b262e-7138-48a0-785e-08db59f1a20a was inserted.
+5/21/2023 7:52:19 AM: Activity 'CAEDC LodgingTourism Meeting' starting at '7/26/2023 12:00:00 PM'  with id af2ace4f-e131-4d3f-785f-08db59f1a20a was inserted.
+5/21/2023 7:52:20 AM: Activity 'The Society for Women and the Civil War Annual Conference ' starting at '7/28/2023 12:00:00 PM'  with id c0d683fb-d735-44be-7860-08db59f1a20a was inserted.
+5/21/2023 7:52:22 AM: Activity 'The Society for Women and the Civil War Annual Conference' starting at '7/29/2023 10:00:00 AM'  with id 1635c2f0-38fe-4093-7861-08db59f1a20a was inserted.
+5/21/2023 7:52:23 AM: Activity 'Leadership Academy' starting at '8/14/2023 7:00:00 AM'  with id 85cb7d60-545a-42a6-7862-08db59f1a20a was inserted.
+5/21/2023 7:52:24 AM: Activity 'ATF Philadelphia Field Division Supervisor Training' starting at '8/15/2023 9:00:00 AM'  with id 1b4900b7-a434-493a-7863-08db59f1a20a was inserted.
+5/21/2023 7:52:26 AM: Activity '90-day IPR Veterans Day CCR' starting at '8/16/2023 10:30:00 AM'  with id 5a5bcc91-350d-45ae-7864-08db59f1a20a was inserted.
+5/21/2023 7:52:27 AM: Activity 'Carlisle Barracks Movie Night Presented by FAP  EFMP' starting at '9/8/2023 6:30:00 PM'  with id ef311f64-dc14-44db-7865-08db59f1a20a was inserted.
+5/21/2023 7:52:27 AM: Activity '60-day IPR Veterans Day CCR' starting at '9/13/2023 1:00:00 PM'  with id 9a000f30-6dda-46c8-7866-08db59f1a20a was inserted.
+5/21/2023 7:52:28 AM: Activity 'Software Users Group Meeting' starting at '9/14/2023 7:00:00 AM'  with id ac315021-08b6-49ef-7867-08db59f1a20a was inserted.
+5/21/2023 7:52:30 AM: Activity 'Widener  Drexel ROTC' starting at '9/22/2023 3:00:00 PM'  with id 0600b1e2-923a-4fe6-7868-08db59f1a20a was inserted.
+5/21/2023 7:52:31 AM: Activity 'University of Pittsburgh ROTC' starting at '9/29/2023 2:00:00 PM'  with id 0e464e03-3a38-4504-7869-08db59f1a20a was inserted.
+5/21/2023 7:52:33 AM: Activity 'Special Forces Chapter 64' starting at '10/3/2023 12:00:00 PM'  with id cf3011a5-6ae7-46dc-786a-08db59f1a20a was inserted.
+5/21/2023 7:52:34 AM: Activity 'Northeaster and Boston College ROTC' starting at '10/6/2023 3:00:00 PM'  with id 81f234cc-9a45-4585-786b-08db59f1a20a was inserted.
+5/21/2023 7:52:36 AM: Activity '30-day IPR Veterans Day CCR' starting at '10/11/2023 1:00:00 PM'  with id db0a5152-0ee9-4c89-786c-08db59f1a20a was inserted.
+5/21/2023 7:52:37 AM: Activity 'EFMP Halloween Spooktacular' starting at '10/27/2023 6:30:00 PM'  with id 8a39492a-51e7-4b75-786d-08db59f1a20a was inserted.
+5/21/2023 7:52:37 AM: Activity 'Veterans Day Federal Holiday' starting at '11/10/2023 12:00:00 AM'  with id 70594a80-b6fa-4b75-786e-08db59f1a20a was inserted.
+5/21/2023 7:52:37 AM: Activity 'Night of the Museum' starting at '2/23/2024 5:00:00 PM'  with id 4c352245-7791-4fce-786f-08db59f1a20a was inserted.
+5/21/2023 7:52:39 AM: Activity 'Night of the Museum' starting at '3/1/2024 5:00:00 PM'  with id 730c0184-ea3b-4561-7870-08db59f1a20a was inserted.

@@ -87,6 +87,22 @@ namespace API.Controllers
         public async Task<ActionResult<Activity>> CancelRoomReservations(Guid id) =>
           HandleResult(await Mediator.Send(new CancelRoomReservations.Command { Id = id }));
 
+        [HttpPut("cancelRoomReservations/{id}/{manageSeries}")]
+        public async Task<ActionResult<Activity>> CancelRoomReservationsForSeries(Guid id, string manageSeries)
+        {
+
+            if (!string.IsNullOrEmpty(manageSeries) && manageSeries == "true")
+            {
+                return HandleResult(await Mediator.Send(new CancelRoomReservationsForSeries.Command { Id = id }));
+           
+            }
+            else
+            {
+                return HandleResult(await Mediator.Send(new CancelRoomReservations.Command { Id = id }));
+            }
+        }
+
+
         [HttpPut("restore/{id}")]
         public async Task<ActionResult<Activity>> RestoreActivity(Guid id) =>
           HandleResult(await Mediator.Send(new Restore.Command { Id = id }));

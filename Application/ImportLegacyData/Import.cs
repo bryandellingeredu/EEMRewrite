@@ -9,6 +9,8 @@ using CsvHelper;
 using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using Application.Activities;
+using Microsoft.Graph;
 
 namespace Application.ImportLegacyData
 {
@@ -33,7 +35,6 @@ namespace Application.ImportLegacyData
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                string filePath = @"C:\Users\Bryan.Dellinger.Apps\Documents\EEMRewriteEDU\EEMRewrite\Application\result.txt";
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
@@ -131,8 +132,10 @@ namespace Application.ImportLegacyData
                         }); 
                     }
                     var index = 0;
+                    string filePath = @"C:\Users\Bryan.Dellinger.Apps\Documents\EEMRewriteEDU\EEMRewrite\Application\ImportLegacyData\result.txt";
                     foreach (var item in activities)
                     {
+                        index++;
                         string logMessage = string.Empty;
                         logMessage =$"{DateTime.Now}: Looking at Activity '{item.Title}' starting at '{item.Start}'  index: {index} .\n";
                         Debug.WriteLine(logMessage);
@@ -170,18 +173,18 @@ namespace Application.ImportLegacyData
                                     _context.Activities.Remove(a);
                                     await _context.SaveChangesAsync();
                                     // Write to the text file after successful deletion
-                                    File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was deleted successfully.\n");
+                                    System.IO.File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was deleted successfully.\n");
                                     Debug.WriteLine($"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was deleted successfully.\n");
                                 }
                                 else
                                 {
-                                    File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it has a hosting report.\n");
+                                    System.IO.File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it has a hosting report.\n");
                                     Debug.WriteLine($"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it has a hosting report.\n");
                                 }
                             }
                             catch (Exception ex)
                             {
-                                File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it had an error.\n");
+                                System.IO.File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it had an error.\n");
                                 Debug.WriteLine($"{DateTime.Now}: Activity '{activityToDelete.Title}' starting at '{activityToDelete.Start}' was not  deleted  it had an error.\n");
                                 // could not delete keep going
                             }
@@ -201,7 +204,7 @@ namespace Application.ImportLegacyData
 
                     foreach (var a in activities)
                     {
-                        File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{a.Title}' starting at '{a.Start}'  with id {a.Id} was inserted.\n");
+                        System.IO.File.AppendAllText(filePath, $"{DateTime.Now}: Activity '{a.Title}' starting at '{a.Start}'  with id {a.Id} was inserted.\n");
                         Debug.WriteLine($"{DateTime.Now}: Activity '{a.Title}' starting at '{a.Start}'  with id {a.Id} was inserted.\n");
                         bool exceptionOccurred = false;
                         List<string> roomEmails = new List<string>();
@@ -238,7 +241,7 @@ namespace Application.ImportLegacyData
                                 endDateAsString = endDate.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
                             }
 
-                       /*     GraphEventDTO graphEventDTO = new GraphEventDTO
+                            GraphEventDTO graphEventDTO = new GraphEventDTO
                             {
                                 EventTitle = a.Title,
                                 EventDescription = a.Description,
@@ -250,28 +253,30 @@ namespace Application.ImportLegacyData
                                 RequesterLastName = "EEMServiceAccount",
                                 IsAllDay = a.AllDayEvent,
                                 UserEmail = coordinatorEmail
-                            }; */
+                            }; 
 
-                      /*      try
+                           try
                             {
+                                Debug.WriteLine($"{DateTime.Now}: Activity '{graphEventDTO.EventTitle}' starting at '{graphEventDTO.Start}' adding room.\n");
                                 Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                                 var activityToUpdate = await _context.Activities.FindAsync(a.Id);
                                 if (activityToUpdate != null)
                                 {
                                     activityToUpdate.EventLookup = evt.Id;
                                     await _context.SaveChangesAsync();
-                                    Console.WriteLine($"Room {string.Join(", ", graphEventDTO.RoomEmails)}, {a.Title}, {a.Start}");
+                                    Debug.WriteLine($"Room {string.Join(", ", graphEventDTO.RoomEmails)}, {a.Title}, {a.Start}");
                                 }
                             }
                             catch (Exception e)
                             {
                                 var exc = e;
                                 exceptionOccurred = true; // Set the flag to true
-                            }*/
+                            }
                         }
 
                         if (exceptionOccurred) // Check if an exception occurred
                         {
+                            Debug.WriteLine($"{DateTime.Now}: Exception Occured");
                             continue; // Continue with the next 'a' in activities
                         }
                     }

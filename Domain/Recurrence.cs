@@ -37,5 +37,40 @@ namespace Domain
         public DateTime? ActivityStart { get; set; }
         [NotMapped]
         public DateTime? ActivityEnd { get; set; }
+
+        public bool ArePropertiesEqual(Recurrence other)
+        {
+            bool isEqual = true;
+
+            if (other == null)
+                return false;
+
+            isEqual &= Sunday == other.Sunday;
+            isEqual &= Monday == other.Monday;
+            isEqual &= Tuesday == other.Tuesday;
+            isEqual &= Wednesday == other.Wednesday;
+            isEqual &= Thursday == other.Thursday;
+            isEqual &= Friday == other.Friday;
+            isEqual &= Saturday == other.Saturday;
+            isEqual &= string.Equals(Interval, other.Interval);
+            isEqual &= string.Equals(DayOfMonth, other.DayOfMonth);
+            isEqual &= string.Equals(WeekOfMonth, other.WeekOfMonth);
+            isEqual &= string.Equals(WeekdayOfMonth, other.WeekdayOfMonth);
+            isEqual &= IntervalStart == other.IntervalStart;
+            isEqual &= IntervalEnd == other.IntervalEnd;
+            isEqual &= IncludeWeekends == other.IncludeWeekends;
+            isEqual &= string.Equals(DaysRepeating, other.DaysRepeating);
+            isEqual &= string.Equals(WeeksRepeating, other.WeeksRepeating);
+            isEqual &= string.Equals(MonthsRepeating, other.MonthsRepeating);
+            isEqual &= string.Equals(WeekInterval, other.WeekInterval);
+            isEqual &= string.Equals(WeekendsIncluded, other.WeekendsIncluded);
+            isEqual &= string.Equals(WeeklyRepeatType, other.WeeklyRepeatType);
+            isEqual &= string.Equals(MonthlyRepeatType, other.MonthlyRepeatType);
+            isEqual &= string.Equals(MonthlyDayType, other.MonthlyDayType);
+
+            return isEqual;
+        }
+
+
     }
 }

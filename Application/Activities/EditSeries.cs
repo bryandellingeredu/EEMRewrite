@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Application.Interfaces;
-using Azure.Core;
 
 namespace Application.Activities
 {
@@ -67,14 +66,15 @@ namespace Application.Activities
                     var activitiesToBeDeleted = _context.Activities.Where(x => x.RecurrenceId == request.Activity.RecurrenceId);
                     var activityIds = activitiesToBeDeleted.Select(x => x.Id).ToArray();
                     var newActivities = new List<Activity>();
+                    List<Activity> storedGraphEvents = new List<Activity>();
 
 
               
                     Settings s = new Settings();
                     var settings = s.LoadSettings(_config);
                     GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
-
-                 if (
+                    var allrooms = await GraphHelper.GetRoomsAsync();
+                    if (
                    (
                      string.IsNullOrEmpty(request.Activity.CoordinatorEmail) ||
                      !request.Activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
@@ -94,36 +94,54 @@ namespace Application.Activities
                     var createdBy = activitiesToBeDeleted.FirstOrDefault().CreatedBy;
                     var createdAt = activitiesToBeDeleted.FirstOrDefault().CreatedAt;
                     //delete the old activities and the recurrence we will make new ones
+                    bool shouldGraphEventsBeRegenerated = await GetShouldGraphEventsBeRegenerated(request.Activity, allrooms);
+
                     foreach (var item in activitiesToBeDeleted)
                     {
 
                         if (
                             !string.IsNullOrEmpty(request.Activity.EventLookup) &&
-                            !string.IsNullOrEmpty(request.Activity.CoordinatorEmail)
+                            !string.IsNullOrEmpty(request.Activity.CoordinatorEmail )
                             )
+
+
                         {
-                            // delete graph event we will make new ones
-                            var coordinatorEmail = item.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? item.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
-                            try
+
+                            if (shouldGraphEventsBeRegenerated)
                             {
-                                await GraphHelper.DeleteEvent(item.EventLookup, coordinatorEmail);
-                                item.EventLookup = string.Empty;
-                            }
-                            catch (Exception)
-                            {
+
+                                // delete graph event we will make new ones
+                                var coordinatorEmail = item.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? item.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
                                 try
                                 {
-                                    await GraphHelper.DeleteEvent(item.EventLookup, GraphHelper.GetEEMServiceAccount());
+                                    await GraphHelper.DeleteEvent(item.EventLookup, coordinatorEmail);
                                     item.EventLookup = string.Empty;
                                 }
                                 catch (Exception)
                                 {
+                                    try
+                                    {
+                                        await GraphHelper.DeleteEvent(item.EventLookup, GraphHelper.GetEEMServiceAccount());
+                                        item.EventLookup = string.Empty;
+                                    }
+                                    catch (Exception)
+                                    {
 
-                                    item.EventLookup = string.Empty;
+                                        item.EventLookup = string.Empty;
+                                    }
+
                                 }
-                                
-                            }
-                           
+
+                            }  else
+                            {
+                                storedGraphEvents.Add(new Activity
+                                {
+                                    Start=item.Start,
+                                    End=item.End,
+                                    AllDayEvent=item.AllDayEvent,   
+                                    EventLookup=item.EventLookup,
+                                });
+                            }                         
                         }
                     }
                    
@@ -164,25 +182,37 @@ namespace Application.Activities
 
                         if (!string.IsNullOrEmpty(a.CoordinatorEmail))
                         {
-                            //create outlook event
-                            GraphEventDTO graphEventDTO = new GraphEventDTO
+                            if (shouldGraphEventsBeRegenerated)
                             {
-                                EventTitle = a.Title,
-                                EventDescription = a.Description,
-                                Start = a.StartDateAsString,
-                                End = a.EndDateAsString,
-                                RoomEmails = a.RoomEmails,
-                                RequesterEmail = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
-                                RequesterFirstName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
-                                RequesterLastName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
-                                IsAllDay = a.AllDayEvent,
-                                UserEmail = user.Email
-                            };
-                            Event evt = await GraphHelper.CreateEvent(graphEventDTO);
-                            a.EventLookup = evt.Id;
-                            a.CoordinatorEmail = user.Email;
-                            a.CoordinatorFirstName = user.DisplayName;
-                            a.CoordinatorLastName = String.Empty;
+                                //create outlook event
+                                GraphEventDTO graphEventDTO = new GraphEventDTO
+                                {
+                                    EventTitle = a.Title,
+                                    EventDescription = a.Description,
+                                    Start = a.StartDateAsString,
+                                    End = a.EndDateAsString,
+                                    RoomEmails = a.RoomEmails,
+                                    RequesterEmail = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
+                                    RequesterFirstName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
+                                    RequesterLastName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
+                                    IsAllDay = a.AllDayEvent,
+                                    UserEmail = user.Email
+                                };
+                                Event evt = await GraphHelper.CreateEvent(graphEventDTO);
+                                a.EventLookup = evt.Id;
+                                a.CoordinatorEmail = user.Email;
+                                a.CoordinatorFirstName = user.DisplayName;
+                                a.CoordinatorLastName = String.Empty;
+                            }
+                            else
+                            {
+                                var storedGraphEvent = storedGraphEvents.Where(x => x.Start == a.Start && x.End == a.End && x.AllDayEvent == a.AllDayEvent).FirstOrDefault();
+                                if (storedGraphEvent != null) {
+                                    a.EventLookup = storedGraphEvent.EventLookup;
+                                }
+
+                            }
+                             
                         }
 
 
@@ -210,6 +240,84 @@ namespace Application.Activities
 
                     throw;
                 }
+            }
+
+            private async Task<bool> GetShouldGraphEventsBeRegenerated(Activity updatedActivity, IGraphServicePlacesCollectionPage allrooms)
+            {
+                if (!updatedActivity.RoomEmails.Any()) return false;
+              
+                var originalActivity = await _context.Activities.AsNoTracking().FirstOrDefaultAsync(x => x.Id == updatedActivity.Id);
+
+                if (updatedActivity.RoomEmails.Any() && string.IsNullOrEmpty(originalActivity.EventLookup)) return true;
+
+                var oldRecurrence = await _context.Recurrences.AsNoTracking().FirstOrDefaultAsync(x => x.Id == updatedActivity.RecurrenceId);
+
+                if (oldRecurrence == null)
+                {
+                    return true;
+                }
+
+                // check if the recurrence has changed
+                bool isRecurrenceEqual = oldRecurrence.ArePropertiesEqual(updatedActivity.Recurrence);
+                if (!isRecurrenceEqual)
+                { 
+                    return true;
+                }
+                var updatedStart = TimeZoneInfo.ConvertTime(updatedActivity.Start, TimeZoneInfo.Local);
+                if (updatedStart != originalActivity.Start)
+                {
+                return true;
+                }
+
+                var updatedEnd = TimeZoneInfo.ConvertTime(updatedActivity.End, TimeZoneInfo.Local);
+                if (updatedEnd != originalActivity.End)
+                {
+                    return true;
+                }
+
+                if (updatedActivity.AllDayEvent != originalActivity.AllDayEvent)
+                {
+                    return true;
+                }
+                Event evt;
+                try
+                {
+                    evt = await GraphHelper.GetEventAsync(originalActivity.CoordinatorEmail, originalActivity.EventLookup);
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), originalActivity.EventLookup);
+                    }
+                    catch (Exception)
+                    {
+                        return true;
+                        
+                    }              
+                }
+
+                var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();
+                List<string> newActivityRooms = new List<string>();
+                if (evt != null && evt.Attendees != null)
+                {
+                    foreach (var item in evt.Attendees.Where(x => allroomEmails.Contains(x.EmailAddress.Address)))
+                    {
+
+                        newActivityRooms.Add(item.EmailAddress.Address);
+                    }
+                }
+                newActivityRooms.Sort();
+                var roomEmailsList = updatedActivity.RoomEmails.ToList();
+                roomEmailsList.Sort();
+                bool areEqual = newActivityRooms.SequenceEqual(roomEmailsList);
+                if (!areEqual)
+                {
+                    return true;
+                }
+
+                return false;
+
             }
 
             private void AddHostingReportToNewActivities(Guid id, HostingReport hostingReport)

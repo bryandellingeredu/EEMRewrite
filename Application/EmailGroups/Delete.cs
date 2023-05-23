@@ -51,9 +51,17 @@ namespace Application.EmailGroups
 
                 if (!emailGroupEmailGroupMemberJunctions2.Any())
                 {
-                    var emailGroupMember = await _context.EmailGroupMembers.FindAsync(request.MemberId);
-                    _context.EmailGroupMembers.Remove(emailGroupMember);
-                    await _context.SaveChangesAsync();
+                    var emailGroupMember = await _context.EmailGroupMembers.Where(x => x.Id ==request.MemberId).FirstOrDefaultAsync();
+                    if (emailGroupMember != null)
+                    {
+                        _context.EmailGroupMembers.Remove(emailGroupMember);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        //fixing null error bdd 5/22/2023
+                        return Result<Unit>.Success(Unit.Value);
+                    }
                 }
 
                 if (success) return Result<Unit>.Success(Unit.Value);

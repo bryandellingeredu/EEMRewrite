@@ -158,7 +158,7 @@ export default observer(function ActivityForm() {
   const handleCancelRoomReservations =() => {
     setConfirmModalOpen(false);
     setCancellingRooms(true);
-    agent.Activities.cancelRoomReservations(id)
+    agent.Activities.cancelRoomReservations(id, manageSeries)
     .then(() => {
       setRemoveEventLookup(true);
       setRoomRequired(false);
