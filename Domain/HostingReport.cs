@@ -74,7 +74,7 @@ namespace Domain
         public string AdditionalForeignGuestInformation {get; set;}
         public bool HostingReportNotificationSent {get; set;}
         public bool HostingReportApprovalNotificationSent {get; set;}
-    
-     }
+        public bool HostingReportLocalTransportationNotificationSent { get; set; }
+    }
 }
 

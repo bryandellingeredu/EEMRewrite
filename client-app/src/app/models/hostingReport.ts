@@ -61,5 +61,5 @@ classificationOfInformationReleased: string
 additionalForeignGuestInformation: string
 hostingReportNotificationSent: boolean
 hostingReportApprovalNotificationSent: boolean
-
+hostingReportLocalTransportationNotificationSent: boolean
 }

@@ -17,6 +17,11 @@ export default function MySelectInput(props: Props) {
     setSearchTerm(searchQuery);
   };
 
+  const handleBlur = () => {
+    helpers.setTouched(true);
+    setSearchTerm('');  // clear the search term
+  };
+
   const filteredOptions = props.options.filter((option: any) =>
     option.text.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -30,7 +35,7 @@ export default function MySelectInput(props: Props) {
         options={filteredOptions}
         value={field.value || null}
         onChange={(e, d) => helpers.setValue(d.value)}
-        onBlur={() => helpers.setTouched(true)}
+        onBlur={handleBlur}  // use the new handleBlur
         onSearchChange={handleSearchChange}
         placeholder={props.placeholder}
       />

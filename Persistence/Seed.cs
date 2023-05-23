@@ -63,7 +63,8 @@ namespace Persistence
                   new EmailGroup {Name = "Outsider Report Added"},
                   new EmailGroup {Name = "Office Call With Commandant"},
                   new EmailGroup {Name = "Parking Requirements Needed"},
-                  new EmailGroup {Name = "Foreign Guest is Visiting the USAWC"},                 
+                  new EmailGroup {Name = "Foreign Guest is Visiting the USAWC"},  
+                  new EmailGroup {Name = "Local Transportation Requirement"},                    
                 };
 
                 await context.EmailGroups.AddRangeAsync(emailGroups);

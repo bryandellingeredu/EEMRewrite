@@ -10,10 +10,7 @@ using Activity = Domain.Activity;
 using Recurrence = Domain.Recurrence;
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Application.DTOs;
-using System.Diagnostics;
-using Azure.Core;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Application.Activities
 {
@@ -43,15 +40,17 @@ namespace Application.Activities
             private readonly IConfiguration _config;
             private readonly IUserAccessor _userAccessor;
             private readonly ICACAccessor _cacAccessor;  //new
+            private readonly IWebHostEnvironment _webHostEnvironment;
 
             public Handler(
-                DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor)
+                DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor, IWebHostEnvironment webHostEnvironment)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
                 _userAccessor = userAccessor;
-                _cacAccessor = cacAccessor; 
+                _cacAccessor = cacAccessor;
+                _webHostEnvironment = webHostEnvironment;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -172,7 +171,7 @@ namespace Application.Activities
 
 
 
-                        WorkflowHelper workflowHelper = new WorkflowHelper(a, settings, _context);
+                        WorkflowHelper workflowHelper = new WorkflowHelper(a, settings, _context, _webHostEnvironment);
                         await workflowHelper.SendNotifications();
 
                         if (request.Activity.HostingReport! != null && !string.IsNullOrEmpty(_cacAccessor.GetCacInfo()))   // if you are creating a hosting report always use the army user not the edu user
@@ -200,7 +199,7 @@ namespace Application.Activities
                             _context.HostingReports.Add(hostingReport);
                             var result2 = await _context.SaveChangesAsync() > 0;
 
-                            HostingReportWorkflowHelper hostingReportWorkflowHelper = new HostingReportWorkflowHelper(a, settings, _context, hostingReport);
+                            HostingReportWorkflowHelper hostingReportWorkflowHelper = new HostingReportWorkflowHelper(a, settings, _context, hostingReport, _webHostEnvironment);
                             await hostingReportWorkflowHelper.SendNotifications();
                         }
 

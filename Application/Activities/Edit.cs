@@ -5,14 +5,10 @@ using Persistence;
 using Application.Core;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Graph.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Application.Interfaces;
-using System.Dynamic;
-using Application.DTOs;
-using Microsoft.AspNetCore.Http;
-using Application.GraphSchedules;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Application.Activities
 {
@@ -42,15 +38,16 @@ namespace Application.Activities
             private readonly IConfiguration _config;
             private readonly IUserAccessor _userAccessor;
             private readonly ICACAccessor _cacAccessor;
+            private readonly IWebHostEnvironment _webHostEnvironment;
 
-            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor)
+            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor, IWebHostEnvironment webHostEnvironment)
             {
                 _context = context;
                 _mapper = mapper;
                 _config = config;
                 _userAccessor = userAccessor;
                 _cacAccessor = cacAccessor;
-
+                _webHostEnvironment = webHostEnvironment;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -197,13 +194,13 @@ namespace Application.Activities
                 activity.CreatedAt = createdAt;
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return Result<Unit>.Failure("Failed to Update Activity");
-                WorkflowHelper workflowHelper = new WorkflowHelper(activity, settings, _context);
+                WorkflowHelper workflowHelper = new WorkflowHelper(activity, settings, _context, _webHostEnvironment);
                 await workflowHelper.SendNotifications();
                 if (!_cacAccessor.IsCACAuthenticated() && activity.HostingReport != null)
                 {
                     Activity a = await _context.Activities.FindAsync(activity.Id);
                     HostingReport h = await _context.HostingReports.FindAsync(activity.HostingReport.Id);
-                    HostingReportWorkflowHelper hostingReportWorkflowHelper = new HostingReportWorkflowHelper(activity, settings, _context, h);
+                    HostingReportWorkflowHelper hostingReportWorkflowHelper = new HostingReportWorkflowHelper(activity, settings, _context, h, _webHostEnvironment  );
                     await hostingReportWorkflowHelper.SendNotifications();
                 }
 

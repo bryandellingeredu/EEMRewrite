@@ -46,7 +46,7 @@ import MySemanticCheckBox from "../../../app/common/form/MySemanticCheckbox";
 import MySemanticRadioButton from "../../../app/common/form/MySemanticRadioButton";
 import ScrollToFieldError from "../../../app/common/form/ScrollToFieldError";
 import { Editor } from "react-draft-wysiwyg";
-import { convertToRaw, EditorState, convertFromRaw } from "draft-js";
+import { convertToRaw, EditorState, convertFromRaw  } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import DocumentUploadWidget from "../../../app/common/documentUpload/documentUploadWidget";
 import { Attachment } from "../../../app/models/attachment";
@@ -59,6 +59,8 @@ import UploadAttachmentModal from "./UploadAttachmentModal";
 import ActivityAttachmentComponent from "./ActivityAttachmentComponent";
 import SubCalendarInformation from "./SubCalendarInformation";
 import CUIWarningModal from "./CUIWarningModal";
+
+
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -182,8 +184,29 @@ export default observer(function ActivityForm() {
   const handleUploadDifferentBioClick = () =>
     setUploadDifferentBioIndicator(true);
 
-  const handleSetRoomEmails = (roomEmails: string[]) => {
-    setRoomEmails(roomEmails);
+  const [blissHallModalOpen, setBlissHallModalOpen] = useState<boolean>(false);
+  const handleCloseBlissHallModal = () => setBlissHallModalOpen(false);
+
+  const handleSetRoomEmails = (newRoomEmails: string[]) => {
+
+    const blissHallEmails = graphRooms
+    .filter(x => x.displayName.includes("Bliss"))
+    .map(x => x.emailAddress);
+
+    let showModal : boolean = false;
+
+    blissHallEmails.forEach(email => {
+      if (!roomEmails.includes(email) && newRoomEmails.includes(email)) {
+        showModal = true;
+      }
+    });
+
+    if (showModal) {
+      setBlissHallModalOpen(true);
+    }
+
+    setRoomEmails(newRoomEmails);
+
   };
 
   const handleSetRecurrence = (recurrence: Recurrence) => {
@@ -760,6 +783,31 @@ export default observer(function ActivityForm() {
           </div>
         </div>
       )}
+
+<Modal
+        open={blissHallModalOpen}
+        onClose={handleCloseBlissHallModal}
+        size='small'
+      >
+        <Modal.Header>Bliss Hall Support</Modal.Header>
+        <Modal.Content>
+          <p>You have select Bliss Hall Auditorium, Please indicate if you need additional support by clicking the Bliss Hall Support Checkbox.  If selected then enter your comments in the Bliss Hall AV 
+            Support Required Textbox. This gives teh NEC contractor a heads up that audio visual support is being requested (e.g. projection support, record presentation, broadcast presentation etc). If you do need projection support,
+            please attach your PowerPoint Briefing to the attachment section at the bottom of the form. Please contact Matt Divittore at 245-4333 if you have additional questions about utilizing Bliss Hall Auditorium.
+          </p>
+          <p>
+            NOTE: If you need audio visual support, you must also enter your audio visual request into the VIOS system. The NEC Contractor still requires the <a href="https://vios.army.mil" target="_blank">
+                            VIOS
+                          </a>{" "}form to be filled out.
+          </p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={handleCloseBlissHallModal}>
+            Close
+          </Button>
+        </Modal.Actions>
+      </Modal>
+
 <Formik
   enableReinitialize
   initialValues={activity}
@@ -1273,7 +1321,7 @@ export default observer(function ActivityForm() {
                     .filter((obj) => roomEmails.includes(obj.emailAddress))
                     .map((x) => x.displayName)
                     .join(",")
-                    .includes("Bliss Hall") && (
+                    .includes("Bliss") && (
                     <>
                       <Grid>
                         <Grid.Row>
