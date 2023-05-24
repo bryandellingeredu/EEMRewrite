@@ -796,7 +796,9 @@ export default observer(function ActivityForm() {
             please attach your PowerPoint Briefing to the attachment section at the bottom of the form. Please contact Matt Divittore at 245-4333 if you have additional questions about utilizing Bliss Hall Auditorium.
           </p>
           <p>
-            NOTE: If you need audio visual support, you must also enter your audio visual request into the VIOS system. The NEC Contractor still requires the <a href="https://vios.army.mil" target="_blank">
+            NOTE: If you need audio visual support, you must also enter your audio visual request into the  <a href="https://vios.army.mil" target="_blank">
+                            VIOS
+                          </a>{" "} system. The NEC Contractor still requires the <a href="https://vios.army.mil" target="_blank">
                             VIOS
                           </a>{" "}form to be filled out.
           </p>
