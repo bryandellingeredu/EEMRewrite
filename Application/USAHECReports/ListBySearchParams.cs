@@ -101,8 +101,17 @@ using Microsoft.Graph;
                         }
                         catch (Exception)
                         {
+                        try
+                        {
+                            evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), activity.EventLookup);
+                        }
+                        catch (Exception)
+                        {
+
                             activity.EventLookup = string.Empty;
                             evt = new Event();
+                        }
+                           
                         }
 
                         var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();
@@ -135,20 +144,24 @@ using Microsoft.Graph;
                 }
 
                 List<USAHECFacilitiesUsageDTO> reportList = new List<USAHECFacilitiesUsageDTO>();
-                 reportList = activities.Where(x => x.ActivityRooms.Any())
-                    .Select(activity => new USAHECFacilitiesUsageDTO
-                    {
-                        Title = activity.Title,
-                        Start = activity.Start,
-                        End = activity.End,
-                        Location = string.Join(", ", activity.ActivityRooms.Select(x => x.Name.Replace(',', ';')).ToArray()),
-                        CreatedBy = activity.CreatedBy,
-                        AllDayEvent = activity.AllDayEvent,
-                        Id= activity.Id,
-                        CategoryId= activity.CategoryId,
-                        ActionOfficer=activity.ActionOfficer,
+
+                if (activities != null)
+                {
+                    reportList = activities.Where(x => x.ActivityRooms != null && x.ActivityRooms.Any())
+                        .Select(activity => new USAHECFacilitiesUsageDTO
+                        {
+                            Title = activity.Title,
+                            Start = activity.Start,
+                            End = activity.End,
+                            Location = activity.ActivityRooms != null ? string.Join(", ", activity.ActivityRooms.Select(x => x.Name != null ? x.Name.Replace(',', ';') : "").ToArray()) : "",
+                            CreatedBy = activity.CreatedBy,
+                            AllDayEvent = activity.AllDayEvent,
+                            Id = activity.Id,
+                            CategoryId = activity.CategoryId,
+                            ActionOfficer = activity.ActionOfficer,
                         })
                          .ToList();
+                }
 
                 return Result<List<USAHECFacilitiesUsageDTO>>.Success(reportList);
             }
