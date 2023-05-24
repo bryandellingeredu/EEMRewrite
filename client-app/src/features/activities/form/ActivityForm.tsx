@@ -145,7 +145,20 @@ export default observer(function ActivityForm() {
 
   const [popupStartOpen, setPopupStartOpen] =useState(false);
   const [popupEndOpen, setPopupEndOpen] =useState(false);
+  const [popupRecurringOpen, setPopupRecurringOpen] = useState(false);
   const [removeEventLookup, setRemoveEventLookup] = useState(false);
+
+  const handleRecurringClose = () => {
+    setPopupRecurringOpen(false);
+  }
+
+  const handleRecurringOpen = () => {
+    setPopupRecurringOpen(true);
+  }
+
+  const handleSetConfirmModalOpen = () => {
+    setConfirmModalOpen(true);
+  }
 
   const handleStartOpen = () => {
     setPopupStartOpen(true);
@@ -170,7 +183,9 @@ export default observer(function ActivityForm() {
       setPopupStartOpen(false);
       setTimeout(function() {
         setRoomRequired(true);
-        window.location.reload();
+        let currentPath = history.location.pathname;
+        history.replace(`/temporary-route`);
+        history.replace(currentPath);
       }, 1000);
     }).catch((error) => {
       console.log(error);
@@ -980,6 +995,12 @@ export default observer(function ActivityForm() {
                     start={values.start}
                     setRecurrence={handleSetRecurrence}
                     setRecurrenceInd={handleSetRecurrenceInd}
+                    handleRecurringClose={handleRecurringClose}
+                    handleRecurringOpen={handleRecurringOpen}
+                    popupRecurringOpen={popupRecurringOpen}
+                    renderConfirmModal={renderConfirmModal}
+                    handleSetConfirmModalOpen={handleSetConfirmModalOpen}
+                    cancellingRooms={cancellingRooms}
                   />
                 </Grid.Column>
               </Grid>
@@ -1067,17 +1088,23 @@ export default observer(function ActivityForm() {
                   </Grid.Column>
                   <Grid.Column>
                     <Grid.Column>
-                      <RepeatingEventButton
-                        id={id}
-                        manageSeries={manageSeries}
-                        originalRoomEmails={originalRoomEmails}
-                        recurrenceInd={recurrenceInd}
-                        recurrenceDisabled={recurrenceDisabled}
-                        recurrence={recurrence}
-                        start={values.start}
-                        setRecurrence={handleSetRecurrence}
-                        setRecurrenceInd={handleSetRecurrenceInd}
-                      />
+                    <RepeatingEventButton
+                    id={id}
+                    manageSeries={manageSeries}
+                    originalRoomEmails={originalRoomEmails}
+                    recurrenceInd={recurrenceInd}
+                    recurrenceDisabled={recurrenceDisabled}
+                    recurrence={recurrence}
+                    start={values.start}
+                    setRecurrence={handleSetRecurrence}
+                    setRecurrenceInd={handleSetRecurrenceInd}
+                    handleRecurringClose={handleRecurringClose}
+                    handleRecurringOpen={handleRecurringOpen}
+                    popupRecurringOpen={popupRecurringOpen}
+                    renderConfirmModal={renderConfirmModal}
+                    handleSetConfirmModalOpen={handleSetConfirmModalOpen}
+                    cancellingRooms={cancellingRooms}
+                  />
                     </Grid.Column>
                   </Grid.Column>
                 </Grid>
@@ -1168,17 +1195,23 @@ export default observer(function ActivityForm() {
                     </SemanticForm.Field>
                     <SemanticForm.Field>
                       <Grid.Column>
-                        <RepeatingEventButton
-                          id={id}
-                          manageSeries={manageSeries}
-                          originalRoomEmails={originalRoomEmails}
-                          recurrenceInd={recurrenceInd}
-                          recurrenceDisabled={recurrenceDisabled}
-                          recurrence={recurrence}
-                          start={values.start}
-                          setRecurrence={handleSetRecurrence}
-                          setRecurrenceInd={handleSetRecurrenceInd}
-                        />
+                      <RepeatingEventButton
+                    id={id}
+                    manageSeries={manageSeries}
+                    originalRoomEmails={originalRoomEmails}
+                    recurrenceInd={recurrenceInd}
+                    recurrenceDisabled={recurrenceDisabled}
+                    recurrence={recurrence}
+                    start={values.start}
+                    setRecurrence={handleSetRecurrence}
+                    setRecurrenceInd={handleSetRecurrenceInd}
+                    handleRecurringClose={handleRecurringClose}
+                    handleRecurringOpen={handleRecurringOpen}
+                    popupRecurringOpen={popupRecurringOpen}
+                    renderConfirmModal={renderConfirmModal}
+                    handleSetConfirmModalOpen={handleSetConfirmModalOpen}
+                    cancellingRooms={cancellingRooms}
+                  />
                       </Grid.Column>
                     </SemanticForm.Field>
                   </SemanticForm.Group>

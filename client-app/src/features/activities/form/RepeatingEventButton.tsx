@@ -1,8 +1,9 @@
-import { Button, Form, Icon, Popup } from "semantic-ui-react";
+import { Button, Divider, Form, Icon, Popup } from "semantic-ui-react";
 import RecurrenceInformation from "./RecurrenceInformation";
 import { useStore } from "../../../app/stores/store";
 import { Recurrence } from "../../../app/models/recurrence";
 import RecurrenceMessage from "../recurrenceMessage/RecurrenceMessage";
+import { ReactNode } from 'react';
 
 interface Props{
     id: string
@@ -14,11 +15,20 @@ interface Props{
     start: Date;
     setRecurrence: (recurrence: Recurrence) => void;
     setRecurrenceInd: (recurrenceInd: boolean) => void;
+    handleRecurringClose: () => void;
+    handleRecurringOpen: () => void;
+    popupRecurringOpen: boolean;
+    renderConfirmModal: () => ReactNode;
+    handleSetConfirmModalOpen: () => void;
+    cancellingRooms: boolean
+  
 }
 
 export default function RepeatingEventButton(
     {id, manageSeries, originalRoomEmails, recurrenceInd, recurrenceDisabled,
-        recurrence, start, setRecurrence, setRecurrenceInd } : Props 
+        recurrence, start, setRecurrence, setRecurrenceInd,
+        handleRecurringClose, handleRecurringOpen, popupRecurringOpen,
+        renderConfirmModal, handleSetConfirmModalOpen, cancellingRooms} : Props 
 ){
     const {modalStore} = useStore();
     const {openModal} = modalStore;
@@ -29,6 +39,8 @@ export default function RepeatingEventButton(
             <>
               {id && originalRoomEmails && originalRoomEmails.length > 0 && (
                 <Popup
+                  open={popupRecurringOpen}
+                  onOpen={handleRecurringOpen}
                   trigger={
                     <Form.Field >
                       <Button icon labelPosition="left" disabled>
@@ -42,13 +54,28 @@ export default function RepeatingEventButton(
                   }
                 >
                   <Popup.Header>
+                     <Button
+            floated="right"
+            icon
+            size="mini"
+            color="black"
+            compact
+            onClick={() => handleRecurringClose()}
+          >
+            <Icon name="close" />
+          </Button>
                     Why can't I change how this series repeats?
                   </Popup.Header>
                   <Popup.Content>
                     This series has current room reservations. To change the
-                    series you must first cancel the room reservation. To do
-                    this choose "no room required" and save your work. you
-                    will then be able to set the series and reserve a room.
+                    series you must first cancel the room reservations.
+                         <Divider />
+                      <Button type='button' primary
+                        onClick={() => {handleSetConfirmModalOpen()}}
+                         loading={cancellingRooms}>
+                        Cancel Room Reservation
+                      </Button> 
+                      {renderConfirmModal()}
                   </Popup.Content>
                 </Popup>
               )}
