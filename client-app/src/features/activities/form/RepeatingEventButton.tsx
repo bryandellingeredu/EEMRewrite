@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Icon, Popup } from "semantic-ui-react";
+import { Button, Divider, Form, Icon, Message, Popup } from "semantic-ui-react";
 import RecurrenceInformation from "./RecurrenceInformation";
 import { useStore } from "../../../app/stores/store";
 import { Recurrence } from "../../../app/models/recurrence";
@@ -124,9 +124,24 @@ export default function RepeatingEventButton(
                   </Button>
             </Form.Field>
            }
-           {recurrenceInd && recurrence &&
+           {recurrenceInd && recurrence && (!id || (manageSeries && manageSeries === "true")) &&
+      
            <RecurrenceMessage values={recurrence} weeklyRepeatType={recurrence.weeklyRepeatType} monthlyDayType={recurrence.monthlyDayType} monthlyRepeatType={recurrence.monthlyRepeatType} />
            }
+           {recurrenceInd && recurrence && id && (!manageSeries || manageSeries !== "true" ) &&
+          <div style={{
+            padding: '1em',
+            margin: '1em 0',
+            border: '1px solid #d4a017',
+            backgroundColor: '#ffffcc',
+            color: '#9f6000'
+        }}>
+            <h2>Warning you are updating an event outside of its series!</h2>
+            <h3>Any updates will only effect this event not the entire series. To update the entire series hit cancel and choose update entire series.</h3>
+        </div>
+           }
+           
        </>
     )
 }
+
