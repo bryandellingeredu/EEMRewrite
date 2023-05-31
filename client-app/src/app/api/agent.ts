@@ -25,6 +25,7 @@ import { CSLCalendarLegend } from '../models/cslCalendarLegend';
 import { EmailGroupMemberDTO } from '../models/emailGroupMemberDTO';
 import { ActivityAttachment } from '../models/activityAttachment';
 import { USAHECFacilitiesUsageLegend } from '../models/usahecFacilitiesUsageLegend';
+import { FlagReportDTO } from '../models/flagReportDTO';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -271,6 +272,7 @@ const HostingReports = {
     listBySearchParams: (data: any) => axiosRequest.post<any>('/hostingReports/listBySearchParams', data),
     listOutsiderBySearchParams: (data: any) => axiosRequest.post<any>('/hostingReports/listOutsiderBySearchParams', data),
     listForHostingReportPDF: () => axiosRequest.get<Activity[]>('/hostingReports/ListForHostingReportPDF'),
+    getFlagReport: (month: number, direction: string) => axiosRequest.post<FlagReportDTO[]>('/hostingReports/getFlagReport', {month, direction}),
 }
 
 const Calendars = {

@@ -21,6 +21,7 @@ namespace API.Controllers
             _cacAccessor = cacAccessor;
         }
 
+ 
 
         [HttpGet]
         public async Task<IActionResult> GetHostingReports()
@@ -31,7 +32,7 @@ namespace API.Controllers
             }
           return Unauthorized();
         }
-   
+
 
 
         [HttpGet("ListForHostingReportPDF")]
@@ -44,6 +45,12 @@ namespace API.Controllers
             return Unauthorized();
         }
 
+        [HttpPost("getFlagReport")]
+        public async Task<IActionResult> ListBySearchParams(FlagReportData data)
+        {
+            var result = await Mediator.Send(new GetFlagReport.Query { Month = data.Month, Direction = data.Direction});
+            return HandleResult(result);
+        }
 
         [HttpPost("listBySearchParams")]
         public async Task<IActionResult> ListBySearchParams(HostingReportTableSearchParams data)
@@ -68,6 +75,8 @@ namespace API.Controllers
         }
 
 
+
+
         [HttpGet("getGuestTitles")]
         public async Task<ActionResult> getGuestTitles()
         {
@@ -84,6 +93,13 @@ namespace API.Controllers
             }
             return Unauthorized();
 
+        }
+
+        public class FlagReportData
+        {
+            public  string Direction { get; set; }
+
+            public int Month { get; set; }
         }
     }
 }
