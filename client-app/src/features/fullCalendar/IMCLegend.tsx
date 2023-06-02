@@ -24,7 +24,9 @@ export default observer(function IMCLegend() {
           (item) =>
             item.name !== "PKSOI Calendar" && item.name !== "Staff Calendar" && item.name !== "Other"
         ).map(category => (
-        <Label key={category.id} style={{backgroundColor: category.imcColor, color: 'white', marginBottom: '5px'}} content = {category.name === 'Academic IMC Event'? 'Academic Event' : category.name} />
+        <Label key={category.id} style={{backgroundColor: category.imcColor, color: 'white', marginBottom: '5px'}}
+         content = {category.name === 'Academic IMC Event'? 'Faculty Calendar' : 
+                    category.name === 'SSL Calendar'? 'SSL Admin Calendar' : category.name} />
       ))}
       </div>
       }

@@ -55,7 +55,6 @@ interface TableData{
          <Table.Cell> {renderTextWithPopup(item.requestorPOCContactInfo)}</Table.Cell>
          <Table.Cell> {renderTextWithPopup(item.dialInNumber)}</Table.Cell>
          <Table.Cell> {renderTextWithPopup(item.siteIDDistantEnd)}</Table.Cell>
-         <Table.Cell>{item.gosesInAttendance}</Table.Cell>
          <Table.Cell> {renderTextWithPopup(item.seniorAttendeeNameRank)}</Table.Cell>
          <Table.Cell> {renderTextWithPopup(item.additionalVTCInfo)}</Table.Cell>
          <Table.Cell colSpan = '2'>{item.vtcStatus}</Table.Cell>

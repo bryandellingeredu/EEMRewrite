@@ -143,7 +143,9 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                                 }
                                 {activity.category.name !== 'Other' &&                                
                                 <p>
-                                    <strong>{activity.category.name === 'Academic Calendar' ? 'Student Calendar' : activity.category.name === 'Academic IMC Event' ? 'Academic Calendar' : activity.category.name}</strong>
+                                    <strong>{activity.category.name === 'Academic Calendar' ? 'Student Calendar' :
+                                             activity.category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
+                                             activity.category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : activity.category.name}</strong>
                                 </p>
                                 }
 

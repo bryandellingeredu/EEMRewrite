@@ -121,7 +121,7 @@ picURL: '',
         if(activity && activity.id !== '00000000-0000-0000-0000-000000000000' ){
           const activityContent  = ` <p></p>
           ${activity.description ?'<p><strong>Description: <strong>' + activity.description + '</p>' : '' }
-          ${activity.category ?'<p><strong>Sub Calendar: <strong>' + activity.category.name + '</p>' : '' }
+          ${activity.category  ? '<p><strong>Sub Calendar: </strong>' + (activity.category.name === 'Academic IMC Event' ? 'Faculty Calendar' : activity.category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : activity.category.name) + '</p>' : ''}
           ${activity.organization?.name ? '<p><strong>Lead Org: <strong>' + activity.organization?.name + '</p>' : '' }
           ${activity.actionOfficer ? '<p><strong>Action Officer: <strong>' + activity.actionOfficer + '</p>' : ''}
           ${activity.actionOfficerPhone ?'<p><strong>Action Officer Phone: <strong>' + activity.actionOfficerPhone + '</p>' : ''}

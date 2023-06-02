@@ -36,7 +36,7 @@ export default function GenericCalendarHeader({id} : Props){
     {id === 'ssl' &&
      <>
      <FontAwesomeIcon icon={faPersonRifle} size='2x' style={{marginRight: '10px'}} />
-     SSL Calendar
+     SSL Admin Calendar
    </>
       }
  
@@ -158,7 +158,7 @@ export default function GenericCalendarHeader({id} : Props){
       {id === 'academic' &&
         <>
           <FontAwesomeIcon icon={faGraduationCap} size='2x' style={{marginRight: '10px'}} />
-          Academic Calendar
+          Faculty Calendar
         </>
       }
       

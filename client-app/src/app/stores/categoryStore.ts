@@ -22,7 +22,10 @@ constructor() {
     options.push({ text: ' ', value: this.categories.find(x => x.name === 'Other')?.id });
     this.categories.forEach(category => {
         if (category.name !== 'Other') {
-            options.push({ text: category.name === 'Academic Calendar' ? 'Student Calendar' :  category.name === 'Academic IMC Event' ? 'Academic Calendar' : category.name,
+            options.push({
+               text: category.name === 'Academic Calendar' ? 'Student Calendar' :
+                     category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
+                     category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : category.name,
             value: category.id });
         }
     });

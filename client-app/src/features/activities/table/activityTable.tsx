@@ -352,7 +352,8 @@ export default observer(function ActivityTable(){
                <Table.Cell>
                 {
                   item.subCalendar === 'Academic Calendar' ? 'Student Calendar' :
-                  item.subCalendar === 'Academic IMC Event' ? 'Academic Calendar' :
+                  item.subCalendar === 'Academic IMC Event' ? 'Faculty Calendar' :
+                  item.subCalendar === 'SSL Calendar' ? 'SSL Admin Calendar' :
                   item.subCalendar === 'Other' ? '' :
                   item.subCalendar
                 }
@@ -394,7 +395,8 @@ export default observer(function ActivityTable(){
                <Table.Cell>
                 {
                   item.subCalendar === 'Academic Calendar' ? 'Student Calendar' :
-                  item.subCalendar === 'Academic IMC Event' ? 'Academic Calendar' :
+                  item.subCalendar === 'Academic IMC Event' ? 'Faculty Calendar' :
+                  item.subCalendar === 'SSL Calendar' ? 'SSL Admin Calendar' :
                   item.subCalendar === 'Other' ? '' :
                   item.subCalendar
                 }

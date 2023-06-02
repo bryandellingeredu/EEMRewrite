@@ -199,7 +199,7 @@ export default function SVTCCalendarTable(){
         onSubmit={(values) => handleFormSubmit(values)}>
               {({handleSubmit}) => (
               <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'
-              style={{ overflowX: "auto", overflowY: "hidden", minHeight: "300px", fontSize: '0.95em' }}>
+              style={{ overflowX: "auto", overflowY: "hidden", minHeight: "300px", fontSize: '0.9em' }}>
         
         <Table celled selectable>
             <Table.Header>
@@ -214,7 +214,6 @@ export default function SVTCCalendarTable(){
                     <Table.HeaderCell style={{ minWidth: "100px" }}>Requestor POC</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "100px" }}>Dial In Number</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "100px" }}>Site ID Distant End</Table.HeaderCell>
-                    <Table.HeaderCell style={{ minWidth: "100px" }}>Is SES in Attendance</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "100px" }}>SES Name / Rank</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "100px" }}>SVTC Info</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "100px" }}>SVTC Status</Table.HeaderCell>
@@ -265,17 +264,6 @@ export default function SVTCCalendarTable(){
                 <Table.HeaderCell><MyTextInput name='requestorPOCContactInfo'  placeholder="" /></Table.HeaderCell>
                 <Table.HeaderCell><MyTextInput name='dialInNumber'  placeholder="" /></Table.HeaderCell>
                 <Table.HeaderCell><MyTextInput name='siteIDDistantEnd'  placeholder="" /></Table.HeaderCell>
-                <Table.HeaderCell>
-                <MySelectInput
-                          options={[
-                            { text: "", value: "" },
-                            { text: "Yes", value: "Yes" },
-                            { text: "No", value: "No" },
-                          ]}
-                          name="gosesInAttendance"
-                          placeholder=""
-                        />
-                </Table.HeaderCell>
                 <Table.HeaderCell><MyTextInput name='seniorAttendeeNameRank'  placeholder="" /></Table.HeaderCell>
                 <Table.HeaderCell><MyTextInput name='additionalVTCInfo'  placeholder="" /></Table.HeaderCell>
                 <Table.HeaderCell>
@@ -300,7 +288,7 @@ export default function SVTCCalendarTable(){
             </Table.Header>
             <Table.Body>
             {loading && 
-                <Table.Row colSpan = '15'>
+                <Table.Row colSpan = '14'>
                     <LoadingComponent content='Loading SVTC data...'/>
                 </Table.Row>
             }

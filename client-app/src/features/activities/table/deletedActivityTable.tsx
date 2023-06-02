@@ -65,7 +65,15 @@ export default function DeletedActivityTable(){
                <Table.Cell>{item.allDayEvent? format(new Date(item.end), 'MM/dd/yy') : format(new Date(item.end), 'MM/dd/yy h:mm a')}</Table.Cell>
                <Table.Cell>{item.actionOfficer}</Table.Cell>
                <Table.Cell>{item.organization?.name}</Table.Cell>
-               <Table.Cell>{item.category.name}</Table.Cell>
+               <Table.Cell>
+               {
+                  item.category.name === 'Academic Calendar' ? 'Student Calendar' :
+                  item.category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
+                  item.category.name === 'SSL Calendar' ? 'SSL Admin Calendar' :
+                  item.category.name === 'Other' ? '' :
+                  item.category.name
+                }
+               </Table.Cell>
                <Table.Cell>{item.deletedBy}</Table.Cell>
                <Table.Cell>{format(new Date(item.deletedAt as Date), 'MM/dd/yy h:mm a')}</Table.Cell>
           </Table.Row>

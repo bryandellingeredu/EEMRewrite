@@ -2236,7 +2236,7 @@ export default observer(function ActivityForm() {
                           />
                           <MySemanticCheckBox
                             name="copiedToacademic"
-                            label="Academic Calendar"
+                            label="Faculty Calendar"
                             disabled={categories
                               .filter((x) => x.routeName === "academic")
                               .map((x) => x.id)
@@ -2365,7 +2365,7 @@ export default observer(function ActivityForm() {
                           />
                           <MySemanticCheckBox
                             name="copiedTossl"
-                            label="SSL Calendar"
+                            label="SSL Admin Calendar"
                             disabled={categories
                               .filter((x) => x.routeName === "ssl")
                               .map((x) => x.id)

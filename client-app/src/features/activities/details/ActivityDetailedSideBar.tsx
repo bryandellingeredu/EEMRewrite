@@ -426,7 +426,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <Icon name='graduation' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={14}>
-                   Added to the Academic Calendar
+                   Added to the Faculty Calendar
                  </Grid.Column>
              </Grid>
  </Segment>
@@ -572,7 +572,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <FontAwesomeIcon icon={faPersonRifle} size='2x'  color='#00b5ad' />
                  </Grid.Column>
                  <Grid.Column width={14} style={{paddingLeft: '20px'}}>
-                   Added to the SSL Calendar
+                   Added to the SSL Admin Calendar
                  </Grid.Column>
              </Grid>
  </Segment>
