@@ -127,7 +127,23 @@ export default observer(function GenericCalendar() {
    if(!categories.length) categoryStore.loadCategories();
   }, [categories.length])
 
-
+  const eventDidMount = (info : any) => {
+    const eventColor = info.event.backgroundColor;
+    const eventDot = info.el.querySelector('.fc-daygrid-event-dot');
+    const recurring = info.event.extendedProps.recurring;
+  
+    if (eventDot) {
+      eventDot.style.borderColor = eventColor;
+    }
+    if (recurring) {
+      const eventContent = info.el.querySelector('.fc-event-title');
+      if (eventContent) {
+        const icon = document.createElement('i');
+        icon.className = 'redo alternate icon'; // The Semantic UI class for the repeating icon
+        eventContent.prepend(icon);
+      }
+    }
+  };
 
   return (
     <>
@@ -156,6 +172,7 @@ export default observer(function GenericCalendar() {
             eventClick={handleEventClick}
             dateClick={handleDateClick}
             eventMouseEnter={handleMouseEnter} 
+            eventDidMount={eventDidMount}
             slotMinTime={'07:00:00'}
             slotMaxTime={'21:00:00'}     
           />

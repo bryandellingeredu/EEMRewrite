@@ -4,33 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.GraphSchedules
+namespace Domain
 {
-    public class FullCalendarEventDTO
+    public class SVTCSearchParams
     {
-        public string Id { get; set; }
         public string Title { get; set; }
         public string Start { get; set; }
         public string End { get; set; }
-        public string CategoryId { get; set; }
-        public string Color { get; set; }
-        public string TextColor { get; set; }
-        public string BorderColor { get; set; }
-        public bool AllDay { get; set; }
-        public string Description { get; set; }
-        public string PrimaryLocation { get; set; }
-        public string LeadOrg { get; set; }
+        public string Location { get; set; }
         public string ActionOfficer { get; set; }
-        public string ActionOfficerPhone { get; set; }
-        public string CoordinatorEmail { get;  set; }
-        public string EventLookup { get;  set; }
-        public string CategoryName { get; set; }
-        public bool Recurring {get; set;}
         public string VTCClassification { get; set; }
         public string DistantTechPhoneNumber { get; set; }
         public string RequestorPOCContactInfo { get; set; }
         public string DialInNumber { get; set; }
         public string SiteIDDistantEnd { get; set; }
+        public string GOSESInAttendance { get; set; }
         public string SeniorAttendeeNameRank { get; set; }
         public string AdditionalVTCInfo { get; set; }
         public string VTCStatus { get; set; }

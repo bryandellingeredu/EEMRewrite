@@ -135,6 +135,11 @@ export default observer(function Navbar() {
             <DropdownDivider/>
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper`} text ="USAHEC Meeting Summary By Location"
             label={{ color: 'black', empty: true, circular: true }}/>
+            <DropdownDivider/>
+            <Dropdown.Header icon='tv' content='SVTC Reports' />
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/svtcCalendar`} text ="SVTC Calendar"
+            label={{ color: 'orange', empty: true, circular: true }}/>
+            <DropdownDivider/>
             </Dropdown.Menu>
             </Dropdown>
 

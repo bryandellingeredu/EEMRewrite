@@ -16,7 +16,7 @@ export default function MyTextInput(props: Props){
         <label>
             {props.label}
         </label>
-        <input {...field} {...props}/>
+        <input {...field} {...props} spellCheck={true}/>
         {meta.touched && meta.error ? (
             <Label basic color='red'>
                 {meta.error}

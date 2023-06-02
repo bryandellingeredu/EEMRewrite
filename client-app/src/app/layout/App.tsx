@@ -41,6 +41,7 @@ import hostingReportPDFWrapper from '../../features/reports/hostingReportPDFWrap
 import usahecMeetingSummaryByLocationWrapper from '../../features/reports/usahecMeetingSummaryByLocationWrapper';
 import outsiderReportTable from '../../features/reports/outsiderReportTable';
 import FlagReport from '../../features/reports/flagReport';
+import SVTCCalendar from '../../features/fullCalendar/SVTCCalendar';
 
 function App() {
   const location = useLocation();
@@ -88,6 +89,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/hostingReportTable`} component={HostingReportTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/outsiderReportTable`} component={outsiderReportTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/flagReport`} component={FlagReport}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/svtcCalendar`} component={SVTCCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} component={hostingReportPDFWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper`} component={usahecMeetingSummaryByLocationWrapper}/>            
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>

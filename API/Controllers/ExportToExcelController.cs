@@ -53,6 +53,22 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("SVTCReport")]
+        public IActionResult SVTCReport([FromBody] SVTCReportCSVData[] csvDataList)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Title,Start,End,Location,Action Officer,SVTC Classification,Distant Tech Phone,Requestor POC,Dial In Number,Site ID Distant End,Is SES in Attendance,SES Name / Rank,SVTC Info,SVTC Status");
+            foreach (var data in csvDataList)
+            {
+                var status = string.IsNullOrEmpty(data.VTCStatus) ? "Tentative" : data.VTCStatus;
+                builder.AppendLine($"\"{data.Title}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.ActionOfficer}\",\"{data.VTCClassification}\",\"{data.DistantTechPhoneNumber}\",\"{data.RequestorPOCContactInfo}\",\"{data.DialInNumber}\",\"{data.SiteIDDistantEnd}\",\"{data.GOSESInAttendance}\",\"{data.SeniorAttendeeNameRank}\",\"{data.AdditionalVTCInfo}\",\"{status}\"");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "svtcReports.csv");
+        }
+
+
+        [AllowAnonymous]
         [HttpPost("GenericCalendar")]
         public IActionResult GenericCalendar([FromBody] GenericCalendarCSVData[] csvDataList)
         {
@@ -144,6 +160,25 @@ namespace API.Controllers
             public string Location { get; set; }
             public string ActionOfficer { get; set; }
             public string CreatedBy { get; set; }
+        }
+
+        public class SVTCReportCSVData
+        {
+            public string Title { get; set; }
+            public string Start { get; set; }
+            public string End { get; set; }
+            public string Location { get; set; }
+            public string ActionOfficer { get; set; }
+            public string VTCClassification { get; set; }
+            public string DistantTechPhoneNumber { get; set; }
+            public string RequestorPOCContactInfo { get; set; }
+            public string DialInNumber { get; set; }
+            public string SiteIDDistantEnd { get; set; }
+            public string GOSESInAttendance { get; set; }
+            public string SeniorAttendeeNameRank { get; set; }
+            public string AdditionalVTCInfo { get; set; }
+            public string VTCStatus { get; set; }
+
         }
 
     }

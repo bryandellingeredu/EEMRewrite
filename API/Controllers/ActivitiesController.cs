@@ -53,6 +53,14 @@ namespace API.Controllers
             HandleResult(await Mediator.Send(
                 new ListBySearchParams.Query { Title = data.Title, Start = data.Start, End = data.End, CategoryIds = data.CategoryIds, Location = data.Location, ActionOfficer=data.ActionOfficer, OrganizationId = data.OrganizationId, Description = data.Description }));
 
+        [HttpPost("listSVTCBySearchParams")]
+        public async Task<IActionResult> ListSVTCBySearchParams(SVTCSearchParams data) =>
+     HandleResult(await Mediator.Send(
+         new ListSVTCBySearchParams.Query { Title = data.Title, Start = data.Start, End = data.End,  Location = data.Location, ActionOfficer = data.ActionOfficer, VTCClassification = data.VTCClassification,
+             DistantTechPhoneNumber = data.DistantTechPhoneNumber, RequestorPOCContactInfo = data.RequestorPOCContactInfo, DialInNumber = data.DialInNumber,  SiteIDDistantEnd = data.SiteIDDistantEnd,
+             GOSESInAttendance = data.GOSESInAttendance,  SeniorAttendeeNameRank = data.SeniorAttendeeNameRank,  AdditionalVTCInfo = data.AdditionalVTCInfo, VTCStatus = data.VTCStatus
+         }));
+
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity) =>
           HandleResult(await Mediator.Send(new Create.Command { Activity = activity }));
@@ -136,7 +144,17 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new GetIMCEventsByDate.Query { Start = start, End = end }));
         }
 
-    
+        [AllowAnonymous]
+        [HttpGet("getSVTCEventsByDate")]
+        public async Task<ActionResult> GetSVTCEvents()
+        {
+            string start = Request.Query["start"];
+            string end = Request.Query["end"];
+            return HandleResult(await Mediator.Send(new GetSVTCEventsByDate.Query { Start = start, End = end }));
+        }
+
+
+
         [HttpGet("getLocations")]
         public async Task<ActionResult> GetLocations() =>  Ok(await _context.Activities.Where(x => !String.IsNullOrEmpty(x.PrimaryLocation)).Select(x => x.PrimaryLocation).Distinct().ToListAsync());
 

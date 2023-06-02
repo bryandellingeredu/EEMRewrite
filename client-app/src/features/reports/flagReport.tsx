@@ -96,7 +96,7 @@ const handlePrint = useReactToPrint({
   return(
     <>
     <Grid columns={15}>
-        <Grid.Column>
+        <Grid.Column width={3}>
       <Select 
         value={selectedMonth}
         onChange={handleChange}
