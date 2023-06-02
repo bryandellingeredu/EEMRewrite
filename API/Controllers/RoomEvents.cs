@@ -14,6 +14,16 @@ namespace API.Controllers
             string end = Request.Query["end"];  
             return HandleResult(await Mediator.Send(new EventsByRoom.Query { Id = id, Start = start, End = end }));
         }
-         
+
+
+        [AllowAnonymous]
+        [HttpGet("bldg651")]
+        public async Task<ActionResult> GetBldg651Events()
+        {
+            string start = Request.Query["start"];
+            string end = Request.Query["end"];
+            return HandleResult(await Mediator.Send(new EventsByBldg651.Query {  Start = start, End = end }));
+        }
+
     }
 }

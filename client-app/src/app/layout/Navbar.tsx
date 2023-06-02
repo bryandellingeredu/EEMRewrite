@@ -104,6 +104,11 @@ export default observer(function Navbar() {
                     as={Link}
                     to={`${process.env.PUBLIC_URL}/academiccalendar`}
                   />
+                    <Dropdown.Item
+                    text="Bldg 651 Calendar"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/bldg651Calendar`}
+                  />
               {categories.filter(x => x.routeName && x.name !== "Other").map((category) => (
                  <Dropdown.Item key={category.id}
                   text={category.name === 'Academic IMC Event' ? 'Faculty Calendar' : category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : category.name}   as={Link} 

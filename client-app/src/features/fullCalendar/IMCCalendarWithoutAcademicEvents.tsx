@@ -13,8 +13,10 @@ import { v4 as uuid } from "uuid";
 import { useStore } from "../../app/stores/store";
 import Pikaday from "pikaday";
 import { EventApi } from '@fullcalendar/react';
+import { Loader } from "semantic-ui-react";
 
 export default function IMCCalendarWithoutAcademicEvents(this: any) {
+  const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
   const { activityStore } = useStore();
   const { addCalendarEventParameters } = activityStore;
@@ -147,7 +149,11 @@ function addIconToEvent(event: EventApi, el: HTMLElement) {
 
   return (
     <>
-   
+       {isLoading && (
+         <Loader active size='large' style={{marginTop: '100px'}}>
+           Loading events...
+         </Loader>
+        )}
    <FullCalendar
       ref={calendarRef}
       height={height}
@@ -169,6 +175,7 @@ function addIconToEvent(event: EventApi, el: HTMLElement) {
       dateClick={handleDateClick}
       slotMinTime={"07:00:00"}
       slotMaxTime={"21:00:00"}
+      loading={(isLoading) => setIsLoading(isLoading)}
       eventDidMount={({ event, el }) => {
         if (event.extendedProps.recurring) {
           addIconToEvent(event, el);

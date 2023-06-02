@@ -42,6 +42,7 @@ import usahecMeetingSummaryByLocationWrapper from '../../features/reports/usahec
 import outsiderReportTable from '../../features/reports/outsiderReportTable';
 import FlagReport from '../../features/reports/flagReport';
 import SVTCCalendar from '../../features/fullCalendar/SVTCCalendar';
+import Bldg651Calendar from '../../features/fullCalendar/Bldg651Calendar';
 
 function App() {
   const location = useLocation();
@@ -95,6 +96,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/> 
                 <Route exact path={`${process.env.PUBLIC_URL}/roomDelegateTable`} component={RoomDelegateTable}/> 
+                <Route exact path={`${process.env.PUBLIC_URL}/bldg651Calendar`} component={Bldg651Calendar}/> 
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/manageRoomDelegate/:id`} component={RoomDelegateForm}/> 
                 <Route exact path={`${process.env.PUBLIC_URL}/vtcCoordinatorTable`} component={vtcCoordinatorsTable}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/manageVTCCoordinators/:id`} component={vtcCoordinatorForm}/>                 

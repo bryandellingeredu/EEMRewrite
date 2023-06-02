@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { Divider, Header, Popup } from "semantic-ui-react";
+import { Divider, Header, Loader, Popup } from "semantic-ui-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPeopleRoof } from "@fortawesome/free-solid-svg-icons";
 import { useStore } from "../../app/stores/store";
@@ -27,7 +27,7 @@ export default observer(function RoomCalendar() {
     const{ getActivityIdByRoom, addCalendarEventParameters } = activityStore;
     const history = useHistory();
     const [height, setHeight] = useState(window.innerHeight - 100);
-
+    const [isLoading, setIsLoading] = useState(true);
   
     const[graphRoom, setGraphRoom] = useState<GraphRoom>({
         address: {
@@ -198,7 +198,11 @@ picURL: '',
         <>
         {loadingInitial
             &&<LoadingComponent content = 'Loading Room Calendar'/>}
-   
+          {isLoading && (
+         <Loader active size='large' style={{marginTop: '100px'}}>
+           Loading events...
+         </Loader>
+        )}
         <Divider horizontal>
         <Header as='h2'>
 
@@ -230,6 +234,7 @@ picURL: '',
             slotMinTime={'07:00:00'}
             slotMaxTime={'21:00:00'}
             eventDidMount={eventDidMount}
+            loading={(isLoading) => setIsLoading(isLoading)}
             //eventContent={renderEventContent}  
           />
       </>

@@ -15,8 +15,10 @@ import agent from "../../app/api/agent";
 import { v4 as uuid } from "uuid";
 import GenericCalendarTable from "./GenericCalendarTable";
 import Pikaday from "pikaday";
+import { Loader } from "semantic-ui-react";
 
 export default observer(function GenericCalendar() {
+  const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
   const { categoryStore, activityStore } = useStore();
   const { categories, loadingInitial } = categoryStore;
@@ -152,6 +154,11 @@ export default observer(function GenericCalendar() {
       }
       {!loadingInitial &&
         <div>
+             {isLoading && (
+         <Loader active size='large' style={{marginTop: '100px'}}>
+           Loading events...
+         </Loader>
+        )}
           <GenericCalendarHeader id={id} />
           <FullCalendar
            ref={calendarRef}
@@ -174,7 +181,8 @@ export default observer(function GenericCalendar() {
             eventMouseEnter={handleMouseEnter} 
             eventDidMount={eventDidMount}
             slotMinTime={'07:00:00'}
-            slotMaxTime={'21:00:00'}     
+            slotMaxTime={'21:00:00'} 
+            loading={(isLoading) => setIsLoading(isLoading)}    
           />
            <GenericCalendarTable id={id} />
            
