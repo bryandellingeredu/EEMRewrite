@@ -50,10 +50,23 @@ export default function SubCalendarInformation(){
                      <Icon name='calendar' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={3}>
-                     <strong>SSL Academic Calendar</strong>
+                     <strong>Faculty Calendar</strong>
                  </Grid.Column>
                  <Grid.Column width={12}>
                  School of Strategic Landpower Academic events which affect or influence the Enterprise. Examples: Noon time lectures, leadership meetings, boatyard wars, RWRC 
+                 </Grid.Column>
+             </Grid>
+             </Segment>
+             <Segment>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='calendar' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={3}>
+                     <strong>SSL Admin Calendar</strong>
+                 </Grid.Column>
+                 <Grid.Column width={12}>
+                 The Administrative Calendar for SSL to include SSL department meetings, and other internal SSL events. 
                  </Grid.Column>
              </Grid>
              </Segment>

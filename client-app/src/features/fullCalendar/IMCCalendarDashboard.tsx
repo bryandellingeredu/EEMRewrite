@@ -8,6 +8,7 @@ import IMCLegend from "./IMCLegend";
 import SyncCalendarInformation from "./SyncCalendarInformation";
 import { useStore } from "../../app/stores/store";
 import GenericCalendarTable from "./GenericCalendarTable";
+import SubCalendarInformation from "../activities/form/SubCalendarInformation";
 
 
   
@@ -16,6 +17,16 @@ export default observer(function IMCCalendarDashboard(){
   const {openModal} = modalStore;
     return(
           <>   
+      <Button icon  floated="left" color='black' size='tiny'
+          onClick={() =>
+            openModal(
+              <SubCalendarInformation/>, 'large'
+            )
+          }
+        >
+      <Icon name='info'/>
+       &nbsp; Calendar Descriptions
+    </Button>  
                <Button icon  floated="right" color='black' size='tiny'
           onClick={() =>
             openModal(
