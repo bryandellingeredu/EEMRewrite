@@ -39,7 +39,7 @@ namespace Application.GraphSchedules
                 DateTime endDateTime = DateTime.Parse(request.ScheduleRequestDTO.EndTime.DateTime, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
                 TimeSpan timeDifference = endDateTime - startDateTime;
 
-                if (timeDifference.TotalDays > 365 * 2)
+                if (timeDifference.TotalDays > 365)
                 {
                     endDateTime = startDateTime.AddYears(2).AddHours(endDateTime.Hour - startDateTime.Hour).AddMinutes(endDateTime.Minute - startDateTime.Minute).AddSeconds(endDateTime.Second - startDateTime.Second);
                 }
