@@ -169,7 +169,8 @@
                         retries--;
                         if (retries > 0)
                         {
-                            await Task.Delay(TimeSpan.FromSeconds(1));
+                            var delay = (int)Math.Pow(2, 3 - retries); // 2^0 = 1 second for first retry, 2^1 = 2 seconds for second retry, 2^2 = 4 seconds for final retry
+                            await Task.Delay(TimeSpan.FromSeconds(delay));
                         }
                         else
                         {

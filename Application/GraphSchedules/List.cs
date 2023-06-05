@@ -57,7 +57,7 @@ namespace Application.GraphSchedules
                     for (int i = 0; i < intervalCount; i++)
                     {
                         DateTime sDT = startDateTime.AddDays(i * interval);
-                        DateTime eDT= startDateTime.AddDays((i + 1) * interval - 1);
+                        DateTime eDT = startDateTime.AddDays((i + 1) * interval - 1);
                         if (endDate > endDateTime)
                         {
                             endDate = endDateTime;
@@ -65,10 +65,9 @@ namespace Application.GraphSchedules
                         intervals[i] = new Tuple<DateTime, DateTime>(sDT, eDT);
                     }
 
-                   List<ScheduleInformation> scheduleInformationList = new List<ScheduleInformation>();
+                    List<ScheduleInformation> scheduleInformationList = new List<ScheduleInformation>();
 
-
-                    var tasks = intervals.Select(async item =>
+                    foreach (var item in intervals)
                     {
                         ScheduleRequestDTO scheduleRequestDTO = new ScheduleRequestDTO
                         {
@@ -83,9 +82,7 @@ namespace Application.GraphSchedules
                         {
                             scheduleInformationList.Add(scheduleInformation);
                         }
-                    });
-
-                    await Task.WhenAll(tasks);
+                    }
 
                     var result = scheduleInformationList.GroupBy(x => x.ScheduleId)
                       .Select(g => new ScheduleInformation
@@ -98,15 +95,16 @@ namespace Application.GraphSchedules
                       .ToList();
 
                     foreach (var item in result)
-                     {
+                    {
                         if (item.ScheduleItems != null)
                         {
                             item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free);
                         }
-                    } 
+                    }
 
                     return Result<List<ScheduleInformation>>.Success(result);
                 }
+
                 else
                 {
                     ICalendarGetScheduleCollectionPage result = await GraphHelper.GetScheduleAsync(request.ScheduleRequestDTO);
