@@ -18,6 +18,12 @@ namespace Persistence
                 await roleManager.CreateAsync(new IdentityRole() { Name = "admin" });
             }
 
+            string roleName = "studentCalendarAdmin";
+            if (!roleManager.RoleExistsAsync(roleName).Result)
+            {
+                await roleManager.CreateAsync(new IdentityRole() { Name = roleName });
+            }
+
             if (!userManager.Users.Any())
             {
                 var users = new List<AppUser>

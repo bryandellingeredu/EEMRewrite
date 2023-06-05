@@ -4,6 +4,7 @@
     using Application.GraphSchedules;
     using Azure.Identity;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Graph;
     using System.IO;
     using static System.Net.WebRequestMethods;
@@ -12,6 +13,8 @@
     public class GraphHelper
     {
         private static Settings _settings;
+        private static IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
+        private static readonly string RoomsCacheKey = "RoomsCacheKey";
 
         public static void InitializeGraph(Settings settings,
           Func<DeviceCodeInfo, CancellationToken, Task> deviceCodePrompt)
@@ -89,19 +92,33 @@
            
         }
 
-        public static Task<IGraphServicePlacesCollectionPage> GetRoomsAsync()
+        public static async Task<IGraphServicePlacesCollectionPage> GetRoomsAsync()
         {
-            EnsureGraphForAppOnlyAuth();
-            _ = _appClient ??
-              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
-            var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
-            var options = new List<Option>
-    {
-        new QueryOption("$top", "200")
-    };
-            var placesRequest = new GraphServicePlacesCollectionRequest(roomUrl, _appClient, options).GetAsync();
-            return placesRequest;
+   
+
+            if (!_cache.TryGetValue(RoomsCacheKey, out IGraphServicePlacesCollectionPage cachedRooms))
+            {
+                EnsureGraphForAppOnlyAuth();
+                _ = _appClient ??
+                  throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+                var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room");
+                var options = new List<Option>
+            {
+                new QueryOption("$top", "200")
+            };
+                cachedRooms = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, options).GetAsync();
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromHours(1)); // Set cache to expire after 1 hour, adjust as necessary
+
+                _cache.Set(RoomsCacheKey, cachedRooms, cacheEntryOptions);
+            }
+
+            return cachedRooms;
         }
+
+
 
         public static Task<User> GetUserAsync(string email)
         {
@@ -174,7 +191,8 @@
                         }
                         else
                         {
-                            throw new Exception("Failed to get schedule after 3 attempts.", ex);
+                            //   throw new Exception("Failed to get schedule after 3 attempts.", ex);
+                            return new CalendarGetScheduleCollectionPage();
                         }
                     }
                 }
