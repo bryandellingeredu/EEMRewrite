@@ -84,21 +84,29 @@ namespace Application.GraphSchedules
                         }
                     }
 
-                    var result = scheduleInformationList.GroupBy(x => x.ScheduleId)
-                      .Select(g => new ScheduleInformation
-                      {
-                          ScheduleId = g.Key,
-                          WorkingHours = g.First().WorkingHours,
-                          AdditionalData = g.First().AdditionalData,
-                          ScheduleItems = g.SelectMany(x => x.ScheduleItems).ToList()
-                      })
-                      .ToList();
+                    var result = scheduleInformationList
+            .Where(x => x != null)
+            .GroupBy(x => x.ScheduleId)
+            .Select(g => new ScheduleInformation
+            {
+                ScheduleId = g.Key,
+                WorkingHours = g.First()?.WorkingHours, // null-check
+                AdditionalData = g.First()?.AdditionalData, // null-check
+                ScheduleItems = g.Any() && g.First().ScheduleItems != null
+                    ? g.SelectMany(x => x.ScheduleItems).ToList()
+                    : new List<ScheduleItem>() // null-check
+            })
+            .ToList();
 
                     foreach (var item in result)
                     {
                         if (item.ScheduleItems != null)
                         {
-                            item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free);
+                            item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free).ToList();
+                        }
+                        else
+                        {
+                            item.ScheduleItems = new List<ScheduleItem>();
                         }
                     }
 
@@ -117,11 +125,15 @@ namespace Application.GraphSchedules
                     {
                         if (item.ScheduleItems != null)
                         {
-                            item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free);
+                            item.ScheduleItems = item.ScheduleItems.Where(x => x.Status != FreeBusyStatus.Free).ToList();
+                        }
+                        else
+                        {
+                            item.ScheduleItems = new List<ScheduleItem>();
                         }
                     }
                     return Result<List<ScheduleInformation>>.Success(scheduleInformationList);
-                }              
+                }
             }
 
             private string ConvertToDateTimeTimeZone(DateTime  dateTime, bool  isStart)
