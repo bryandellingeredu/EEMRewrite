@@ -209,13 +209,10 @@ export default function SVTCCalendarTable(){
                     <Table.HeaderCell style={{ minWidth: "165px" }} >End</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "175x" }}>Location</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "100px" }}>Action Officer</Table.HeaderCell>
-                    <Table.HeaderCell style={{ minWidth: "100px" }}>SVTC Classification</Table.HeaderCell>
-                    <Table.HeaderCell style={{ minWidth: "100px" }}>Distant Tech Phone</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "100px" }}>Requestor POC</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "100px" }}>Dial In Number</Table.HeaderCell>
                     <Table.HeaderCell style={{ minWidth: "100px" }}>Site ID Distant End</Table.HeaderCell>
-                    <Table.HeaderCell style={{ minWidth: "100px" }}>SES Name / Rank</Table.HeaderCell>
-                    <Table.HeaderCell style={{ minWidth: "100px" }}>SVTC Info</Table.HeaderCell>
+     
                     <Table.HeaderCell style={{ minWidth: "100px" }}>SVTC Status</Table.HeaderCell>
                     <Table.HeaderCell > 
                       <Button animated color='black' onClick={handleDownload} >
@@ -244,28 +241,12 @@ export default function SVTCCalendarTable(){
                 </Table.HeaderCell>
                 <Table.HeaderCell><MyTextInput name='location'  placeholder="" /></Table.HeaderCell>
                 <Table.HeaderCell><MyTextInput name='actionOfficer'  placeholder="" /></Table.HeaderCell>
-                <Table.HeaderCell>
-                <MySelectInput
-                          options={[
-                            { text: "", value: "" },
-                            { text: "UNCLASS ISDN", value: "UNCLASS ISDN" },
-                            { text: "UNCLASS IP", value: "UNCLASS IP" },
-                            { text: "SECRET IP", value: "SECRET IP" },
-                            {
-                              text: "Audio Call Only",
-                              value: "Audio Call Only",
-                            },
-                          ]}
-                          name="vtcClassification"
-                          placeholder=""
-                        />
-                </Table.HeaderCell>
-                <Table.HeaderCell><MyTextInput name='distantTechPhoneNumber'  placeholder="" /></Table.HeaderCell>
+          
+
                 <Table.HeaderCell><MyTextInput name='requestorPOCContactInfo'  placeholder="" /></Table.HeaderCell>
                 <Table.HeaderCell><MyTextInput name='dialInNumber'  placeholder="" /></Table.HeaderCell>
                 <Table.HeaderCell><MyTextInput name='siteIDDistantEnd'  placeholder="" /></Table.HeaderCell>
-                <Table.HeaderCell><MyTextInput name='seniorAttendeeNameRank'  placeholder="" /></Table.HeaderCell>
-                <Table.HeaderCell><MyTextInput name='additionalVTCInfo'  placeholder="" /></Table.HeaderCell>
+
                 <Table.HeaderCell>
                 <MySelectInput
                           options={[
@@ -288,7 +269,7 @@ export default function SVTCCalendarTable(){
             </Table.Header>
             <Table.Body>
             {loading && 
-                <Table.Row colSpan = '14'>
+                <Table.Row colSpan = '10'>
                     <LoadingComponent content='Loading SVTC data...'/>
                 </Table.Row>
             }

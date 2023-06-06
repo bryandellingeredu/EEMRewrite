@@ -45,18 +45,15 @@ interface TableData{
          <Table.Cell>{item.start}</Table.Cell>
          <Table.Cell>{item.end}</Table.Cell>
          <Table.Cell>
-           {renderTextWithPopup(item.location)}
+           {item.location}
          </Table.Cell>
          <Table.Cell>
            {renderTextWithPopup(item.actionOfficer)}
          </Table.Cell> 
-         <Table.Cell>{item.vtcClassification}</Table.Cell>
-         <Table.Cell> {renderTextWithPopup(item.distantTechPhoneNumber)}</Table.Cell>
          <Table.Cell> {renderTextWithPopup(item.requestorPOCContactInfo)}</Table.Cell>
          <Table.Cell> {renderTextWithPopup(item.dialInNumber)}</Table.Cell>
          <Table.Cell> {renderTextWithPopup(item.siteIDDistantEnd)}</Table.Cell>
-         <Table.Cell> {renderTextWithPopup(item.seniorAttendeeNameRank)}</Table.Cell>
-         <Table.Cell> {renderTextWithPopup(item.additionalVTCInfo)}</Table.Cell>
+
          <Table.Cell colSpan = '2'>{item.vtcStatus}</Table.Cell>
         </Table.Row>
     )
