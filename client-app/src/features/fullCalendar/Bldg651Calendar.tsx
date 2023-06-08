@@ -91,7 +91,7 @@ export default function Bldg651Calendar (){
     }
 
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-        getActivityIdByRoom( clickInfo.event.title.split('( Bldg 651')[0], clickInfo.event.startStr, clickInfo.event.endStr).then((activity) => {
+        getActivityIdByRoom( clickInfo.event.title.split('(Bldg')[0], clickInfo.event.startStr, clickInfo.event.endStr).then((activity) => {
           if(!activity || activity.id === '00000000-0000-0000-0000-000000000000' ){
             toast.info(`Event ${clickInfo.event.title} is reserved in outlook only, there is no eem information`, {
               position: "top-right",
