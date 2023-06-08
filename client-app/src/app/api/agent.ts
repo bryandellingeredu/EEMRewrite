@@ -26,6 +26,7 @@ import { EmailGroupMemberDTO } from '../models/emailGroupMemberDTO';
 import { ActivityAttachment } from '../models/activityAttachment';
 import { USAHECFacilitiesUsageLegend } from '../models/usahecFacilitiesUsageLegend';
 import { FlagReportDTO } from '../models/flagReportDTO';
+import { UserRole } from '../models/userRole';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -280,6 +281,12 @@ const Calendars = {
     listBySearchParams: (data: any, id: string) => axiosRequest.post<any>(`/calendar/listBySearchParams/${id}`, data),
 }
 
+const UserRoles = {
+    list: () => axiosRequest.get<UserRole[]>('/UserRoles'),
+    delete: (id: string, email: string) => axiosRequest.del<void>(`/UserRoles/${id}/${email}`),
+    create: (id: string, email: string) => axiosRequest.post<void>('/UserRoles',{id, email})
+}
+
 const agent = {
     Activities,
     Account,
@@ -300,7 +307,8 @@ const agent = {
     USAHECFacilitiesUsageCalendarLegend,
     HostingReports,
     USAHECReports,
-    Calendars 
+    Calendars,
+    UserRoles 
 }
 
 export default agent;

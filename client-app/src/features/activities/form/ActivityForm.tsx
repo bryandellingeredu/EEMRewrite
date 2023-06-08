@@ -12,7 +12,8 @@ import {
   Divider,
   Label,
   ButtonGroup,
-  Modal
+  Modal,
+  Message
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -91,7 +92,8 @@ export default observer(function ActivityForm() {
     commonStore,
     graphUserStore,
     graphRoomStore,
-    modalStore
+    modalStore,
+    userStore
   } = useStore();
   const {
     createGraphEvent,
@@ -105,6 +107,11 @@ export default observer(function ActivityForm() {
     uploading,
     calendarEventParameters,
   } = activityStore;
+  const {user} = userStore
+  const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
+  useEffect(() => {
+    setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
+}, [user]);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const { categoryOptions, categories, loadCategories } = categoryStore;
   const { eduGraphUser, loadEDUGraphUser, armyProfile } = graphUserStore;
@@ -712,6 +719,7 @@ export default observer(function ActivityForm() {
             copiedTo: "copiedTosymposiumAndConferences",
           },
           { routeName: "militaryFamilyAndSpouseProgram", copiedTo: "mfp" },
+          { routeName: "studentCalendar", copiedTo: "copiedTostudentCalendar" },
         ];
         routeNames.forEach((route) => {
           const isCategory = categories
@@ -1524,7 +1532,7 @@ export default observer(function ActivityForm() {
                   <Grid.Column width={13}>
                     <MySelectInput
                       options={categoryOptions
-                        .filter((x: any) => x.text !== "Student Calendar" && x.text !== "Staff Calendar")
+                        .filter((x: any) => x.text !== "Student Calendar Academic Year 2023" && x.text !== "Staff Calendar")
                         .sort((a: any, b: any) => {
                           if (a.text === "") {
                             return -1;
@@ -1542,7 +1550,64 @@ export default observer(function ActivityForm() {
               </Grid>
             </Segment>
 
+            {!studentCalendarAdmin && values.copiedTostudentCalendar &&
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFAF3',
+    color: '#9F6000',
+    padding: '1em',
+    borderRadius: '5px',
+    margin: '1em',
+    border: '1px solid #9F6000',
+  }}>
+    <h2>You are not authorized to create or update a Student Calendar Event</h2>
+    <p>You do not have the necessary permissions to save events to the "Student Calendar".</p>
+  </div>
+}
+
+            {categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" && 
+               <Segment style={{ backgroundColor: "#f4e9f7" }} >
+                   <Header as="h5" icon textAlign="center" color="purple">
+                  <Icon name="graduation cap" />
+                  <Header.Content>Student Calendar</Header.Content>               
+                </Header>
+
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={2}>
+                      <strong>Attendance is Mandatory:</strong>
+                    </Grid.Column>
+                    <Grid.Column width={14}>
+                      <SemanticForm.Group inline>
+                        <MySemanticCheckBox name="studentCalendarMandatory" />
+                      </SemanticForm.Group>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+                <Divider />
+
       
+                  <MyTextInput name="studentCalendarPresenter" placeholder="Presenter" label="Presenter:" />
+                 
+                  <MyTextArea
+                      rows={3}
+                      placeholder="Uniform: "
+                      name="studentCalendarUniform"
+                      label="Uniform:"
+                    />
+
+                   <MyTextArea
+                      rows={3}
+                      placeholder="Notes: "
+                      name="studentCalendarNotes"
+                      label="Notes:"
+                    />
+                  
+               </Segment>
+            }
 
             {categories.find((x) => x.id === values.categoryId)?.name ===
               "Garrison Calendar" && (
@@ -2405,6 +2470,15 @@ export default observer(function ActivityForm() {
                             label="Visits And Tours"
                             disabled={categories
                               .filter((x) => x.routeName === "visitsAndTours")
+                              .map((x) => x.id)
+                              .includes(currentCategoryId)}
+                          />
+
+                         <MySemanticCheckBox
+                            name="copiedTostudentCalendar"
+                            label="Student Calendar"
+                            disabled={categories
+                              .filter((x) => x.routeName === "studentCalendar")
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
@@ -3354,7 +3428,7 @@ export default observer(function ActivityForm() {
                           </Grid>
                           <Divider color="black" />
             <Button
-              disabled={submitting || activity.cancelled}
+              disabled={submitting || activity.cancelled || (!studentCalendarAdmin && values.copiedTostudentCalendar)}
               loading={submitting}
               floated="right"
               positive
@@ -3372,6 +3446,24 @@ export default observer(function ActivityForm() {
               type="button"
               content="Cancel"
             />
+      
+      {!studentCalendarAdmin && values.copiedTostudentCalendar &&
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFAF3',
+    color: '#9F6000',
+    padding: '1em',
+    borderRadius: '5px',
+    margin: '1em',
+    border: '1px solid #9F6000',
+  }}>
+    <h2>You are not authorized!</h2>
+    <p>You do not have the necessary permissions to save events to the "Student Calendar". Please choose another option.</p>
+  </div>
+}
           </Form>
         )}
       </Formik>

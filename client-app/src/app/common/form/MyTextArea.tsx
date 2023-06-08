@@ -29,6 +29,9 @@ export default function MyTextArea(props: Props){
 
     return(
       <Form.Field error={meta.touched && !!meta.error}>
+        <label>
+            {props.label}
+        </label>
       <textarea
         {...field}
         {...props}

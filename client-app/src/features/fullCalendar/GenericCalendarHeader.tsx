@@ -161,6 +161,13 @@ export default function GenericCalendarHeader({id} : Props){
           Faculty Calendar
         </>
       }
+
+       {id === 'studentCalendar' &&
+        <>
+          <FontAwesomeIcon icon={faGraduationCap} size='2x' style={{marginRight: '10px'}} />
+          Student Calendar
+        </>
+      }
       
     </Header>
   </Divider>

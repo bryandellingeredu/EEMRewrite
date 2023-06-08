@@ -2,10 +2,12 @@
 using Application.Core;
 using Application.Interfaces;
 using AutoMapper;
+using Domain;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructucture.Security;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Persistence;

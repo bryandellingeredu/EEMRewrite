@@ -177,9 +177,11 @@ export interface Activity{
     lastUpdatedAt : Date | null
     marketingCampaignCategory : string
     marketingProgram : string
-
-
-
+    copiedTostudentCalendar : boolean
+    studentCalendarUniform : string
+    studentCalendarMandatory : boolean
+    studentCalendarNotes : string
+    studentCalendarPresenter : string
 }
 
 export class Activity implements Activity{
@@ -355,6 +357,11 @@ export class ActivityFormValues{
     lastUpdatedAt : Date | null = null;
     marketingCampaignCategory : string = '';
     marketingProgram : string = '';
+    copiedTostudentCalendar : boolean = false;
+    studentCalendarUniform : string = ''
+    studentCalendarMandatory : boolean = false
+    studentCalendarNotes : string = ''
+    studentCalendarPresenter : string = ''
 
 
 
@@ -524,8 +531,12 @@ export class ActivityFormValues{
         this.lastUpdatedBy = activity.lastUpdatedBy;
         this.lastUpdatedAt = activity.lastUpdatedAt;
         this.marketingCampaignCategory = activity.marketingCampaignCategory
-        this.marketingProgram = activity.marketingProgram 
-    
+        this.marketingProgram = activity.marketingProgram
+        this.copiedTostudentCalendar = activity.copiedTostudentCalendar
+        this.studentCalendarUniform = activity.studentCalendarUniform
+        this.studentCalendarMandatory = activity.studentCalendarMandatory
+        this.studentCalendarNotes = activity.studentCalendarNotes
+        this.studentCalendarPresenter = activity.studentCalendarNotes
        } 
     }
 }

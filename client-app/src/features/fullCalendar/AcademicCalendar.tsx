@@ -70,7 +70,7 @@ export default observer( function AcademicCalendar(){
     <Divider horizontal>
       <Header as='h2'>
         <Icon name='graduation cap' />
-        Student Calendar
+        Student Calendar Academic Year 2023
       </Header>
     </Divider>
         <FullCalendar

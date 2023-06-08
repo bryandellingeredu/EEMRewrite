@@ -220,6 +220,9 @@ namespace Persistence.Migrations
                     b.Property<bool>("CopiedTostaff")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("CopiedTostudentCalendar")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("CopiedTosymposiumAndConferences")
                         .HasColumnType("bit");
 
@@ -453,6 +456,18 @@ namespace Persistence.Migrations
 
                     b.Property<DateTime>("Start")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("StudentCalendarMandatory")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StudentCalendarNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentCalendarPresenter")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentCalendarUniform")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SuppliesComments")
                         .HasColumnType("nvarchar(max)");

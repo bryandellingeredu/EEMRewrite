@@ -36,7 +36,6 @@ interface PeoplePickerSelection {
 
 export default observer(function EmailGroupForm() {
   const [isSignedIn] = useIsSignedIn();
-  const history = useHistory();
   const { id } = useParams<{ id: string }>();
   const { emailGroupStore } = useStore();
   const { emailGroups, loadEmailGroups} = emailGroupStore 

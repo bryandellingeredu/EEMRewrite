@@ -629,10 +629,17 @@ export default class ActivityStore {
     lastUpdatedBy: '',
     lastUpdatedAt : null,
     marketingCampaignCategory : '',
-    marketingProgram :  ''
+    marketingProgram :  '',
+    copiedTostudentCalendar : false,
+    studentCalendarUniform : '',
+    studentCalendarMandatory : false,
+    studentCalendarNotes :  '',
+    studentCalendarPresenter : ''
     }
     return activity;
   }
+
+  
 
   deleteGraphEvent = async (id: string) => {
     this.loading = true;

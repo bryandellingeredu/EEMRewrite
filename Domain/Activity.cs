@@ -198,6 +198,11 @@ namespace Domain
         public DateTime? CancelledAt { get; set; }
         public string MarketingCampaignCategory {get; set;}
         public string MarketingProgram {get; set;}
+        public bool CopiedTostudentCalendar { get; set; }
+        public string StudentCalendarUniform { get; set; }
+        public bool StudentCalendarMandatory { get; set; }
+        public string StudentCalendarNotes { get; set; }
+        public string StudentCalendarPresenter { get; set; }
 
 
     }

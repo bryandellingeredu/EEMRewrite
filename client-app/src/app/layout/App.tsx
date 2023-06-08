@@ -43,6 +43,8 @@ import outsiderReportTable from '../../features/reports/outsiderReportTable';
 import FlagReport from '../../features/reports/flagReport';
 import SVTCCalendar from '../../features/fullCalendar/SVTCCalendar';
 import Bldg651Calendar from '../../features/fullCalendar/Bldg651Calendar';
+import ManageRolesTable from '../../features/admin/manageRoles/manageRolesTable';
+import ManageRolesForm from '../../features/admin/manageRoles/manageRoleForm';
 
 function App() {
   const location = useLocation();
@@ -92,6 +94,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/flagReport`} component={FlagReport}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/svtcCalendar`} component={SVTCCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} component={hostingReportPDFWrapper}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/manageRolesTable`} component={ManageRolesTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper`} component={usahecMeetingSummaryByLocationWrapper}/>            
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/> 
@@ -122,6 +125,7 @@ function App() {
                   `${process.env.PUBLIC_URL}/copy/:id/:categoryId/:copy`,
                   ]} component={ActivityForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageRoleForm/:id`} component={ManageRolesForm}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />
                 <Route path={`${process.env.PUBLIC_URL}/account/verifyEmail`} component={ConfirmEmail} />

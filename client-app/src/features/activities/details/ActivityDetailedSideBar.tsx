@@ -432,6 +432,19 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
  </Segment>
  }
 
+{activity.copiedTostudentCalendar &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='graduation' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the Student Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
 {activity.copiedToasep &&
              <Segment attached>
              <Grid verticalAlign='middle'>
@@ -1358,6 +1371,66 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
          </Segment>
  }
 
+{activity.category.name === "Student Calendar" && activity.studentCalendarMandatory &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='street view' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Attendance is Mandatory
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+{ activity.category.name  === 'Student Calendar'  && activity.studentCalendarUniform &&
+            <Segment attached>
+                <Grid>
+                    <Grid.Column width={1}>
+                        <Icon size='large' color='teal' name='male' />
+                    </Grid.Column>
+                    <Grid.Column width={2}>
+                        Uniform:
+                    </Grid.Column>
+                    <Grid.Column width={12}>
+                    {activity.studentCalendarUniform}
+                    </Grid.Column>
+                </Grid>
+            </Segment>
+      }
+
+{activity.category.name === "Student Calendar" && activity.studentCalendarPresenter &&
+    <Segment attached>
+    <Grid verticalAlign='middle'>
+        <Grid.Column width={1}>
+        <FontAwesomeIcon icon={faChalkboardTeacher} size='2x' color='#00b5ad'  />
+        </Grid.Column>
+        <Grid.Column width={14}>
+        <span style={{paddingLeft: '10px'}}>
+          Presenter: {activity.studentCalendarPresenter}
+          </span>
+        </Grid.Column>
+    </Grid>
+</Segment>
+ }
+
+
+{ activity.category.name  === 'Student Calendar'  && activity.studentCalendarNotes &&
+            <Segment attached>
+                <Grid>
+                    <Grid.Column width={1}>
+                        <Icon size='large' color='teal' name='info' />
+                    </Grid.Column>
+                    <Grid.Column width={2}>
+                        Notes:
+                    </Grid.Column>
+                    <Grid.Column width={12}>
+                    {activity.studentCalendarNotes}
+                    </Grid.Column>
+                </Grid>
+            </Segment>
+      }
+
 { activity.category.name  === 'Weekly Pocket Calendar'  && activity.pocketCalNotes &&
             <Segment attached>
                 <Grid>
@@ -1374,9 +1447,13 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
             </Segment>
       }
 
+      
+
 {activityAttachments.map((attachment) => (
         <ActivityAttachmentSideBarComponent key={attachment.id} attachmentActivityId = {attachment.id} fileName = {attachment.fileName}  />
      ))}
+
+
 
 </Segment.Group>
     )

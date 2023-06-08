@@ -100,7 +100,7 @@ export default observer(function Navbar() {
               <Dropdown item text="Calendars" scrolling >
                 <Dropdown.Menu>
                     <Dropdown.Item
-                    text="Student Calendar"
+                    text="Student Calendar Academic Year 2023"
                     as={Link}
                     to={`${process.env.PUBLIC_URL}/academiccalendar`}
                   />
@@ -162,8 +162,15 @@ export default observer(function Navbar() {
             <Dropdown.Header icon='paperclip' content='Links' />
             <DropdownDivider/>
             <Dropdown.Item>
-            <a href="https://apps.armywarcollege.edu"  rel="noopener noreferrer">
+            <a href="https://apps.armywarcollege.edu"  rel="noopener noreferrer" target='_blank'>
                  <span style={{ color: 'black' }}>Main Landing Page</span>
+            </a>
+            
+        
+            </Dropdown.Item>
+            <Dropdown.Item>
+            <a href={`${process.env.PUBLIC_URL}/assets/floorplans.pdf`} target='_blank'>
+                 <span style={{ color: 'black' }}>Bldg 651 Floor Plans</span>
             </a>
             </Dropdown.Item>
             </Dropdown.Menu>
@@ -177,6 +184,7 @@ export default observer(function Navbar() {
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/emailGroupTable`} text ="Manage Email Groups"/>
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/roomDelegateTable`} text ="Manage Room Delegates"/>
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/vtcCoordinatorTable`} text ="Manage VTC Coordinators"/>
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/manageRolesTable`} text ="Manage User Roles"/>
             </Dropdown.Menu>    
             </Dropdown> 
            }

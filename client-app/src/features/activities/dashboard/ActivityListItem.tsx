@@ -159,7 +159,7 @@ export default function ActivityListItem({activity}:Props){
                     <Item.Header as={Link} to={`${process.env.PUBLIC_URL}/activities/${activity.id}/${activity.categoryId}`}>
                     {activity.title}
                     </Item.Header> 
-                    <Item.Description> {activity.category.name === 'Academic Calendar' ? 'Student Calendar' :
+                    <Item.Description> {activity.category.name === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                                         activity.category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
                                         activity.category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : activity.category.name}
                     </Item.Description>                 
