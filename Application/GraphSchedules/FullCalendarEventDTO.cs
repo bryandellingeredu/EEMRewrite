@@ -34,5 +34,9 @@ namespace Application.GraphSchedules
         public string SeniorAttendeeNameRank { get; set; }
         public string AdditionalVTCInfo { get; set; }
         public string VTCStatus { get; set; }
+        public string StudentCalendarPresenter { get; set; }
+        public string StudentCalendarUniform { get; set; }
+        public string  StudentCalendarNotes { get; set; }
+       public bool  StudentCalendarMandatory { get; set; }
     }
 }

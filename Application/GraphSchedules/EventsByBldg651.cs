@@ -67,29 +67,42 @@ namespace Application.GraphSchedules
 
                 ICalendarGetScheduleCollectionPage result = await GraphHelper.GetScheduleAsync(scheduleRequestDTO);
                 List<FullCalendarEventDTO> fullCalendarEventDTOs = new List<FullCalendarEventDTO>();
-              
+
                 foreach (ScheduleInformation scheduleInformation in result.CurrentPage)
                 {
-                    foreach (ScheduleItem scheduleItem  in scheduleInformation.ScheduleItems)
+                    foreach (ScheduleItem scheduleItem in scheduleInformation.ScheduleItems)
                     {
-                        if (scheduleItem.Status != FreeBusyStatus.Free)
+                        // Check if the scheduleItem is not free and has both subject and location.
+                        if (scheduleItem.Status != FreeBusyStatus.Free && scheduleItem.Subject != null && scheduleItem.Location != null)
                         {
                             FullCalendarEventDTO fullCalendarEventDto = new FullCalendarEventDTO
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 Start = scheduleItem.Start.DateTime,
                                 End = scheduleItem.End.DateTime,
-                                Title = $"{scheduleItem.Subject.Split("- Requested by: ")[0]} ( {scheduleItem.Location})" ,
+                                Title = $"{scheduleItem.Subject.Split("- Requested by: ")[0]} ({scheduleItem.Location})",
                                 Color = scheduleItem.Status == FreeBusyStatus.Busy ? "Green" : "GoldenRod",
                                 AllDay = scheduleItem.Start.DateTime.Split('T')[1] == "00:00:00.0000000" &&
-                                         scheduleItem.End.DateTime.Split('T')[1] == "00:00:00.0000000" ? true : false
+                                         scheduleItem.End.DateTime.Split('T')[1] == "00:00:00.0000000"
                             };
+
                             fullCalendarEventDTOs.Add(fullCalendarEventDto);
                         }
-                        
                     }
                 }
-                return Result<List<FullCalendarEventDTO>>.Success(fullCalendarEventDTOs);
+
+                List<FullCalendarEventDTO>  distinctFullCalendarEventDTOs = fullCalendarEventDTOs
+                        .GroupBy(p => new
+                         {
+                             p.Start,
+                             p.End,
+                             p.Title,
+                             p.AllDay
+                             })
+                            .Select(g => g.First())
+                            .ToList();
+
+                return Result<List<FullCalendarEventDTO>>.Success(distinctFullCalendarEventDTOs);
             }
         }
     }

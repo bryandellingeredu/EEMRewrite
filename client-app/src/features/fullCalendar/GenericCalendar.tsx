@@ -102,6 +102,25 @@ export default observer(function GenericCalendar() {
     ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: <strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
     ${arg.event.extendedProps.actionOfficer ? '<p><strong>Action Officer: <strong>' + arg.event.extendedProps.actionOfficer + '</p>' : ''}
     ${arg.event.extendedProps.actionOfficerPhone ?'<p><strong>Action Officer Phone: <strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
+    ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarMandatory ? '<p><strong>Attendance is : <strong> Mandatory </p>' : '' }
+    ${id === "studentCalendar" && !arg.event.extendedProps.studentCalendarMandatory ? '<p><strong>Attendance is : <strong> Optional </p>' : '' }
+    ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarPresenter?'<p><strong>Presenter: <strong>' + arg.event.extendedProps.studentCalendarPresenter + '</p>' : ''}
+    ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarUniform
+    ? '<p><strong>Uniform: <strong>' 
+        + (arg.event.extendedProps.studentCalendarUniform.length > 100 
+            ? arg.event.extendedProps.studentCalendarUniform.slice(0, 100) + '...' 
+            : arg.event.extendedProps.studentCalendarUniform) 
+        + '</p>' 
+    : ''
+}
+${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
+    ? '<p><strong>Notes: <strong>' 
+        + (arg.event.extendedProps.studentCalendarNotes.length > 100 
+            ? arg.event.extendedProps.studentCalendarNotes.slice(0, 100) + '...' 
+            : arg.event.extendedProps.studentCalendarNotes) 
+        + '</p>' 
+    : ''
+}
      `;
    var tooltip : any = tippy(arg.el, {     
       content,

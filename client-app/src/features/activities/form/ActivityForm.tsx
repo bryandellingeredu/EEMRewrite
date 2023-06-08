@@ -60,6 +60,7 @@ import UploadAttachmentModal from "./UploadAttachmentModal";
 import ActivityAttachmentComponent from "./ActivityAttachmentComponent";
 import SubCalendarInformation from "./SubCalendarInformation";
 import CUIWarningModal from "./CUIWarningModal";
+import MyTextAreaWithTypeahead from "../../../app/common/form/MyTextAreaWithTypeAhead";
 
 
 
@@ -1592,12 +1593,29 @@ export default observer(function ActivityForm() {
       
                   <MyTextInput name="studentCalendarPresenter" placeholder="Presenter" label="Presenter:" />
                  
-                  <MyTextArea
-                      rows={3}
-                      placeholder="Uniform: "
-                      name="studentCalendarUniform"
-                      label="Uniform:"
-                    />
+                 <MyTextAreaWithTypeahead
+                   rows={3}
+                   placeholder="Uniform: "
+                   name="studentCalendarUniform"
+                   label="Uniform:"
+                   options={['',
+                    'Uniform Required: Special Event--Class A/Army Service Uniform (ASU) or comparable uniform for other services; Civilians: Traditional Business--gentlemen: matching suit, dress shirt, tie and leather dress shoes; ladies: suit or jacket with coordinating skirt/slacks or a dress, and dress shoes.',
+                    'Service Dress (Class B)--Military: Class B/Army Service Uniform (ASU) (rank and name plate required, no jacket, tie required if wearing long sleeve shirt/no tie with short sleeve shirt) or comparable uniform for other services; Civilians: Business--gentlemen: sports jacket with dress slacks, dress shirt, and no tie, and leather dress shoes;ladies: jacket or business top with skirt or slacks or a dress, and dress shoes.',
+                    'Smart Business: gentlemen: sports jacket with dress slacks, dress shirt and tie, and leather dress shoes; ladies: jacket with skirt or slacks or a dress, and dress shoes. Or Class B/ASU or comparable attire for other services is an authorized equivalent standard of dress. Tuesday is "tieless Tuesday" no tie is required with suit.',
+                    'Business Casual: gentlemen: slacks, dress shirt or collared polo shirt/buttoned shirt and/or sweater, leather shoes, boat shoes, or loafers (no sneakers); ladies: skirt or slacks with top or casual dress and casual shoes. Class B/ASU or comparable attire for other services is an authorized equivalent standard of dress.',
+                    'Combat and Functional: Military--Army Combat Uniform or comparable attire for other services (flight suits authorized); Civilians: Business Casual--gentlemen: slacks, dress shirt or collared polo shirt/buttoned shirt, and/or sweater, leather shoes, boat shoes, or loafers (no sneakers); ladies: skirt or slacks with top or casual dress, and casual shoes.',
+                    'Bliss Hall, random seating.',
+                    'Seminar Rooms, Root Hall. ',
+                    'Bliss Hall, assigned seating by seminar.',
+                    'Wil Washcoe Auditorium (WWA).',
+                    'Attendance voluntary.',
+                    'Spouses invited to attend, the name tag must be displayed.',
+                    'Meet in accordance with instructions in Electives syllabi and previously issued course and classroom assignment instructions.',
+                  ]}
+                 />
+
+
+         
 
                    <MyTextArea
                       rows={3}

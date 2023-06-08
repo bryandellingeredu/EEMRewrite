@@ -22,6 +22,8 @@ namespace API.Controllers
             _roleManager = roleManager;
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpGet]
         public async Task<IActionResult> GetUserRoles()
         {
             var rolesUsersList = new List<UserRoleDTO>();

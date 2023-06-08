@@ -160,7 +160,7 @@ export default function Bldg651Calendar (){
 <FullCalendar
 ref={calendarRef}
 height={height}
-initialView="dayGridMonth"
+initialView="timeGridWeek"
 headerToolbar={{
   left: "prev,next",
   center: "title",

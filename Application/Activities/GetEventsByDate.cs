@@ -6,6 +6,7 @@ using Persistence;
 using Microsoft.Extensions.Configuration;
 using Application.GraphSchedules;
 using Domain;
+using Microsoft.Graph;
 
 namespace Application.Activities
 {
@@ -95,7 +96,11 @@ namespace Application.Activities
                         ActionOfficerPhone = activity.ActionOfficerPhone,
                         EventLookup = activity.EventLookup,
                         CoordinatorEmail = activity.CoordinatorEmail,
-                        Recurring = activity.RecurrenceInd
+                        Recurring = activity.RecurrenceInd,
+                        StudentCalendarPresenter = activity.StudentCalendarPresenter,
+                        StudentCalendarUniform = activity.StudentCalendarUniform,
+                        StudentCalendarNotes = activity.StudentCalendarNotes,
+                        StudentCalendarMandatory = activity.StudentCalendarMandatory
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);
