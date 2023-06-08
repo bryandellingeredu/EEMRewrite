@@ -163,7 +163,7 @@ export default observer(function GenericCalendar() {
           <FullCalendar
            ref={calendarRef}
             height= {height}
-            initialView="dayGridMonth"
+            initialView={id === "studentCalendar" ? "timeGridWeek" : "dayGridMonth"}
             headerToolbar={{
               left: "prev,next",
               center: "title",
