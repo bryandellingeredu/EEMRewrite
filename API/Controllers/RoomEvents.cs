@@ -17,12 +17,12 @@ namespace API.Controllers
 
 
         [AllowAnonymous]
-        [HttpGet("bldg651")]
-        public async Task<ActionResult> GetBldg651Events()
+        [HttpGet("bldg651/{id}")]
+        public async Task<ActionResult> GetBldg651Events(string id)
         {
             string start = Request.Query["start"];
             string end = Request.Query["end"];
-            return HandleResult(await Mediator.Send(new EventsByBldg651.Query {  Start = start, End = end }));
+            return HandleResult(await Mediator.Send(new EventsByBldg651.Query {  Start = start, End = end, Id = id }));
         }
 
     }

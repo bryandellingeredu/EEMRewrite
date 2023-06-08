@@ -16,6 +16,7 @@ import Pikaday from "pikaday";
 import { useStore } from "../../app/stores/store";
 
 export default function Bldg651Calendar (){
+    const { id } = useParams<{ id: string }>();
     const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
     const [height, setHeight] = useState(window.innerHeight - 100);
@@ -149,7 +150,7 @@ export default function Bldg651Calendar (){
         <Header as='h2'>
 
               <FontAwesomeIcon icon={faBuilding} size='2x' style={{marginRight: '10px'}} />
-              Building 651
+             {id === '651' ? 'Building 651' : 'Root Hall Bldg 122'} 
         </Header>
         </Divider>
         {isLoading && (
@@ -174,7 +175,7 @@ customButtons={{
 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 eventClick={handleEventClick}
 dateClick={handleDateClick}
-events={`${process.env.REACT_APP_API_URL}/roomEvents/bldg651`}
+events={`${process.env.REACT_APP_API_URL}/roomEvents/bldg651/${id}`}
 eventMouseEnter={handleMouseEnter}
 slotMinTime={'07:00:00'}
 slotMaxTime={'21:00:00'}

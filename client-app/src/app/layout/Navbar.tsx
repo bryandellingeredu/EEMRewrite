@@ -107,7 +107,12 @@ export default observer(function Navbar() {
                     <Dropdown.Item
                     text="Bldg 651 Calendar"
                     as={Link}
-                    to={`${process.env.PUBLIC_URL}/bldg651Calendar`}
+                    to={`${process.env.PUBLIC_URL}/bldg651Calendar/651`}
+                  />
+                  <Dropdown.Item
+                    text="Root Hall Bldg 122 Calendar"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/bldg651Calendar/122`}
                   />
               {categories.filter(x => x.routeName && x.name !== "Other").map((category) => (
                  <Dropdown.Item key={category.id}

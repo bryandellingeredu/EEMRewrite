@@ -16,6 +16,7 @@ namespace Application.GraphSchedules
     {
         public class Query : IRequest<Result<List<FullCalendarEventDTO>>>
         {
+            public string Id { get; set; }
             public string Start { get; set; }
             public string End { get; set; }
         }
@@ -35,6 +36,7 @@ namespace Application.GraphSchedules
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                 var allRooms = await GraphHelper.GetRoomsAsync();
                 var rooms = allRooms .Where(r => r.AdditionalData.ContainsKey("building") && r.AdditionalData["building"].ToString() == "Bldg 651").ToList();
+                if (request.Id == "122") rooms = allRooms.Where(r => r.AdditionalData.ContainsKey("building") && r.AdditionalData["building"].ToString() == "Root Hall, Bldg 122").ToList();
                 List<string> emails = rooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();    
                 var startArray = request.Start.Split('T');
                 var endArray = request.End.Split('T');

@@ -99,7 +99,6 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/> 
                 <Route exact path={`${process.env.PUBLIC_URL}/roomDelegateTable`} component={RoomDelegateTable}/> 
-                <Route exact path={`${process.env.PUBLIC_URL}/bldg651Calendar`} component={Bldg651Calendar}/> 
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/manageRoomDelegate/:id`} component={RoomDelegateForm}/> 
                 <Route exact path={`${process.env.PUBLIC_URL}/vtcCoordinatorTable`} component={vtcCoordinatorsTable}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/manageVTCCoordinators/:id`} component={vtcCoordinatorForm}/>                 
@@ -125,6 +124,7 @@ function App() {
                   `${process.env.PUBLIC_URL}/copy/:id/:categoryId/:copy`,
                   ]} component={ActivityForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/bldg651Calendar/:id`} component={Bldg651Calendar}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageRoleForm/:id`} component={ManageRolesForm}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />

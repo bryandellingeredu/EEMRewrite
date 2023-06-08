@@ -51,7 +51,22 @@ namespace API
 
             app.UseRouting();
             app.UseDefaultFiles();
-            app.UseStaticFiles();
+            // app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    var reqPath = ctx.Context.Request.Path.Value;
+
+                    // Disable caching for index.html
+                    if (reqPath.EndsWith("/index.html"))
+                    {
+                        ctx.Context.Response.Headers.Append("Cache-Control", "no-cache, no-store");
+                        ctx.Context.Response.Headers.Append("Pragma", "no-cache");
+                        ctx.Context.Response.Headers.Append("Expires", "0");
+                    }
+                }
+            });
 
 
             app.UseCors("CorsPolicy");
