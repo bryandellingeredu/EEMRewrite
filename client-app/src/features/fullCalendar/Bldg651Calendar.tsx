@@ -71,7 +71,7 @@ export default function Bldg651Calendar (){
       });
   
         try {
-          const activity =  await getActivityIdByRoom( arg.event.title.split('( Bldg 651')[0], arg.event.startStr, arg.event.endStr)
+          const activity =  await getActivityIdByRoom( arg.event.title.split('(Bldg')[0], arg.event.startStr, arg.event.endStr)
           if(activity && activity.id !== '00000000-0000-0000-0000-000000000000' ){
             const activityContent  = ` <p></p>
             ${activity.description ?'<p><strong>Description: <strong>' + activity.description + '</p>' : '' }
