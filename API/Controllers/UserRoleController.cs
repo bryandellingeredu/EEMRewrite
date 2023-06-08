@@ -22,14 +22,14 @@ namespace API.Controllers
             _roleManager = roleManager;
         }
 
-        [Authorize(Roles = "admin")]
-        [HttpGet]
         public async Task<IActionResult> GetUserRoles()
         {
-   
             var rolesUsersList = new List<UserRoleDTO>();
 
-            foreach (var role in _roleManager.Roles)
+            // Get roles
+            var roles = _roleManager.Roles.ToList();
+
+            foreach (var role in roles)
             {
                 var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
                 var userNamesInRole = usersInRole.Select(u => u.UserName).ToList();
@@ -37,7 +37,6 @@ namespace API.Controllers
             }
 
             return Ok(rolesUsersList);
-
         }
 
         [Authorize(Roles = "admin")]

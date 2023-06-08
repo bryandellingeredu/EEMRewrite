@@ -64,6 +64,7 @@ namespace Application.Activities
                                       (category.RouteName == "symposiumAndConferences" && x.CopiedTosymposiumAndConferences) ||
                                       (category.RouteName == "battlerhythm" && x.CopiedTobattlerhythm) ||
                                       (category.RouteName == "staff" && x.CopiedTostaff) ||
+                                      (category.RouteName == "studentCalendar" && x.CopiedTostudentCalendar) ||
                                       (category.RouteName == "militaryFamilyAndSpouseProgram" && x.MFP))).
                           Where(x => !x.LogicalDeleteInd)
                           .ToListAsync();
@@ -120,6 +121,17 @@ namespace Application.Activities
                 }
 
                 if(category.RouteName =="csl" && (activity.ApprovedByOPS == "Pending" || string.IsNullOrEmpty(activity.ApprovedByOPS)))  color = "#F6BE00";
+
+                if(category.RouteName == "studentCalendar")
+                {
+                    if (activity.StudentCalendarMandatory)
+                    {
+                        color = "green";
+                    } else
+                    {
+                        color = "goldenrod";
+                    }
+                }
               
                 return color;
             }
