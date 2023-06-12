@@ -110,7 +110,7 @@
                 cachedRooms = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, options).GetAsync();
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromHours(1)); // Set cache to expire after 1 hour, adjust as necessary
+                    .SetSlidingExpiration(TimeSpan.FromHours(24)); // Set cache to expire after 1 hour, adjust as necessary
 
                 _cache.Set(RoomsCacheKey, cachedRooms, cacheEntryOptions);
             }

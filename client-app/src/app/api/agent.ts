@@ -27,6 +27,7 @@ import { ActivityAttachment } from '../models/activityAttachment';
 import { USAHECFacilitiesUsageLegend } from '../models/usahecFacilitiesUsageLegend';
 import { FlagReportDTO } from '../models/flagReportDTO';
 import { UserRole } from '../models/userRole';
+import { ArmyWarCollegeUser } from '../models/armyWarCollegeUser';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -179,7 +180,8 @@ const Categories = {
 const RoomDelegates = {
     list: () => axiosRequest.get<RoomDelegate[]>('/roomDelegate'),
     create: (data : RoomDelegate) => axiosRequest.post<void>('/roomDelegate', data),
-    delete: (id: string) => axiosRequest.del<void>(`/roomDelegate/${id}`)
+    delete: (id: string) => axiosRequest.del<void>(`/roomDelegate/${id}`),
+    requestChanges: (data: RoomDelegate[]) => axiosRequest.post<void>('/roomDelegate/requestchanges', data)
 }
 
 const VTCCoordinators = {
@@ -284,7 +286,8 @@ const Calendars = {
 const UserRoles = {
     list: () => axiosRequest.get<UserRole[]>('/UserRoles'),
     delete: (id: string, email: string) => axiosRequest.del<void>(`/UserRoles/${id}/${email}`),
-    create: (id: string, email: string) => axiosRequest.post<void>('/UserRoles',{id, email})
+    create: (id: string, email: string) => axiosRequest.post<void>('/UserRoles',{id, email}),
+    listArmyWarCollegeUsers: () => axiosRequest.get<ArmyWarCollegeUser[]>('/UserRoles/armywarcollegeusers')
 }
 
 const agent = {

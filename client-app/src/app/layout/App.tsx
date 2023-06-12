@@ -45,6 +45,7 @@ import SVTCCalendar from '../../features/fullCalendar/SVTCCalendar';
 import Bldg651Calendar from '../../features/fullCalendar/Bldg651Calendar';
 import ManageRolesTable from '../../features/admin/manageRoles/manageRolesTable';
 import ManageRolesForm from '../../features/admin/manageRoles/manageRoleForm';
+import RequestRoomDelegateChanges from '../../features/rooms/RequestRoomDelegateChanges';
 
 function App() {
   const location = useLocation();
@@ -126,6 +127,7 @@ function App() {
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/bldg651Calendar/:id`} component={Bldg651Calendar}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageRoleForm/:id`} component={ManageRolesForm}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/requestRoomDelegateChanges/:id`} component={RequestRoomDelegateChanges}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />
                 <Route path={`${process.env.PUBLIC_URL}/account/verifyEmail`} component={ConfirmEmail} />

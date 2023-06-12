@@ -16,6 +16,11 @@ namespace API.Controllers
         public async Task<IActionResult> Post(RoomDelegate roomDelegate) =>
          HandleResult(await Mediator.Send(new Post.Command { RoomDelegate = roomDelegate }));
 
+
+        [HttpPost("requestchanges")]
+        public async Task<IActionResult> RequestRoomDelegateChanges(RoomDelegate[] roomDelegates) =>
+   HandleResult(await Mediator.Send(new RequestChanges.Command { RoomDelegates = roomDelegates }));
+
         [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Activity>> DeleteRoomDelegate(Guid id) =>

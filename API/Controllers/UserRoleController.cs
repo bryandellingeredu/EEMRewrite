@@ -6,6 +6,7 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using static API.Controllers.UserRolesController;
 
 namespace API.Controllers
@@ -91,6 +92,21 @@ namespace API.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpGet("armywarcollegeusers")]
+        public async Task<IActionResult> GetArmyWarCollegeUsers()
+        {
+            var users = await _userManager.Users
+           .Where(u => u.Email.EndsWith("@armywarcollege.edu"))
+           .Select(u => new
+           {
+               u.Email,
+               u.DisplayName
+           })
+           .ToListAsync();
+
+            return Ok(users);
         }
 
 

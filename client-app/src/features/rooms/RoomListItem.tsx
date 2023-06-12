@@ -6,6 +6,7 @@ import { useStore } from "../../app/stores/store";
 import { useEffect } from 'react';
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import RoomPictureModal from "./RoomPictureModal";
+import { NavLink } from "react-router-dom";
 
 interface Props{
     room: GraphRoom
@@ -79,6 +80,18 @@ export default observer (function RoomListItem(
                     </Grid.Column>
                     <Grid.Column width={14}>
                         <p>room delegate/s: {roomDelegates.filter(x => x.roomEmail === room.emailAddress).map(x => x.delegateDisplayName).join(', ') || 'N/A'}</p>
+                        <Button
+                as={NavLink}
+                to={`${process.env.PUBLIC_URL}/requestRoomDelegateChanges/${room.id}`}
+                icon
+                labelPosition="left"
+                basic
+                color="teal"
+                size="mini"
+              >
+                <Icon name="configure" />
+                Request Room Delegate Changes
+              </Button>
                     </Grid.Column>
                 </Grid>
               </Segment>
