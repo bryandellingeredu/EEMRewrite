@@ -536,7 +536,7 @@ export class ActivityFormValues{
         this.studentCalendarUniform = activity.studentCalendarUniform
         this.studentCalendarMandatory = activity.studentCalendarMandatory
         this.studentCalendarNotes = activity.studentCalendarNotes
-        this.studentCalendarPresenter = activity.studentCalendarNotes
+        this.studentCalendarPresenter = activity.studentCalendarPresenter
        } 
     }
 }
