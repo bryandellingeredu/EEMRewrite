@@ -246,7 +246,7 @@ export default observer(function RoomDelegateForm() {
                           loading={deleting}
                         >
                           <Icon name="x" color="red" />
-                          {delegate.delegateDisplayName}
+                          {delegate.delegateDisplayName}{' ('}{delegate.delegateEmail}{')'}
                         </Button>
                         <Confirm
                           header="You are about to delete this room delegate"

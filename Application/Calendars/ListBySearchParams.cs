@@ -158,6 +158,10 @@ namespace Application.Calendars
                 {
                     query = query.Where(e => e.CopiedTostaff);
                 }
+                if (request.Id == "studentCalendar")
+                {
+                    query = query.Where(e => e.CopiedTostudentCalendar);
+                }
 
 
 

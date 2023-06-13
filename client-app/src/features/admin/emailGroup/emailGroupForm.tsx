@@ -248,7 +248,7 @@ export default observer(function EmailGroupForm() {
                           loading={deleting}
                         >
                           <Icon name="x" color="red" />
-                          {member.displayName}
+                          {member.displayName}{' ('}{member.email}{')'}
                         </Button>
                         <Confirm
                           header="You are about to delete this group member"

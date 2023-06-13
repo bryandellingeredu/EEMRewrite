@@ -247,7 +247,7 @@ export default observer(function VTCCoordinatorForm() {
                           loading={deleting}
                         >
                           <Icon name="x" color="red" />
-                          {coordinator.vtcCoordinatorDisplayName}
+                          {coordinator.vtcCoordinatorDisplayName}{' ('}{coordinator.vtcCoordinatorEmail}{')'}
                         </Button>
                         <Confirm
                           header="You are about to delete this VTC Coordinator"
