@@ -16,6 +16,7 @@ export default function ManageRolesForm(){
     const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [userToDelete, setUserToDelete] = useState<string>('');
 
     useEffect(() => {
 
@@ -32,51 +33,55 @@ export default function ManageRolesForm(){
     }, []);
 
     const handleSubmit = (event: any) => {
-        debugger;
-        event.preventDefault();
-        let error = false;
-        if (!email) {
-            error = true;
-            setEmailError(true);
-          }
-         // Regular expression for email ending with armywarcollege.edu or army.mil
-         const regex = /^[^\s@]+@([^\s@]+\.)?(armywarcollege\.edu|army\.mil)$/i;
+      event.preventDefault();
+      let error = false;
+  
+      // Trim any leading or trailing spaces from the email
+      let trimmedEmail = email.trim();
+  
+      // Regular expression for email ending with armywarcollege.edu or army.mil
+      const regex = /^[^\s@]+@([^\s@]+\.)?(armywarcollege\.edu|army\.mil)$/i;
+  
+      if (!trimmedEmail || !regex.test(trimmedEmail)) {
+          error = true;
+          setEmailError(true);
+      }
+  
+      if(!error){
+          setSaving(true)
+          agent.UserRoles.create(id, trimmedEmail).then(() =>{
+              setEmail('');
+              toast.success(" Save Successful");
+              setSaving(false); 
+              setUserRole({
+                  ...userRole,
+                  userNames: [...userRole.userNames, trimmedEmail]
+              });
+          })
+          .catch((error : any) => {
+              console.error(error);
+              toast.error(" Something Went Wrong During Save Please Try Again");
+              setSaving(false);
+          });
+      }
+  }
 
-    // Check if the email is valid
-    if (!regex.test(email)) {
-        error = true;
-        setEmailError(true);
+   const handleDeleteButton = (userEmail: string) => {
+        setOpenConfirm(true);
+        setUserToDelete(userEmail);
     }
-    if(!error){
 
-      setSaving(true)
-      agent.UserRoles.create(id, email).then(() =>{
-        setEmail('');
-        toast.success(" Save Successfull");
-        setSaving(false); 
-        setUserRole({
-          ...userRole,
-          userNames: [...userRole.userNames, email]
-        });
-      })
-      .catch((error : any) => {
-        console.error(error);
-        toast.error(" Something Went Wrong During Save Please Try Again");
-        setSaving(false);
-      });
-     }
-    }
 
-    const handleDelete = async (userEmail: string) => {
+    const handleDelete = async () => {
         try {
           setOpenConfirm(false);
           setDeleting(true);
-          agent.UserRoles.delete(id, userEmail ).then(() => {
+          agent.UserRoles.delete(id, userToDelete ).then(() => {
             toast.success("Role has been removed from user");
             setDeleting(false);
             setUserRole({
                 ...userRole,
-                userNames: userRole.userNames.filter((name) => name !== userEmail)
+                userNames: userRole.userNames.filter((name) => name !== userToDelete)
             });
           });
         } catch (error) {
@@ -135,7 +140,7 @@ export default function ManageRolesForm(){
                              basic
                              color="teal"
                              size="large"
-                             onClick={() => setOpenConfirm(true)}
+                             onClick={() => handleDeleteButton(member)}
                              loading={deleting}
                            >
                              <Icon name="x" color="red" />
@@ -145,7 +150,7 @@ export default function ManageRolesForm(){
                              header="You are about to remove this role from this person"
                              open={openConfirm}
                              onCancel={() => setOpenConfirm(false)}
-                             onConfirm={() => handleDelete(member)}
+                             onConfirm={() => handleDelete()}
                            />
                          </Fragment>
                        ))}
@@ -178,7 +183,7 @@ export default function ManageRolesForm(){
                   />
                   {emailError && (
                     <Label basic color="red">
-                      User  Email is Required and must end with @army.mil or @armywarcollege.edu
+                      User  Email is Required, it must not start with a space, and it must end with @army.mil or @armywarcollege.edu
                     </Label>
                   )}
                 </Form.Field>

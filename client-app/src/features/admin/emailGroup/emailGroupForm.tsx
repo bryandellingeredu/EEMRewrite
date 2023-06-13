@@ -50,15 +50,21 @@ export default observer(function EmailGroupForm() {
   const [peoplePickerKey, setPeoplePickerKey] = useState(0);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<string>('');
 
-  const handleDelete = async (memberid: string) => {
+  const handleDeleteButton = (id: string) => {
+        setOpenConfirm(true);
+        setUserToDelete(id);
+    }
+
+  const handleDelete = async () => {
     try {
       setOpenConfirm(false);
       setDeleting(true);
-      agent.EmailGroups.delete(memberid, id ).then(() => {
+      agent.EmailGroups.delete(userToDelete, id ).then(() => {
         toast.success("Row has been deleted");
         setDeleting(false);
-        setEmailGroupMembers(emailGroupMembers.filter((x) => x.id !== memberid));
+        setEmailGroupMembers(emailGroupMembers.filter((x) => x.id !== userToDelete));
       });
     } catch (error) {
       console.log(error);
@@ -94,51 +100,59 @@ export default observer(function EmailGroupForm() {
   const handleSubmit = (event: any) => {
     event.preventDefault();
     let error = false;
-    if (!displayName) {
+  
+    // Trim any leading or trailing spaces
+    let trimmedDisplayName = displayName.trim();
+    let trimmedEmail = email.trim();
+  
+    if (!trimmedDisplayName) {
       error = true;
       setNameError(true);
     }
-    if (!email) {
+    if (!trimmedEmail) {
       error = true;
       setEmailError(true);
     }
     if (!error) {
       setSaving(true);
-      const emailGroupMember: EmailGroupMemberDTO= {
+      const emailGroupMember: EmailGroupMemberDTO = {
         id: uuid(),
-        email,
-        displayName,
+        email: trimmedEmail,
+        displayName: trimmedDisplayName,
         groupId: id,
       };
-
+  
       agent.EmailGroups.create(emailGroupMember)
         .then(() => {
-          setEmailGroupMembers(
-            [...emailGroupMembers,
-               {id: emailGroupMember.id,
-                email: emailGroupMember.email,
-                displayName: emailGroupMember.displayName,
-                emailGroups: [
-                  {id: emailGroupMember.groupId,
-                   name: emailGroups.find((x) => x.id === id)!.name
-                  }
-                  ]
-                }
-              ]);
+          setEmailGroupMembers([
+            ...emailGroupMembers,
+            {
+              id: emailGroupMember.id,
+              email: emailGroupMember.email,
+              displayName: emailGroupMember.displayName,
+              emailGroups: [
+                {
+                  id: emailGroupMember.groupId,
+                  name: emailGroups.find((x) => x.id === id)!.name,
+                },
+              ],
+            },
+          ]);
           setSelectedPerson(null);
           setPeoplePickerKey(peoplePickerKey + 1);
           setEmail("");
           setDisplayName("");
-          toast.success(" Save Successfull");
+          toast.success(" Save Successful");
           setSaving(false);
         })
-        .catch((error : any) => {
+        .catch((error: any) => {
           console.error(error);
           toast.error(" Something Went Wrong During Save Please Try Again");
           setSaving(false);
         });
     }
   };
+  
 
   useEffect(() => {
     setLoading(true);
@@ -230,7 +244,7 @@ export default observer(function EmailGroupForm() {
                           basic
                           color="teal"
                           size="large"
-                          onClick={() => setOpenConfirm(true)}
+                          onClick={() => handleDeleteButton(member.id)}
                           loading={deleting}
                         >
                           <Icon name="x" color="red" />
@@ -240,7 +254,7 @@ export default observer(function EmailGroupForm() {
                           header="You are about to delete this group member"
                           open={openConfirm}
                           onCancel={() => setOpenConfirm(false)}
-                          onConfirm={() => handleDelete(member.id)}
+                          onConfirm={() => handleDelete()}
                         />
                       </Fragment>
                     ))}
@@ -299,7 +313,7 @@ export default observer(function EmailGroupForm() {
                   />
                   {emailError && (
                     <Label basic color="red">
-                      Group Member Email is Required
+                      Group Member Email is Required And Must Not Start With A Blank Space
                     </Label>
                   )}
                 </Form.Field>

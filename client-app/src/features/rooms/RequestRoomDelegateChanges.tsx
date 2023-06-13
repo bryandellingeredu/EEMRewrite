@@ -62,6 +62,7 @@ export default observer( function RequestRoomDelegateChanges () {
     const [isModalOpen, setModalOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const history = useHistory(); 
+    const [userToDelete, setUserToDelete] = useState<string>('');
 
     const handleButtonSubmit = () => {
       setModalOpen(true);
@@ -112,9 +113,14 @@ export default observer( function RequestRoomDelegateChanges () {
         }
       }, [id]);
 
-      const handleDelete =  (id: string) => {
+      const handleDeleteButton = (id: string) => {
+        setOpenConfirm(true);
+        setUserToDelete(id);
+    }
+
+      const handleDelete =  () => {
           setOpenConfirm(false);
-          setRoomDelegates(roomDelegates.filter((x) => x.id !== id));
+          setRoomDelegates(roomDelegates.filter((x) => x.id !== userToDelete));
         };
 
         function handleFormSubmit(values : FormValues, {resetForm, setFieldValue}: FormikHelpers<FormValues> ) {        
@@ -260,7 +266,7 @@ export default observer( function RequestRoomDelegateChanges () {
                           basic
                           color="teal"
                           size="large"
-                          onClick={() => setOpenConfirm(true)}
+                          onClick={() => handleDeleteButton(delegate.id)}
                         >
                           <Icon name="x" color="red" />
                           {delegate.delegateDisplayName}
@@ -269,7 +275,7 @@ export default observer( function RequestRoomDelegateChanges () {
                           header="You are asking for this room delegate to be removed"
                           open={openConfirm}
                           onCancel={() => setOpenConfirm(false)}
-                          onConfirm={() => handleDelete(delegate.id)}
+                          onConfirm={() => handleDelete()}
                         />
                       </Fragment>
                     ))}

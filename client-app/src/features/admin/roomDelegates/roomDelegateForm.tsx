@@ -61,15 +61,21 @@ export default observer(function RoomDelegateForm() {
   const [peoplePickerKey, setPeoplePickerKey] = useState(0);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<string>('');
 
-  const handleDelete = async (id: string) => {
+     const handleDeleteButton = (userId: string) => {
+        setOpenConfirm(true);
+        setUserToDelete(userId);
+    }
+
+  const handleDelete = async () => {
     try {
       setOpenConfirm(false);
       setDeleting(true);
-      agent.RoomDelegates.delete(id).then(() => {
+      agent.RoomDelegates.delete(userToDelete).then(() => {
         toast.success("Row has been deleted");
         setDeleting(false);
-        setRoomDelegates(roomDelegates.filter((x) => x.id !== id));
+        setRoomDelegates(roomDelegates.filter((x) => x.id !== userToDelete));
       });
     } catch (error) {
       console.log(error);
@@ -236,7 +242,7 @@ export default observer(function RoomDelegateForm() {
                           basic
                           color="teal"
                           size="large"
-                          onClick={() => setOpenConfirm(true)}
+                          onClick={() => handleDeleteButton(delegate.id)}
                           loading={deleting}
                         >
                           <Icon name="x" color="red" />
@@ -246,7 +252,7 @@ export default observer(function RoomDelegateForm() {
                           header="You are about to delete this room delegate"
                           open={openConfirm}
                           onCancel={() => setOpenConfirm(false)}
-                          onConfirm={() => handleDelete(delegate.id)}
+                          onConfirm={() => handleDelete()}
                         />
                       </Fragment>
                     ))}

@@ -61,15 +61,22 @@ export default observer(function VTCCoordinatorForm() {
   const [peoplePickerKey, setPeoplePickerKey] = useState(0);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<string>('');
 
-  const handleDelete = async (id: string) => {
+  
+     const handleDeleteButton = (id: string) => {
+        setOpenConfirm(true);
+        setUserToDelete(id);
+    }
+
+  const handleDelete = async () => {
     try {
       setOpenConfirm(false);
       setDeleting(true);
-      agent.VTCCoordinators.delete(id).then(() => {
+      agent.VTCCoordinators.delete(userToDelete).then(() => {
         toast.success("Row has been deleted");
         setDeleting(false);
-        setCoordinators(coordinators.filter((x) => x.id !== id));
+        setCoordinators(coordinators.filter((x) => x.id !== userToDelete));
       });
     } catch (error) {
       console.log(error);
@@ -236,7 +243,7 @@ export default observer(function VTCCoordinatorForm() {
                           basic
                           color="teal"
                           size="large"
-                          onClick={() => setOpenConfirm(true)}
+                          onClick={() => handleDeleteButton(coordinator.id)}
                           loading={deleting}
                         >
                           <Icon name="x" color="red" />
@@ -246,7 +253,7 @@ export default observer(function VTCCoordinatorForm() {
                           header="You are about to delete this VTC Coordinator"
                           open={openConfirm}
                           onCancel={() => setOpenConfirm(false)}
-                          onConfirm={() => handleDelete(coordinator.id)}
+                          onConfirm={() => handleDelete()}
                         />
                       </Fragment>
                     ))}
