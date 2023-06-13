@@ -8,6 +8,7 @@ interface TableData{
   id: string
   categoryId: string
   title: string
+  usahecFacilityReservationType: string
   start : string
   end : string
   location: string
@@ -30,7 +31,7 @@ export default function USAHECMeetingSummaryByLocationRoomRow({item} : Props){
     return (
     <>
      <Table.Row negative >
-        <Table.Cell colSpan={7}>
+        <Table.Cell colSpan={8}>
             {item.location}
          </Table.Cell>
    </Table.Row> 

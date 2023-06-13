@@ -14,9 +14,12 @@ import USAHECMeetingSummaryByLocationDateRow from "./usahecMeetingSummaryByLocat
 import { v4 as uuid } from "uuid";
 import { USAHECMeetingSummaryByLocationComponentToPrint } from "./usahecMeetingSummaryByLocationComponentToPrint";
 import { useReactToPrint } from "react-to-print";
+import MySelectInput from "../../app/common/form/MySelectInput";
+import { useParams } from "react-router-dom";
 
 interface SearchFormValues{
   title: string
+  usahecFacilityReservationType: string
   start : Date | null
   end : Date | null
   location: string
@@ -28,6 +31,7 @@ interface TableData{
   id: string
   categoryId: string
   title: string
+  usahecFacilityReservationType: string
   start : string
   end : string
   location: string
@@ -45,6 +49,7 @@ interface GroupedData {
 
 interface CSVData{
   title: string
+  usahecFacilityReservationType: string
   start : string
   end : string
   location: string
@@ -53,7 +58,7 @@ interface CSVData{
 }
 
 export default observer(function USAHECMeetingSummaryByLocationWrapper(){
-
+    const { id } = useParams<{ id: string }>();
     const [createdByList, setCreatedByList] = useState<string[]>([]);
     const [actionOfficers, setActionOfficers] = useState<string[]>([]);
     const {graphRoomStore} = useStore();
@@ -102,7 +107,7 @@ export default observer(function USAHECMeetingSummaryByLocationWrapper(){
           await loadData(
             
             {
-              title: '', start: format(new Date(), 'MM-dd-yyy'), end: format(nextMonth, 'MM-dd-yyy'), loaction: '',
+              title: '',   usahecFacilityReservationType: '', start: format(new Date(), 'MM-dd-yyy'), end: format(nextMonth, 'MM-dd-yyy'), loaction: '',
               actionOfficer: '', hostingReportStatus: '', guestRank: '', guestTitle: '', createdBy: ''
             }, true
           )
@@ -118,6 +123,7 @@ export default observer(function USAHECMeetingSummaryByLocationWrapper(){
               id: item.id,
               categoryId: item.categoryId,
               title: item.title,
+              usahecFacilityReservationType: item.usahecFacilityReservationType,
               start: item.allDayEvent ?  format(new Date(item.start), 'MM/dd/yyyy' ) : format(new Date(item.start), 'MM/dd/yyyy h:mma' ),
               end: item.allDayEvent ?  format(new Date(item.end), 'MM/dd/yyyy' ) : format(new Date(item.end), 'MM/dd/yyyy h:mma' ),
               actionOfficer: item.actionOfficer,
@@ -152,44 +158,72 @@ export default observer(function USAHECMeetingSummaryByLocationWrapper(){
         }}
 
         function groupByDate(data: TableData[]): GroupedData[] {
-          const groupedData = data.reduce((acc: { [key: string]: { [key: string]: TableData[] } }, item) => {
-            const date = item.start.split(" ")[0];
-            const locations = item.location.split(', ');
+          if (id === 'location') {
+            const groupedData = data.reduce((acc: { [key: string]: { [key: string]: TableData[] } }, item) => {
+              const date = item.start.split(" ")[0];
+              const locations = item.location.split(', ');
         
-            locations.forEach(location => {
-              const newItem = { ...item, location };
+              locations.forEach(location => {
+                const newItem = { ...item, location };
+        
+                if (!acc[date]) {
+                  acc[date] = {};
+                }
+        
+                if (!acc[date][location]) {
+                  acc[date][location] = [];
+                }
+        
+                acc[date][location].push(newItem);
+              });
+        
+              return acc;
+            }, {});
+        
+            return Object.entries(groupedData).map(([day, locations]) => ({
+              day,
+              values: Object.entries(locations).map(([location, events]) => ({ location, events })),
+            }));
+          } else {
+            const groupedData = data.reduce((acc: { [key: string]: { [key: string]: TableData[] } }, item) => {
+              const date = item.start.split(" ")[0];
+              const reservationType = item.usahecFacilityReservationType || 'No Reservation Type';
         
               if (!acc[date]) {
                 acc[date] = {};
               }
         
-              if (!acc[date][location]) {
-                acc[date][location] = [];
+              if (!acc[date][reservationType]) {
+                acc[date][reservationType] = [];
               }
         
-              acc[date][location].push(newItem);
-            });
+              acc[date][reservationType].push(item);
         
-            return acc;
-          }, {});
+              return acc;
+            }, {});
         
-          return Object.entries(groupedData).map(([day, locations]) => ({
-            day,
-            values: Object.entries(locations).map(([location, events]) => ({ location, events })),
-          }));
+            return Object.entries(groupedData).map(([day, reservationTypes]) => ({
+              day,
+              values: Object.entries(reservationTypes).map(([reservationType, events]) => ({
+                location: reservationType,
+                events
+              })),
+            }));
+          }
         }
+
 
         const handleDownload = () => {
           const url = `${process.env.REACT_APP_API_URL}/ExportToExcel/USAHECFacilitiesUsageReport`;
           let data: CSVData[] = [];
           if (searched && searchedData) {
-            data = searchedData.map(({ title,start,end,location,actionOfficer,createdBy}) => {
-              return { title,start,end,location,actionOfficer,createdBy};
+            data = searchedData.map(({ title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy}) => {
+              return { title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy};
             });
           }
           if(!searched && initialData){
-            data = initialData.map(({ title,start,end,location,actionOfficer,createdBy}) => {
-              return { title,start,end,location,actionOfficer,createdBy};
+            data = initialData.map(({ title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy}) => {
+              return { title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy};
             });
           }
           if(data && data.length > 0){
@@ -228,7 +262,7 @@ export default observer(function USAHECMeetingSummaryByLocationWrapper(){
         <Divider horizontal>
         <Header as='h2'>
         <Icon name='book'  />
-           USAHEC Meeting Summary By Location
+           {id === 'location' ?  'USAHEC Meeting Summary By Location' : 'USAHEC Meeting by Reservation Type'}
          
         </Header>
    
@@ -238,7 +272,7 @@ export default observer(function USAHECMeetingSummaryByLocationWrapper(){
 
         <Formik
         
-initialValues={{title: '', start: new Date(), end: nextMonth, location: '', actionOfficer: '',  createdBy: ''}}
+initialValues={{title: '', usahecFacilityReservationType: '', start: new Date(), end: nextMonth, location: '', actionOfficer: '',  createdBy: ''}}
 onSubmit={(values) => handleFormSubmit(values)}>
         {({handleSubmit}) => (
             <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'
@@ -250,6 +284,7 @@ onSubmit={(values) => handleFormSubmit(values)}>
                 <Table.HeaderCell style={{ minWidth: "200px" }}>End</Table.HeaderCell>
                 <Table.HeaderCell style={{ minWidth: "200px" }}>Room</Table.HeaderCell>
                 <Table.HeaderCell style={{ minWidth: "200px" }}>Meeting Title</Table.HeaderCell>
+                <Table.HeaderCell style={{ minWidth: "200px" }}>Reservation Type</Table.HeaderCell>
                 <Table.HeaderCell style={{ minWidth: "200px" }}>Booked By</Table.HeaderCell>
                 <Table.HeaderCell style={{ minWidth: "200px" }}>Action Officer</Table.HeaderCell>
                 <Table.HeaderCell > 
@@ -289,6 +324,36 @@ onSubmit={(values) => handleFormSubmit(values)}>
                         <MyTextInput name='title'  placeholder="" />
                     </Table.HeaderCell>
                     <Table.HeaderCell>
+                    <MySelectInput
+                  options={[
+                    { text: "", value: "" },
+                    {
+                      text: "Army Heritage Center Foundation",
+                      value: "Army Heritage Center Foundation",
+                    },
+                    { text: "Education", value: "Education" },
+                    { text: "General", value: "General" },
+                    { text: "Government", value: "Government" },
+                    { text: "Holiday", value: "Holiday" },
+                    { text: "Maintenance", value: "Maintenance" },
+                    { text: "MHINAF", value: "MHINAF" },
+                    { text: "Non/Profit", value: "Non/Profit" },
+                    { text: "Public Event", value: "Public Event" },
+                    { text: "Scouts", value: "Scouts" },
+                    { text: "Training", value: "Training" },
+                    { text: "U.S. Army", value: "U.S. Army" },
+                    {
+                      text: "U.S. Army War College",
+                      value: "U.S. Army College",
+                    },
+                    { text: "USAHEC Meeting", value: "USAHEC Meeting" },
+                    { text: "Veteran", value: "Veteran" },
+                  ]}
+                  placeholder=""
+                  name="usahecFacilityReservationType"
+                />
+                    </Table.HeaderCell>
+                    <Table.HeaderCell>
                     <MyDataList
                               name="createdBy"
                               placeholder=""
@@ -315,7 +380,7 @@ onSubmit={(values) => handleFormSubmit(values)}>
                 <Table.Body>
               {( (loadingInitialData && !searched) || (loadingSearchedData && searched)) &&
               <Table.Row>
-                <Table.Cell colSpan='7'>
+                <Table.Cell colSpan='8'>
                     <LoadingComponent content='Loading USAHEC Facilities Usage Report...'/>
                 </Table.Cell>
               </Table.Row>

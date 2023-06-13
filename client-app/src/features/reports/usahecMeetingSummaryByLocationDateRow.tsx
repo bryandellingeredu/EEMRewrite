@@ -9,6 +9,7 @@ interface TableData{
   id: string
   categoryId: string
   title: string
+  usahecFacilityReservationType: string
   start : string
   end : string
   location: string
@@ -37,7 +38,7 @@ export default function USAHECMeetingSummaryByLocationDateRow({item} : Props){
       <Fragment>
  
      <Table.Row positive >
-        <Table.Cell colSpan={7}>
+        <Table.Cell colSpan={8}>
             {format(new Date(item.day),  'EEEE, MMMM d, yyyy')}
          </Table.Cell>
    </Table.Row> 
@@ -46,7 +47,7 @@ export default function USAHECMeetingSummaryByLocationDateRow({item} : Props){
       <USAHECMeetingSummaryByLocationRoomRow key={uuid()} item={value} /> 
     ))}
        <Table.Row style={{backgroundColor: '#fcf3e9'}}>
-    <Table.Cell colSpan={7}>
+    <Table.Cell colSpan={8}>
          </Table.Cell>
     </Table.Row>
     

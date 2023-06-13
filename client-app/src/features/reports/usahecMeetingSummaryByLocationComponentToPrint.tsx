@@ -7,6 +7,7 @@ interface TableData{
   id: string
   categoryId: string
   title: string
+  usahecFacilityReservationType: string
   start : string
   end : string
   location: string
@@ -38,6 +39,7 @@ interface Props {
                   <Table.HeaderCell>End</Table.HeaderCell>
                   <Table.HeaderCell>Room</Table.HeaderCell>
                   <Table.HeaderCell>Meeting Title</Table.HeaderCell>
+                  <Table.HeaderCell>Reservation Type</Table.HeaderCell>
                   <Table.HeaderCell>Booked By</Table.HeaderCell>
                   <Table.HeaderCell colSpan={2}>Action Officer</Table.HeaderCell>               
                   </Table.Row>

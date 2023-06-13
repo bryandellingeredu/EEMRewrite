@@ -143,7 +143,9 @@ export default observer(function Navbar() {
             <DropdownDivider/>
             <Dropdown.Header icon='tags' content='USAHEC Reports' />
             <DropdownDivider/>
-            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper`} text ="USAHEC Meeting Summary By Location"
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper/location`} text ="USAHEC Meeting Summary By Location"
+            label={{ color: 'black', empty: true, circular: true }}/>
+            <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper/reservation`} text ="USAHEC Meeting Summary By Reservation Type"
             label={{ color: 'black', empty: true, circular: true }}/>
             <DropdownDivider/>
             <Dropdown.Header icon='tv' content='SVTC Reports' />

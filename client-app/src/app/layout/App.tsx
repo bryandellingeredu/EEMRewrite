@@ -96,7 +96,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/svtcCalendar`} component={SVTCCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} component={hostingReportPDFWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/manageRolesTable`} component={ManageRolesTable}/>
-                <Route exact path={`${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper`} component={usahecMeetingSummaryByLocationWrapper}/>            
+                   
                 <Route exact path={`${process.env.PUBLIC_URL}/deletedactivityTable`} component={DeletedActivityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/emailGroupTable`} component={EmailGroupTable}/> 
                 <Route exact path={`${process.env.PUBLIC_URL}/roomDelegateTable`} component={RoomDelegateTable}/> 
@@ -127,6 +127,7 @@ function App() {
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/bldg651Calendar/:id`} component={Bldg651Calendar}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageRoleForm/:id`} component={ManageRolesForm}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper/:id`} component={usahecMeetingSummaryByLocationWrapper}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/requestRoomDelegateChanges/:id`} component={RequestRoomDelegateChanges}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />

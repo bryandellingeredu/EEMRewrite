@@ -54,6 +54,11 @@ using Microsoft.Graph;
                     query = query.Where(e => e.CreatedBy == request.searchParams.CreatedBy);
                 }
 
+                if (!string.IsNullOrEmpty(request.searchParams.USAHECFacilityReservationType))
+                {
+                    query = query.Where(e => e.USAHECFacilityReservationType == request.searchParams.USAHECFacilityReservationType);
+                }
+
 
 
                 if (!string.IsNullOrEmpty(request.searchParams.Start))
@@ -151,6 +156,7 @@ using Microsoft.Graph;
                         .Select(activity => new USAHECFacilitiesUsageDTO
                         {
                             Title = activity.Title,
+                            USAHECFacilityReservationType= activity.USAHECFacilityReservationType,
                             Start = activity.Start,
                             End = activity.End,
                             Location = activity.ActivityRooms != null ? string.Join(", ", activity.ActivityRooms.Select(x => x.Name != null ? x.Name.Replace(',', ';') : "").ToArray()) : "",

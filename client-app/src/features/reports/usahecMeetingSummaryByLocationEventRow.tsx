@@ -7,6 +7,7 @@ interface TableData{
   id: string
   categoryId: string
   title: string
+  usahecFacilityReservationType: string
   start : string
   end : string
   location: string
@@ -42,6 +43,9 @@ export default function USAHECMeetingSummaryByLocationEventRow({item} : Props){
          </Table.Cell>
          <Table.Cell>
          {renderTextWithPopup(item.title)}
+         </Table.Cell>
+         <Table.Cell>
+         {renderTextWithPopup(item.usahecFacilityReservationType)}
          </Table.Cell>
          <Table.Cell>
          {renderTextWithPopup(item.createdBy)}

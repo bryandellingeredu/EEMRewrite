@@ -21,5 +21,6 @@ namespace Application.USAHECReports
         public string GuestTitle { get; set; }
         public string CreatedBy { get; set; }
         public bool AllDayEvent { get; set; }
+        public string USAHECFacilityReservationType { get; set; }
     }
 }
