@@ -87,10 +87,10 @@ namespace API.Controllers
         public IActionResult CsvFacilitiesUsageHostingReport([FromBody] USAHECFacilitiesUsageReportCSVData[] csvDataList)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("Title,Start,End,Room/s, Action Officer, Created By");
+            builder.AppendLine("Title,Reservation Type,Start,End,Room/s, Action Officer, Created By");
             foreach (var data in csvDataList)
             {
-                builder.AppendLine($"\"{data.Title}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.ActionOfficer}\",\"{data.CreatedBy}\"");
+                builder.AppendLine($"\"{data.Title}\",\"{data.USAHECFacilityReservationType}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.ActionOfficer}\",\"{data.CreatedBy}\"");
             }
 
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "USAHECFacilitiesUsageReport.csv");
@@ -155,6 +155,7 @@ namespace API.Controllers
         public class USAHECFacilitiesUsageReportCSVData
         {
             public string Title { get; set; }
+            public string USAHECFacilityReservationType { get; set; }
             public string Start { get; set; }
             public string End { get; set; }
             public string Location { get; set; }
