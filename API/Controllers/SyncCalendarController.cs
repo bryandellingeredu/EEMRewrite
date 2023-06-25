@@ -127,6 +127,9 @@ namespace API.Controllers
                 case "imc":
                     query = query.Where(a => a.IMC);
                     break;
+                case "studentCalendar":
+                    query = query.Where(a => a.CopiedTostudentCalendar);
+                    break;
                 default:
                     throw new Exception($"Unknown route: {route}");
             }
