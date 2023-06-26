@@ -239,6 +239,9 @@ namespace API.Controllers
                 case "imc":
                     retval = "Integrated Master Calendar (IMC)";
                     break;
+                case "studentCalendar":
+                    retval = "Student Calendar";
+                    break;
 
             }
 
