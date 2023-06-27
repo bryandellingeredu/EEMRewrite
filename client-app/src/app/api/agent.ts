@@ -290,6 +290,10 @@ const UserRoles = {
     listArmyWarCollegeUsers: () => axiosRequest.get<ArmyWarCollegeUser[]>('/UserRoles/armywarcollegeusers')
 }
 
+const AddToEEMCalendars = {
+    update: (activityCalendarInformationDTO: any, id: string) => axiosRequest.put<void>(`/addToEEMCalendars/${id}`, activityCalendarInformationDTO),
+}
+
 const agent = {
     Activities,
     Account,
@@ -311,7 +315,8 @@ const agent = {
     HostingReports,
     USAHECReports,
     Calendars,
-    UserRoles 
+    UserRoles,
+    AddToEEMCalendars 
 }
 
 export default agent;

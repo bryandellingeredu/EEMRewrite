@@ -1551,7 +1551,7 @@ export default observer(function ActivityForm() {
               </Grid>
             </Segment>
 
-            {!studentCalendarAdmin && values.copiedTostudentCalendar &&
+            {!studentCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
   <div style={{
     display: 'flex',
     flexDirection: 'column',
@@ -1566,10 +1566,16 @@ export default observer(function ActivityForm() {
   }}>
     <h2>You are not authorized to create or update a Student Calendar Event</h2>
     <p>You do not have the necessary permissions to save events to the "Student Calendar".</p>
+    {activity.id && activity.categoryId && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
+    <Button basic color='blue'
+    as={Link} to={`${process.env.PUBLIC_URL}/addToCalendars/${activity.id}/${activity.categoryId}`}
+    >I would like to add this event to an EEM Calendar </Button>
+    }
   </div>
 }
 
-            {categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" && 
+            {(categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" || values.copiedTostudentCalendar) &&
+               studentCalendarAdmin &&
                <Segment style={{ backgroundColor: "#f4e9f7" }} >
                    <Header as="h5" icon textAlign="center" color="purple">
                   <Icon name="graduation cap" />
@@ -2495,7 +2501,7 @@ export default observer(function ActivityForm() {
                          <MySemanticCheckBox
                             name="copiedTostudentCalendar"
                             label="Student Calendar"
-                            disabled={categories
+                            disabled={!studentCalendarAdmin || categories
                               .filter((x) => x.routeName === "studentCalendar")
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
@@ -3446,7 +3452,7 @@ export default observer(function ActivityForm() {
                           </Grid>
                           <Divider color="black" />
             <Button
-              disabled={submitting || activity.cancelled || (!studentCalendarAdmin && values.copiedTostudentCalendar)}
+              disabled={submitting || activity.cancelled || (!studentCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar")}
               loading={submitting}
               floated="right"
               positive
@@ -3465,7 +3471,7 @@ export default observer(function ActivityForm() {
               content="Cancel"
             />
       
-      {!studentCalendarAdmin && values.copiedTostudentCalendar &&
+      {!studentCalendarAdmin && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
   <div style={{
     display: 'flex',
     flexDirection: 'column',
@@ -3479,7 +3485,12 @@ export default observer(function ActivityForm() {
     border: '1px solid #9F6000',
   }}>
     <h2>You are not authorized!</h2>
-    <p>You do not have the necessary permissions to save events to the "Student Calendar". Please choose another option.</p>
+    <p>You do not have the necessary permissions to save events to the "Student Calendar".</p>
+    {activity.id && activity.categoryId && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
+    <Button basic color='blue'
+    as={Link} to={`${process.env.PUBLIC_URL}/addToCalendars/${activity.id}/${activity.categoryId}`}
+    >I would like to add this event to an EEM Calendar </Button>
+    }
   </div>
 }
           </Form>

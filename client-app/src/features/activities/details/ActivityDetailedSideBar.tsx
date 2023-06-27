@@ -1371,7 +1371,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
          </Segment>
  }
 
-{activity.category.name === "Student Calendar" && activity.studentCalendarMandatory &&
+{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarMandatory &&
              <Segment attached>
              <Grid verticalAlign='middle'>
                  <Grid.Column width={1}>
@@ -1383,7 +1383,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
              </Grid>
  </Segment>
  }
-{ activity.category.name  === 'Student Calendar'  && activity.studentCalendarUniform &&
+{ (activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar)  && activity.studentCalendarUniform &&
             <Segment attached>
                 <Grid>
                     <Grid.Column width={1}>
@@ -1399,7 +1399,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
             </Segment>
       }
 
-{activity.category.name === "Student Calendar" && activity.studentCalendarPresenter &&
+{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarPresenter &&
     <Segment attached>
     <Grid verticalAlign='middle'>
         <Grid.Column width={1}>
@@ -1415,7 +1415,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
  }
 
 
-{ activity.category.name  === 'Student Calendar'  && activity.studentCalendarNotes &&
+{ (activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar)  && activity.studentCalendarNotes &&
             <Segment attached>
                 <Grid>
                     <Grid.Column width={1}>
