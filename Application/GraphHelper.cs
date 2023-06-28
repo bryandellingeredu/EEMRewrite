@@ -286,6 +286,26 @@
 
         }
 
+        public static async Task UpdateEventTitle(string eventId, string title, string requesterEmail)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            // Get the event
+            var @event = await _appClient.Users[requesterEmail].Events[eventId]
+                .Request()
+                .GetAsync();
+
+            // Update the title
+            @event.Subject = title;
+
+            // Update the event
+            await _appClient.Users[requesterEmail].Events[eventId]
+                .Request()
+                .UpdateAsync(@event);
+        }
+
         public static async Task DeleteEvent(string eventLookup, string coordinatorEmail)
         {
             EnsureGraphForAppOnlyAuth();
@@ -409,5 +429,7 @@
                     return uploadedFile.WebUrl; //returns a DriveItem. 
         }
         }
+
+   
     }
 }

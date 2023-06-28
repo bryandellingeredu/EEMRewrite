@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Application.Interfaces;
 
+
 namespace Application.Activities
 {
     public class EditSeries
@@ -93,6 +94,8 @@ namespace Application.Activities
                     }
                     var createdBy = activitiesToBeDeleted.FirstOrDefault().CreatedBy;
                     var createdAt = activitiesToBeDeleted.FirstOrDefault().CreatedAt;
+                    var originalTitle = activitiesToBeDeleted.FirstOrDefault().Title;
+                    var originalCoordinatorEmail = activitiesToBeDeleted.FirstOrDefault().CoordinatorEmail;
                     //delete the old activities and the recurrence we will make new ones
                     bool shouldGraphEventsBeRegenerated = await GetShouldGraphEventsBeRegenerated(request.Activity, allrooms);
 
@@ -209,6 +212,38 @@ namespace Application.Activities
                                 var storedGraphEvent = storedGraphEvents.Where(x => x.Start == a.Start && x.End == a.End && x.AllDayEvent == a.AllDayEvent).FirstOrDefault();
                                 if (storedGraphEvent != null) {
                                     a.EventLookup = storedGraphEvent.EventLookup;
+                                }
+                                // if the title of the event has changed update the room reservation with the new title
+                                if( !shouldGraphEventsBeRegenerated
+                                    && originalTitle != request.Activity.Title
+                                    && !string.IsNullOrEmpty(a.EventLookup)
+                                    )
+                                {
+                                    try
+                                    {
+                                        await GraphHelper.UpdateEventTitle(a.EventLookup, request.Activity.Title, GraphHelper.GetEEMServiceAccount());
+                                    }
+                                    catch (Exception)
+                                    {
+
+                                        try
+                                        {
+                                            await GraphHelper.UpdateEventTitle(a.EventLookup, request.Activity.Title, originalCoordinatorEmail );
+                                        }
+                                        catch (Exception)
+                                        {
+
+                                            try
+                                            {
+                                                await GraphHelper.UpdateEventTitle(a.EventLookup, request.Activity.Title, a.CoordinatorEmail);
+                                            }
+                                            catch (Exception)
+                                            {
+
+                                               // do nothing
+                                            }
+                                        }
+                                    }
                                 }
 
                             }

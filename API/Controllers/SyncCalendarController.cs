@@ -59,7 +59,8 @@ namespace API.Controllers
 
 
             var query = _context.Activities.AsQueryable();
-            query = query.Where(a => a.Start > startDateLimit && a.End < endDateLimit);
+            //     query = query.Where(a => a.Start > startDateLimit && a.End < endDateLimit);
+            query = query.Where(a => a.Start > startDateLimit );
             query = query.Where(a => !a.LogicalDeleteInd);
 
             switch (route)
@@ -135,7 +136,13 @@ namespace API.Controllers
             }
 
 
-            var activities = await query.ToListAsync();
+            //  var activities = await query.ToListAsync();
+
+            var activities = await query
+    .OrderBy(a => a.Start)
+    .Take(1000)
+    .ToListAsync();
+
             foreach (Activity activity in activities)
             {
                 writer.WriteLine("BEGIN:VEVENT");

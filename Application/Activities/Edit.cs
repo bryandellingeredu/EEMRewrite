@@ -81,6 +81,7 @@ namespace Application.Activities
                 var originalAllDayEvent = activity.AllDayEvent;
                 var originalEventLookup = activity.EventLookup;
                 var originalCoordinatorEmail = activity.CoordinatorEmail;
+                var originalTitle = activity.Title; 
 
                 var createdBy = activity.CreatedBy;
                 var createdAt = activity.CreatedAt;
@@ -180,7 +181,44 @@ namespace Application.Activities
                 else
                 {
                     activity.EventLookup = originalEventLookup;
+
+                    // check if the title has changed and there is a room reservation. if that happened we need to update the room reservation with the new title.
+                    if(
+                        !shouldGraphEventsBeRegenerated 
+                        && !string.IsNullOrEmpty(activity.EventLookup)
+                        && originalTitle != request.Activity.Title)
+                      {
+                        try
+                        {
+                            await GraphHelper.UpdateEventTitle(activity.EventLookup, request.Activity.Title, GraphHelper.GetEEMServiceAccount());
+                        }
+                        catch (Exception)
+                        {
+
+                            try
+                            {
+                                await GraphHelper.UpdateEventTitle(activity.EventLookup, request.Activity.Title, originalCoordinatorEmail);
+                            }
+                            catch (Exception)
+                            {
+
+                                try
+                                {
+                                    await GraphHelper.UpdateEventTitle(activity.EventLookup, request.Activity.Title, request.Activity.CoordinatorEmail);
+                                }
+                                catch (Exception)
+                                {
+
+                                    // do nothing
+                                }
+                            }
+                        }
+                     
+                      }
+                        
+                 
                 }
+
                 if (activity.CoordinatorEmail == GraphHelper.GetEEMServiceAccount() && shouldGraphEventsBeRegenerated)
                 {
 
@@ -248,7 +286,7 @@ namespace Application.Activities
                             try
                             {
                            
-                                evt = await GraphHelper.GetEventAsync(activity.CoordinatorEmail, originalEventLookup);
+                                evt = await GraphHelper.GetEventAsync(originalCoordinatorEmail, originalEventLookup);
 
                             }
                             catch (Exception)
