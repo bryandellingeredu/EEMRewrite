@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Text.Json;
+using Azure.Core;
+using Persistence.Migrations;
 
 namespace Application.GraphSchedules
 {
@@ -85,7 +87,8 @@ namespace Application.GraphSchedules
                                 Title = $"{scheduleItem.Subject.Split("- Requested by: ")[0]} ({scheduleItem.Location})",
                                 Color = scheduleItem.Status == FreeBusyStatus.Busy ? "Green" : "GoldenRod",
                                 AllDay = scheduleItem.Start.DateTime.Split('T')[1] == "00:00:00.0000000" &&
-                                         scheduleItem.End.DateTime.Split('T')[1] == "00:00:00.0000000"
+                                         scheduleItem.End.DateTime.Split('T')[1] == "00:00:00.0000000",
+                                RoomId = rooms.FirstOrDefault(r => r.AdditionalData["emailAddress"].ToString() == scheduleInformation.ScheduleId)?.Id
                             };
 
                             fullCalendarEventDTOs.Add(fullCalendarEventDto);
@@ -106,6 +109,8 @@ namespace Application.GraphSchedules
 
                 return Result<List<FullCalendarEventDTO>>.Success(distinctFullCalendarEventDTOs);
             }
+
+         
         }
     }
 }

@@ -82,7 +82,7 @@ picURL: '',
     }, [ categories, history]);
 
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-      getActivityIdByRoom( clickInfo.event.title, clickInfo.event.startStr, clickInfo.event.endStr).then((activity) => {
+      getActivityIdByRoom( clickInfo.event.title, clickInfo.event.startStr, clickInfo.event.endStr, id).then((activity) => {
         if(!activity || activity.id === '00000000-0000-0000-0000-000000000000' ){
           toast.info(`Event ${clickInfo.event.title} is reserved in outlook only, there is no eem information`, {
             position: "top-right",
@@ -117,7 +117,7 @@ picURL: '',
     });
 
       try {
-        const activity =  await getActivityIdByRoom( arg.event.title, arg.event.startStr, arg.event.endStr)
+        const activity =  await getActivityIdByRoom( arg.event.title, arg.event.startStr, arg.event.endStr, id)
         if(activity && activity.id !== '00000000-0000-0000-0000-000000000000' ){
           const activityContent  = ` <p></p>
           ${activity.description ?'<p><strong>Description: <strong>' + activity.description + '</p>' : '' }

@@ -165,7 +165,7 @@ const Activities = {
         room: NonDepartmentRoomReservationRequest) => axiosRequest.post<string>(
             '/activities/reserveNonDepartmentRoom', room ),
     listPossibleByRecurrence: (recurrence: Recurrence) => axiosRequest.post<Activity[]>('/activities/listPossibleByRecurrence', recurrence),
-    getByRoom: (title: string, start: string, end: string) => axiosRequest.get<Activity>(`/activities/getByRoom/${title}/${start}/${end}`),
+    getByRoom: (title: string, start: string, end: string, id: string) => axiosRequest.get<Activity>(`/activities/getByRoom/${title}/${start}/${end}/${id}`),
     getRoomNames: (eventLookup: string, coordinatorEmail: string) => axiosRequest.get<string>(`/activities/getRoomNames/${eventLookup}/${coordinatorEmail}`),
     getIMCEventsByDate: (start: string, end: string) => axiosRequest.get<CalendarEvent[]>(`/activities/getIMCEventsByDate?start=${start}&end=${end}`),
     getLocations: () => axiosRequest.get<string[]>('activities/getLocations'),

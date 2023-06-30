@@ -53,9 +53,9 @@ export default class ActivityStore {
   }
 
 
-  getActivityIdByRoom = async(title: string, startStr: string, endStr: string)  =>{
+  getActivityIdByRoom = async(title: string, startStr: string, endStr: string, id: string)  =>{
     try{
-      const activity: Activity = await agent.Activities.getByRoom(title, startStr, endStr)
+      const activity: Activity = await agent.Activities.getByRoom(title, startStr, endStr, id)
       if(activity && activity.id !== "00000000-0000-0000-0000-000000000000"){
       this.setActivity(activity);
       return activity;

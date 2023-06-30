@@ -38,5 +38,6 @@ namespace Application.GraphSchedules
         public string StudentCalendarUniform { get; set; }
         public string  StudentCalendarNotes { get; set; }
        public bool  StudentCalendarMandatory { get; set; }
+        public string RoomId { get; set; }
     }
 }
