@@ -7,7 +7,7 @@ using Domain;
 using Microsoft.Extensions.Configuration;
 using Azure.Core;
 using Microsoft.Graph;
-
+using System.Text.RegularExpressions;
 
 namespace Application.Activities
 {
@@ -41,16 +41,39 @@ namespace Application.Activities
                 var room = allRooms.Where(r => r.Id == request.Id).FirstOrDefault();
                 string roomEmail = room.AdditionalData["emailAddress"].ToString();
 
+                DateTime start = Helper.GetDateTimeFromRequest(request.Start);
+                DateTime end = Helper.GetDateTimeFromRequest(request.End);
+                DateTime startDate = start.Date.AddMonths(-2);
+                DateTime endDate = end.Date.AddMonths(2);
 
                 var activity = new Activity();
 
+                var titleRequest = Regex.Replace(request.Title.Trim().ToLower(), @"[^a-zA-Z0-9]", "");
+
                 var activities = await _context.Activities
-                .Include(x => x.Organization)
-                .Include(x => x.Category)
-                .Where(x => !x.LogicalDeleteInd)
-                .Where(x => !string.IsNullOrWhiteSpace(x.EventLookup))
-                .Where(x => x.Title == request.Title).ToListAsync();
-                var multipleActivities = new List<Activity>();
+                                .Include(x => x.Organization)
+                                .Include(x => x.Category)
+                                .Where(x => !x.LogicalDeleteInd)
+                                .Where(x => !string.IsNullOrWhiteSpace(x.EventLookup))
+                                .Where(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower())
+                                .ToListAsync();
+
+                if (!activities.Any())
+                {
+                    activities = await _context.Activities
+                                .Include(x => x.Organization)
+                                .Include(x => x.Category)
+                                .Where(x => !x.LogicalDeleteInd)
+                                .Where(x => !string.IsNullOrWhiteSpace(x.EventLookup))
+                                .Where(x => x.Start.Date >= startDate)
+                                .Where(x => x.End.Date <= endDate)
+                                .ToListAsync();
+
+                    activities = activities
+                                .Where(x => Regex.Replace(x.Title.Trim().ToLower(), @"[^a-zA-Z0-9]", "") == titleRequest)
+                                .ToList();
+                }
+
 
 
                 if (activities.Any())
@@ -89,8 +112,7 @@ namespace Application.Activities
                     }
                     else
                     {
-                        DateTime start = Helper.GetDateTimeFromRequest(request.Start);
-                        DateTime end = Helper.GetDateTimeFromRequest(request.End);
+      
 
                         // Look for the title where the date is anytime between the start date at midnight and the end date plus a day
                         var dateRangeActivities = filteredActivities.Where(x => x.Start.Date >= start.Date && x.End.Date <= end.Date && !string.IsNullOrEmpty(x.EventLookup)).ToList();
@@ -105,7 +127,7 @@ namespace Application.Activities
                             activities = dateRangeActivities.Where(x => DateTime.Compare(x.Start, start) == 0 && DateTime.Compare(x.End, end) == 0).ToList();
                             if (dateRangeActivities.Any())
                             {
-                                activity = activities.First();
+                                activity = dateRangeActivities.First();
                             }
                         }
                     }

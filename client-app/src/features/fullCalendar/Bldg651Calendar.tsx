@@ -72,7 +72,8 @@ export default function Bldg651Calendar (){
       });
   
         try {
-          const activity =  await getActivityIdByRoom( arg.event.title.split('(Bldg')[0], arg.event.startStr, arg.event.endStr, arg.event.extendedProps.roomId)
+          var sanitizedTitle = arg.event.title.split('(Bldg')[0].replace(/\//g, '');
+          const activity =  await getActivityIdByRoom( sanitizedTitle, arg.event.startStr, arg.event.endStr, arg.event.extendedProps.roomId)
           if(activity && activity.id !== '00000000-0000-0000-0000-000000000000' ){
             const activityContent  = ` <p></p>
             ${activity.description ?'<p><strong>Description: <strong>' + activity.description + '</p>' : '' }
@@ -92,7 +93,8 @@ export default function Bldg651Calendar (){
     }
 
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-        getActivityIdByRoom( clickInfo.event.title.split('(Bldg')[0], clickInfo.event.startStr, clickInfo.event.endStr, clickInfo.event.extendedProps.roomId).then((activity) => {
+      var sanitizedTitle = clickInfo.event.title.split('(Bldg')[0].replace(/\//g, '');
+        getActivityIdByRoom( sanitizedTitle, clickInfo.event.startStr, clickInfo.event.endStr, clickInfo.event.extendedProps.roomId).then((activity) => {
           if(!activity || activity.id === '00000000-0000-0000-0000-000000000000' ){
             toast.info(`Event ${clickInfo.event.title} is reserved in outlook only, there is no eem information`, {
               position: "top-right",
