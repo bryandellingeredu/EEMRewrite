@@ -66,6 +66,7 @@ namespace Application.Activities
                                       (category.RouteName == "battlerhythm" && x.CopiedTobattlerhythm) ||
                                       (category.RouteName == "staff" && x.CopiedTostaff) ||
                                       (category.RouteName == "studentCalendar" && x.CopiedTostudentCalendar) ||
+                                      (category.RouteName == "academic" && x.CopiedToacademic) ||
                                       (category.RouteName == "militaryFamilyAndSpouseProgram" && x.MFP))).
                           Where(x => !x.LogicalDeleteInd)
                           .ToListAsync();
