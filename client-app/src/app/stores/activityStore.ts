@@ -699,22 +699,48 @@ export default class ActivityStore {
     if(activity.activityRooms && activity.activityRooms.length > 0){
       location = activity.activityRooms.map(x => x.name).join('-');
     }
+    const dtStart = activity.allDayEvent ? 
+        `DTSTART;VALUE=DATE:${store.commonStore.convertDateToGraph(activity.start, activity.allDayEvent, false).replace(/[^\w\s]/gi, '').substring(0, 8)}` : 
+        `DTSTART;TZID=America/New_York:${store.commonStore.convertDateToGraph(activity.start, activity.allDayEvent, false).replace(/[^\w\s]/gi, '').substring(0, 15)}`;
+    const dtEnd = activity.allDayEvent ? 
+        `DTEND;VALUE=DATE:${store.commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true).replace(/[^\w\s]/gi, '').substring(0, 8)}` : 
+        `DTEND;TZID=America/New_York:${store.commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true).replace(/[^\w\s]/gi, '').substring(0, 15)}`;
+
     const url = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'BEGIN:VEVENT',
-    'CLASS:PUBLIC',
-    `DESCRIPTION:${activity.title}`,
-    `DTSTART;TZID=America/New_York:${store.commonStore.convertDateToGraph(activity.start, activity.allDayEvent, false).replace(/[^\w\s]/gi, '').substring(0, 15)}`,
-    `DTEND;TZID=America/New_York:${store.commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true).replace(/[^\w\s]/gi, '').substring(0, 15)}`,
-    `LOCATION:${location||'N/A'}`,
-    `SUMMARY;LANGUAGE=en-us:${activity.title}`,
-    'TRANSP:TRANSPARENT',
-    'END:VEVENT',
-    'END:VCALENDAR'
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//United States Army War College//EEM//EN',
+        'BEGIN:VTIMEZONE',
+        'TZID:America/New_York',
+        'BEGIN:DAYLIGHT',
+        'TZOFFSETFROM:-0500',
+        'TZOFFSETTO:-0400',
+        'DTSTART:19700308T020000',
+        'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU',
+        'TZNAME:EDT',
+        'END:DAYLIGHT',
+        'BEGIN:STANDARD',
+        'TZOFFSETFROM:-0400',
+        'TZOFFSETTO:-0500',
+        'DTSTART:19701101T020000',
+        'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU',
+        'TZNAME:EST',
+        'END:STANDARD',
+        'END:VTIMEZONE',
+        'BEGIN:VEVENT',
+        'CLASS:PUBLIC',
+        `DESCRIPTION:${activity.title}`,
+        dtStart,
+        dtEnd,
+        `LOCATION:${location||'N/A'}`,
+        `SUMMARY;LANGUAGE=en-us:${activity.title}`,
+        'TRANSP:TRANSPARENT',
+        'END:VEVENT',
+        'END:VCALENDAR'
     ].join('\n');
 
     return url;
-  }
+}
+
   }
 
