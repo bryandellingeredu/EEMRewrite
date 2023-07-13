@@ -182,6 +182,17 @@ export interface Activity{
     studentCalendarMandatory : boolean
     studentCalendarNotes : string
     studentCalendarPresenter : string
+    enlistedAideEvent : boolean
+    enlistedAideFundingType : string
+    enlistedAideVenue : string
+    enlistedAideGuestCount : string
+    enlistedAideCooking : string
+    enlistedAideDietaryRestrictions : string
+    enlistedAideAlcohol : string
+    enlistedAideAcknowledged : boolean
+    enlistedAideNumOfBartenders : string
+    enlistedAideNumOfServers : string
+    enlistedAideSupportNeeded : string
 }
 
 export class Activity implements Activity{
@@ -362,6 +373,15 @@ export class ActivityFormValues{
     studentCalendarMandatory : boolean = false
     studentCalendarNotes : string = ''
     studentCalendarPresenter : string = ''
+    enlistedAideEvent : boolean = false
+    enlistedAideGuestCount : string = ''
+    enlistedAideCooking : string = ''
+    enlistedAideDietaryRestrictions : string = ''
+    enlistedAideAlcohol : string = ''
+    enlistedAideAcknowledged : boolean = false
+    enlistedAideNumOfBartenders : string = ''
+    enlistedAideNumOfServers : string = ''
+    enlistedAideSupportNeeded : string = ''
 
 
 
@@ -537,6 +557,15 @@ export class ActivityFormValues{
         this.studentCalendarMandatory = activity.studentCalendarMandatory
         this.studentCalendarNotes = activity.studentCalendarNotes
         this.studentCalendarPresenter = activity.studentCalendarPresenter
+        this.enlistedAideEvent = activity.enlistedAideEvent
+        this.enlistedAideGuestCount = activity.enlistedAideGuestCount
+        this.enlistedAideCooking = activity.enlistedAideCooking
+        this.enlistedAideDietaryRestrictions = activity.enlistedAideDietaryRestrictions
+        this.enlistedAideAlcohol = activity.enlistedAideAlcohol
+        this.enlistedAideAcknowledged = activity.enlistedAideAcknowledged
+        this.enlistedAideNumOfBartenders = activity.enlistedAideNumOfBartenders
+        this.enlistedAideNumOfServers = activity.enlistedAideNumOfServers
+        this.enlistedAideSupportNeeded = activity.enlistedAideSupportNeeded
        } 
     }
 }

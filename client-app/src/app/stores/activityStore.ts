@@ -634,7 +634,16 @@ export default class ActivityStore {
     studentCalendarUniform : '',
     studentCalendarMandatory : false,
     studentCalendarNotes :  '',
-    studentCalendarPresenter : ''
+    studentCalendarPresenter : '',
+    enlistedAideEvent: false,
+    enlistedAideGuestCount : '',
+    enlistedAideCooking : '',
+    enlistedAideDietaryRestrictions : '',
+    enlistedAideAlcohol : '',
+    enlistedAideAcknowledged : false,
+    enlistedAideNumOfBartenders :  '',
+    enlistedAideNumOfServers : '',
+    enlistedAideSupportNeeded : ''
     }
     return activity;
   }

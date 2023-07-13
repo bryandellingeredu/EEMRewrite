@@ -203,6 +203,18 @@ namespace Domain
         public bool StudentCalendarMandatory { get; set; }
         public string StudentCalendarNotes { get; set; }
         public string StudentCalendarPresenter { get; set; }
+        public bool EnlistedAideEvent { get; set; }
+        public string EnlistedAideFundingType { get; set; }
+        public string EnlistedAideVenue { get; set; }
+        public string EnlistedAideGuestCount { get; set; }
+        public string EnlistedAideCooking { get; set; }
+        public string EnlistedAideDietaryRestrictions{ get; set; }
+        public string EnlistedAideAlcohol { get; set; }
+        public bool EnlistedAideAcknowledged { get; set; }
+        public string EnlistedAideNumOfBartenders { get; set; }
+        public string EnlistedAideNumOfServers { get; set; }
+        public string EnlistedAideSupportNeeded{ get; set; }
+
 
 
     }
