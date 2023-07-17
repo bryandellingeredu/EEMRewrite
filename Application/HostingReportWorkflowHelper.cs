@@ -33,7 +33,7 @@ namespace Application
             }
         }
 
-        private string GetHostingReportDetails() =>$@"<h2>Hosing Report Details</h2><p></p>
+        private string GetHostingReportDetails() =>$@"<h2>Hosting Report Details</h2><p></p>
                              <p><strong>Title: </strong> {_activity.Title} </p>
                              <p><strong>Start Time: </strong> {GetStartTime()} </p>
                               <p><strong>End Time: </strong> {GetEndTime()} </p> "

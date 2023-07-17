@@ -16,6 +16,7 @@ import Pikaday from "pikaday";
 import { useStore } from "../../app/stores/store";
 
 export default function Bldg651Calendar (){
+  const [view, setView] = useState(localStorage.getItem("calendarView651") || "timeGridWeek");
     const { id } = useParams<{ id: string }>();
     const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
@@ -163,7 +164,7 @@ export default function Bldg651Calendar (){
 <FullCalendar
 ref={calendarRef}
 height={height}
-initialView="timeGridWeek"
+initialView={view}
 headerToolbar={{
   left: "prev,next",
   center: "title",
@@ -183,6 +184,11 @@ slotMinTime={'07:00:00'}
 slotMaxTime={'21:00:00'}
 loading={(isLoading) => setIsLoading(isLoading)}
 eventDidMount={eventDidMount}
+datesSet={(arg) => {
+  // Save the user's view selection
+  localStorage.setItem("calendarView651", arg.view.type);
+  setView(arg.view.type);
+}}
 //eventContent={renderEventContent}  
 />
 </>

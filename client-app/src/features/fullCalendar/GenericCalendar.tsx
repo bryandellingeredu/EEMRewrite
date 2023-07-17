@@ -18,6 +18,7 @@ import Pikaday from "pikaday";
 import { Loader } from "semantic-ui-react";
 
 export default observer(function GenericCalendar() {
+  const [view, setView] = useState(localStorage.getItem("calendarViewGeneric") || "dayGridMonth");
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
   const { categoryStore, activityStore } = useStore();
@@ -182,7 +183,7 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
           <FullCalendar
            ref={calendarRef}
             height= {height}
-            initialView={id === "studentCalendar" ? "timeGridWeek" : "dayGridMonth"}
+            initialView={view}
             headerToolbar={{
               left: "prev,next",
               center: "title",
@@ -202,6 +203,11 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
             slotMinTime={'07:00:00'}
             slotMaxTime={'21:00:00'} 
             loading={(isLoading) => setIsLoading(isLoading)}    
+            datesSet={(arg) => {
+              // Save the user's view selection
+              localStorage.setItem("calendarViewGeneric", arg.view.type);
+              setView(arg.view.type);
+            }}
           />
            <GenericCalendarTable id={id} />
            

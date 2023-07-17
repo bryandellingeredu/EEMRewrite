@@ -142,6 +142,7 @@ export default observer(function ActivityForm() {
   const [attachBioError, setAttachBioError] = useState(false);
   const [distantTechError, setDistantTechError] = useState(false);
   const [attachNoAttachmentError, setAttachNoAttachmentError] = useState(false);
+  const [subCalendarError, setSubCalendarError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [recurrenceDisabled, setRecurrenceDisabled] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
@@ -486,9 +487,23 @@ export default observer(function ActivityForm() {
     debugger;
     let hostingReportError = false;
     let distantTechErrorIndicator = false;
+    let subCalendarErrorIndicator = false;
     setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
+    setSubCalendarError(false);
+    
+    if(!roomRequired && (activity.categoryId == '' || categories.find((x) => x.id === activity.categoryId)?.name ==="Other")){
+      setSubCalendarError(true);
+      subCalendarErrorIndicator = true;
+      const subCalendarAnchor = document.getElementById("subCalendarAnchor");
+      if (subCalendarAnchor) {
+        subCalendarAnchor.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
 
     if (activity.vtc && !activity.distantTechPhoneNumber){
       setDistantTechError(true);
@@ -533,7 +548,7 @@ export default observer(function ActivityForm() {
         }
       }
     }
-    if (!hostingReportError && !distantTechErrorIndicator) {
+    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator) {
       setSubmitting(true);
       if (!activity.categoryId)
         activity.categoryId = categories.find((x) => x.name === "Other")!.id;
@@ -1548,6 +1563,14 @@ export default observer(function ActivityForm() {
                       placeholder="Sub Calendar"
                       name="categoryId"
                     />
+                     <p><i id="subCalendarAnchor">A sub calendar is required for the event to appear on an installation calendar</i></p>
+                                {subCalendarError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      You must enter a sub calendar if you are not reserving a room
+                                    </Label>
+                                  </p>
+                                )}
                   </Grid.Column>
                 </Grid.Row>
               </Grid>

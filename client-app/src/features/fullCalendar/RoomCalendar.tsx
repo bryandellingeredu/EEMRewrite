@@ -21,6 +21,7 @@ import Pikaday from "pikaday";
 
 export default observer(function RoomCalendar() {
     const { id } = useParams<{ id: string }>();
+    const [view, setView] = useState(localStorage.getItem("calendarViewRoom") || "dayGridMonth");
     const {graphRoomStore, activityStore, categoryStore} = useStore();
     const{loadingInitial, graphRooms, loadGraphRooms} = graphRoomStore;
     const { categories } = categoryStore;
@@ -217,7 +218,7 @@ picURL: '',
       <FullCalendar
             ref={calendarRef}
             height={height}
-            initialView="dayGridMonth"
+            initialView={view}
             headerToolbar={{
               left: "prev,next",
               center: "title",
@@ -237,6 +238,11 @@ picURL: '',
             slotMaxTime={'21:00:00'}
             eventDidMount={eventDidMount}
             loading={(isLoading) => setIsLoading(isLoading)}
+            datesSet={(arg) => {
+              // Save the user's view selection
+              localStorage.setItem("calendarViewRoom", arg.view.type);
+              setView(arg.view.type);
+            }}
             //eventContent={renderEventContent}  
           />
       </>

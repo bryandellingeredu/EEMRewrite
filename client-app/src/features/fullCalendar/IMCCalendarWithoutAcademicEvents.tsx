@@ -16,6 +16,7 @@ import { EventApi } from '@fullcalendar/react';
 import { Loader } from "semantic-ui-react";
 
 export default function IMCCalendarWithoutAcademicEvents(this: any) {
+  const [view, setView] = useState(localStorage.getItem("calendarViewIMC") || "timeGridWeek");
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
   const { activityStore } = useStore();
@@ -157,7 +158,7 @@ function addIconToEvent(event: EventApi, el: HTMLElement) {
    <FullCalendar
       ref={calendarRef}
       height={height}
-      initialView="timeGridWeek"
+      initialView={view}
       headerToolbar={{
         left: "prev,next",
         center: "title",
@@ -181,6 +182,12 @@ function addIconToEvent(event: EventApi, el: HTMLElement) {
           addIconToEvent(event, el);
         }
       }}
+      datesSet={(arg) => {
+        // Save the user's view selection
+        localStorage.setItem("calendarViewIMC", arg.view.type);
+        setView(arg.view.type);
+      }}
+    
     />
     </>
   )
