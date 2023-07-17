@@ -214,8 +214,8 @@ namespace Domain
         public string EnlistedAideNumOfBartenders { get; set; }
         public string EnlistedAideNumOfServers { get; set; }
         public string EnlistedAideSupportNeeded{ get; set; }
-
-
-
+        public bool EnlistedAideSetup { get; set; }
+        public bool NewEnlistedAideEventToAideNotificationSent { get; set; }
+        public bool NewEnlistedAideEventToESDNotificationSent { get; set; }
     }
 }

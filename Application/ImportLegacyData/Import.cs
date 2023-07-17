@@ -224,10 +224,7 @@ namespace Application.ImportLegacyData
 
                         if (roomEmails.Count > 0)
                         {
-                            if (roomEmails.Count > 1)
-                            {
-                                var x = "y";
-                            }
+                           
                             string startDateAsString = a.Start.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
                             string endDateAsString = a.End.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", CultureInfo.InvariantCulture);
 

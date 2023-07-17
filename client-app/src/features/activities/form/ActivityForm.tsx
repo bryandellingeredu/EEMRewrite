@@ -109,9 +109,11 @@ export default observer(function ActivityForm() {
     calendarEventParameters,
   } = activityStore;
   const {user} = userStore
+  const [enlistedAidAdmin, setEnlistedAidAdmin] = useState(false);
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
   useEffect(() => {
     setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
+    setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
 }, [user]);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const { categoryOptions, categories, loadCategories } = categoryStore;
@@ -3417,6 +3419,86 @@ export default observer(function ActivityForm() {
               
               </>
             )}
+
+
+                 {enlistedAidAdmin && 
+                       <Grid>
+                        <Grid.Row>
+                          <Grid.Column width={3}>
+                            <strong>Add this Event to the Enlisted Aide Management Calendar:</strong>
+                          </Grid.Column>
+                          <Grid.Column width={13}>
+                            <SemanticForm.Group inline>
+                              <MySemanticCheckBox name="enlistedAideEvent" />
+                            </SemanticForm.Group>
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+                  }
+
+                      {values.enlistedAideEvent && enlistedAidAdmin && (
+                <Segment style={{ backgroundColor: "#f7f2e1" }} >
+                <Header as="h5" icon textAlign="center" color="orange">
+                  <Icon name="clipboard" />
+                  <Header.Content>Enlisted Aide Event Information</Header.Content>
+                </Header>
+
+                <MyDataList
+                      name="enlistedAideFundingType"
+                      placeholder=""
+                      label="Funding Type: (Pick from the list or type your own)"
+                      dataListId="enlistedAideFundingType"
+                      options={['GIFT','ORF']}
+                    />
+                  
+                  <MyDataList
+                      name="enlistedAideVenue"
+                      placeholder=""
+                      label="Venue: (Pick from the list or type your own)"
+                      dataListId="enlistedAideVenue"
+                      options={['AHEC','LVCC', 'Quarters 1', 'Root Hall']}
+                    />
+
+                   <MyTextInput name="enlistedAideGuestCount" placeholder="0" label = "Guest Count"/>
+
+                   <MyDataList
+                      name="enlistedAideCooking"
+                      placeholder="Not Applicable"
+                      label="Cooking: (Leave Blank for Not Applicable, Pick from the list, or type your own)"
+                      dataListId="enlistedAideCooking"
+                      options={["Buffet", "Hours d' oeuvres", "Plated Meal"]}
+                    />
+
+                  <MyTextInput name="enlistedAideDietaryRestrictions" placeholder="None Known" label = "Dietary Restrictions (Leave Blank for no dietary restrictions)"/>
+
+                  
+                  <MyDataList
+                      name="enlistedAideAlcohol"
+                      placeholder="No Alcohol Needed"
+                      label="Alcohol: (Leave Blank for Not Applicable, Pick from the list, or type your own)"
+                      dataListId="enlistedAideAlcohol"
+                      options={["Open Bar", "Wine & Beer"]}
+                    />
+
+                 <Divider />
+                   <Grid>
+                        <Grid.Row>
+                          <Grid.Column width={2}>
+                            <strong>Set Up is Needed:</strong>
+                          </Grid.Column>
+                          <Grid.Column width={14}>
+                            <SemanticForm.Group inline>
+                              <MySemanticCheckBox name="enlistedAideSetup" />
+                            </SemanticForm.Group>
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+
+                </Segment>
+
+                )}
+
+
                     <Divider color="black" />
                           <Grid>
                             <Grid.Row>

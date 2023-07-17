@@ -47,6 +47,7 @@ import ManageRolesTable from '../../features/admin/manageRoles/manageRolesTable'
 import ManageRolesForm from '../../features/admin/manageRoles/manageRoleForm';
 import RequestRoomDelegateChanges from '../../features/rooms/RequestRoomDelegateChanges';
 import AddToCalendars from '../../features/activities/form/AddToCalendars';
+import enlistedAideConfirmation from '../../features/enlistedaide/enlistedAideConfirmation';
 
 function App() {
   const location = useLocation();
@@ -125,6 +126,7 @@ function App() {
                   `${process.env.PUBLIC_URL}/createActivityWithCalendar/:calendarid`,
                   `${process.env.PUBLIC_URL}/copy/:id/:categoryId/:copy`,
                   ]} component={ActivityForm}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/enlistedAideConfirmation/:id/:categoryId`} component={enlistedAideConfirmation}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/addToCalendars/:id/:categoryId`} component={AddToCalendars}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/bldg651Calendar/:id`} component={Bldg651Calendar}/>

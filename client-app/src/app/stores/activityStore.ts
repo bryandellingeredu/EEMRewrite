@@ -636,6 +636,8 @@ export default class ActivityStore {
     studentCalendarNotes :  '',
     studentCalendarPresenter : '',
     enlistedAideEvent: false,
+    enlistedAideFundingType: '',
+    enlistedAideVenue : '',
     enlistedAideGuestCount : '',
     enlistedAideCooking : '',
     enlistedAideDietaryRestrictions : '',
@@ -643,7 +645,10 @@ export default class ActivityStore {
     enlistedAideAcknowledged : false,
     enlistedAideNumOfBartenders :  '',
     enlistedAideNumOfServers : '',
-    enlistedAideSupportNeeded : ''
+    enlistedAideSupportNeeded : '',
+    enlistedAideSetup: false,
+    newEnlistedAideEventToAideNotificationSent: false,
+    newEnlistedAideEventToESDNotificationSent: false
     }
     return activity;
   }

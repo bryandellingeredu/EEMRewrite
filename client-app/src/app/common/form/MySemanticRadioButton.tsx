@@ -19,7 +19,7 @@ export default function MySemanticRadioButton(props: Props){
           checked={field.value === props.value}
           onChange={(e) => helpers.setValue(e.currentTarget.querySelector('input')?.value)}
         />
-        { meta.error ? (
+        { meta.touched && meta.error ? (
             <Label basic color='red' style={{marginTop: '50px', marginLeft: '-85px'}}>
                 {meta.error}
             </Label>

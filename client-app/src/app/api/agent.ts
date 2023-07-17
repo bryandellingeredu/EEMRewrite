@@ -294,6 +294,10 @@ const AddToEEMCalendars = {
     update: (activityCalendarInformationDTO: any, id: string) => axiosRequest.put<void>(`/addToEEMCalendars/${id}`, activityCalendarInformationDTO),
 }
 
+const EnlistedAide = {
+    confirm: (enlistedAideConfirmationDTO: any) => axiosRequest.post<void>('/enlistedAide/confirm', enlistedAideConfirmationDTO),
+}
+
 const agent = {
     Activities,
     Account,
@@ -316,7 +320,8 @@ const agent = {
     USAHECReports,
     Calendars,
     UserRoles,
-    AddToEEMCalendars 
+    AddToEEMCalendars,
+    EnlistedAide
 }
 
 export default agent;

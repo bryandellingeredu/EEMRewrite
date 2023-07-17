@@ -40,6 +40,16 @@ export default observer(function Navbar() {
     graphUserStore: {armyProfile}
   } = useStore();
   const [isSignedIn] = useIsSignedIn();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+  const handleToggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   useEffect(() => {
     if (!graphRooms.length) loadGraphRooms();
@@ -49,6 +59,13 @@ export default observer(function Navbar() {
     console.log(user?.displayName);
     console.log(user?.roles);
   }, [loadGraphRooms, graphRooms.length, categories.length]);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div style={{position: "fixed", top: 0, width: "100%", zIndex: 999}}>
@@ -76,7 +93,7 @@ export default observer(function Navbar() {
           <img src={`${process.env.PUBLIC_URL}/assets/logo.png`} alt="logo" style={{ marginRight: 10 }} />
           EEM
         </Menu.Item>
-        {isLoggedIn && (
+        {!isMobile && isLoggedIn && (
           <>
       
             <Menu.Item>

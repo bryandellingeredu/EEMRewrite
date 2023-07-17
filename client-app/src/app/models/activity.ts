@@ -1,4 +1,3 @@
-
 import { store } from "../stores/store";
 import { Category } from "./category";
 import { Organization } from "./organization";
@@ -193,6 +192,9 @@ export interface Activity{
     enlistedAideNumOfBartenders : string
     enlistedAideNumOfServers : string
     enlistedAideSupportNeeded : string
+    enlistedAideSetup: boolean
+    newEnlistedAideEventToAideNotificationSent: boolean
+    newEnlistedAideEventToESDNotificationSent: boolean
 }
 
 export class Activity implements Activity{
@@ -374,6 +376,8 @@ export class ActivityFormValues{
     studentCalendarNotes : string = ''
     studentCalendarPresenter : string = ''
     enlistedAideEvent : boolean = false
+    enlistedAideFundingType : string = ''
+    enlistedAideVenue : string = ''
     enlistedAideGuestCount : string = ''
     enlistedAideCooking : string = ''
     enlistedAideDietaryRestrictions : string = ''
@@ -382,6 +386,9 @@ export class ActivityFormValues{
     enlistedAideNumOfBartenders : string = ''
     enlistedAideNumOfServers : string = ''
     enlistedAideSupportNeeded : string = ''
+    enlistedAideSetup : boolean = false
+    newEnlistedAideEventToAideNotificationSent: boolean = false
+    newEnlistedAideEventToESDNotificationSent: boolean = false
 
 
 
@@ -558,6 +565,8 @@ export class ActivityFormValues{
         this.studentCalendarNotes = activity.studentCalendarNotes
         this.studentCalendarPresenter = activity.studentCalendarPresenter
         this.enlistedAideEvent = activity.enlistedAideEvent
+        this.enlistedAideFundingType = activity.enlistedAideFundingType
+        this.enlistedAideVenue = activity.enlistedAideVenue 
         this.enlistedAideGuestCount = activity.enlistedAideGuestCount
         this.enlistedAideCooking = activity.enlistedAideCooking
         this.enlistedAideDietaryRestrictions = activity.enlistedAideDietaryRestrictions
@@ -566,6 +575,9 @@ export class ActivityFormValues{
         this.enlistedAideNumOfBartenders = activity.enlistedAideNumOfBartenders
         this.enlistedAideNumOfServers = activity.enlistedAideNumOfServers
         this.enlistedAideSupportNeeded = activity.enlistedAideSupportNeeded
+        this.enlistedAideSetup = activity.enlistedAideSetup
+        this.newEnlistedAideEventToAideNotificationSent = activity.newEnlistedAideEventToAideNotificationSent
+        this.newEnlistedAideEventToESDNotificationSent = activity.newEnlistedAideEventToESDNotificationSent
        } 
     }
 }
