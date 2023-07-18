@@ -115,7 +115,13 @@ export default observer(function Navbar() {
                 IMC
             </Menu.Item>     
               <Dropdown item text="Calendars" scrolling >
+                
                 <Dropdown.Menu>
+                <Dropdown.Item
+                    text="Customizable Calendar"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/customcalendar`}
+                  />
                     <Dropdown.Item
                     text="Student Calendar Academic Year 2023"
                     as={Link}

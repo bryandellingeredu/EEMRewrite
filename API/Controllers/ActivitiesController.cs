@@ -145,6 +145,15 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("getAllEventsByDate")]
+        public async Task<ActionResult> GetAllEvents()
+        {
+            string start = Request.Query["start"];
+            string end = Request.Query["end"];
+            return HandleResult(await Mediator.Send(new GetAllEventsByDate.Query { Start = start, End = end }));
+        }
+
+        [AllowAnonymous]
         [HttpGet("getSVTCEventsByDate")]
         public async Task<ActionResult> GetSVTCEvents()
         {

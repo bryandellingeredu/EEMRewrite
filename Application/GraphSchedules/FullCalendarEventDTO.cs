@@ -13,6 +13,7 @@ namespace Application.GraphSchedules
         public string Start { get; set; }
         public string End { get; set; }
         public string CategoryId { get; set; }
+        public string ActivityCategoryId { get; set; }
         public string Color { get; set; }
         public string TextColor { get; set; }
         public string BorderColor { get; set; }
