@@ -233,7 +233,7 @@ const handleLabelClick = (id: string) => {
             const picker = new Pikaday({
               field: document.querySelector(".fc-datepicker-button") as HTMLElement,
               format: "YYYY-MM-DD",
-              onSelect: function (dateString) {
+              onSelect: function (dateString) { 
                 const calendarApi = calendarRef.current?.getApi();
                 if (calendarApi) {
                   picker.gotoDate(new Date(dateString));

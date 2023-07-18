@@ -2810,7 +2810,7 @@ export default observer(function ActivityForm() {
                     {values.report === "Hosting Report" && (
                       <MyTextInput
                         name="hostingReport.uniformOfGuest"
-                        placeholder="Unifrom of Visitor"
+                        placeholder="Uniform of Visitor"
                         label="Uniform of Visitor:"
                       />
                     )}
@@ -3286,7 +3286,7 @@ export default observer(function ActivityForm() {
                     {values.report === "Hosting Report" && (
                       <MyTextArea
                         rows={3}
-                        placeholder="Official Gift Exchange (Or speaker fift only for addressing the entire class)"
+                        placeholder="Official Gift Exchange (Or speaker gift only for addressing the entire class)"
                         name="hostingReport.gift"
                         label="Gift Requirement:"
                       />
