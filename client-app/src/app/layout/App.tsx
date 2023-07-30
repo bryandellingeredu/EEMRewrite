@@ -49,6 +49,10 @@ import RequestRoomDelegateChanges from '../../features/rooms/RequestRoomDelegate
 import AddToCalendars from '../../features/activities/form/AddToCalendars';
 import enlistedAideConfirmation from '../../features/enlistedaide/enlistedAideConfirmation';
 import CustomCalendar from '../../features/fullCalendar/CustomCalendar';
+import { EnlistedAideChecklist } from '../models/enlistedAideChecklist';
+import enlistedAideChecklistForm from '../../features/enlistedaide/enlistedAideChecklistForm';
+import FullScreenEnlistedAideCalendar from '../../features/enlistedaide/fullScreenEnlistedAideCalendar';
+import EnlistedAideCalendarWrapper from '../../features/enlistedaide/enlistedAideCalendarWrapper';
 
 function App() {
   const location = useLocation();
@@ -109,6 +113,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/activities`} component={ActivityDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/academiccalendar`} component={AcademicCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar`} component={IMCCalendarDashboard}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper`} component={EnlistedAideCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/customcalendar`} component={CustomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/genericcalendar/:id`} component={GenericCalendar}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/roomcalendar/:id`} component={RoomCalendar}/>
@@ -129,6 +134,7 @@ function App() {
                   `${process.env.PUBLIC_URL}/copy/:id/:categoryId/:copy`,
                   ]} component={ActivityForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/enlistedAideConfirmation/:id/:categoryId`} component={enlistedAideConfirmation}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/enlistedAideChecklistForm/:id/:categoryId`} component={enlistedAideChecklistForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/addToCalendars/:id/:categoryId`} component={AddToCalendars}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/bldg651Calendar/:id`} component={Bldg651Calendar}/>

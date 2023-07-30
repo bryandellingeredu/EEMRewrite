@@ -92,11 +92,12 @@ namespace Application
             }
             if (!_activity.EventClearanceLevelNotificationSent && (_activity.EventClearanceLevel == "Secret" || _activity.EventClearanceLevel == "Top Secret" || _activity.EventClearanceLevel == "TS-SCI"))  await this.SendEventClearanceLevelNotification();   
             if (!_activity.BlissHallAVNotificationSent && (_activity.BlissHallSupport || !string.IsNullOrEmpty(_activity.EventClearanceLevel))) await this.SendBlissHallNotification();   
-            if (!_activity.VTCCoordinatorNotificationSent && _activity.RoomEmails.Any() && _activity.VTC) await this.SendVTCCoordinatorEmails();
-            if (!_activity.VTCConfirmedConfirmationSent && _activity.RoomEmails.Any() && _activity.VTC && _activity.VTCStatus == "Confirmed") await this.SendVTCConfirmedEmail();
-            if (!_activity.CCRNotificationSent && _activity.RoomEmails.Any() && !string.IsNullOrEmpty(_activity.RoomSetUp)) await this.SendCCRNotification();
+            if (!_activity.VTCCoordinatorNotificationSent && _activity.RoomEmails != null &&_activity.RoomEmails.Any() && _activity.VTC) await this.SendVTCCoordinatorEmails();
+            if (!_activity.VTCConfirmedConfirmationSent && _activity.RoomEmails != null && _activity.RoomEmails.Any() && _activity.VTC && _activity.VTCStatus == "Confirmed") await this.SendVTCConfirmedEmail();
+            if (!_activity.CCRNotificationSent && _activity.RoomEmails != null &&  _activity.RoomEmails.Any() && !string.IsNullOrEmpty(_activity.RoomSetUp)) await this.SendCCRNotification();
             if (!_activity.NewEnlistedAideEventToESDNotificationSent && _activity.EnlistedAideEvent) await this.SendNewEnlistedAideEventToESD();
             if (!_activity.NewEnlistedAideEventToAideNotificationSent && _activity.EnlistedAideEvent) await this.SendNewEnlistedAideEventToAide();
+            if (_activity.SendEnlistedAideConfirmationNotification && _activity.EnlistedAideEvent) await this.SendEnlistedAideConfirmationNotification();
         }
 
         private async Task SendNewEnlistedAideEventToAide()
@@ -137,6 +138,56 @@ namespace Application
             await _context.SaveChangesAsync();
         }
 
+      
+
+            private async Task SendEnlistedAideConfirmationNotification()
+        {
+            string title = $"Enilisted Aide {_activity.LastUpdatedBy} {(_activity.EnlistedAideAcknowledged ? "is available" : " is not available")} for {_activity.Title} ";
+
+            string requestedBy = string.IsNullOrEmpty(_activity.LastUpdatedBy) ? _activity.CreatedBy : _activity.LastUpdatedBy;
+            string body = $"<p> Enilisted Aide {_activity.LastUpdatedBy} {(_activity.EnlistedAideAcknowledged ? "is available" : " is not available")} for {_activity.Title} </p>";
+            if (_activity.EnlistedAideAcknowledged && !string.IsNullOrEmpty(_activity.EnlistedAideNumOfBartenders))
+            {
+                body = body + $"<p>The Enilisted Aide has requested  <strong>number of bartenders: </strong>  {_activity.EnlistedAideNumOfBartenders}</p>";
+            }
+            if (_activity.EnlistedAideAcknowledged && !string.IsNullOrEmpty(_activity.EnlistedAideNumOfServers))
+            {
+                body = body + $"<p>The Enilisted Aide has requested <strong>number of servers: </strong> {_activity.EnlistedAideNumOfServers}  </p>";
+            }
+            if (_activity.EnlistedAideAcknowledged && !string.IsNullOrEmpty(_activity.EnlistedAideSupportNeeded))
+            {
+                body = body + $"<p><strong> Additional Support: </strong> {_activity.EnlistedAideSupportNeeded}  </p>";
+            }
+            body = body + $@"<h2>Event Request Details</h2><p></p>
+                       <p><strong>Title: </strong> {_activity.Title} </p>
+                       <p><strong>Start Time: </strong> {GetStartTime()} </p>
+                      <p><strong>End Time: </strong> {GetEndTime()} </p> "
+                        + (string.IsNullOrEmpty(_activity.EnlistedAideFundingType) ? "" : $" <p><strong>Funding Type: </strong> {_activity.EnlistedAideFundingType} </p>")
+                        + (string.IsNullOrEmpty(_activity.EnlistedAideVenue) ? "" : $" <p><strong>Venue: </strong> {_activity.EnlistedAideVenue} </p>")
+                        + (string.IsNullOrEmpty(_activity.EnlistedAideGuestCount) ? "" : $" <p><strong>Guest Count: </strong> {_activity.EnlistedAideGuestCount} </p>")
+                        + (string.IsNullOrEmpty(_activity.EnlistedAideCooking) ? "" : $" <p><strong>Cooking: </strong> {_activity.EnlistedAideCooking} </p>")
+                        + (string.IsNullOrEmpty(_activity.EnlistedAideDietaryRestrictions) ? "" : $" <p><strong>Dietary Restrictions: </strong> {_activity.EnlistedAideDietaryRestrictions} </p>")
+                        + (string.IsNullOrEmpty(_activity.EnlistedAideAlcohol) ? "" : $" <p><strong>Alcohol: </strong> {_activity.EnlistedAideAlcohol} </p>");
+
+            if (_activity.EnlistedAideSetup)
+            {
+                body = body + "<p><strong>Setup: </strong> setup is needed";
+            }
+            else
+            {
+                body = body + "<p><strong>Setup: </strong> setup is not needed";
+            }
+            body = body + $@"<p><p/><p><p/><p> To view in the Enterprise Event Manager (EEM), click the: <a href='{_settings.BaseUrl}?id={_activity.Id}&categoryid={_activity.CategoryId}'> EEM Link </a></p>
+              <p></p><p></p><p>DO NOT REPLY TO THIS E-MAIL. THIS MESSAGE WAS AUTOMATICALLY GENERATED BY THE SYSTEM AND IS NOT MONITORED.</p>";
+            await GraphHelper.SendEmail(GetEmails("Enlisted Aide ESD"), title, body);
+
+            var activityToUpdate = await _context.Activities.FindAsync(_activity.Id);
+            activityToUpdate.SendEnlistedAideConfirmationNotification = false;
+            _context.Activities.Update(activityToUpdate);
+            await _context.SaveChangesAsync();
+        }
+
+
         private async Task SendNewEnlistedAideEventToESD()
         {
             string title = $"A request was made to  prepare an Enlisted Aid Event  on {GetStartTime()}";
@@ -151,7 +202,7 @@ namespace Application
                         + (string.IsNullOrEmpty(_activity.EnlistedAideFundingType) ? "" : $" <p><strong>Funding Type: </strong> {_activity.EnlistedAideFundingType} </p>")
                         + (string.IsNullOrEmpty(_activity.EnlistedAideVenue) ? "" : $" <p><strong>Venue: </strong> {_activity.EnlistedAideVenue} </p>")
                         + (string.IsNullOrEmpty(_activity.EnlistedAideGuestCount) ? "" : $" <p><strong>Guest Count: </strong> {_activity.EnlistedAideGuestCount} </p>")
-                        + (string.IsNullOrEmpty(_activity.EnlistedAideCooking) ? "" : $" <p><strong>Cooking: </strong> {_activity.EnlistedAideGuestCount} </p>")
+                        + (string.IsNullOrEmpty(_activity.EnlistedAideCooking) ? "" : $" <p><strong>Cooking: </strong> {_activity.EnlistedAideCooking} </p>")
                         + (string.IsNullOrEmpty(_activity.EnlistedAideDietaryRestrictions) ? "" : $" <p><strong>Dietary Restrictions: </strong> {_activity.EnlistedAideDietaryRestrictions} </p>")
                         + (string.IsNullOrEmpty(_activity.EnlistedAideAlcohol) ? "" : $" <p><strong>Alcohol: </strong> {_activity.EnlistedAideAlcohol} </p>");
 

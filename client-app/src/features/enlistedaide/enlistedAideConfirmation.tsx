@@ -78,9 +78,14 @@ export default observer(function EnlistedAideConfirmation(){
     
           setSaving(true);
           await agent.EnlistedAide.confirm(newValues);
-          console.log(newValues);
+          history.push(`${process.env.PUBLIC_URL}/enlistedaidechecklistform/${id}/${categoryId}`);
         } catch (error: any) {
-          toast.error('An error occurred: ' + error.message);
+          if(error && error.message){
+            toast.error('An error occurred: ' + error.message);
+          }else{
+            toast.error('An error occurred: ');
+          }
+   
         } finally {
           setSaving(false);
         }
@@ -103,90 +108,57 @@ export default observer(function EnlistedAideConfirmation(){
         Enlisted Aide Info
      </Header>
     </Divider>
-           <Header as='h5' attached>
-                  Title
-              </Header>
-              <Segment attached color='teal'>{activity.title}</Segment>
-              <Header as='h5' attached>
-                  Description
-              </Header>
-              <Segment attached color='teal'>{activity.description}</Segment>
-               <Header as='h5' attached>
-                  Time
-              </Header>
-                <Segment attached color='teal'>
-               {!activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') !== format(activity.end, 'MMMM d, yyyy') &&
-                                    <p>
+         <Segment>
+           <Grid columns={3} divided stackable>
+             <Grid.Row>
+               <Grid.Column>
+                     <strong>Title:</strong> {activity.title}
+               </Grid.Column>
+                <Grid.Column>
+                 <strong>Event Time: </strong> 
+                 {!activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') !== format(activity.end, 'MMMM d, yyyy') &&
+                   <span> {format(activity.start, 'MMMM d, yyyy h:mm aa')} - {format(activity.end, 'MMMM d, yyyy h:mm aa')}</span>}
 
-                                        {format(activity.start, 'MMMM d, yyyy h:mm aa')} -
-                                        {format(activity.end, 'MMMM d, yyyy h:mm aa')}
-                                    </p>
-                                }
-                                {!activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') === format(activity.end, 'MMMM d, yyyy') &&
-                                    <p>
-                                        {format(activity.start, 'MMMM d, yyyy h:mm aa')} -
-                                        {format(activity.end, 'h:mm aa')}
-                                    </p>
-                                }
-                                {activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') === format(activity.end, 'MMMM d, yyyy') &&
-                                    <p>
+                 {!activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') === format(activity.end, 'MMMM d, yyyy') &&
+                   <span>{format(activity.start, 'MMMM d, yyyy h:mm aa')} - {format(activity.end, 'h:mm aa')}</span> }
 
-                                        {format(activity.start, 'MMMM d, yyyy')}
-                                    </p>
-                                }
-                                {activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') !== format(activity.end, 'MMMM d, yyyy') &&
-                                    <p>
+                {activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') === format(activity.end, 'MMMM d, yyyy') &&
+                                    <span>{format(activity.start, 'MMMM d, yyyy')}</span> }
 
-                                        {format(activity.start, 'MMMM d, yyyy')} - {format(activity.end, 'MMMM d, yyyy')}
-                                    </p>
-                                }
-                </Segment>
-                <Header as='h5' attached>
-                  Action Officer
-              </Header>
-              <Segment attached color='teal'>{activity.actionOfficer}</Segment>
-              {activity.enlistedAideVenue &&
-              <> 
-              <Header as='h5' attached>
-                  Venue
-              </Header>
-              <Segment attached color='teal'>{activity.enlistedAideVenue}</Segment>
-              </>
-              }
-            {activity.enlistedAideGuestCount &&
-              <> 
-              <Header as='h5' attached>
-                  Guest Count
-              </Header>
-              <Segment attached color='teal'>{activity.enlistedAideGuestCount}</Segment>
-              </>
-              }
-            {activity.enlistedAideCooking &&
-              <> 
-              <Header as='h5' attached>
-                  Cooking
-              </Header>
-              <Segment attached color='teal'>{activity.enlistedAideCooking}</Segment>
-              </>
-              }
+                {activity.allDayEvent && format(activity.start, 'MMMM d, yyyy') !== format(activity.end, 'MMMM d, yyyy') &&
+                                  <span>{format(activity.start, 'MMMM d, yyyy')} - {format(activity.end, 'MMMM d, yyyy')}</span> }
+             </Grid.Column>
+              <Grid.Column>
+                <strong>Action Officer:</strong> {activity.actionOfficer}
+            </Grid.Column>
+             </Grid.Row>
 
-           {activity.enlistedAideDietaryRestrictions &&
-              <> 
-              <Header as='h5' attached>
-                  Dietary Restrictions
-              </Header>
-              <Segment attached color='teal'>{activity.enlistedAideDietaryRestrictions}</Segment>
-              </>
-              }
+              <Grid.Row>
+              <Grid.Column>
+                   <strong>Venue: </strong> {activity.enlistedAideVenue || 'N/A'}
+             </Grid.Column>
+             <Grid.Column>
+                   <strong>Guest Count: </strong> {activity.enlistedAideGuestCount|| 'N/A'}
+             </Grid.Column>
+             <Grid.Column>
+                   <strong>Cooking: </strong> {activity.enlistedAideCooking || 'N/A'}
+             </Grid.Column>
+            </Grid.Row>
 
-            {activity.enlistedAideAlcohol &&
-              <> 
-              <Header as='h5' attached>
-                  Alcohol
-              </Header>
-              <Segment attached color='teal'>{activity.enlistedAideAlcohol}</Segment>
-              </>
-              }
+             <Grid.Row>
+                <Grid.Column>
+                    <strong>Dietary Restrictions: </strong> {activity.enlistedAideDietaryRestrictions || 'N/A'}
+                </Grid.Column>
+                <Grid.Column>
+                <strong>Alcohol: </strong> {activity.enlistedAideAlcohol || 'N/A'}
+                </Grid.Column>
+                <Grid.Column>
+                   <strong>Setup: </strong> {activity.enlistedAideSetup ? 'Set Up for this event is required' : 'Set Up for this event is NOT required'}
+                </Grid.Column>
+           </Grid.Row>
+           </Grid>
+         </Segment>
+
 
 <Divider horizontal>
      <Header as='h2'>
@@ -242,6 +214,8 @@ export default observer(function EnlistedAideConfirmation(){
               positive
               type="submit"
               content="Submit"
+              loading={saving}
+              disabled={saving}
             />
 
 

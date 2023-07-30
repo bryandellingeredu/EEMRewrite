@@ -32,6 +32,9 @@ namespace Application.Core
               CreateMap<HostingReport, HostingReport>()
                 .ForMember(x => x.Activity, opt => opt.MapFrom<Activity>(_ => null));
 
+              CreateMap<EnlistedAideCheckList, EnlistedAideCheckList>()
+                 .ForMember(x => x.Activity, opt => opt.MapFrom<Activity>(_ => null));
+
         }
 
         private DateTime GetZeroTime(DateTime date)

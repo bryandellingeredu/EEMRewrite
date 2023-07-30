@@ -28,6 +28,7 @@ import { USAHECFacilitiesUsageLegend } from '../models/usahecFacilitiesUsageLege
 import { FlagReportDTO } from '../models/flagReportDTO';
 import { UserRole } from '../models/userRole';
 import { ArmyWarCollegeUser } from '../models/armyWarCollegeUser';
+import { EnlistedAideChecklist } from '../models/enlistedAideChecklist';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -296,6 +297,8 @@ const AddToEEMCalendars = {
 
 const EnlistedAide = {
     confirm: (enlistedAideConfirmationDTO: any) => axiosRequest.post<void>('/enlistedAide/confirm', enlistedAideConfirmationDTO),
+    details: (id: string) => axiosRequest.get<EnlistedAideChecklist>(`/enlistedAide/${id}`),
+    update: (enlistedAideChecklist: EnlistedAideChecklist) => axiosRequest.post<void>('/enlistedAide', enlistedAideChecklist),
 }
 
 const agent = {

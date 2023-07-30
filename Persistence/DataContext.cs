@@ -27,6 +27,7 @@ namespace Persistence
         public DbSet<CSLCalendarLegend> CSLCalendarLegends { get; set; }
          public DbSet<USAHECFacilitiesUsageLegend> USAHECFacilitiesUsageLegends { get; set; }
         public DbSet<RoomVTCCoordinator> RoomVTCCoordinators {get; set;}
+        public DbSet<EnlistedAideCheckList> EnlistedAideCheckLists { get; set; }
 
 
 

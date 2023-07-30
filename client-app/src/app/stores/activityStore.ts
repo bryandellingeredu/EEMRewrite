@@ -648,7 +648,8 @@ export default class ActivityStore {
     enlistedAideSupportNeeded : '',
     enlistedAideSetup: false,
     newEnlistedAideEventToAideNotificationSent: false,
-    newEnlistedAideEventToESDNotificationSent: false
+    newEnlistedAideEventToESDNotificationSent: false,
+    sendEnlistedAideConfirmationNotification: false
     }
     return activity;
   }

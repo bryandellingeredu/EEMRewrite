@@ -217,5 +217,6 @@ namespace Domain
         public bool EnlistedAideSetup { get; set; }
         public bool NewEnlistedAideEventToAideNotificationSent { get; set; }
         public bool NewEnlistedAideEventToESDNotificationSent { get; set; }
+        public bool SendEnlistedAideConfirmationNotification { get; set; }
     }
 }

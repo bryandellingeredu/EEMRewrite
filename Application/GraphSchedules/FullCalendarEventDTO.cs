@@ -9,6 +9,7 @@ namespace Application.GraphSchedules
     public class FullCalendarEventDTO
     {
         public string Id { get; set; }
+        public string ActivityId {get; set;}
         public string Title { get; set; }
         public string Start { get; set; }
         public string End { get; set; }
@@ -40,5 +41,17 @@ namespace Application.GraphSchedules
         public string  StudentCalendarNotes { get; set; }
        public bool  StudentCalendarMandatory { get; set; }
         public string RoomId { get; set; }
+        public string EventTitle { get; set; }
+        public string Task { get; set; }
+        public string EnlistedAideFundingType { get; set; }
+        public string EnlistedAideVenue { get; set; }
+        public string EnlistedAideGuestCount { get; set; }
+        public string EnlistedAideCooking { get; set; }
+        public string EnlistedAideDietaryRestrictions { get; set; }
+        public string EnlistedAideAlcohol { get; set; }
+        public bool EnlistedAideAcknowledged { get; set; }
+        public string EnlistedAideNumOfBartenders { get; set; }
+        public string EnlistedAideNumOfServers { get; set; }
+        public string EnlistedAideSupportNeeded { get; set; }
     }
 }

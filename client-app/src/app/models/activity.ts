@@ -195,6 +195,7 @@ export interface Activity{
     enlistedAideSetup: boolean
     newEnlistedAideEventToAideNotificationSent: boolean
     newEnlistedAideEventToESDNotificationSent: boolean
+    sendEnlistedAideConfirmationNotification: boolean
 }
 
 export class Activity implements Activity{
@@ -389,6 +390,7 @@ export class ActivityFormValues{
     enlistedAideSetup : boolean = false
     newEnlistedAideEventToAideNotificationSent: boolean = false
     newEnlistedAideEventToESDNotificationSent: boolean = false
+    sendEnlistedAideConfirmationNotification: boolean = false
 
 
 
@@ -578,6 +580,7 @@ export class ActivityFormValues{
         this.enlistedAideSetup = activity.enlistedAideSetup
         this.newEnlistedAideEventToAideNotificationSent = activity.newEnlistedAideEventToAideNotificationSent
         this.newEnlistedAideEventToESDNotificationSent = activity.newEnlistedAideEventToESDNotificationSent
+        this.sendEnlistedAideConfirmationNotification = activity.sendEnlistedAideConfirmationNotification
        } 
     }
 }

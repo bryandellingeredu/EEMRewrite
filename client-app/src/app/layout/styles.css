@@ -121,4 +121,12 @@ mgt-login {
   animation: pulse 2s infinite;
 }
 
+@media screen and (max-width: 767px) {
+  .stackable-checkbox-group > .field {
+    display: block;
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+}
+
 

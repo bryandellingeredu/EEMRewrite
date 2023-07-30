@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230719122455_EAConfirmationNotification2")]
+    partial class EAConfirmationNotification2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -773,103 +776,6 @@ namespace Persistence.Migrations
                     b.ToTable("EmailGroupMembers");
                 });
 
-            modelBuilder.Entity("Domain.EnlistedAideCheckList", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ActivityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("AlcoholEstimate")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CleanCutlery")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CleanPlates")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CleanServiceItems")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Coffee")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Cook")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Dust")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FoodPrep")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("FoodShopping")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("GFEBS")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("GatherIce")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HighTopsAndTables")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IceBeverages")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("MenuReviewedByPrincipal")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("NapkinsPressed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("NapkinsRolled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("OrderAlcohol")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PolishSilver")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Prepare4843GuestList")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PrepareGuestList")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PrepareLegalReview")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PrepareMenu")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PreparePRAForm")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("SendToLegalForApproval")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Sterno")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("SweepAndMop")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("TentSetUp")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActivityId");
-
-                    b.ToTable("EnlistedAideCheckLists");
-                });
-
             modelBuilder.Entity("Domain.HostingReport", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1443,17 +1349,6 @@ namespace Persistence.Migrations
                     b.Navigation("EmailGroup");
 
                     b.Navigation("EmailGroupMember");
-                });
-
-            modelBuilder.Entity("Domain.EnlistedAideCheckList", b =>
-                {
-                    b.HasOne("Domain.Activity", "Activity")
-                        .WithMany()
-                        .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Activity");
                 });
 
             modelBuilder.Entity("Domain.HostingReport", b =>

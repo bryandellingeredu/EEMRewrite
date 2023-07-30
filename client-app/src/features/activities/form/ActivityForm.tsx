@@ -484,7 +484,6 @@ export default observer(function ActivityForm() {
   }, [isSignedIn, graphRooms]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
-    debugger;
     let hostingReportError = false;
     let distantTechErrorIndicator = false;
     let subCalendarErrorIndicator = false;

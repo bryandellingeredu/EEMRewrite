@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230719172145_EnlistedAideCheckList")]
+    partial class EnlistedAideCheckList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -806,9 +809,6 @@ namespace Persistence.Migrations
                     b.Property<bool>("FoodPrep")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("FoodShopping")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("GFEBS")
                         .HasColumnType("bit");
 
@@ -842,12 +842,6 @@ namespace Persistence.Migrations
                     b.Property<bool>("PrepareGuestList")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("PrepareLegalReview")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("PrepareMenu")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("PreparePRAForm")
                         .HasColumnType("bit");
 
@@ -858,9 +852,6 @@ namespace Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("SweepAndMop")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("TentSetUp")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
