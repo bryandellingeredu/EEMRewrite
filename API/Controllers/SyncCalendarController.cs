@@ -1,10 +1,12 @@
 ﻿using Application;
+using Application.Core;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Persistence;
+using System.Text;
 
 namespace API.Controllers
 {
@@ -173,7 +175,8 @@ namespace API.Controllers
 
             writer.WriteLine("END:VCALENDAR");
 
-            return Ok(writer.ToString());
+            //  return Ok(writer.ToString());
+            return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
         }
 
         private string GetCalendarName(string route)
@@ -300,11 +303,34 @@ namespace API.Controllers
 
         private void WriteLineWithEllipsis(StringWriter writer, string line)
         {
-            if (line.Length > 75)
+            const int maxLineLength = 70; // 70 to be safe
+            var currentLine = new StringBuilder();
+
+            foreach (var c in line)
             {
-                line = line.Substring(0, 72) + "...";
+                var escaped = c switch
+                {
+                    '\\' => "\\\\",
+                    ';' => "\\;",
+                    ',' => "\\,",
+                    '\n' => "\\n",
+                    '\r' => "\\r",
+                    _ => c.ToString()
+                };
+
+                if (Encoding.UTF8.GetByteCount(currentLine.ToString() + escaped) > maxLineLength)
+                {
+                    writer.Write(currentLine.ToString() + "\r\n ");
+                    currentLine.Clear();
+                }
+
+                currentLine.Append(escaped);
             }
-            writer.WriteLine(line);
+
+            if (currentLine.Length > 0)
+            {
+                writer.WriteLine(currentLine.ToString());
+            }
         }
     } 
 }
