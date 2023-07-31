@@ -12,6 +12,7 @@ import UserStore from "./userStore";
 import EmailGroupStore from "./emailGroupStore";
 import CSLCalendarLegendStore from "./cslCalendarLegendStore";
 import USAHECFacilitiesUsageLegendStore from "./usahecFacilitiesUsageLegendStore";
+import NavbarStore from "./navbarStore";
 
 interface Store{
     activityStore: ActivityStore
@@ -27,6 +28,7 @@ interface Store{
     emailGroupStore: EmailGroupStore
     cslCalendarLegendStore: CSLCalendarLegendStore
     usahecFacilitiesUsageLegendStore: USAHECFacilitiesUsageLegendStore
+    navbarStore: NavbarStore
 }
 
 export const store: Store = {
@@ -42,7 +44,8 @@ export const store: Store = {
     userStore: new UserStore(),
     emailGroupStore: new EmailGroupStore(),
     cslCalendarLegendStore: new CSLCalendarLegendStore(),
-    usahecFacilitiesUsageLegendStore: new USAHECFacilitiesUsageLegendStore()
+    usahecFacilitiesUsageLegendStore: new USAHECFacilitiesUsageLegendStore(),
+    navbarStore: new NavbarStore()
 }
 
 export const StoreContext = createContext(store);

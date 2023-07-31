@@ -147,6 +147,26 @@ namespace API.Controllers
 
             foreach (Activity activity in activities)
             {
+                string description = activity.Description;
+                if (activity.CopiedTostudentCalendar && route == "studentCalendar")
+                {
+                    if (activity.StudentCalendarMandatory )
+                    {
+                        description = description + $"---ATTENDANCE--- attendance is mandatory.";
+                    }
+                    if (!string.IsNullOrEmpty(activity.StudentCalendarUniform))
+                    {
+                        description = description + $"---UNIFORM--- {activity.StudentCalendarUniform}";
+                    }
+                    if (!string.IsNullOrEmpty(activity.PocketCalPresenter))
+                    {
+                        description = description + $"---PRESENTER--- {activity.StudentCalendarPresenter}";
+                    }
+                    if (!string.IsNullOrEmpty(activity.StudentCalendarNotes))
+                    {
+                        description = description + $"---NOTES--- {activity.StudentCalendarNotes}";
+                    }
+                }
                 writer.WriteLine("BEGIN:VEVENT");
                 writer.WriteLine($"DTSTAMP:{DateTime.UtcNow.ToString("yyyyMMddTHHmmssZ")}");
                 if (activity.AllDayEvent)
@@ -162,7 +182,7 @@ namespace API.Controllers
                 WriteLineWithEllipsis(writer, $"LOCATION:{await GetLocation(activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms)}");
                 writer.WriteLine("SEQUENCE:0");
                 WriteLineWithEllipsis(writer, $"SUMMARY:{activity.Title.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
-                WriteLineWithEllipsis(writer, $"DESCRIPTION:{activity.Description.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
+                WriteLineWithEllipsis(writer, $"DESCRIPTION:{description.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
                 writer.WriteLine("TRANSP:OPAQUE");
                 writer.WriteLine($"UID:{activity.Id}");
                 writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:BUSY");
@@ -176,6 +196,7 @@ namespace API.Controllers
             writer.WriteLine("END:VCALENDAR");
 
             //  return Ok(writer.ToString());
+            Response.Headers.Add("Content-Type", "text/calendar");
             return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
         }
 

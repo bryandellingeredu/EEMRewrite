@@ -150,7 +150,7 @@ const GraphEvents = {
  }
 
 const Activities = {
-    list: (day: Date) => axiosRequest.get<Activity[]>(`/activities/getByDay/${day.toISOString()}`),
+    list: (day: Date) => axiosRequest.post<Activity[]>('/activities/getByDay', { day: day.toISOString() }),
     listDeleted: () => axiosRequest.get<Activity[]>('activities/getDeleted'),
     listBySearchParams: (data: any) => axiosRequest.post<Activity[]>('/activities/listBySearchParams', data),
     listSVTCBySearchParams: (data: any) => axiosRequest.post<Activity[]>('/activities/listSVTCBySearchParams', data),
@@ -220,7 +220,7 @@ const Account = {
                 axiosRequest.post<void>(`/account/verifyEmail?token=${token}&email=${email}`, {}),
     resendEmailConfirm: (email: string) => 
                 axiosRequest.get(`/account/resendEmailConfirmationLink?email=${email}`),
-    getRoles: (userEmail: string) => axiosRequest.get<string[]>(`/account/getRoles/${userEmail}`)
+    getRoles: (userEmail: string) => axiosRequest.post<string[]>('/account/getRoles', { userEmail })
 }
 
 const Uploads = {

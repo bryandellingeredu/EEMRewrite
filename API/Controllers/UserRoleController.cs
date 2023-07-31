@@ -23,7 +23,7 @@ namespace API.Controllers
             _roleManager = roleManager;
         }
 
-        [Authorize(Roles = "admin")]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetUserRoles()
         {
@@ -94,6 +94,7 @@ namespace API.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
         [HttpGet("armywarcollegeusers")]
         public async Task<IActionResult> GetArmyWarCollegeUsers()
         {

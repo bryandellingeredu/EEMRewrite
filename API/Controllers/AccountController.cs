@@ -170,16 +170,17 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("getRoles/{userEmail}")]
-        public async Task<IActionResult> GetRoles(string userEmail){
-            
-            var user = await _userManager.FindByEmailAsync(userEmail);
-             if (user == null) return Unauthorized("Invalid Email");
-              var roles = await _userManager.GetRolesAsync(user);
-            if(roles.Any()){
-                  return Ok(roles.ToArray());
+        [HttpPost("getRoles")]
+        public async Task<IActionResult> GetRoles([FromBody] UserEmailDto userEmailDto)
+        {
+            var user = await _userManager.FindByEmailAsync(userEmailDto.UserEmail);
+            if (user == null) return BadRequest($"Surely even you realize that {userEmailDto.UserEmail} does not exist");
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Any())
+            {
+                return Ok(roles.ToArray());
             }
-            return  Ok(Array.Empty<string>());
+            return Ok(Array.Empty<string>());
         }
 
 
@@ -332,7 +333,11 @@ namespace API.Controllers
             };
         }
 
-  
+        public class UserEmailDto
+        {
+            public string UserEmail { get; set; }
+        }
+
     }
 }
 

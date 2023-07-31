@@ -1,15 +1,12 @@
 import {useState, useEffect, useCallback, useRef} from 'react';
-import LoadingComponent from "../../app/layout/LoadingComponent";
 import FullCalendar, { EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 import { format } from 'date-fns';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import agent from "../../app/api/agent";
-import { v4 as uuid } from "uuid";
 import Pikaday from "pikaday";
 import { Divider, Header, Icon, Loader } from "semantic-ui-react";
 

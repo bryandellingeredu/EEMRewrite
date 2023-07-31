@@ -6,6 +6,7 @@ import { Divider, Header, Icon, Loader } from "semantic-ui-react";
 import { EnlistedAideMobileDetails } from "../../app/models/enlistedAideMobileDetails";
 import EnlistedAideEventDetails from "./enlistedAideEventDetails";
 
+
 export default function MobileEnlistedAideCalendar (){
     const [isLoading, setIsLoading] = useState(true);
     const calendarRef = useRef<FullCalendar>(null);

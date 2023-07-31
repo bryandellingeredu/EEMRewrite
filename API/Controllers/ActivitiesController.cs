@@ -25,16 +25,27 @@ namespace API.Controllers
        public async Task<IActionResult> GetDeletedActivities() =>
       HandleResult(await Mediator.Send(new ListDeleted.Query()));
 
-        [AllowAnonymous]
-        [HttpGet("getByDay/{day}")]
-        public async Task<IActionResult> GetActivities(string day)
+        public class DayRequest
         {
-            DateTime utcDateTime = DateTime.Parse(day, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            public string Day { get; set; }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("getByDay")]
+        public async Task<IActionResult> GetActivities([FromBody] DayRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.Day))
+            {
+                return BadRequest("Bad Request.");
+            }
+
+            DateTime utcDateTime = DateTime.Parse(request.Day, null, System.Globalization.DateTimeStyles.RoundtripKind);
             DateTime estDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, TimeZoneInfo.Local);
             var result = await Mediator.Send(new ListByDay.Query { Day = estDateTime });
+
             return HandleResult(result);
         }
-     
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetActivity(Guid id) =>
@@ -120,6 +131,7 @@ namespace API.Controllers
         public async Task<ActionResult<Activity>> DeleteActivity(Guid id) =>
           HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
 
+        [AllowAnonymous]
         [HttpGet("GetRoomNames/{eventLookup}/{coordinatorEmail}")]
         public async Task<ActionResult> GetRoomNames(string eventLookup, string coordinatorEmail) =>
             HandleResult(await Mediator.Send(
