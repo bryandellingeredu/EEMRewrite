@@ -101,7 +101,9 @@ namespace Application.Activities
                         StudentCalendarPresenter = activity.StudentCalendarPresenter,
                         StudentCalendarUniform = activity.StudentCalendarUniform,
                         StudentCalendarNotes = activity.StudentCalendarNotes,
-                        StudentCalendarMandatory = activity.StudentCalendarMandatory
+                        StudentCalendarMandatory = activity.StudentCalendarMandatory,
+                        HyperLink = activity.Hyperlink,
+                        HyperLinkDescription = activity.HyperlinkDescription
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);

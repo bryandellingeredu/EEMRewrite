@@ -20,6 +20,8 @@ interface EventInfo{
     presenter: string
     uniform: string
     notes: string
+    hyperLink: string
+    hyperLinkDescription: string
   }
 
 export default function MobileStudentCalendar (){
@@ -39,7 +41,9 @@ export default function MobileStudentCalendar (){
          mandatory: false,
          presenter: '',
          uniform: '',
-         notes: ''
+         notes: '',
+         hyperLink: '',
+         hyperLinkDescription: ''
         }
         )
       const [loadingEvent, setLoadingEvent] = useState(false);
@@ -96,6 +100,8 @@ export default function MobileStudentCalendar (){
             presenter: clickInfo.event.extendedProps.studentCalendarPresenter,
             uniform: clickInfo.event.extendedProps.studentCalendarUniform,
             notes: clickInfo.event.extendedProps.studentCalendarNotes,
+            hyperLink: clickInfo.event.extendedProps.hyperLink,
+            hyperLinkDescription: clickInfo.event.extendedProps.hyperLinkDescription || 'Go To Link'
           };
 
           if (clickInfo.event.extendedProps.eventLookup && clickInfo.event.extendedProps.coordinatorEmail) { 

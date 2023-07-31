@@ -53,5 +53,7 @@ namespace Application.GraphSchedules
         public string EnlistedAideNumOfBartenders { get; set; }
         public string EnlistedAideNumOfServers { get; set; }
         public string EnlistedAideSupportNeeded { get; set; }
+        public string HyperLink { get; set; }
+        public string HyperLinkDescription { get; set; }
     }
 }

@@ -12,6 +12,8 @@ interface EventInfo{
     presenter: string
     uniform: string
     notes: string
+    hyperLink: string
+    hyperLinkDescription: string
   }
 
 interface Props {
@@ -35,6 +37,15 @@ export default function StudentCalendarEventDetails({eventInfo} : Props) {
         <Segment>
             <strong>Location:</strong> {eventInfo.location}
        </Segment>
+       {eventInfo.hyperLink && 
+  <Segment> 
+    <a href={eventInfo.hyperLink} className="ui orange button" target="_blank">
+      {eventInfo.hyperLinkDescription.length > 500 
+       ? `${eventInfo.hyperLinkDescription.substring(0, 500)}...` 
+       : eventInfo.hyperLinkDescription}
+    </a>
+    </Segment>
+}
         <Segment>
             <strong>Description:</strong> {eventInfo.description}
        </Segment>

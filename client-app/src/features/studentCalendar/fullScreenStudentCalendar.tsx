@@ -24,6 +24,8 @@ interface EventInfo{
   presenter: string
   uniform: string
   notes: string
+  hyperLink: string
+  hyperLinkDescription: string
 }
 
 export default function FullScreenStudentCalendar (){
@@ -44,7 +46,9 @@ export default function FullScreenStudentCalendar (){
        mandatory: false,
        presenter: '',
        uniform: '',
-       notes: ''
+       notes: '',
+       hyperLink: '',
+       hyperLinkDescription: ''
       }
       )
     const [loadingEvent, setLoadingEvent] = useState(false);
@@ -151,6 +155,8 @@ const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     presenter: clickInfo.event.extendedProps.studentCalendarPresenter,
     uniform: clickInfo.event.extendedProps.studentCalendarUniform,
     notes: clickInfo.event.extendedProps.studentCalendarNotes,
+    hyperLink: clickInfo.event.extendedProps.hyperLink,
+    hyperLinkDescription: clickInfo.event.extendedProps.hyperLinkDescription || 'Go To Link'
   };
 
   if (clickInfo.event.extendedProps.eventLookup && clickInfo.event.extendedProps.coordinatorEmail) { 
@@ -211,6 +217,15 @@ const eventDidMount = (info : any) => {
     <Modal.Description>
       <Header>{eventInfo.time}</Header>  
        <p><strong>{eventInfo.location}</strong></p>
+       {eventInfo.hyperLink && 
+  <p> 
+    <a href={eventInfo.hyperLink} className="ui orange button" target="_blank">
+      {eventInfo.hyperLinkDescription.length > 500 
+       ? `${eventInfo.hyperLinkDescription.substring(0, 500)}...` 
+       : eventInfo.hyperLinkDescription}
+    </a>
+  </p>
+}
       <p><strong>Description: </strong>{eventInfo.description}</p>
       {eventInfo.leadOrg && <p><strong>Lead Org: </strong>{eventInfo.leadOrg}</p>}
       {eventInfo.actionOfficer && <p><strong>Action Officer: </strong>{eventInfo.actionOfficer}</p>}
