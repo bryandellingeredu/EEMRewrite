@@ -153,7 +153,7 @@ export default observer(function HomePage(){
             </Header.Subheader>
             </Header>
             {loading && <LoadingComponent content="logging in..." /> }
-              {!loading &&
+              {!loading && navbarType === 'eem' &&
               <Login
                 loginCompleted={loginCompleted}
                 loginInitiated={handleLoginInitiated}
