@@ -131,12 +131,19 @@ namespace API.Controllers
         public async Task<ActionResult<Activity>> DeleteActivity(Guid id) =>
           HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
 
+
+        public class GetRoomNamesRequest
+        {
+            public string EventLookup { get; set; }
+            public string CoordinatorEmail { get; set; }
+        }
         [AllowAnonymous]
-        [HttpGet("GetRoomNames/{eventLookup}/{coordinatorEmail}")]
-        public async Task<ActionResult> GetRoomNames(string eventLookup, string coordinatorEmail) =>
+        [HttpPost("GetRoomNames")]
+        public async Task<ActionResult> GetRoomNames([FromBody] GetRoomNamesRequest request) =>
             HandleResult(await Mediator.Send(
-                new GetRoomNames.Query { EventLookup = eventLookup, CoordinatorEmail = coordinatorEmail }));
-        
+                new GetRoomNames.Query { EventLookup = request.EventLookup, CoordinatorEmail = request.CoordinatorEmail }));
+
+
 
         [AllowAnonymous]
         [HttpGet("GetEventsByDate/{routeName}")]
