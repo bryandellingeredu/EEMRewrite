@@ -2,12 +2,16 @@ import FullCalendar from "@fullcalendar/react";
 import listPlugin from '@fullcalendar/list';
 import { useState,  useRef } from "react";
 import { EventClickArg } from "@fullcalendar/core";
-import { Divider, Header, Icon, Loader } from "semantic-ui-react";
+import { Button, Divider, Header, Icon, Loader } from "semantic-ui-react";
 import { EnlistedAideMobileDetails } from "../../app/models/enlistedAideMobileDetails";
 import EnlistedAideEventDetails from "./enlistedAideEventDetails";
+import { useStore } from '../../app/stores/store';
+import SyncCalendarInformation from '../fullCalendar/SyncCalendarInformation';
 
 
 export default function MobileEnlistedAideCalendar (){
+  const { modalStore } = useStore();
+  const {openModal} = modalStore;
     const [isLoading, setIsLoading] = useState(true);
     const calendarRef = useRef<FullCalendar>(null);
     const [showDetails, setShowDetails] = useState(false);
@@ -88,6 +92,18 @@ export default function MobileEnlistedAideCalendar (){
     };
     return(
         <>
+                <Button icon  floated="right" color='black' size='tiny'
+          onClick={() =>
+            openModal(
+              <SyncCalendarInformation
+                routeName={'enlistedAide'}
+              />, 'large'
+            )
+          }
+        >
+      <Icon name='sync'/>
+       &nbsp; Sync To My Calendar
+    </Button>
         <Divider horizontal>
       <Header as='h2'>
         <Icon name='clipboard' />

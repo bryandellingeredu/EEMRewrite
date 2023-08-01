@@ -8,7 +8,10 @@ import { format } from 'date-fns';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import Pikaday from "pikaday";
-import { Divider, Header, Icon, Loader } from "semantic-ui-react";
+import { Button, Divider, Header, Icon, Loader } from "semantic-ui-react";
+import { useStore } from '../../app/stores/store';
+import SyncCalendarInformation from '../fullCalendar/SyncCalendarInformation';
+
 
 export default function FullScreenEnlistedAideCalendar (){
     const [view, setView] = useState(localStorage.getItem("calendarViewEnlistedAide") || "dayGridMonth");
@@ -16,6 +19,8 @@ export default function FullScreenEnlistedAideCalendar (){
     const calendarRef = useRef<FullCalendar>(null);
     const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
+    const { modalStore } = useStore();
+    const {openModal} = modalStore;
 
     useEffect(() => {
         const handleResize = () => {
@@ -100,6 +105,18 @@ const eventDidMount = (info : any) => {
 
     return(
         <>
+             <Button icon  floated="right" color='black' size='tiny'
+          onClick={() =>
+            openModal(
+              <SyncCalendarInformation
+                routeName={'enlistedAide'}
+              />, 'large'
+            )
+          }
+        >
+      <Icon name='sync'/>
+       &nbsp; Sync To My Calendar
+    </Button>
           <Divider horizontal>
       <Header as='h2'>
         <Icon name='clipboard' />

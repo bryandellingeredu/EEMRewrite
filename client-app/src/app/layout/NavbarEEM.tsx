@@ -113,7 +113,12 @@ export default observer(function NavbarEEM() {
             </Dropdown>   
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/imccalendar`}>
                 IMC
-            </Menu.Item>     
+            </Menu.Item> 
+            {  user && user.roles &&  user.roles.includes("EnlistedAidAdmin") &&
+            <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper`}>
+                Enlisted Aide Calendar
+            </Menu.Item>    
+            } 
               <Dropdown item text="Calendars" scrolling >
                 
                 <Dropdown.Menu>
@@ -251,6 +256,12 @@ export default observer(function NavbarEEM() {
             )}
           </>
         )}
+         {isMobile && isLoggedIn && user && user.roles &&  user.roles.includes("EnlistedAidAdmin") &&
+         (
+          <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper`}>
+            Enlisted Aide Calendar
+         </Menu.Item>
+         )}
       </Container>
     </Menu>
     </div>

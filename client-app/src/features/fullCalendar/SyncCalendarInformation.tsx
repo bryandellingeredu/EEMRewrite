@@ -127,7 +127,7 @@ export default function SyncCalendarInformation({routeName} : Props){
         menuItem: {
           key: "tab4",
           icon: <FontAwesomeIcon icon={faGooglePropIcon} size="2x" color="#00b5ad" />,
-          content: <span style={{color: '#00b5ad', fontSize: '2em'}}>&nbsp;Google Calendar</span>
+          content: <span style={{color: '#00b5ad', fontSize: '2em'}}>&nbsp;Google</span>
         },
         render: () => <Tab.Pane>
            <List bulleted size="big">

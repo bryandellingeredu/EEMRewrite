@@ -1,5 +1,8 @@
 ﻿using Application;
+using Application.Activities;
 using Application.Core;
+using Application.GraphSchedules;
+using CsvHelper;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,178 +29,485 @@ namespace API.Controllers
         [HttpGet("{route}")]
         public async Task<IActionResult> Get(string route)
         {
-            Settings s = new Settings();
-            var settings = s.LoadSettings(_config);
-            GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
-            var allrooms = await GraphHelper.GetRoomsAsync();
-
-            StringWriter writer = new StringWriter();
-            writer.WriteLine("BEGIN:VCALENDAR");
-            writer.WriteLine($"PRODID://{GetCalendarName(route)}//USAWC//EN");
-            writer.WriteLine("VERSION:2.0");
-            writer.WriteLine("METHOD:PUBLISH");
-            writer.WriteLine($"X-WR-CALNAME:{GetCalendarName(route)}");
-
-            // Add VTIMEZONE component
-            writer.WriteLine("BEGIN:VTIMEZONE");
-            writer.WriteLine("TZID:America/New_York");
-            writer.WriteLine("BEGIN:STANDARD");
-            writer.WriteLine("DTSTART:16010101T020000");
-            writer.WriteLine("RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=11");
-            writer.WriteLine("TZOFFSETFROM:-0400");
-            writer.WriteLine("TZOFFSETTO:-0500");
-            writer.WriteLine("END:STANDARD");
-            writer.WriteLine("BEGIN:DAYLIGHT");
-            writer.WriteLine("DTSTART:16010101T020000");
-            writer.WriteLine("RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3");
-            writer.WriteLine("TZOFFSETFROM:-0500");
-            writer.WriteLine("TZOFFSETTO:-0400");
-            writer.WriteLine("END:DAYLIGHT");
-            writer.WriteLine("END:VTIMEZONE");
-
-            DateTime startDateLimit = DateTime.UtcNow.AddMonths(-1);
-            DateTime endDateLimit = DateTime.UtcNow.AddMonths(1);
-
-
-
-            var query = _context.Activities.AsQueryable();
-            //     query = query.Where(a => a.Start > startDateLimit && a.End < endDateLimit);
-            query = query.Where(a => a.Start > startDateLimit );
-            query = query.Where(a => !a.LogicalDeleteInd);
-
-            switch (route)
+            if (route != "enlistedAide")
             {
-                case "academic":
-                    query = query.Where(a => a.CopiedToacademic);
-                    break;
-                case "asep":
-                    query = query.Where(a => a.CopiedToasep);
-                    break;
-                case "commandGroup":
-                    query = query.Where(a => a.CopiedToasep);
-                    break;
-                case "community":
-                    query = query.Where(a => a.CopiedTocommunity);
-                    break;
-                case "csl":
-                    query = query.Where(a => a.CopiedTocsl);
-                    break;
-                case "garrison":
-                    query = query.Where(a => a.CopiedTogarrison);
-                    break;
-                case "generalInterest":
-                    query = query.Where(a => a.CopiedTogeneralInterest);
-                    break;
-                case "holiday":
-                    query = query.Where(a => a.CopiedToholiday);
-                    break;
-                case "pksoi":
-                    query = query.Where(a => a.CopiedTopksoi);
-                    break;
-                case "socialEventsAndCeremonies":
-                    query = query.Where(a => a.CopiedTosocialEventsAndCeremonies);
-                    break;
-                case "usahec":
-                    query = query.Where(a => a.CopiedTousahec);
-                    break;
-                case "ssiAndUsawcPress":
-                    query = query.Where(a => a.CopiedTossiAndUsawcPress);
-                    break;
-                case "ssl":
-                    query = query.Where(a => a.CopiedTossl);
-                    break;
-                case "trainingAndMiscEvents":
-                    query = query.Where(a => a.CopiedTotrainingAndMiscEvents);
-                    break;
-                case "usahecFacilitiesUsage":
-                    query = query.Where(a => a.CopiedTousahecFacilitiesUsage);
-                    break;
-                case "visitsAndTours":
-                    query = query.Where(a => a.CopiedTovisitsAndTours);
-                    break;
-                case "symposiumAndConferences":
-                    query = query.Where(a => a.CopiedTosymposiumAndConferences);
-                    break;
-                case "militaryFamilyAndSpouseProgram":
-                    query = query.Where(a => a.MFP);
-                    break;
-                case "battlerhythm":
-                    query = query.Where(a => a.CopiedTobattlerhythm);
-                    break;
-                case "staff":
-                    query = query.Where(a => a.CopiedTostaff);
-                    break;
-                case "imc":
-                    query = query.Where(a => a.IMC);
-                    break;
-                case "studentCalendar":
-                    query = query.Where(a => a.CopiedTostudentCalendar);
-                    break;
-                default:
-                    throw new Exception($"Unknown route: {route}");
+                Settings s = new Settings();
+                var settings = s.LoadSettings(_config);
+                GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
+                var allrooms = await GraphHelper.GetRoomsAsync();
+
+                StringWriter writer = new StringWriter();
+                writer.WriteLine("BEGIN:VCALENDAR");
+                writer.WriteLine($"PRODID://{GetCalendarName(route)}//USAWC//EN");
+                writer.WriteLine("VERSION:2.0");
+                writer.WriteLine("METHOD:PUBLISH");
+                writer.WriteLine($"X-WR-CALNAME:{GetCalendarName(route)}");
+
+                // Add VTIMEZONE component
+                writer.WriteLine("BEGIN:VTIMEZONE");
+                writer.WriteLine("TZID:America/New_York");
+                writer.WriteLine("BEGIN:STANDARD");
+                writer.WriteLine("DTSTART:16010101T020000");
+                writer.WriteLine("RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=11");
+                writer.WriteLine("TZOFFSETFROM:-0400");
+                writer.WriteLine("TZOFFSETTO:-0500");
+                writer.WriteLine("END:STANDARD");
+                writer.WriteLine("BEGIN:DAYLIGHT");
+                writer.WriteLine("DTSTART:16010101T020000");
+                writer.WriteLine("RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3");
+                writer.WriteLine("TZOFFSETFROM:-0500");
+                writer.WriteLine("TZOFFSETTO:-0400");
+                writer.WriteLine("END:DAYLIGHT");
+                writer.WriteLine("END:VTIMEZONE");
+
+                DateTime startDateLimit = DateTime.UtcNow.AddMonths(-1);
+                DateTime endDateLimit = DateTime.UtcNow.AddMonths(1);
+
+
+
+                var query = _context.Activities.AsQueryable();
+                //     query = query.Where(a => a.Start > startDateLimit && a.End < endDateLimit);
+                query = query.Where(a => a.Start > startDateLimit);
+                query = query.Where(a => !a.LogicalDeleteInd);
+
+                switch (route)
+                {
+                    case "academic":
+                        query = query.Where(a => a.CopiedToacademic);
+                        break;
+                    case "asep":
+                        query = query.Where(a => a.CopiedToasep);
+                        break;
+                    case "commandGroup":
+                        query = query.Where(a => a.CopiedToasep);
+                        break;
+                    case "community":
+                        query = query.Where(a => a.CopiedTocommunity);
+                        break;
+                    case "csl":
+                        query = query.Where(a => a.CopiedTocsl);
+                        break;
+                    case "garrison":
+                        query = query.Where(a => a.CopiedTogarrison);
+                        break;
+                    case "generalInterest":
+                        query = query.Where(a => a.CopiedTogeneralInterest);
+                        break;
+                    case "holiday":
+                        query = query.Where(a => a.CopiedToholiday);
+                        break;
+                    case "pksoi":
+                        query = query.Where(a => a.CopiedTopksoi);
+                        break;
+                    case "socialEventsAndCeremonies":
+                        query = query.Where(a => a.CopiedTosocialEventsAndCeremonies);
+                        break;
+                    case "usahec":
+                        query = query.Where(a => a.CopiedTousahec);
+                        break;
+                    case "ssiAndUsawcPress":
+                        query = query.Where(a => a.CopiedTossiAndUsawcPress);
+                        break;
+                    case "ssl":
+                        query = query.Where(a => a.CopiedTossl);
+                        break;
+                    case "trainingAndMiscEvents":
+                        query = query.Where(a => a.CopiedTotrainingAndMiscEvents);
+                        break;
+                    case "usahecFacilitiesUsage":
+                        query = query.Where(a => a.CopiedTousahecFacilitiesUsage);
+                        break;
+                    case "visitsAndTours":
+                        query = query.Where(a => a.CopiedTovisitsAndTours);
+                        break;
+                    case "symposiumAndConferences":
+                        query = query.Where(a => a.CopiedTosymposiumAndConferences);
+                        break;
+                    case "militaryFamilyAndSpouseProgram":
+                        query = query.Where(a => a.MFP);
+                        break;
+                    case "battlerhythm":
+                        query = query.Where(a => a.CopiedTobattlerhythm);
+                        break;
+                    case "staff":
+                        query = query.Where(a => a.CopiedTostaff);
+                        break;
+                    case "imc":
+                        query = query.Where(a => a.IMC);
+                        break;
+                    case "studentCalendar":
+                        query = query.Where(a => a.CopiedTostudentCalendar);
+                        break;
+                    case "studentcalendar":
+                        query = query.Where(a => a.CopiedTostudentCalendar);
+                        break;
+                    default:
+                        throw new Exception($"Unknown route: {route}");
+                }
+
+
+                //  var activities = await query.ToListAsync();
+
+                var activities = await query
+        .OrderBy(a => a.Start)
+        .Take(1000)
+        .ToListAsync();
+
+                foreach (Activity activity in activities)
+                {
+                    string description = activity.Description;
+                    if (!string.IsNullOrEmpty(activity.Hyperlink) && !string.IsNullOrEmpty(activity.HyperlinkDescription))
+                    {
+                        description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
+                    }
+                    if (activity.CopiedTostudentCalendar && (route == "studentCalendar" || route == "studentcalendar"))
+                    {
+                        if (activity.StudentCalendarMandatory)
+                        {
+                            description = description + $"---ATTENDANCE--- attendance is mandatory.";
+                        }
+                        if (!string.IsNullOrEmpty(activity.StudentCalendarUniform))
+                        {
+                            description = description + $"---UNIFORM--- {activity.StudentCalendarUniform}";
+                        }
+                        if (!string.IsNullOrEmpty(activity.PocketCalPresenter))
+                        {
+                            description = description + $"---PRESENTER--- {activity.StudentCalendarPresenter}";
+                        }
+                        if (!string.IsNullOrEmpty(activity.StudentCalendarNotes))
+                        {
+                            description = description + $"---NOTES--- {activity.StudentCalendarNotes}";
+                        }
+                    }
+                    writer.WriteLine("BEGIN:VEVENT");
+                    writer.WriteLine($"DTSTAMP:{DateTime.UtcNow.ToString("yyyyMMddTHHmmssZ")}");
+                    if (activity.AllDayEvent)
+                    {
+                        writer.WriteLine($"DTSTART;VALUE=DATE:{activity.Start.ToString("yyyyMMdd")}");
+                        writer.WriteLine($"DTEND;VALUE=DATE:{activity.End.AddDays(1).ToString("yyyyMMdd")}");
+                    }
+                    else
+                    {
+                        writer.WriteLine($"DTSTART;TZID=America/New_York:{activity.Start.ToString("yyyyMMddTHHmmss")}");
+                        writer.WriteLine($"DTEND;TZID=America/New_York:{activity.End.ToString("yyyyMMddTHHmmss")}");
+                    }
+                    WriteLineWithEllipsis(writer, $"LOCATION:{await GetLocation(activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms)}");
+                    writer.WriteLine("SEQUENCE:0");
+                    WriteLineWithEllipsis(writer, $"SUMMARY:{activity.Title.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
+                    WriteLineWithEllipsis(writer, $"DESCRIPTION:{description.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
+                    writer.WriteLine("TRANSP:OPAQUE");
+                    writer.WriteLine($"UID:{activity.Id}");
+                    writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:BUSY");
+                    if (activity.Category != null)
+                    {
+                        writer.WriteLine($"CATEGORIES:{activity.Category}");
+                    }
+                    writer.WriteLine("END:VEVENT");
+                }
+
+                writer.WriteLine("END:VCALENDAR");
+
+                //  return Ok(writer.ToString());
+                Response.Headers.Add("Content-Type", "text/calendar");
+                return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
             }
-
-
-            //  var activities = await query.ToListAsync();
-
-            var activities = await query
-    .OrderBy(a => a.Start)
-    .Take(1000)
-    .ToListAsync();
-
-            foreach (Activity activity in activities)
+            else
             {
-                string description = activity.Description;
-                if (activity.CopiedTostudentCalendar && route == "studentCalendar")
+                var checklists = await _context.EnlistedAideCheckLists.Include(x => x.Activity)
+                  .Where(x => !x.Activity.LogicalDeleteInd)
+                  .ToListAsync();
+
+                List<FullCalendarEventDTO> fullCalendarEventDTOs = new List<FullCalendarEventDTO>();
+
+                foreach (var checkList in checklists)
                 {
-                    if (activity.StudentCalendarMandatory )
+                    fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Event", checkList.Activity.AllDayEvent, checkList.Activity.Start, checkList.Activity.End));
+                    if (checkList.AlcoholEstimate)
                     {
-                        description = description + $"---ATTENDANCE--- attendance is mandatory.";
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Alcohol Estimate", true,
+                            checkList.Activity.Start.Date.AddDays(-28),
+                            checkList.Activity.Start.Date.AddDays(-28)
+                            ));
                     }
-                    if (!string.IsNullOrEmpty(activity.StudentCalendarUniform))
+                    if (checkList.PrepareLegalReview)
                     {
-                        description = description + $"---UNIFORM--- {activity.StudentCalendarUniform}";
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Prepare Legal Review", true,
+                            checkList.Activity.Start.Date.AddDays(-28),
+                            checkList.Activity.Start.Date.AddDays(-28)
+                            ));
                     }
-                    if (!string.IsNullOrEmpty(activity.PocketCalPresenter))
+                    if (checkList.PreparePRAForm)
                     {
-                        description = description + $"---PRESENTER--- {activity.StudentCalendarPresenter}";
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Prepare PR&A Form With Legal Review", true,
+                            checkList.Activity.Start.Date.AddDays(-28),
+                             checkList.Activity.Start.Date.AddDays(-28)
+                            ));
                     }
-                    if (!string.IsNullOrEmpty(activity.StudentCalendarNotes))
+                    if (checkList.PrepareGuestList)
                     {
-                        description = description + $"---NOTES--- {activity.StudentCalendarNotes}";
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Prepare Guest List With Legal Review", true,
+                            checkList.Activity.Start.Date.AddDays(-28),
+                               checkList.Activity.Start.Date.AddDays(-28)
+                            ));
+                    }
+                    if (checkList.Prepare4843GuestList)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Prepare 4843 Guest List With Legal Review", true,
+                            checkList.Activity.Start.Date.AddDays(-28),
+                             checkList.Activity.Start.Date.AddDays(-28)
+                            ));
+                    }
+                    if (checkList.PrepareMenu)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Menu Preparation", true,
+                            checkList.Activity.Start.Date.AddDays(-21),
+                                checkList.Activity.Start.Date.AddDays(-21)
+                            ));
+                    }
+                    if (checkList.SendToLegalForApproval)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Submit Legal Review For Approval", true,
+                            checkList.Activity.Start.Date.AddDays(-21),
+                             checkList.Activity.Start.Date.AddDays(-21)
+                            ));
+                    }
+                    if (checkList.MenuReviewedByPrincipal)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Menu Reviewed By Principal", true,
+                            checkList.Activity.Start.Date.AddDays(-14),
+                              checkList.Activity.Start.Date.AddDays(-14)
+                            ));
+                    }
+                    if (checkList.OrderAlcohol)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Order Alcohol", true,
+                            checkList.Activity.Start.Date.AddDays(-14),
+                              checkList.Activity.Start.Date.AddDays(-14)
+                            ));
+                    }
+                    if (checkList.GFEBS)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "GFEBS (upon Legal Review document approval)", true,
+                            checkList.Activity.Start.Date.AddDays(-14),
+                              checkList.Activity.Start.Date.AddDays(-14)
+                            ));
+                    }
+                    if (checkList.GatherIce)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Gather ICE", true,
+                            checkList.Activity.Start.Date.AddDays(-7),
+                              checkList.Activity.Start.Date.AddDays(-7)
+                            ));
+                    }
+                    if (checkList.HighTopsAndTables)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "High Tops and Tables", true,
+                            checkList.Activity.Start.Date.AddDays(-7),
+                              checkList.Activity.Start.Date.AddDays(-7)
+                            ));
+                    }
+                    if (checkList.SweepAndMop)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Sweep and Mop", true,
+                            checkList.Activity.Start.Date.AddDays(-7),
+                              checkList.Activity.Start.Date.AddDays(-7)
+                            ));
+                    }
+                    if (checkList.PolishSilver)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Polish Silver", true,
+                            checkList.Activity.Start.Date.AddDays(-7),
+                              checkList.Activity.Start.Date.AddDays(-7)
+                            ));
+                    }
+                    if (checkList.CleanCutlery)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Clean Cutlery", true,
+                            checkList.Activity.Start.Date.AddDays(-7),
+                              checkList.Activity.Start.Date.AddDays(-7)
+                            ));
+                    }
+                    if (checkList.CleanPlates)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Clean Plates", true,
+                            checkList.Activity.Start.Date.AddDays(-7),
+                              checkList.Activity.Start.Date.AddDays(-7)
+                            ));
+                    }
+                    if (checkList.CleanServiceItems)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Clean Service Items", true,
+                            checkList.Activity.Start.Date.AddDays(-7),
+                              checkList.Activity.Start.Date.AddDays(-7)
+                            ));
+                    }
+                    if (checkList.NapkinsPressed)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Napkins Pressed", true,
+                            checkList.Activity.Start.Date.AddDays(-7),
+                              checkList.Activity.Start.Date.AddDays(-7)
+                            ));
+                    }
+                    if (checkList.NapkinsRolled)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Napkins Rolled", true,
+                            checkList.Activity.Start.Date.AddDays(-7),
+                              checkList.Activity.Start.Date.AddDays(-7)
+                            ));
+                    }
+                    if (checkList.FoodShopping)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Food Shopping", true,
+                            checkList.Activity.Start.Date.AddDays(-2),
+                              checkList.Activity.Start.Date.AddDays(-2)
+                            ));
+                    }
+                    if (checkList.FoodPrep)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Food Prep", true,
+                            checkList.Activity.Start.Date.AddDays(-2),
+                              checkList.Activity.Start.Date.AddDays(-2)
+                            ));
+                    }
+                    if (checkList.TentSetUp)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Tent Set Up", true,
+                            checkList.Activity.Start.Date.AddDays(-2),
+                              checkList.Activity.Start.Date.AddDays(-2)
+                            ));
+                    }
+                    if (checkList.Dust)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Dust", true,
+                            checkList.Activity.Start.Date.AddDays(-1),
+                              checkList.Activity.Start.Date.AddDays(-1)
+                            ));
+                    }
+                    if (checkList.Cook)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Cook", true,
+                            checkList.Activity.Start.Date.AddDays(-0),
+                              checkList.Activity.Start.Date.AddDays(-0)
+                            ));
+                    }
+                    if (checkList.Coffee)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Coffee", false,
+                            checkList.Activity.Start.AddHours(-1),
+                              checkList.Activity.Start
+                            ));
+                    }
+                    if (checkList.IceBeverages)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Ice Beverages", false,
+                            checkList.Activity.Start.AddHours(-1),
+                              checkList.Activity.Start
+                            ));
+                    }
+                    if (checkList.Sterno)
+                    {
+                        fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(checkList, "Sterno", false,
+                            checkList.Activity.Start.AddMinutes(-30),
+                              checkList.Activity.Start
+                            ));
                     }
                 }
-                writer.WriteLine("BEGIN:VEVENT");
-                writer.WriteLine($"DTSTAMP:{DateTime.UtcNow.ToString("yyyyMMddTHHmmssZ")}");
-                if (activity.AllDayEvent)
+
+                StringWriter writer = new StringWriter();
+                writer.WriteLine("BEGIN:VCALENDAR");
+                writer.WriteLine($"PRODID://ENLISTEDAIDE//USAWC//EN");
+                writer.WriteLine("VERSION:2.0");
+                writer.WriteLine("METHOD:PUBLISH");
+                writer.WriteLine($"X-WR-CALNAME:ENLISTEDAIDE");
+
+                // Add VTIMEZONE component
+                writer.WriteLine("BEGIN:VTIMEZONE");
+                writer.WriteLine("TZID:America/New_York");
+                writer.WriteLine("BEGIN:STANDARD");
+                writer.WriteLine("DTSTART:16010101T020000");
+                writer.WriteLine("RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=11");
+                writer.WriteLine("TZOFFSETFROM:-0400");
+                writer.WriteLine("TZOFFSETTO:-0500");
+                writer.WriteLine("END:STANDARD");
+                writer.WriteLine("BEGIN:DAYLIGHT");
+                writer.WriteLine("DTSTART:16010101T020000");
+                writer.WriteLine("RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3");
+                writer.WriteLine("TZOFFSETFROM:-0500");
+                writer.WriteLine("TZOFFSETTO:-0400");
+                writer.WriteLine("END:DAYLIGHT");
+                writer.WriteLine("END:VTIMEZONE");
+
+            
+                foreach (var item in fullCalendarEventDTOs)
                 {
-                    writer.WriteLine($"DTSTART;VALUE=DATE:{activity.Start.ToString("yyyyMMdd")}");
-                    writer.WriteLine($"DTEND;VALUE=DATE:{activity.End.AddDays(1).ToString("yyyyMMdd")}");
+                    string location = "USAWC";
+                    if (!string.IsNullOrEmpty(item.EnlistedAideVenue)) location = item.EnlistedAideVenue;
+                    string description = string.Empty;
+                    if (!string.IsNullOrEmpty(item.EnlistedAideFundingType)) description = description + $"---FUNDING TYPE--- {item.EnlistedAideFundingType} ";
+                    if (!string.IsNullOrEmpty(item.EnlistedAideGuestCount)) description = description + $"---GUEST COUNT--- {item.EnlistedAideGuestCount} ";
+                    if (!string.IsNullOrEmpty(item.EnlistedAideCooking)) description = description + $"---COOKING--- {item.EnlistedAideCooking} ";
+                    if (!string.IsNullOrEmpty(item.EnlistedAideDietaryRestrictions)) description = description + $"---DIETARY RESTRICTIONS--- {item.EnlistedAideDietaryRestrictions} ";
+                    if (!string.IsNullOrEmpty(item.EnlistedAideAlcohol)) description = description + $"---ALCOHOL--- {item.EnlistedAideAlcohol} ";
+                    if (!string.IsNullOrEmpty(item.EnlistedAideNumOfBartenders)) description = description + $"---NUMBER OF BARTENDERS--- {item.EnlistedAideNumOfBartenders} ";
+                    if (!string.IsNullOrEmpty(item.EnlistedAideNumOfServers)) description = description + $"---NUMBER OF SERVERS--- {item.EnlistedAideNumOfServers} ";
+                    if (!string.IsNullOrEmpty(item.EnlistedAideSupportNeeded)) description = description + $"---ADDITIONAL SUPPORT--- {item.EnlistedAideSupportNeeded} ";
+
+                    writer.WriteLine("BEGIN:VEVENT");
+                    writer.WriteLine($"DTSTAMP:{DateTime.UtcNow.ToString("yyyyMMddTHHmmssZ")}");
+                    if (item.AllDay)
+                    {
+                        writer.WriteLine($"DTSTART;VALUE=DATE:{item.StartForICS}");
+                        writer.WriteLine($"DTEND;VALUE=DATE:{item.EndForICS}");
+                    }
+                    else
+                    {
+                        writer.WriteLine($"DTSTART;TZID=America/New_York:{item.StartForICS}");
+                        writer.WriteLine($"DTEND;TZID=America/New_York:{item.EndForICS}");
+                    }
+                    WriteLineWithEllipsis(writer, $"LOCATION:{location}");
+                    writer.WriteLine("SEQUENCE:0");
+                    WriteLineWithEllipsis(writer, $"SUMMARY:{item.Task}");
+                    writer.WriteLine("TRANSP:OPAQUE");
+                    writer.WriteLine($"UID:{Guid.NewGuid()}");
+                    writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:BUSY");
+                    writer.WriteLine("END:VEVENT");
                 }
-                else
-                {
-                    writer.WriteLine($"DTSTART;TZID=America/New_York:{activity.Start.ToString("yyyyMMddTHHmmss")}");
-                    writer.WriteLine($"DTEND;TZID=America/New_York:{activity.End.ToString("yyyyMMddTHHmmss")}");
-                }
-                WriteLineWithEllipsis(writer, $"LOCATION:{await GetLocation(activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms)}");
-                writer.WriteLine("SEQUENCE:0");
-                WriteLineWithEllipsis(writer, $"SUMMARY:{activity.Title.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
-                WriteLineWithEllipsis(writer, $"DESCRIPTION:{description.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
-                writer.WriteLine("TRANSP:OPAQUE");
-                writer.WriteLine($"UID:{activity.Id}");
-                writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:BUSY");
-                if (activity.Category != null)
-                {
-                    writer.WriteLine($"CATEGORIES:{activity.Category}");
-                }
-                writer.WriteLine("END:VEVENT");
+                writer.WriteLine("END:VCALENDAR");
+
+                //  return Ok(writer.ToString());
+                Response.Headers.Add("Content-Type", "text/calendar");
+                return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
             }
+        }
 
-            writer.WriteLine("END:VCALENDAR");
-
-            //  return Ok(writer.ToString());
-            Response.Headers.Add("Content-Type", "text/calendar");
-            return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
+        private FullCalendarEventDTO CreateFullCalendarEventDTO(Domain.EnlistedAideCheckList checkList, string task, bool allDayEvent, DateTime start, DateTime end)
+        {
+            DateTime endDateForCalendar = allDayEvent ? end.AddDays(1) : end;
+            return new FullCalendarEventDTO
+            {
+                Id = checkList.Id.ToString(),
+                CategoryId = checkList.Activity.CategoryId.ToString(),
+                ActivityId = checkList.Activity.Id.ToString(),
+                Title = $"{task}  ( {checkList.Activity.Title} )",
+                Start = Helper.GetStringFromDateTime(start, allDayEvent),
+                End = Helper.GetStringFromDateTime(endDateForCalendar, allDayEvent),
+                StartForICS = allDayEvent ? start.ToString("yyyyMMdd") : start.ToString("yyyyMMddTHHmmss"),
+                EndForICS = allDayEvent ? endDateForCalendar.ToString("yyyyMMdd") : endDateForCalendar.ToString("yyyyMMddTHHmmss"),
+                AllDay = allDayEvent,
+                ActionOfficer = checkList.Activity.ActionOfficer,
+                ActionOfficerPhone = checkList.Activity.ActionOfficerPhone,
+                EventTitle = checkList.Activity.Title,
+                Task = task,
+                EnlistedAideFundingType = checkList.Activity.EnlistedAideFundingType,
+                EnlistedAideVenue = checkList.Activity.EnlistedAideVenue,
+                EnlistedAideGuestCount = checkList.Activity.EnlistedAideGuestCount,
+                EnlistedAideCooking = checkList.Activity.EnlistedAideCooking,
+                EnlistedAideDietaryRestrictions = checkList.Activity.EnlistedAideDietaryRestrictions,
+                EnlistedAideAlcohol = checkList.Activity.EnlistedAideAlcohol,
+                EnlistedAideNumOfBartenders = checkList.Activity.EnlistedAideNumOfBartenders,
+                EnlistedAideNumOfServers = checkList.Activity.EnlistedAideNumOfServers,
+                EnlistedAideSupportNeeded = checkList.Activity.EnlistedAideSupportNeeded
+            };
         }
 
         private string GetCalendarName(string route)
@@ -271,6 +581,9 @@ namespace API.Controllers
                     retval = "Integrated Master Calendar (IMC)";
                     break;
                 case "studentCalendar":
+                    retval = "Student Calendar";
+                    break;
+                case "studentcalendar":
                     retval = "Student Calendar";
                     break;
 
