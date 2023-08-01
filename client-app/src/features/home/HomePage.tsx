@@ -32,10 +32,11 @@ function useIsEduSignedIn(): [boolean] {
 export default observer(function HomePage(){
     const [isEduSignedIn] = useIsEduSignedIn();
     const history = useHistory();
-    const {userStore, graphUserStore, commonStore} = useStore();
+    const {userStore, graphUserStore, commonStore, navbarStore} = useStore();
     const {loadEDUGraphUser, armyProfile} = graphUserStore;
     const {redirectId, redirectCategoryId, redirectToPage} = commonStore;
     const {signInEDUGraphUser, signInArmyUser, loadingInitial, errors} = userStore;
+    const {navbarType} = navbarStore
     const [loading, setLoading] = useState<boolean>(false);
     const loginCompleted = () => {
         setLoading(true);
@@ -46,6 +47,12 @@ export default observer(function HomePage(){
           }
         });
       };
+
+      useEffect(() => {
+        if(navbarType === 'studentCalendar'){
+          history.push(`${process.env.PUBLIC_URL}/studentcalendar`)
+        }
+      }, [navbarType ])
 
       useEffect(() => {
         if(redirectToPage && userStore.isLoggedIn){
@@ -69,6 +76,9 @@ export default observer(function HomePage(){
       }
 
     return(
+      <>
+      {navbarType !== 'eem' && <LoadingComponent content='Loading...'/>}
+      {navbarType === 'eem' && 
         <Segment inverted textAlign='center' vertical className='masthead'>
     <Container text>
     <Header as='h1' inverted>
@@ -171,5 +181,7 @@ export default observer(function HomePage(){
 
     </Container>
         </Segment>
+}
+        </>
     )
 })
