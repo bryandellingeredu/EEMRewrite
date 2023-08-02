@@ -128,11 +128,6 @@ export default observer(function NavbarEEM() {
                     to={`${process.env.PUBLIC_URL}/customcalendar`}
                   />
                     <Dropdown.Item
-                    text="Student Calendar Academic Year 2023"
-                    as={Link}
-                    to={`${process.env.PUBLIC_URL}/academiccalendar`}
-                  />
-                    <Dropdown.Item
                     text="Bldg 651 Calendar"
                     as={Link}
                     to={`${process.env.PUBLIC_URL}/bldg651Calendar/651`}
@@ -144,7 +139,7 @@ export default observer(function NavbarEEM() {
                   />
               {categories.filter(x => x.routeName && x.name !== "Other").map((category) => (
                  <Dropdown.Item key={category.id}
-                  text={category.name === 'Academic IMC Event' ? 'Faculty Calendar' : category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : category.name}   as={Link} 
+                  text={category.name === 'Academic IMC Event' ? 'Faculty Calendar' : category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : category.name === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :category.name}   as={Link} 
                   to={`${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}  />
                 ))}
                 </Dropdown.Menu>

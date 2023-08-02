@@ -353,6 +353,7 @@ export default observer(function ActivityTable(){
                 {
                   item.subCalendar === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                   item.subCalendar === 'Academic IMC Event' ? 'Faculty Calendar' :
+                  item.subCalendar === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :
                   item.subCalendar === 'SSL Calendar' ? 'SSL Admin Calendar' :
                   item.subCalendar === 'Other' ? '' :
                   item.subCalendar
@@ -396,6 +397,7 @@ export default observer(function ActivityTable(){
                 {
                   item.subCalendar === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                   item.subCalendar === 'Academic IMC Event' ? 'Faculty Calendar' :
+                  item.subCalendar === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :
                   item.subCalendar === 'SSL Calendar' ? 'SSL Admin Calendar' :
                   item.subCalendar === 'Other' ? '' :
                   item.subCalendar

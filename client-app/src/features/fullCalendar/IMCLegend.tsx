@@ -26,7 +26,8 @@ export default observer(function IMCLegend() {
         ).map(category => (
         <Label key={category.id} style={{backgroundColor: category.imcColor, color: 'white', marginBottom: '5px'}}
          content = {category.name === 'Academic IMC Event'? 'Faculty Calendar' : 
-                    category.name === 'SSL Calendar'? 'SSL Admin Calendar' : category.name} />
+         category.name === 'Military Family and Spouse Program'? 'Military Spouse and Family Program' : 
+         category.name === 'SSL Calendar'? 'SSL Admin Calendar' : category.name} />
       ))}
       </div>
       }

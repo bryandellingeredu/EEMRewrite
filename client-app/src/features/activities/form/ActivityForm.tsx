@@ -2422,7 +2422,7 @@ export default observer(function ActivityForm() {
                           />
                           <MySemanticCheckBox
                             name="mfp"
-                            label="Military Family and Spouse Program"
+                            label="Military Spouse and Family Program"
                             disabled={categories
                               .filter(
                                 (x) =>
@@ -2573,7 +2573,7 @@ export default observer(function ActivityForm() {
             )}
 
             {(values.mfp ||
-              ["Military Family and Spouse Program"].includes(
+              ["Military Spouse and Family Program"].includes(
                 categories.find((x) => x.id === values.categoryId)?.name || ""
               )) && (
               <MySelectInput
@@ -2599,7 +2599,7 @@ export default observer(function ActivityForm() {
                 ]}
                 placeholder="No Color"
                 name="educationalCategory"
-                label="Educational Category for MFSP:"
+                label="Educational Category for MSFP:"
               />
             )}
 

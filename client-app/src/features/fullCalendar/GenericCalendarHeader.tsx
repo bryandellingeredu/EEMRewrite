@@ -152,7 +152,7 @@ export default function GenericCalendarHeader({id} : Props){
        {id === 'militaryFamilyAndSpouseProgram' &&
         <>
           <FontAwesomeIcon icon={faHouseChimneyWindow} size='2x' style={{marginRight: '10px'}} />
-          Military Family and Spouse Program
+          Military Spouse and Family Program
         </>
       }
       {id === 'academic' &&

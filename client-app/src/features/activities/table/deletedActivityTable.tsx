@@ -69,6 +69,7 @@ export default function DeletedActivityTable(){
                {
                   item.category.name === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                   item.category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
+                  item.category.name === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :
                   item.category.name === 'SSL Calendar' ? 'SSL Admin Calendar' :
                   item.category.name === 'Other' ? '' :
                   item.category.name

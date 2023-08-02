@@ -139,7 +139,7 @@ export default observer(function customCalendar() {
     ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: </strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
     ${arg.event.extendedProps.actionOfficer ? '<p><strong>Action Officer: </strong>' + arg.event.extendedProps.actionOfficer + '</p>' : ''}
     ${arg.event.extendedProps.actionOfficerPhone ? '<p><strong>Action Officer Phone: </strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
-    ${arg.event.extendedProps.categoryName ? '<p><strong>Sub Calendar: </strong>' + (arg.event.extendedProps.categoryName === 'Academic IMC Event' ? 'Faculty Calendar' : arg.event.extendedProps.categoryName === 'SSL Calendar' ? 'SSL Admin Calendar' : arg.event.extendedProps.categoryName) + '</p>' : ''}
+    ${arg.event.extendedProps.categoryName ? '<p><strong>Sub Calendar: </strong>' + (arg.event.extendedProps.categoryName === 'Academic IMC Event' ? 'Faculty Calendar' : arg.event.extendedProps.category.name === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program':  arg.event.extendedProps.categoryName === 'SSL Calendar' ? 'SSL Admin Calendar' : arg.event.extendedProps.categoryName) + '</p>' : ''}
      `;
    var tooltip : any = tippy(arg.el, {     
       content,
@@ -209,6 +209,7 @@ const handleLabelClick = (id: string) => {
           >
             <Icon name={category.selected ? 'check square outline' : 'square outline'} size="large" />
             {category.name === 'Academic IMC Event'? 'Faculty Calendar' : 
+            category.name === 'Military Family and Spouse Program'? 'Military Spouse and Family Program' : 
              category.name === 'SSL Calendar'? 'SSL Admin Calendar' : category.name}
           </Label>
       ))}

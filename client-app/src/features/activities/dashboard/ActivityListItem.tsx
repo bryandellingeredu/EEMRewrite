@@ -161,6 +161,7 @@ export default function ActivityListItem({activity}:Props){
                     </Item.Header> 
                     <Item.Description> {activity.category.name === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                                         activity.category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
+                                        activity.category.name === 'Military Family and Spouse Program'? 'Military Spouse and Family Program' : 
                                         activity.category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : activity.category.name}
                     </Item.Description>                 
                 </Item.Content>
