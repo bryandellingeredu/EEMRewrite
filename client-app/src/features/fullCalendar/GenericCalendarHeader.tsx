@@ -7,6 +7,7 @@ import USAHECFacilitiesUsageLegend from "./USAHECFacilitiesUsageLegend";
 import { faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
 import { useStore } from "../../app/stores/store";
 import SyncCalendarInformation from "./SyncCalendarInformation";
+import MSFPLegend from "./MSFPLegend";
 
 interface Props {
     id: string
@@ -174,6 +175,7 @@ export default function GenericCalendarHeader({id} : Props){
 
     {id === 'csl' && <CSLLegend />}
     {id === 'usahecFacilitiesUsage' && <USAHECFacilitiesUsageLegend />}
+    {id === 'militaryFamilyAndSpouseProgram' && <MSFPLegend />}
     </>
     )
 }

@@ -103,7 +103,8 @@ namespace Application.Activities
                         StudentCalendarNotes = activity.StudentCalendarNotes,
                         StudentCalendarMandatory = activity.StudentCalendarMandatory,
                         HyperLink = activity.Hyperlink,
-                        HyperLinkDescription = activity.HyperlinkDescription
+                        HyperLinkDescription = activity.HyperlinkDescription,
+                        EducationalCategory = activity.EducationalCategory
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);
@@ -138,6 +139,25 @@ namespace Application.Activities
                     } else
                     {
                         color = "goldenrod";
+                    }
+                }
+
+                if(category.RouteName == "militaryFamilyAndSpouseProgram" && !string.IsNullOrEmpty(activity.EducationalCategory)) 
+                {
+                   switch (activity.EducationalCategory)
+                    {
+                        case "Leadership & Readiness":
+                            return "#00008B";
+                        case "Personal Finance Management":
+                            return "#FF8C00";
+                        case "Personal Growth and Fitness":
+                            return "#8B0000";
+                        case "Family Growth & Resiliency":
+                            return "#006400";
+                        case "TS-SCI":
+                            return "#00008B";
+                        default:
+                            return "#483D8B";
                     }
                 }
               

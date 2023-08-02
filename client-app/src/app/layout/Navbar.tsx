@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "../stores/store";
 import NavbarStudentCalendar from "./NavbarStudentCalendar";
 import { Loader } from "semantic-ui-react";
+import NavbarMSFPCalendar from "./NavbarMSFPCalendar";
 
 export default observer( function Navbar() {
   const {
@@ -12,8 +13,9 @@ export default observer( function Navbar() {
   return (
     <>
     {!navbarType && <Loader size='small' inline/> }
-    {navbarType === 'eem' && <NavbarEEM /> }
+    {navbarType && navbarType === 'eem' && <NavbarEEM /> }
     {navbarType && navbarType === 'studentCalendar'&& <NavbarStudentCalendar /> }
+    {navbarType && navbarType === 'msfp'&& <NavbarMSFPCalendar /> }
    </>
   );
 });

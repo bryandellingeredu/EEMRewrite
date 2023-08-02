@@ -57,5 +57,6 @@ namespace Application.GraphSchedules
         public string EnlistedAideSupportNeeded { get; set; }
         public string HyperLink { get; set; }
         public string HyperLinkDescription { get; set; }
+        public string EducationalCategory { get; set; }
     }
 }

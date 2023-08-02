@@ -103,13 +103,25 @@ picURL: '',
       });
     }, [categories, history]);
 
+    const getTime = (clickInfo: EventClickArg) => {
+  let time : string = ''
+  if(!clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') !== format(clickInfo.event.end!, 'MMMM d, yyyy')){
+    time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy h:mm aa')} - ${format(clickInfo.event.end!, 'MMMM d, yyyy h:mm aa')}`
+  }
+  if(!clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') === format(clickInfo.event.end!, 'MMMM d, yyyy')){
+    time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy h:mm aa')} - ${format(clickInfo.event.end!, 'h:mm aa')}`
+  }
+  if(clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') === format(clickInfo.event.end!, 'MMMM d, yyyy')){
+    time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy')} `
+  }
+  if(clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') !== format(clickInfo.event.end!, 'MMMM d, yyyy')){
+    time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy')} - ${format(clickInfo.event.end!, 'MMMM d, yyyy')}`
+  }
+  return time;
+}
+
     const handleMouseEnter = async (arg : any) =>{
-      let content =  `<p><strong> 
-      ${ 
-        arg.event.allDay ?
-        format(arg.event.start, 'MM/dd') :
-        format(arg.event.start, 'h:mm aa')} - ${format(arg.event.end, 'h:mm aa')
-      }</strong></p>             
+      let content =  `<p><strong> ${ getTime(arg)} </strong></p>             
       <p> <span>${arg.event.title}</span></p>
       ${arg.event.backgroundColor === 'Green' ? '(Reservation Approved)' : '(Reservation Pending)'}`;
 

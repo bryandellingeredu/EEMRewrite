@@ -90,13 +90,25 @@ export default observer(function GenericCalendar() {
     history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`);
   }, [ categories, history]);
 
+  const getTime = (clickInfo: EventClickArg) => {
+    let time : string = ''
+    if(!clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') !== format(clickInfo.event.end!, 'MMMM d, yyyy')){
+      time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy h:mm aa')} - ${format(clickInfo.event.end!, 'MMMM d, yyyy h:mm aa')}`
+    }
+    if(!clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') === format(clickInfo.event.end!, 'MMMM d, yyyy')){
+      time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy h:mm aa')} - ${format(clickInfo.event.end!, 'h:mm aa')}`
+    }
+    if(clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') === format(clickInfo.event.end!, 'MMMM d, yyyy')){
+      time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy')} `
+    }
+    if(clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') !== format(clickInfo.event.end!, 'MMMM d, yyyy')){
+      time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy')} - ${format(clickInfo.event.end!, 'MMMM d, yyyy')}`
+    }
+    return time;
+  }
+
   const  handleMouseEnter = async (arg : any) =>{
-    var content = `<p> 
-    ${ 
-      arg.event.allDay ?
-      format(arg.event.start, 'MM/dd') :
-      format(arg.event.start, 'h:mm aa')} - ${format(arg.event.end, 'h:mm aa')
-    }</p>              
+    var content = `<p> ${ getTime(arg)}</p>              
     <p> <strong>Title: </strong> ${arg.event.title} </p>
     ${arg.event.extendedProps.description ?'<p><strong>Description: <strong>' + arg.event.extendedProps.description + '</p>' : '' }
     ${arg.event.extendedProps.primaryLocation ? '<p><strong>Location: <strong>' + arg.event.extendedProps.primaryLocation + '</p>' : '' }

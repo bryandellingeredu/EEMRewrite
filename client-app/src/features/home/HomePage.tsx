@@ -52,6 +52,9 @@ export default observer(function HomePage(){
         if(navbarType === 'studentCalendar'){
           history.push(`${process.env.PUBLIC_URL}/studentcalendar`)
         }
+        if(navbarType === 'msfp'){
+          history.push(`${process.env.PUBLIC_URL}/msfpcalendar`)
+        }
       }, [navbarType ])
 
       useEffect(() => {

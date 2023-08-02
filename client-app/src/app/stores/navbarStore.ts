@@ -11,7 +11,10 @@ export default class NavbarStore{
     setNavbarTypeFromUrl = (url: string) => {
         if(url.toLowerCase().endsWith('eem/studentcalendar')){
             this.setNavbarType('studentCalendar');
-        } else{
+        } else if(url.toLowerCase().endsWith('eem/msfp')){
+            this.setNavbarType('msfp');
+        }
+         else{
             this.setNavbarType('eem');
         }
     }
