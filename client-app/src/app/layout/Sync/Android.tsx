@@ -12,7 +12,7 @@ const faAndroidPropIcon = faAndroid as IconProp;
 
 export default observer (function Android(){
     const {
-        navbarStore: {setPage },
+        navbarStore: {setPage, icalUrl, calendarName },
       } = useStore();
 
     const handleGoBack = () => setPage("calendar");
@@ -22,14 +22,14 @@ export default observer (function Android(){
         <Header.Content>
         <FontAwesomeIcon icon={faAndroidPropIcon} size="2x" color="orange" style={{paddingRight: '10px'}} />
          Android iCal Subscription Instructions
-          <Header.Subheader>  Subscribing to the Student Calendar will automatically sync any changes made to your Android Device's calendar and you will receive updates automatically.
+          <Header.Subheader>  Subscribing to the {calendarName} will automatically sync any changes made to your Android Device's calendar and you will receive updates automatically.
        </Header.Subheader>
         </Header.Content>
       </Header>
       <Header as="h4" textAlign="center" >
-              Copy the iCal feed Url: https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar
+              Copy the iCal feed Url: {icalUrl}
               <span style={{ marginLeft: '50px' }} />
-                 <CopyToClipboard text={'https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar' } />
+                 <CopyToClipboard text={icalUrl} />
              </Header>
       <SegmentGroup>
         <Segment content='On your Android device, open the "Calendar" app'></Segment>

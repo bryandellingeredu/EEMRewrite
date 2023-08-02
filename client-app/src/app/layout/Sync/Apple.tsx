@@ -11,8 +11,8 @@ const faApplePropIcon = faApple as IconProp;
 
 
 export default observer (function Apple(){
-    const {
-        navbarStore: {setPage },
+  const {
+        navbarStore: {setPage, icalUrl, calendarName },
       } = useStore();
     const handleGoBack = () => setPage("calendar");
     return(
@@ -21,14 +21,14 @@ export default observer (function Apple(){
         <Header.Content>
         <FontAwesomeIcon icon={faApplePropIcon} size="2x" color="orange" style={{paddingRight: '10px'}} />
          iPhone iCal Subscription Instructions
-          <Header.Subheader>  Subscribing to the Student Calendar will automatically sync any changes made to your iPhone calendar and you will receive updates automatically.
+          <Header.Subheader>  Subscribing to the {calendarName} will automatically sync any changes made to your iPhone calendar and you will receive updates automatically.
        </Header.Subheader>
         </Header.Content>
       </Header>
       <Header as="h4" textAlign="center" >
-              Copy the iCal feed Url:  https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar
+              Copy the iCal feed Url: {icalUrl}
               <span style={{ marginLeft: '50px' }} />
-                 <CopyToClipboard text={`https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar` } />
+                 <CopyToClipboard text={icalUrl} />
              </Header>
       <SegmentGroup>
         <Segment content='On your iPhone, go to "Settings"'></Segment>

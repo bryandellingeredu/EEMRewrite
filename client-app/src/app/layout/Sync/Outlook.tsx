@@ -12,7 +12,7 @@ const faWindowsPropIcon = faWindows as IconProp;
 
 export default observer(function Outlook(){
     const {
-        navbarStore: {setPage },
+        navbarStore: {setPage, icalUrl, calendarName },
       } = useStore();
 
     const handleGoBack = () => setPage("calendar");
@@ -22,14 +22,14 @@ export default observer(function Outlook(){
         <Header.Content>
         <FontAwesomeIcon icon={faWindowsPropIcon} size="2x" color="orange" style={{paddingRight: '10px'}} />
          Outlook iCal Subscription Instructions
-          <Header.Subheader>  Subscribing to the Student Calendar will automatically sync any changes made to your outlook calendar and you will receive updates automatically.
+          <Header.Subheader>  Subscribing to the {calendarName} will automatically sync any changes made to your outlook calendar and you will receive updates automatically.
        </Header.Subheader>
         </Header.Content>
       </Header>
-      <Header as="h4" textAlign="center" >
-              Copy the iCal feed Url:  https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar
+       <Header as="h4" textAlign="center" >
+              Copy the iCal feed Url: {icalUrl}
               <span style={{ marginLeft: '50px' }} />
-                 <CopyToClipboard text={`https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar` } />
+                 <CopyToClipboard text={icalUrl} />
              </Header>
       <SegmentGroup>
         <Segment content='Open Microsoft Outlook'></Segment>

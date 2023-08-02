@@ -11,8 +11,8 @@ const faGooglePropIcon = faGoogle as IconProp;
 
 
 export default observer(function Google(){
-    const {
-        navbarStore: {setPage },
+   const {
+        navbarStore: {setPage, icalUrl, calendarName },
       } = useStore();
 
     const handleGoBack = () => setPage("calendar");
@@ -22,14 +22,14 @@ export default observer(function Google(){
         <Header.Content>
         <FontAwesomeIcon icon={faGooglePropIcon} size="2x" color="orange" style={{paddingRight: '10px'}} />
         Google Calendar iCal Subscription Instructions
-          <Header.Subheader>  Subscribing to the Student Calendar will automatically sync any changes made to your Google Calendar and you will receive updates automatically.
+          <Header.Subheader>  Subscribing to the {calendarName} will automatically sync any changes made to your Google Calendar and you will receive updates automatically.
        </Header.Subheader>
         </Header.Content>
       </Header>
-      <Header as="h4" textAlign="center" >
-              Copy the iCal feed Url:  https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar
+   <Header as="h4" textAlign="center" >
+              Copy the iCal feed Url: {icalUrl}
               <span style={{ marginLeft: '50px' }} />
-                 <CopyToClipboard text={`https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar` } />
+                 <CopyToClipboard text={icalUrl} />
              </Header>
       <SegmentGroup>
         <Segment content='Go to Google Calendar on your computer'></Segment>
