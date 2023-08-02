@@ -4,6 +4,7 @@ import { useStore } from "../stores/store";
 import NavbarStudentCalendar from "./NavbarStudentCalendar";
 import { Loader } from "semantic-ui-react";
 import NavbarMSFPCalendar from "./NavbarMSFPCalendar";
+import NavbarCommunityCalendar from "./NavbarCommunityCalendar";
 
 export default observer( function Navbar() {
   const {
@@ -16,6 +17,7 @@ export default observer( function Navbar() {
     {navbarType && navbarType === 'eem' && <NavbarEEM /> }
     {navbarType && navbarType === 'studentCalendar'&& <NavbarStudentCalendar /> }
     {navbarType && navbarType === 'msfp'&& <NavbarMSFPCalendar /> }
+    {navbarType && navbarType === 'community'&& <NavbarCommunityCalendar /> }
    </>
   );
 });

@@ -6,7 +6,8 @@ import { Divider, Header, Icon, Loader } from "semantic-ui-react";
 import { DatesSetArg } from '@fullcalendar/common';
 import { format } from 'date-fns';
 import agent from "../../app/api/agent";
-import MSFPCalendarEventDetails from "./msfpCalendarEventDetails";
+import CommunityCalendarEventDetails from "./msfpCalendarEventDetails";
+
 
 interface EventInfo{
     title: string
@@ -16,16 +17,15 @@ interface EventInfo{
     leadOrg: string
     actionOfficer: string
     actionOfficerPhone: string
-    educationalCategory: string
     hyperLink: string
     hyperLinkDescription: string
   }
 
-export default function MobileMSFPCalendar (){
+export default function MobileCommunityCalendar (){
     const [isLoading, setIsLoading] = useState(true);
     const calendarRef = useRef<FullCalendar>(null);
     const [showDetails, setShowDetails] = useState(false);
-    const [view, setView] = useState(localStorage.getItem("calendarViewMSFPM") || "listMonth");
+    const [view, setView] = useState(localStorage.getItem("calendarViewECommunityM") || "listMonth");
     const [title, setTitle] = useState("");
     const [eventInfo, setEventInfo] = useState<EventInfo>(
         {title: '',
@@ -35,7 +35,6 @@ export default function MobileMSFPCalendar (){
          leadOrg: '',
          actionOfficer: '',
          actionOfficerPhone: '',
-         educationalCategory: '',
          hyperLink: '',
          hyperLinkDescription: ''
         }
@@ -56,7 +55,7 @@ export default function MobileMSFPCalendar (){
       };
 
       const handleDatesSet = (arg: DatesSetArg) => {
-        localStorage.setItem("calendarViewMSFPM", arg.view.type);
+        localStorage.setItem("calendarViewECommunityM", arg.view.type);
         setView(arg.view.type);
         setTitle(arg.view.title); 
         handleButtonClick();
@@ -90,7 +89,6 @@ export default function MobileMSFPCalendar (){
             leadOrg: clickInfo.event.extendedProps.leadOrg,
             actionOfficer: clickInfo.event.extendedProps.actionOfficer,
             actionOfficerPhone: clickInfo.event.extendedProps.actionOfficerPhone,
-            educationalCategory: clickInfo.event.extendedProps.educationalCategory,
             hyperLink: clickInfo.event.extendedProps.hyperLink,
             hyperLinkDescription: clickInfo.event.extendedProps.hyperLinkDescription || 'Go To Link'
           };
@@ -134,7 +132,7 @@ export default function MobileMSFPCalendar (){
       loading={(isLoading) => setIsLoading(isLoading)}
       ref={calendarRef}
       plugins={[listPlugin]}
-      events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/militaryFamilyAndSpouseProgram`}
+      events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/community`}
         datesSet={handleDatesSet}
       eventClick={handleEventClick}
       initialView={view}
@@ -196,7 +194,7 @@ customButtons={{
     />
 {loadingEvent &&  <Loader size='small' active inline>Loading ...</Loader> }
 
-{showDetails && !loadingEvent && <MSFPCalendarEventDetails eventInfo={eventInfo} /> }
+{showDetails && !loadingEvent && <CommunityCalendarEventDetails eventInfo={eventInfo} /> }
          </>
     )
 

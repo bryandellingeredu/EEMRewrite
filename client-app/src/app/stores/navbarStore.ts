@@ -20,6 +20,11 @@ export default class NavbarStore{
             this.setICALUrl('https://apps.armywarcollege.edu/eem/api/SyncCalendar/militaryFamilyAndSpouseProgram');
             this.setCalendarName('Military Spouse and Family Program Calendar');
         }
+        else if(url.toLowerCase().endsWith('eem/community')){
+            this.setNavbarType('community');
+            this.setICALUrl('https://apps.armywarcollege.edu/eem/api/SyncCalendar/community');
+            this.setCalendarName('Community Calendar');
+        }
          else{
             this.setNavbarType('eem');
         }

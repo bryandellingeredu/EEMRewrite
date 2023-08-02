@@ -55,6 +55,7 @@ import FullScreenEnlistedAideCalendar from '../../features/enlistedaide/fullScre
 import EnlistedAideCalendarWrapper from '../../features/enlistedaide/enlistedAideCalendarWrapper';
 import StudentCalendarWrapper from '../../features/studentCalendar/studentCalendarWrapper';
 import MSFPCalendarWrapper from '../../features/msfp/msfpCalendarWrapper';
+import CommunityCalendarWrapper from '../../features/community/communityCalendarWrapper';
 
 function App() {
   const location = useLocation();
@@ -119,6 +120,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper`} component={EnlistedAideCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/studentcalendar`} component={StudentCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/msfp`} component={MSFPCalendarWrapper}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/community`} component={CommunityCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/customcalendar`} component={CustomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/genericcalendar/:id`} component={GenericCalendar}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/roomcalendar/:id`} component={RoomCalendar}/>
