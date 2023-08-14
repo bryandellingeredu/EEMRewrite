@@ -79,7 +79,7 @@ namespace API.Controllers
                         query = query.Where(a => a.CopiedToasep);
                         break;
                     case "commandGroup":
-                        query = query.Where(a => a.CopiedToasep);
+                        query = query.Where(a => a.CopiedTocommandGroup);
                         break;
                     case "community":
                         query = query.Where(a => a.CopiedTocommunity);
@@ -141,6 +141,9 @@ namespace API.Controllers
                     case "studentcalendar":
                         query = query.Where(a => a.CopiedTostudentCalendar);
                         break;
+                     case "cio":
+                        query = query.Where(a => a.CopiedTocio);
+                        break;
                     default:
                         throw new Exception($"Unknown route: {route}");
                 }
@@ -156,10 +159,12 @@ namespace API.Controllers
                 foreach (Activity activity in activities)
                 {
                     string description = activity.Description;
+                    description = description + $"---ACTION OFFICER---{activity.ActionOfficer} ({activity.ActionOfficerPhone})";
                     if (!string.IsNullOrEmpty(activity.Hyperlink) && !string.IsNullOrEmpty(activity.HyperlinkDescription))
                     {
                         description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
                     }
+
                     if (activity.CopiedTostudentCalendar && (route == "studentCalendar" || route == "studentcalendar"))
                     {
                         if (activity.StudentCalendarMandatory)
@@ -524,10 +529,10 @@ namespace API.Controllers
                     retval = "ASEP Calendar";
                     break;
                 case "commandGroup":
-                    retval = "ASEP Calendar";
+                    retval = "Command Group Calendar";
                     break;
                 case "community":
-                    retval = "Command Group Calendar";
+                    retval = "Community Calendar";
                     break;
                 case "csl":
                     retval = "CSL Calendar";
@@ -569,7 +574,7 @@ namespace API.Controllers
                     retval = "Symposium and Conferences Calendar";
                     break;
                 case "militaryFamilyAndSpouseProgram":
-                    retval = "Military Family and Spouse Program";
+                    retval = "Military Spouse and Family Program";
                     break;
                 case "battlerhythm":
                     retval = "Battle Rhythm Calendar";
@@ -586,7 +591,9 @@ namespace API.Controllers
                 case "studentcalendar":
                     retval = "Student Calendar";
                     break;
-
+                case "cio":
+                    retval = "CIO Event Planning Calendar";
+                    break;
             }
 
             return retval;

@@ -22,7 +22,7 @@ export default observer(function IMCLegend() {
         {categories.filter(x => x.imcColor && x.imcColor.length)
         .filter(
           (item) =>
-            item.name !== "PKSOI Calendar" && item.name !== "Staff Calendar" && item.name !== "Other"
+            item.name !== "PKSOI Calendar" && item.name !== "Staff Calendar" && item.name !== "Other" && item.name !== "CIO Event Planning Calendar"
         ).map(category => (
         <Label key={category.id} style={{backgroundColor: category.imcColor, color: 'white', marginBottom: '5px'}}
          content = {category.name === 'Academic IMC Event'? 'Faculty Calendar' : 

@@ -152,6 +152,7 @@ export interface Activity{
     copiedTocommandGroup: boolean;
     copiedTocommunity: boolean;
     copiedTocsl: boolean;
+    copiedTocio: boolean;
     copiedTogarrison: boolean;
     copiedTogeneralInterest: boolean;
     copiedToholiday: boolean;
@@ -196,6 +197,34 @@ export interface Activity{
     newEnlistedAideEventToAideNotificationSent: boolean
     newEnlistedAideEventToESDNotificationSent: boolean
     sendEnlistedAideConfirmationNotification: boolean
+    eventPlanningNotificationSent :boolean
+    eventPlanningClassification : string
+    eventPlanningExternalEventName : string
+    eventPlanningExternalEventPOCName : string
+    eventPlanningExternalEventPOCEmail : string
+    eventPlanningExternalEventPOCContactInfo : string
+    eventPlanningStatus : string
+    eventPlanningPAX : string
+    eventPlanningCIORequirementsComments : string
+    eventPlanningGovLaptops : boolean
+    eventPlanningPersonalLaptops : boolean
+    eventPlanningTablets : boolean
+    eventPlanningServers : boolean
+    eventPlanningCellPhones : boolean
+    eventPlanningNetworkREN : boolean
+    eventPlanningNetworkWireless : boolean
+    eventPlanningNetworkNTG : boolean
+    eventPlanningNetworkNTS : boolean
+    eventPlanningNetworkSIPR : boolean
+    eventPlanningNetworkNIPR : boolean
+    eventPlanningNotifyPOC : boolean
+    eventPlanningNumOfPC : string
+    eventPlanningNumOfBYADS : string
+    eventPlanningNumOfVOIPs : string
+    eventPlanningNumOfPrinters : string
+    eventPlanningNumOfPeripherals : string
+    eventPlanningNumOfMonitors : string
+    eventPlanningSetUpDate: Date | null
 }
 
 export class Activity implements Activity{
@@ -347,6 +376,7 @@ export class ActivityFormValues{
     copiedTocommandGroup: boolean = false;
     copiedTocommunity: boolean = false;
     copiedTocsl: boolean = false;
+    copiedTocio: boolean = false;
     copiedTogarrison: boolean = false;
     copiedTogeneralInterest: boolean = false;
     copiedToholiday: boolean = false;
@@ -391,8 +421,34 @@ export class ActivityFormValues{
     newEnlistedAideEventToAideNotificationSent: boolean = false
     newEnlistedAideEventToESDNotificationSent: boolean = false
     sendEnlistedAideConfirmationNotification: boolean = false
-
-
+    eventPlanningNotificationSent : boolean = false
+    eventPlanningClassification : string = ''
+    eventPlanningExternalEventName : string = ''
+    eventPlanningExternalEventPOCName: string = ''
+    eventPlanningExternalEventPOCEmail : string = ''
+    eventPlanningExternalEventPOCContactInfo : string = ''
+    eventPlanningStatus : string = ''
+    eventPlanningPAX : string = ''
+    eventPlanningCIORequirementsComments : string = ''
+    eventPlanningGovLaptops : boolean = false
+    eventPlanningPersonalLaptops : boolean = false
+    eventPlanningTablets : boolean = false
+    eventPlanningServers : boolean = false
+    eventPlanningCellPhones : boolean = false
+    eventPlanningNetworkREN : boolean = false
+    eventPlanningNetworkWireless : boolean = false
+    eventPlanningNetworkNTG : boolean = false
+    eventPlanningNetworkNTS : boolean = false
+    eventPlanningNetworkSIPR : boolean = false
+    eventPlanningNetworkNIPR : boolean = false
+    eventPlanningNotifyPOC : boolean = false
+    eventPlanningNumOfPC : string = ''
+    eventPlanningNumOfBYADS : string = ''
+    eventPlanningNumOfVOIPs : string = ''
+    eventPlanningNumOfPrinters : string = ''
+    eventPlanningNumOfPeripherals : string = ''
+    eventPlanningNumOfMonitors : string = ''
+    eventPlanningSetUpDate: Date | null = null
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -537,6 +593,7 @@ export class ActivityFormValues{
         this.copiedTocommandGroup = activity.copiedTocommandGroup;
         this.copiedTocommunity = activity.copiedTocommunity;
         this.copiedTocsl = activity.copiedTocsl;
+        this.copiedTocio = activity.copiedTocio;
         this.copiedTogarrison = activity.copiedTogarrison;
         this.copiedTogeneralInterest = activity.copiedTogeneralInterest;
         this.copiedToholiday = activity.copiedToholiday;
@@ -581,6 +638,35 @@ export class ActivityFormValues{
         this.newEnlistedAideEventToAideNotificationSent = activity.newEnlistedAideEventToAideNotificationSent
         this.newEnlistedAideEventToESDNotificationSent = activity.newEnlistedAideEventToESDNotificationSent
         this.sendEnlistedAideConfirmationNotification = activity.sendEnlistedAideConfirmationNotification
+        this.eventPlanningNotificationSent = activity.eventPlanningNotificationSent
+        this.eventPlanningClassification = activity.eventPlanningClassification
+        this.eventPlanningExternalEventName = activity.eventPlanningExternalEventName
+        this.eventPlanningExternalEventPOCName= activity.eventPlanningExternalEventPOCName
+        this.eventPlanningExternalEventPOCEmail = activity.eventPlanningExternalEventPOCEmail
+        this.eventPlanningExternalEventPOCContactInfo = activity.eventPlanningExternalEventPOCContactInfo
+        this.eventPlanningStatus = activity.eventPlanningStatus
+        this.eventPlanningPAX = activity.eventPlanningPAX
+        this.eventPlanningCIORequirementsComments = activity.eventPlanningCIORequirementsComments
+    this.eventPlanningGovLaptops = activity.eventPlanningGovLaptops
+    this.eventPlanningPersonalLaptops = activity.eventPlanningPersonalLaptops
+    this.eventPlanningTablets = activity.eventPlanningTablets
+    this.eventPlanningServers = activity.eventPlanningServers
+    this.eventPlanningCellPhones = activity.eventPlanningCellPhones
+    this.eventPlanningNetworkREN = activity.eventPlanningNetworkREN
+    this.eventPlanningNetworkWireless = activity.eventPlanningNetworkWireless
+    this.eventPlanningNetworkNTG = activity.eventPlanningNetworkNTG
+    this.eventPlanningNetworkNTS = activity.eventPlanningNetworkNTS
+    this.eventPlanningNetworkSIPR = activity.eventPlanningNetworkSIPR
+    this.eventPlanningNetworkNIPR = activity.eventPlanningNetworkNIPR
+    this.eventPlanningNotifyPOC = activity.eventPlanningNotifyPOC
+    this.eventPlanningNumOfPC = activity.eventPlanningNumOfPC
+    this.eventPlanningNumOfBYADS = activity.eventPlanningNumOfBYADS
+    this.eventPlanningNumOfVOIPs = activity.eventPlanningNumOfVOIPs
+    this.eventPlanningNumOfPrinters = activity.eventPlanningNumOfPrinters
+    this.eventPlanningNumOfPeripherals = activity.eventPlanningNumOfPeripherals
+    this.eventPlanningNumOfMonitors = activity.eventPlanningNumOfMonitors
+    this.eventPlanningSetUpDate = activity.eventPlanningSetUpDate
+
        } 
     }
 }

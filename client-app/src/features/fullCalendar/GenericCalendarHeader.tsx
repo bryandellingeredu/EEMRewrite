@@ -1,5 +1,5 @@
 import { Button, Divider, Header, Icon } from "semantic-ui-react";
-import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap, faPeopleGroup, faHouseChimneyWindow, faCalendarWeek, faClipboardUser } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap, faPeopleGroup, faHouseChimneyWindow, faCalendarWeek, faClipboardUser, faUsersRays } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
 import CSLLegend from "./CSLLegend";
@@ -8,14 +8,32 @@ import { faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
 import { useStore } from "../../app/stores/store";
 import SyncCalendarInformation from "./SyncCalendarInformation";
 import MSFPLegend from "./MSFPLegend";
+import CIOEventPlanningLegend from "./CIOEventPlanningLegend";
+import { useState, useEffect } from "react";
 
 interface Props {
     id: string
 }
 
 export default function GenericCalendarHeader({id} : Props){
-  const { modalStore } = useStore();
+  const { modalStore, userStore } = useStore();
   const {openModal} = modalStore;
+  const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
+  const {user} = userStore
+  useEffect(() => {
+    setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
+}, [user]);
+
+if (id === 'cio' && !cioEventPlanningAdmin) {
+  return (
+    <Header as='h3' color='red'>
+      <Icon name='exclamation triangle' />
+      You do not have the required role to view this content.
+    </Header>
+  );
+} 
+
+
     return(
       <>
        
@@ -51,6 +69,12 @@ export default function GenericCalendarHeader({id} : Props){
      <>
      <FontAwesomeIcon icon={faClipboardUser} size='2x' style={{marginRight: '10px'}} />
      Staff Calendar
+   </>
+      }
+          {id === 'cio' &&
+     <>
+     <FontAwesomeIcon icon={faUsersRays} size='2x' style={{marginRight: '10px'}} />
+     CIO Event Planning Calendar
    </>
       }
     {id === 'visitsAndTours' &&
@@ -176,6 +200,7 @@ export default function GenericCalendarHeader({id} : Props){
     {id === 'csl' && <CSLLegend />}
     {id === 'usahecFacilitiesUsage' && <USAHECFacilitiesUsageLegend />}
     {id === 'militaryFamilyAndSpouseProgram' && <MSFPLegend />}
+    {id === 'cio' && cioEventPlanningAdmin && <CIOEventPlanningLegend />}
     </>
     )
 }

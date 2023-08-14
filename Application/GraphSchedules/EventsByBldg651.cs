@@ -74,24 +74,27 @@ namespace Application.GraphSchedules
 
                 foreach (ScheduleInformation scheduleInformation in result.CurrentPage)
                 {
-                    foreach (ScheduleItem scheduleItem in scheduleInformation.ScheduleItems)
+                    if (scheduleInformation.ScheduleItems != null && scheduleInformation.ScheduleItems.Any())
                     {
-                        // Check if the scheduleItem is not free and has both subject and location.
-                        if (scheduleItem.Status != FreeBusyStatus.Free && scheduleItem.Subject != null && scheduleItem.Location != null)
+                        foreach (ScheduleItem scheduleItem in scheduleInformation.ScheduleItems)
                         {
-                            FullCalendarEventDTO fullCalendarEventDto = new FullCalendarEventDTO
+                            // Check if the scheduleItem is not free and has both subject and location.
+                            if (scheduleItem.Status != FreeBusyStatus.Free && scheduleItem.Subject != null && scheduleItem.Location != null)
                             {
-                                Id = Guid.NewGuid().ToString(),
-                                Start = scheduleItem.Start.DateTime,
-                                End = scheduleItem.End.DateTime,
-                                Title = $"{scheduleItem.Subject.Split("- Requested by: ")[0]} ({scheduleItem.Location})",
-                                Color = scheduleItem.Status == FreeBusyStatus.Busy ? "Green" : "GoldenRod",
-                                AllDay = scheduleItem.Start.DateTime.Split('T')[1] == "00:00:00.0000000" &&
-                                         scheduleItem.End.DateTime.Split('T')[1] == "00:00:00.0000000",
-                                RoomId = rooms.FirstOrDefault(r => r.AdditionalData["emailAddress"].ToString() == scheduleInformation.ScheduleId)?.Id
-                            };
+                                FullCalendarEventDTO fullCalendarEventDto = new FullCalendarEventDTO
+                                {
+                                    Id = Guid.NewGuid().ToString(),
+                                    Start = scheduleItem.Start.DateTime,
+                                    End = scheduleItem.End.DateTime,
+                                    Title = $"{scheduleItem.Subject.Split("- Requested by: ")[0]} ({scheduleItem.Location})",
+                                    Color = scheduleItem.Status == FreeBusyStatus.Busy ? "Green" : "GoldenRod",
+                                    AllDay = scheduleItem.Start.DateTime.Split('T')[1] == "00:00:00.0000000" &&
+                                             scheduleItem.End.DateTime.Split('T')[1] == "00:00:00.0000000",
+                                    RoomId = rooms.FirstOrDefault(r => r.AdditionalData["emailAddress"].ToString() == scheduleInformation.ScheduleId)?.Id
+                                };
 
-                            fullCalendarEventDTOs.Add(fullCalendarEventDto);
+                                fullCalendarEventDTOs.Add(fullCalendarEventDto);
+                            }
                         }
                     }
                 }

@@ -16,16 +16,23 @@ import { v4 as uuid } from "uuid";
 import GenericCalendarTable from "./GenericCalendarTable";
 import Pikaday from "pikaday";
 import { Loader } from "semantic-ui-react";
+import CIOEventPlanningTable from "./CIOEventPlanningTable";
 
 export default observer(function GenericCalendar() {
   const [view, setView] = useState(localStorage.getItem("calendarViewGeneric") || "dayGridMonth");
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams<{ id: string }>();
-  const { categoryStore, activityStore } = useStore();
+  const { categoryStore, activityStore, userStore } = useStore();
   const { categories, loadingInitial } = categoryStore;
   const {addCalendarEventParameters} = activityStore;
   const history = useHistory();
   const [height, setHeight] = useState(window.innerHeight - 100);
+
+  const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
+  const {user} = userStore
+  useEffect(() => {
+    setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
+}, [user]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -115,6 +122,9 @@ export default observer(function GenericCalendar() {
     ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: <strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
     ${arg.event.extendedProps.actionOfficer ? '<p><strong>Action Officer: <strong>' + arg.event.extendedProps.actionOfficer + '</p>' : ''}
     ${arg.event.extendedProps.actionOfficerPhone ?'<p><strong>Action Officer Phone: <strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
+    ${id === "cio" && arg.event.extendedProps.eventPlanningPAX?'<p><strong>PAX: <strong>' + arg.event.extendedProps.eventPlanningPAX + '</p>' : ''}
+    ${id === "cio" && arg.event.extendedProps.eventPlanningStatus?'<p><strong>Status: <strong>' + arg.event.extendedProps.eventPlanningStatus + '</p>' : ''}
+    ${id === "cio" && arg.event.extendedProps.eventClearanceLevel?'<p><strong>Event Clearance Level: <strong>' + arg.event.extendedProps.eventClearanceLevel + '</p>' : '<p><strong>Event Clearance Level: <strong> Undetermined </p>'}
     ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarMandatory ? '<p><strong>Attendance is : <strong> Mandatory </p>' : '' }
     ${id === "studentCalendar" && !arg.event.extendedProps.studentCalendarMandatory ? '<p><strong>Attendance is : <strong> Optional </p>' : '' }
     ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarPresenter?'<p><strong>Presenter: <strong>' + arg.event.extendedProps.studentCalendarPresenter + '</p>' : ''}
@@ -192,6 +202,7 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
          </Loader>
         )}
           <GenericCalendarHeader id={id} />
+          {(id !== 'cio' || cioEventPlanningAdmin) &&
           <FullCalendar
            ref={calendarRef}
             height= {height}
@@ -221,7 +232,9 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
               setView(arg.view.type);
             }}
           />
-           <GenericCalendarTable id={id} />
+      }
+           {id !== 'cio' && <GenericCalendarTable id={id} />}
+           {id === 'cio' && cioEventPlanningAdmin && <CIOEventPlanningTable  />}
            
         </div>
         

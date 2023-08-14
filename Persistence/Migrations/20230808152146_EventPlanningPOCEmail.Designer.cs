@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230808152146_EventPlanningPOCEmail")]
+    partial class EventPlanningPOCEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,9 +379,6 @@ namespace Persistence.Migrations
                     b.Property<bool>("EventPlanningNetworkWireless")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("EventPlanningNotificationSent")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("EventPlanningNotifyPOC")
                         .HasColumnType("bit");
 
@@ -408,9 +408,6 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("EventPlanningServers")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("EventPlanningSetUpDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("EventPlanningStatus")
                         .HasColumnType("nvarchar(max)");

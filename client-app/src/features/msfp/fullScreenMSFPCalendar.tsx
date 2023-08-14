@@ -10,8 +10,7 @@ import 'tippy.js/dist/tippy.css';
 import Pikaday from "pikaday";
 import { Loader, Modal, Button, Header } from 'semantic-ui-react'; 
 import agent from '../../app/api/agent';
-import LoadingComponent from '../../app/layout/LoadingComponent';
-import MSFPLegend from '../fullCalendar/MSFPLegend';
+
 
 interface EventInfo{
   title: string
@@ -230,7 +229,6 @@ const eventDidMount = (info : any) => {
            Loading events...
          </Loader>
          )}
-           <MSFPLegend />
            <FullCalendar
            ref={calendarRef}
             height= {height}

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Routing;
 using System.Reflection;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Migrations;
 
 namespace API.Controllers
 {
@@ -71,6 +72,24 @@ namespace API.Controllers
              DistantTechPhoneNumber = data.DistantTechPhoneNumber, RequestorPOCContactInfo = data.RequestorPOCContactInfo, DialInNumber = data.DialInNumber,  SiteIDDistantEnd = data.SiteIDDistantEnd,
              GOSESInAttendance = data.GOSESInAttendance,  SeniorAttendeeNameRank = data.SeniorAttendeeNameRank,  AdditionalVTCInfo = data.AdditionalVTCInfo, VTCStatus = data.VTCStatus
          }));
+
+        [HttpPost("listCIOEventPlanningBySearchParams")]
+        public async Task<IActionResult> ListCIOEventPlanningBySearchParams(CIOEventPlanningSearchParams data) =>
+HandleResult(await Mediator.Send(
+    new ListCIOEventPlanningBySearchParams.Query
+    {
+        Title = data.Title,
+        Start = data.Start,
+        End = data.End,
+        Location = data.Location,
+        ActionOfficer = data.ActionOfficer,
+       EventPlanningExternalEventPOCName = data.EventPlanningExternalEventPOCName,
+       EventPlanningExternalEventPOCEmail = data.EventPlanningExternalEventPOCEmail,
+        EventPlanningStatus = data.EventPlanningStatus,
+        EventPlanningPAX = data.EventPlanningPAX,
+        EventPlanningSetUpDate = data.EventPlanningSetUpDate,
+        EventClearanceLevel = data.EventClearanceLevel
+    }));
 
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity) =>

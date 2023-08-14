@@ -67,6 +67,7 @@ namespace Application.Activities
                                       (category.RouteName == "staff" && x.CopiedTostaff) ||
                                       (category.RouteName == "studentCalendar" && x.CopiedTostudentCalendar) ||
                                       (category.RouteName == "academic" && x.CopiedToacademic) ||
+                                      (category.RouteName == "cio" && x.CopiedTocio) ||
                                       (category.RouteName == "militaryFamilyAndSpouseProgram" && x.MFP))).
                           Where(x => !x.LogicalDeleteInd)
                           .ToListAsync();
@@ -104,7 +105,10 @@ namespace Application.Activities
                         StudentCalendarMandatory = activity.StudentCalendarMandatory,
                         HyperLink = activity.Hyperlink,
                         HyperLinkDescription = activity.HyperlinkDescription,
-                        EducationalCategory = activity.EducationalCategory
+                        EducationalCategory = activity.EducationalCategory,
+                        EventPlanningPAX = activity.EventPlanningPAX,
+                        EventPlanningStatus = activity.EventPlanningStatus,
+                        EventClearanceLevel = activity.EventClearanceLevel
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);
@@ -158,6 +162,18 @@ namespace Application.Activities
                             return "#00008B";
                         default:
                             return "#483D8B";
+                    }
+                }
+
+                if(category.RouteName == "cio"){
+                    switch(activity.EventPlanningStatus){
+                        case "Ready":
+                        return "#006633";
+                        case "Closed":
+                        return "#FF3333";
+                        default:
+                        return "#F2BA49";
+                        
                     }
                 }
               

@@ -332,6 +332,9 @@ export default class ActivityStore {
           if(activity.hostingReport && activity.hostingReport.departure){
             activity.hostingReport.departure = new Date(activity.hostingReport.departure);
           } 
+          if(activity.eventPlanningSetUpDate){
+            activity.eventPlanningSetUpDate = new Date(activity.eventPlanningSetUpDate);
+          }
           this.activityRegistry.set(activity.id, activity);
           runInAction(() => {
             this.setLoadingInitial(false);
@@ -595,6 +598,7 @@ export default class ActivityStore {
     deanRequestedNotificationSent: false,
     ambassadorRequestedNotificationSent: false,
     csmRequestedNotificationSent: false,
+    eventPlanningNotificationSent: false,
     blissHallSupport: false,
     blissHallAVSptRequired: '',
     blissHallAVNotificationSent: false,
@@ -606,6 +610,7 @@ export default class ActivityStore {
     copiedTocommandGroup: false,
     copiedTocommunity: false,
     copiedTocsl: false,
+    copiedTocio: false,
     copiedTogarrison: false,
     copiedTogeneralInterest: false,
     copiedToholiday: false,
@@ -649,7 +654,34 @@ export default class ActivityStore {
     enlistedAideSetup: false,
     newEnlistedAideEventToAideNotificationSent: false,
     newEnlistedAideEventToESDNotificationSent: false,
-    sendEnlistedAideConfirmationNotification: false
+    sendEnlistedAideConfirmationNotification: false,
+    eventPlanningClassification : '',
+    eventPlanningExternalEventName : '',
+    eventPlanningExternalEventPOCName : '',
+    eventPlanningExternalEventPOCEmail : '',
+    eventPlanningExternalEventPOCContactInfo : '',
+    eventPlanningStatus : '',
+    eventPlanningPAX : '',
+    eventPlanningCIORequirementsComments : '',
+    eventPlanningGovLaptops : false,
+    eventPlanningPersonalLaptops : false,
+    eventPlanningTablets : false,
+    eventPlanningServers : false,
+    eventPlanningCellPhones : false,
+    eventPlanningNetworkREN : false,
+    eventPlanningNetworkWireless : false,
+    eventPlanningNetworkNTG : false,
+    eventPlanningNetworkNTS : false,
+    eventPlanningNetworkSIPR : false,
+    eventPlanningNetworkNIPR : false,
+    eventPlanningNotifyPOC :  false,
+    eventPlanningNumOfPC : '',
+    eventPlanningNumOfBYADS : '',
+    eventPlanningNumOfVOIPs : '',
+    eventPlanningNumOfPrinters : '',
+    eventPlanningNumOfPeripherals : '',
+    eventPlanningNumOfMonitors : '',
+    eventPlanningSetUpDate : null
     }
     return activity;
   }

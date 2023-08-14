@@ -80,6 +80,9 @@ namespace Application.Activities
                     {
                         Activity activity = new Activity();
                         _mapper.Map(request.Activity, activity);
+                        if(activity.EventPlanningSetUpDate != null){
+                            activity.EventPlanningSetUpDate = TimeZoneInfo.ConvertTime(activity.EventPlanningSetUpDate.Value, TimeZoneInfo.Local);
+                        }
                         if (activity.HostingReport != null && activity.HostingReport.Arrival != null)
                         {
                             activity.HostingReport.Arrival = TimeZoneInfo.ConvertTime(activity.HostingReport.Arrival.Value, TimeZoneInfo.Local);

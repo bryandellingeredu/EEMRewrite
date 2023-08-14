@@ -172,12 +172,14 @@ namespace Domain
         public bool BlissHallAVNotificationSent { get; set; }
         public bool VTCCoordinatorNotificationSent { get; set; }
         public bool VTCConfirmedConfirmationSent { get; set; }
+        public bool EventPlanningNotificationSent {get; set;}
         public bool CCRNotificationSent { get; set; }
         public bool CopiedToacademic { get; set; }
         public bool CopiedToasep { get; set; }
         public bool CopiedTocommandGroup { get; set; }
         public bool CopiedTocommunity { get; set; }
         public bool CopiedTocsl { get; set; }
+        public bool CopiedTocio { get; set; }
         public bool CopiedTogarrison { get; set; }
         public bool CopiedTogeneralInterest { get; set; }
         public bool CopiedToholiday { get; set; }
@@ -218,5 +220,35 @@ namespace Domain
         public bool NewEnlistedAideEventToAideNotificationSent { get; set; }
         public bool NewEnlistedAideEventToESDNotificationSent { get; set; }
         public bool SendEnlistedAideConfirmationNotification { get; set; }
+        public string EventPlanningClassification {get; set;}
+        public string EventPlanningExternalEventName {get; set;}
+        public string EventPlanningExternalEventPOCName {get; set;}
+        public string EventPlanningExternalEventPOCEmail {get; set;}
+        public string EventPlanningExternalEventPOCContactInfo {get; set;}
+        public string EventPlanningStatus {get; set;}
+        public string EventPlanningPAX {get; set;}
+        public string EventPlanningCIORequirementsComments {get; set;}
+        public bool EventPlanningGovLaptops {get; set;}
+        public bool EventPlanningPersonalLaptops {get; set;}
+        public bool EventPlanningTablets {get; set;}
+        public bool EventPlanningServers {get; set;}
+        public bool EventPlanningCellPhones {get; set;}
+        public bool EventPlanningNetworkREN{get; set;}
+        public bool EventPlanningNetworkWireless{get; set;}
+        public bool EventPlanningNetworkNTG{get; set;}
+        public bool EventPlanningNetworkNTS{get; set;}
+         public bool EventPlanningNetworkSIPR{get; set;}
+        public bool EventPlanningNetworkNIPR{get; set;}
+        public bool EventPlanningNotifyPOC{get; set;}
+        public string EventPlanningNumOfPC {get; set;}
+        public string EventPlanningNumOfBYADS {get; set;}
+        public string EventPlanningNumOfVOIPs {get; set;}
+        
+        public string EventPlanningNumOfPrinters {get; set;}
+         public string EventPlanningNumOfPeripherals {get; set;}
+        public string EventPlanningNumOfMonitors {get; set;}
+        public DateTime? EventPlanningSetUpDate {get; set;}
+
+
     }
 }

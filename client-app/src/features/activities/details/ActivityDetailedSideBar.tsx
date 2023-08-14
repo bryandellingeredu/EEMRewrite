@@ -4,9 +4,10 @@ import { Segment, Icon, Grid, List } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faChalkboardTeacher, faCheck, faChurch, faClipboardUser, faComputer, faDove, faFax, faGraduationCap, faHashtag, faIdCard, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faShieldHalved, faSitemap, faSquareParking, faUserSecret } from '@fortawesome/free-solid-svg-icons';
+import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faCamera, faChalkboardTeacher, faCheck, faChurch, faClipboardUser, faClock, faComputer, faDove, faEnvelope, faFax, faGraduationCap, faHashtag, faIdCard, faLaptop, faMobile, faNetworkWired, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faPhone, faPhoneFlip, faPrint, faServer, faShieldHalved, faSignal, faSitemap, faSquareParking, faTablet, faTv, faUser, faUserSecret, faUsersRays } from '@fortawesome/free-solid-svg-icons';
 import agent from '../../../app/api/agent';
 import ActivityAttachmentSideBarComponent from './ActivityAttachmentSideBarComponent';
+import format from 'date-fns/format';
 
 interface Props {
     activity: Activity
@@ -453,6 +454,19 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  </Grid.Column>
                  <Grid.Column width={14}>
                    Added to the ASEP Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTocio &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+             <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faUsersRays} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14} style={{paddingLeft: '20px'}}>
+                   Added to the CIO Event Planning Calendar
                  </Grid.Column>
              </Grid>
  </Segment>
@@ -1446,6 +1460,330 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                 </Grid>
             </Segment>
       }
+
+{ activity.copiedTocio && activity.eventPlanningPAX && 
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faP} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Pax: {activity.eventPlanningPAX}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+   
+ }
+
+{ activity.copiedTocio && activity.eventPlanningExternalEventPOCName && 
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faUser} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning POC Name: {activity.eventPlanningExternalEventPOCName}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && activity.eventPlanningExternalEventPOCEmail && 
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faEnvelope} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning POC Email: {activity.eventPlanningExternalEventPOCEmail}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.copiedTocio && activity.eventPlanningExternalEventPOCContactInfo &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='info' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={4}>
+                 <span style={{paddingLeft: '5px'}}>
+                 CIO Event Planning POC Info:
+                 </span>
+                 </Grid.Column>
+                 <Grid.Column width={10}>
+                 {activity.eventPlanningExternalEventPOCContactInfo}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{activity.copiedTocio && activity.eventPlanningCIORequirementsComments &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                     <Icon name='info' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={4}>
+                 <span style={{paddingLeft: '5px'}}>
+                 CIO Requirements Comments:
+                 </span>
+                 </Grid.Column>
+                 <Grid.Column width={10}>
+                 {activity.eventPlanningCIORequirementsComments}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && 
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faCheck} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Status: {activity.eventPlanningStatus || 'Pending'}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && activity.eventPlanningNumOfPC &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faComputer} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Num of PCs: {activity.eventPlanningNumOfPC}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && activity.eventPlanningNumOfBYADS &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faLaptop} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Num of BYADs: {activity.eventPlanningNumOfBYADS}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+ { activity.copiedTocio && activity.eventPlanningNumOfVOIPs &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faMobile} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Num of VOIP / VOSIP / Cell Phone: {activity.eventPlanningNumOfVOIPs}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && activity.eventPlanningNumOfPrinters &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faPrint} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Num of Printers / Copiers: {activity.eventPlanningNumOfPrinters}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && activity.eventPlanningNumOfPeripherals &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faCamera} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Num of Peripherals: {activity.eventPlanningNumOfPeripherals}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && activity.eventPlanningNumOfMonitors &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faTv} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Num of Monitors / Projectors: {activity.eventPlanningNumOfMonitors}              
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && activity.eventPlanningSetUpDate &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faClock} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Set Up:  {format(activity.eventPlanningSetUpDate, 'MMMM d, yyyy h:mm aa')}           
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && activity.eventPlanningGovLaptops &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faLaptop} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Goverment Laptops      
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.copiedTocio && activity.eventPlanningPersonalLaptops &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faLaptop} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Personal Laptops    
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+ { activity.copiedTocio && activity.eventPlanningTablets &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faTablet} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Tablets       
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+  { activity.copiedTocio && activity.eventPlanningServers &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faServer} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Servers       
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+   { activity.copiedTocio && activity.eventPlanningCellPhones &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faMobile} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Cell Phones      
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+    { activity.copiedTocio && activity.eventPlanningNetworkREN &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning REN Required     
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+    
+ }
+    { activity.copiedTocio && activity.eventPlanningNetworkWireless &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faSignal} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                CIO Event Planning Wireless Required     
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+    
+ }
+     { activity.copiedTocio && activity.eventPlanningNetworkNTG &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 CIO Event Planning NTG Required   
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+    
+ }
+
+{ activity.copiedTocio && activity.eventPlanningNetworkNTS &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 CIO Event Planning NTS Required   
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+    
+ }
+
+{ activity.copiedTocio && activity.eventPlanningNetworkSIPR &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 CIO Event Planning SIPR Required   
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+    
+ }
+
+{ activity.copiedTocio && activity.eventPlanningNetworkNIPR &&
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 CIO Event Planning NIPR Required   
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+    
+ }
+
+
 
       
 

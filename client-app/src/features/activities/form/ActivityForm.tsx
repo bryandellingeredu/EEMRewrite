@@ -111,9 +111,11 @@ export default observer(function ActivityForm() {
   const {user} = userStore
   const [enlistedAidAdmin, setEnlistedAidAdmin] = useState(false);
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
+  const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
   useEffect(() => {
     setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
     setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
+    setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
 }, [user]);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const { categoryOptions, categories, loadCategories } = categoryStore;
@@ -331,6 +333,7 @@ export default observer(function ActivityForm() {
 
   const validationSchema = Yup.object({
     communityEvent: Yup.boolean(),
+    copiedTocio: Yup.boolean(),
     categoryId: Yup.string(),
     primaryLocation: Yup.string()
     .when('$roomRequired', {
@@ -367,6 +370,11 @@ export default observer(function ActivityForm() {
     end: Yup.string().required().nullable(),
     actionOfficer: Yup.string().required(),
     actionOfficerPhone: Yup.string().required(),
+    eventPlanningExternalEventPOCEmail: Yup.string()
+    .when("copiedTocio", {
+      is: true,
+      then: Yup.string().email("Invalid email address"),
+    }),
   });
 
   useEffect(() => {
@@ -708,6 +716,7 @@ export default observer(function ActivityForm() {
           { routeName: "asep", copiedTo: "copiedToasep" },
           { routeName: "community", copiedTo: "copiedTocommunity" },
           { routeName: "csl", copiedTo: "copiedTocsl" },
+          { routeName: "cio", copiedTo: "copiedTocio" },
           { routeName: "garrison", copiedTo: "copiedTogarrison" },
           { routeName: "generalInterest", copiedTo: "copiedTogeneralInterest" },
           { routeName: "holiday", copiedTo: "copiedToholiday" },
@@ -1547,21 +1556,34 @@ export default observer(function ActivityForm() {
                   </Grid.Column>
                   
                   <Grid.Column width={13}>
-                    <MySelectInput
-                      options={categoryOptions
-                        .filter((x: any) => x.text !== "Student Calendar Academic Year 2023" && x.text !== "Staff Calendar")
-                        .sort((a: any, b: any) => {
-                          if (a.text === "") {
-                            return -1;
-                          } else if (b.text === "") {
-                            return 1;
-                          } else {
-                            return a.text.localeCompare(b.text);
-                          }
-                        })}
-                      placeholder="Sub Calendar"
-                      name="categoryId"
-                    />
+                 
+                  {activity.copiedTocio && !cioEventPlanningAdmin ? (
+  <div>CIO Event Planning Calendar</div>
+) : (
+  <MySelectInput
+    options={categoryOptions
+      .filter((x: any) => {
+        if (x.text === "Student Calendar Academic Year 2023" || x.text === "Staff Calendar") {
+          return false;
+        }
+        if (x.text === "CIO Event Planning Calendar" && !cioEventPlanningAdmin) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a: any, b: any) => {
+        if (a.text === "") {
+          return -1;
+        } else if (b.text === "") {
+          return 1;
+        } else {
+          return a.text.localeCompare(b.text);
+        }
+      })}
+    placeholder="Sub Calendar"
+    name="categoryId"
+  />
+)}
                      <p><i id="subCalendarAnchor">A sub calendar is required for the event to appear on an installation calendar</i></p>
                                 {subCalendarError && (
                                   <p>
@@ -1597,6 +1619,10 @@ export default observer(function ActivityForm() {
     }
   </div>
 }
+
+
+
+
 
             {(categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" || values.copiedTostudentCalendar) &&
                studentCalendarAdmin &&
@@ -1657,6 +1683,7 @@ export default observer(function ActivityForm() {
                </Segment>
             }
 
+          
             {categories.find((x) => x.id === values.categoryId)?.name ===
               "Garrison Calendar" && (
                 <Segment style={{ backgroundColor: "#FFFCE9" }} >
@@ -2391,6 +2418,14 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
+                              <MySemanticCheckBox
+                            name="copiedTocio"
+                            label="CIO Event Planning Calendar"
+                            disabled={!cioEventPlanningAdmin || categories
+                              .filter((x) => x.routeName === "cio")
+                              .map((x) => x.id)
+                              .includes(currentCategoryId)}
+                          />
                         </SemanticForm.Group>
                       </Grid.Column>
                       <Grid.Column width={4} />
@@ -2539,7 +2574,196 @@ export default observer(function ActivityForm() {
                 </>
               )}
 
-         
+{values.copiedTocio && (
+                <Segment style={{ backgroundColor: "#ECDEC9", display: cioEventPlanningAdmin ? 'block' : 'none'  }} >
+                      <Header as="h5" icon textAlign="center" color="brown">
+                      <Icon name="users" />
+                      <Header.Content>CIO Event Planning Information</Header.Content>
+                      </Header>
+                      {cioEventPlanningAdmin &&  <MyTextInput name="eventPlanningPAX" placeholder="0" label="PAX:"  />}
+                      {!cioEventPlanningAdmin && <p> <strong> PAX: </strong> {activity.eventPlanningPAX}</p>  }
+                      {cioEventPlanningAdmin && <MyTextInput name="eventPlanningExternalEventPOCName" placeholder="" label="External Event POC Name:" />}
+                      {!cioEventPlanningAdmin && <p> <strong> External Event POC Name: </strong> {activity.eventPlanningExternalEventPOCName}</p>  }
+                      {cioEventPlanningAdmin && <MyTextInput name="eventPlanningExternalEventPOCEmail" placeholder="" label="External Event POC Email:" />}
+                      {!cioEventPlanningAdmin && <p> <strong> External Event POC Email: </strong> {activity.eventPlanningExternalEventPOCEmail}</p>  }
+                      {cioEventPlanningAdmin && <MyTextArea  rows={3} placeholder="" name="eventPlanningExternalEventPOCContactInfo" label="External POC Contact Info:"/> }
+                      {!cioEventPlanningAdmin && <p> <strong> External POC Contact Info: </strong> {activity.eventPlanningExternalEventPOCContactInfo}</p>  }
+                      {cioEventPlanningAdmin &&
+                      <>
+               <Divider />
+               <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={2}>
+                     <strong>Email Notification: </strong>
+                    </Grid.Column>
+                    <Grid.Column width={14}>
+                      <SemanticForm.Group inline>
+                        <MySemanticCheckBox
+                          name="eventPlanningNotifyPOC"
+                          label="Notify The POC"
+                        />
+                      </SemanticForm.Group>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+
+                <Divider />
+                </>
+                      }
+                {cioEventPlanningAdmin &&
+                  <MySelectInput
+                  options={[
+                    { text: "", value: "" },
+                    { text: "Pending", value: "Pending" },
+                    { text: "Ready", value: "Ready" },
+                    { text: "Closed", value: "Closed" },
+                   
+                  ]}
+                  placeholder="Pending"
+                  name="eventPlanningStatus"
+                  label="Status:"
+                />}
+
+                 {!cioEventPlanningAdmin && <p> <strong> Status: </strong> {activity.eventPlanningStatus || 'Pending'}</p>  }
+
+<Divider horizontal >
+      Resources
+    </Divider>
+                <Grid>
+                  <Grid.Row columns={3}>
+                    <Grid.Column>
+                    {cioEventPlanningAdmin && <MyTextInput name="eventPlanningNumOfPC" placeholder="0" label="Num Of PCs:" /> }
+                    {!cioEventPlanningAdmin && <p> <strong> Num of PCs: </strong> {activity.eventPlanningNumOfPC || '0'} </p>  }
+                    </Grid.Column>
+                    <Grid.Column>
+                    {cioEventPlanningAdmin && <MyTextInput name="eventPlanningNumOfBYADS" placeholder="0" label="Num Of BYADs (Bring Your Own Device):" /> }
+                    {!cioEventPlanningAdmin && <p> <strong> Num Of BYADs (Bring Your Own Device): </strong> {activity.eventPlanningNumOfBYADS || '0'} </p>  }
+                    </Grid.Column>
+                    <Grid.Column>
+                    {cioEventPlanningAdmin && <MyTextInput name="eventPlanningNumOfVOIPs" placeholder="0" label="Num Of VOIP / VOSIP / Conf Phone:" /> }
+                    {!cioEventPlanningAdmin && <p> <strong> Num Of VOIP / VOSIP / Conf Phone: </strong> {activity.eventPlanningNumOfVOIPs || '0'} </p>  }
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row columns={3}>
+                  <Grid.Column>
+                  {cioEventPlanningAdmin && <MyTextInput name="eventPlanningNumOfPrinters" placeholder="0" label="Num Of Printers / Copiers:" /> }
+                  {!cioEventPlanningAdmin && <p> <strong> Num Of Printers / Copiers: </strong> {activity.eventPlanningNumOfPrinters || '0'} </p>  }
+                    </Grid.Column> 
+                    <Grid.Column>
+                    {cioEventPlanningAdmin &&<MyTextInput name="eventPlanningNumOfPeripherals" placeholder="0" label="Num Of Peripherals (Cameras / Other / Docking Stations):" />}
+                    {!cioEventPlanningAdmin && <p> <strong> Num Of Peripherals (Cameras / Other / Docking Stations): </strong> {activity.eventPlanningNumOfPeripherals || '0'} </p>  }
+                    </Grid.Column>                               
+                    <Grid.Column>
+                    {cioEventPlanningAdmin && <MyTextInput name="eventPlanningNumOfMonitors" placeholder="0" label="Num Of Monitors / Projectors:" /> }
+                    {!cioEventPlanningAdmin && <p> <strong> Num Of Monitors / Projectors: </strong> {activity.eventPlanningNumOfMonitors || '0'} </p>  }
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+                     <Divider />
+
+                     {cioEventPlanningAdmin && <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="Date / Time CIO Reps Should Start Setting Up"
+                          name="eventPlanningSetUpDate"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          title="Date / Time CIO Reps Should Start Setting Up:"
+                          minDate={new Date()}
+                        />}
+                         {!cioEventPlanningAdmin && !activity.eventPlanningSetUpDate && <p> <strong> Date / Time CIO Reps Should Start Setting Up: </strong> </p>  }
+                         {!cioEventPlanningAdmin && activity.eventPlanningSetUpDate && <p> <strong> Date / Time CIO Reps Should Start Setting Up: </strong>  {format(activity.eventPlanningSetUpDate, 'MMMM d, yyyy h:mm aa')} </p>  }
+                         {!cioEventPlanningAdmin && <Divider />}
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={2}>
+                      <strong>BYOD / BYAD:</strong>
+                    </Grid.Column>
+                    <Grid.Column width={14}>
+                      <SemanticForm.Group inline>
+                      {cioEventPlanningAdmin &&
+                        <MySemanticCheckBox
+                          name="eventPlanningGovLaptops"
+                          label="Government Laptops"
+                        />}
+                        {!cioEventPlanningAdmin && activity.eventPlanningGovLaptops && <span>Government Laptops &nbsp;&nbsp; </span>}
+                        {cioEventPlanningAdmin &&<MySemanticCheckBox
+                          name="eventPlanningPersonalLaptops"
+                          label="Personal Laptops"
+                        />}
+                           {!cioEventPlanningAdmin && activity.eventPlanningPersonalLaptops && <span>Personal Laptops &nbsp;&nbsp; </span>}
+                           {cioEventPlanningAdmin &&<MySemanticCheckBox
+                          name="eventPlanningTablets"
+                          label="Tablets"
+                        />}
+                         {!cioEventPlanningAdmin && activity.eventPlanningTablets && <span>Tablets &nbsp;&nbsp; </span>}
+                         {cioEventPlanningAdmin &&<MySemanticCheckBox
+                          name="eventPlanningServers"
+                          label="Servers"
+                        /> }
+                         {!cioEventPlanningAdmin && activity.eventPlanningServers && <span>Servers &nbsp;&nbsp; </span>}
+                         {cioEventPlanningAdmin && <MySemanticCheckBox
+                          name="eventPlanningCellPhones"
+                          label="Cell Phones"
+                        />}
+                        {!cioEventPlanningAdmin && activity.eventPlanningCellPhones && <span>Cell Phones &nbsp;&nbsp; </span>}
+                      </SemanticForm.Group>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+                <Divider />
+
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={2}>
+                      <strong>Networks:</strong>
+                    </Grid.Column>
+                    <Grid.Column width={14}>
+                      <SemanticForm.Group inline>
+                      {cioEventPlanningAdmin &&
+                        <MySemanticCheckBox
+                          name="eventPlanningNetworkREN"
+                          label="REN"
+                        />}
+                          {!cioEventPlanningAdmin && activity.eventPlanningNetworkREN && <span>REN &nbsp;&nbsp; </span>}
+                          {cioEventPlanningAdmin &&
+                        <MySemanticCheckBox
+                          name="eventPlanningNetworkWireless"
+                          label="Wireless"
+                        />}
+                         {!cioEventPlanningAdmin && activity.eventPlanningNetworkWireless && <span>Wireless &nbsp;&nbsp; </span>}
+                         {cioEventPlanningAdmin &&
+                        <MySemanticCheckBox
+                          name="eventPlanningNetworkNTG"
+                          label="NTG"
+                        />}
+                         {!cioEventPlanningAdmin && activity.eventPlanningNetworkNTG && <span>NTG &nbsp;&nbsp; </span>}
+                         {cioEventPlanningAdmin &&
+                        <MySemanticCheckBox
+                          name="eventPlanningNetworkNTS"
+                          label="NTS"
+                        />}
+                          {!cioEventPlanningAdmin && activity.eventPlanningNetworkNTS && <span>NTS &nbsp;&nbsp; </span>}
+                          {cioEventPlanningAdmin &&
+                        <MySemanticCheckBox
+                          name="eventPlanningNetworkSIPR"
+                          label="SIPR"
+                        />}
+                          {!cioEventPlanningAdmin && activity.eventPlanningNetworkSIPR && <span>SIPR &nbsp;&nbsp; </span>}
+                          {cioEventPlanningAdmin &&
+                        <MySemanticCheckBox
+                          name="eventPlanningNetworkNIPR"
+                          label="NIPR"
+                        />}
+                          {!cioEventPlanningAdmin && activity.eventPlanningNetworkNIPR && <span>NIPR &nbsp;&nbsp; </span>}
+                      </SemanticForm.Group>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+
+                </Segment>
+            )}
+
 
             {(values.communityEvent || values.mfp || values.copiedTocommunity ||  ["Community Event (External)"].includes(
                 categories.find((x) => x.id === values.categoryId)?.name || ""
@@ -2602,6 +2826,8 @@ export default observer(function ActivityForm() {
                 label="Educational Category for MSFP:"
               />
             )}
+
+            
 
             <SemanticForm.Group widths="equal">
               <MyTextInput
@@ -3556,7 +3782,8 @@ export default observer(function ActivityForm() {
                           </Grid>
                           <Divider color="black" />
             <Button
-              disabled={submitting || activity.cancelled || (!studentCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar")}
+              disabled={submitting || activity.cancelled ||
+                 (!studentCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar")}
               loading={submitting}
               floated="right"
               positive

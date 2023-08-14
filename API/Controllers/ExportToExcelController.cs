@@ -67,6 +67,22 @@ namespace API.Controllers
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "svtcReports.csv");
         }
 
+        [AllowAnonymous]
+        [HttpPost("CIOEventPlanningReport")]
+        public IActionResult CIOEventPlanningReport([FromBody] CIOEventPlanningReportCSVData[] csvDataList)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Title,Start,End,Location,Action Officer,POC Name,POC Email,Status,PAX,Set Up Date,Clearance");
+            foreach (var data in csvDataList)
+            {
+                var status = string.IsNullOrEmpty(data.EventPlanningStatus) ? "Pending" : data.EventPlanningStatus;
+                var clearance = string.IsNullOrEmpty(data.EventClearanceLevel) ? "Undetermined" : data.EventClearanceLevel;
+                builder.AppendLine($"\"{data.Title}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.ActionOfficer}\",\"{data.EventPlanningExternalEventPOCName}\",\"{data.EventPlanningExternalEventPOCEmail}\",\"{status}\",\"{data.EventPlanningPAX}\",\"{data.EventPlanningSetUpDate}\",\"{clearance}\"");
+            }
+
+            return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "cioEventPlanningReports.csv");
+        }
+
 
         [AllowAnonymous]
         [HttpPost("GenericCalendar")]
@@ -179,6 +195,22 @@ namespace API.Controllers
             public string SeniorAttendeeNameRank { get; set; }
             public string AdditionalVTCInfo { get; set; }
             public string VTCStatus { get; set; }
+
+        }
+
+        public class CIOEventPlanningReportCSVData
+        {
+            public string Title { get; set; }
+            public string Start { get; set; }
+            public string End { get; set; }
+            public string Location { get; set; }
+            public string ActionOfficer { get; set; }
+            public string EventPlanningExternalEventPOCName { get; set; }
+            public string EventPlanningExternalEventPOCEmail { get; set; }
+            public string EventPlanningStatus { get; set; }
+            public string EventPlanningPAX { get; set; }
+            public string EventPlanningSetUpDate  {get; set;}
+            public string  EventClearanceLevel { get; set; }
 
         }
 

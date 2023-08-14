@@ -137,11 +137,22 @@ export default observer(function NavbarEEM() {
                     as={Link}
                     to={`${process.env.PUBLIC_URL}/bldg651Calendar/122`}
                   />
-              {categories.filter(x => x.routeName && x.name !== "Other").map((category) => (
-                 <Dropdown.Item key={category.id}
-                  text={category.name === 'Academic IMC Event' ? 'Faculty Calendar' : category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : category.name === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :category.name}   as={Link} 
-                  to={`${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}  />
-                ))}
+            {
+  categories
+    .filter(x => x.routeName && x.name !== "Other" && !(x.name === 'CIO Event Planning Calendar' && (!user || !user.roles || !user.roles.includes("CIOEventPlanningAdmin"))))
+    .map((category) => (
+      <Dropdown.Item key={category.id}
+        text={
+          category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
+          category.name === 'SSL Calendar' ? 'SSL Admin Calendar' :
+          category.name === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :
+          category.name
+        }
+        as={Link} 
+        to={`${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}  
+      />
+    ))
+}
                 </Dropdown.Menu>
               </Dropdown>
                <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/roomCalendarLinks`}>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230808143705_EventPlanningResources")]
+    partial class EventPlanningResources
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -349,9 +352,6 @@ namespace Persistence.Migrations
                     b.Property<string>("EventPlanningExternalEventPOCContactInfo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EventPlanningExternalEventPOCEmail")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("EventPlanningExternalEventPOCName")
                         .HasColumnType("nvarchar(max)");
 
@@ -374,9 +374,6 @@ namespace Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("EventPlanningNetworkWireless")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("EventPlanningNotificationSent")
                         .HasColumnType("bit");
 
                     b.Property<bool>("EventPlanningNotifyPOC")
@@ -408,9 +405,6 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("EventPlanningServers")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("EventPlanningSetUpDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("EventPlanningStatus")
                         .HasColumnType("nvarchar(max)");

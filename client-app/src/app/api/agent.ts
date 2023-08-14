@@ -154,6 +154,7 @@ const Activities = {
     listDeleted: () => axiosRequest.get<Activity[]>('activities/getDeleted'),
     listBySearchParams: (data: any) => axiosRequest.post<Activity[]>('/activities/listBySearchParams', data),
     listSVTCBySearchParams: (data: any) => axiosRequest.post<Activity[]>('/activities/listSVTCBySearchParams', data),
+    listCIOEventPlanningBySearchParams: (data: any) => axiosRequest.post<Activity[]>('/activities/listCIOEventPlanningBySearchParams', data),
     details: (id: string) => axiosRequest.get<Activity>(`/activities/${id}`),
     create: (activity: Activity) => axiosRequest.post<void>('/activities', activity),
     update: (activity: Activity, id: string) => axiosRequest.put<void>(`/activities/${id}`, activity),
