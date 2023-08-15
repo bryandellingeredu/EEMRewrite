@@ -210,7 +210,7 @@ export default observer(function NavbarEEM() {
         
             </Dropdown.Item>
             <Dropdown.Item>
-            <a href={`${process.env.PUBLIC_URL}/assets/floorplans.pdf`} target='_blank'>
+            <a href={`${process.env.PUBLIC_URL}/assets/simplifiedfloorplans.pdf`} target='_blank'>
                  <span style={{ color: 'black' }}>Bldg 651 Floor Plans</span>
             </a>
             </Dropdown.Item>
