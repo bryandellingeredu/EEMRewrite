@@ -370,11 +370,6 @@ export default observer(function ActivityForm() {
     end: Yup.string().required().nullable(),
     actionOfficer: Yup.string().required(),
     actionOfficerPhone: Yup.string().required(),
-    eventPlanningExternalEventPOCEmail: Yup.string()
-    .when("copiedTocio", {
-      is: true,
-      then: Yup.string().email("Invalid email address"),
-    }),
   });
 
   useEffect(() => {
