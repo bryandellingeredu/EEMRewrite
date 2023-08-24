@@ -29,6 +29,7 @@ import { FlagReportDTO } from '../models/flagReportDTO';
 import { UserRole } from '../models/userRole';
 import { ArmyWarCollegeUser } from '../models/armyWarCollegeUser';
 import { EnlistedAideChecklist } from '../models/enlistedAideChecklist';
+import { ActivityNotification } from '../models/activityNotification';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -192,6 +193,10 @@ const VTCCoordinators = {
     delete: (id: string) => axiosRequest.del<void>(`/VTCCoordinators/${id}`)
 }
 
+const ActivityNotifications = {
+    create: (data : ActivityNotification) => axiosRequest.post<void>('/ActivityNotification', data),
+}
+
 
 
 const Organizations = {
@@ -325,7 +330,8 @@ const agent = {
     Calendars,
     UserRoles,
     AddToEEMCalendars,
-    EnlistedAide
+    EnlistedAide,
+    ActivityNotifications
 }
 
 export default agent;

@@ -28,6 +28,7 @@ namespace Persistence
          public DbSet<USAHECFacilitiesUsageLegend> USAHECFacilitiesUsageLegends { get; set; }
         public DbSet<RoomVTCCoordinator> RoomVTCCoordinators {get; set;}
         public DbSet<EnlistedAideCheckList> EnlistedAideCheckLists { get; set; }
+        public DbSet<ActivityNotification> ActivityNotifications { get; set; }  
 
 
 

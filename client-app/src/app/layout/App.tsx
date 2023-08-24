@@ -56,6 +56,7 @@ import EnlistedAideCalendarWrapper from '../../features/enlistedaide/enlistedAid
 import StudentCalendarWrapper from '../../features/studentCalendar/studentCalendarWrapper';
 import MSFPCalendarWrapper from '../../features/msfp/msfpCalendarWrapper';
 import CommunityCalendarWrapper from '../../features/community/communityCalendarWrapper';
+import AddToMyCalendar from '../../features/activities/details/AddToMyCalendar';
 
 function App() {
   const location = useLocation();
@@ -143,6 +144,7 @@ function App() {
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/enlistedAideConfirmation/:id/:categoryId`} component={enlistedAideConfirmation}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/enlistedAideChecklistForm/:id/:categoryId`} component={enlistedAideChecklistForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/addToCalendars/:id/:categoryId`} component={AddToCalendars}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/addtomycalendar/:id/:categoryId`} component={AddToMyCalendar}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/bldg651Calendar/:id`} component={Bldg651Calendar}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageRoleForm/:id`} component={ManageRolesForm}/>

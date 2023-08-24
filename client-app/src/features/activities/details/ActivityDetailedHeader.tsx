@@ -73,16 +73,6 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
         }
     }
 
-    const handleAddToCalendar = () =>{
-       const icsFile = createICSFile(activity);
-       let blob = new Blob([icsFile], { type: 'text/calendar;charset=utf-8' });
-       //window.open(encodeURI("data:text/calendar;charset=utf8," + url));
-       let url = URL.createObjectURL(blob);
-       let a = document.createElement('a');
-       a.href = url;
-       a.download = `${activity.title}.ics`;
-       a.click();
-    }
     return (
         <Segment.Group>
             <Segment basic attached='top' style={{ padding: '0' }}>
@@ -203,9 +193,12 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
         </>
     }
         { activity.category.name === 'Academic Calendar' &&
-            <Button color='teal'  onClick={handleAddToCalendar} >
-                     Add to Calendar
+        <>
+        
+            <Button  color='teal'  as={Link} to={`${process.env.PUBLIC_URL}/addtomycalendar/${activity.id}/${activity.categoryId}`}>
+                    Add to My Calendar
             </Button>
+            </>
         }
 
 {
@@ -235,9 +228,10 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                 <Button  color='orange'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
                     Update Event
                 </Button>
-                <Button  color='teal'  onClick={handleAddToCalendar} >
-                     Add to Calendar
-                </Button>
+              
+                <Button  color='teal'  as={Link} to={`${process.env.PUBLIC_URL}/addtomycalendar/${activity.id}/${activity.categoryId}`}>
+                    Add to My Calendar
+            </Button>
                 <Button  color='violet'
                 disabled={activity.cancelled}
                   onClick={() => setShowCopyConfirm(true)}                 
