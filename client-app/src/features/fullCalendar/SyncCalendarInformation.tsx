@@ -1,4 +1,4 @@
-import { Button, Divider, Header, Icon, List, Message, Tab } from "semantic-ui-react";
+import { Button, Divider, Form, Header, Icon, Input, Label, List, Message, Tab } from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
 import {useState} from 'react';
 import { FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -8,6 +8,8 @@ import { faApple } from "@fortawesome/free-brands-svg-icons";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faAndroid } from "@fortawesome/free-brands-svg-icons";
 import CopyToClipboard from "./copyToClipboard";
+import agent from "../../app/api/agent";
+import { toast } from "react-toastify";
 
 const faWindowsPropIcon = faWindows as IconProp;
 const faApplePropIcon = faApple as IconProp;
@@ -56,6 +58,14 @@ export default function SyncCalendarInformation({routeName} : Props){
     const { modalStore } = useStore();
      const {closeModal} = modalStore;
      const [lookup, setLookup] = useState<Dictionary[]>(cases);
+     const [saving, setSaving] = useState(false);
+     const [error, setError] = useState(false);
+     const [email, setEmail] = useState('');
+
+     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setError(false);
+      setEmail(e.target.value);
+    };
 
      const panes = [
       {
@@ -141,6 +151,33 @@ export default function SyncCalendarInformation({routeName} : Props){
       }
     ];
 
+    const handleButtonClick = async () => {
+      setError(false);
+      if (email && /\S+@\S+\.\S+/.test(email)) {
+        setSaving(true);
+        try {
+          await agent.SyncCalendarNotifications.create({ email, route: routeName });
+              // Show the toast notification
+              toast.info('Success: You have been added to the synchronization notifications', {
+                position: "top-left",
+                autoClose: 20000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+              });
+    
+        } catch (error) {
+          console.error("An error occurred:", error);
+          setError(true);
+        } finally {
+          setSaving(false);
+        }
+      } else {
+        setError(true);
+      }
+    };
+
     return (
         <>
           <Button
@@ -166,6 +203,25 @@ export default function SyncCalendarInformation({routeName} : Props){
              <Header as="h4" >
               Copy the iCal feed Url:  {`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}`}   <CopyToClipboard text={`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}` } />
              </Header>
+
+             <Message info>
+      <Message.Header>Calendar Update Timing</Message.Header>
+      Most external calendars update within a 3 to 5-hour window. However, if you require notifications for changes occurring within 24 hours prior to an event, please enter your email and click "Submit."<p/>
+      <Form>
+        <Input
+          style={{ width: '600px' }}
+          size="large"
+          label={{ icon: 'asterisk' }}
+          labelPosition='left corner'
+          placeholder='Email...'
+          onChange={handleInputChange}
+          value={email}
+          error={error}
+        />
+        <Button type='button' size="large" primary onClick={handleButtonClick} loading={saving}>Submit </Button>
+        {error && <Label basic color='red' pointing='left'>Please enter a valid email</Label>}
+      </Form>
+    </Message>
 
              <Tab panes={panes} />
 

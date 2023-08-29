@@ -298,7 +298,7 @@ export default observer(function ActivityForm() {
     });
   }
 
-  const handleDownloadAttachment = async () => {
+  /*const handleDownloadAttachment = async () => {
     try {
       const token = commonStore.token;
 
@@ -324,6 +324,39 @@ export default observer(function ActivityForm() {
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(fileUrl);
+    } catch (err) {
+      console.error(err);
+    }
+  }; */
+
+  const handleDownloadAttachment = async () => {
+    try {
+      const token = commonStore.token;
+
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${token}`);
+
+      const requestOptions = {
+        method: "GET",
+        headers: headers,
+      };
+
+      const metaData: Attachment = await agent.Attachments.details(
+        attachment.id
+      );
+
+      const attachmentData = await fetch(`${process.env.REACT_APP_API_URL}/upload/${metaData.id}`, requestOptions);
+
+ headers.append('Content-Type', 'application/json');
+          const data = await attachmentData.arrayBuffer();
+         const file = new Blob([data], { type: metaData.fileType });
+         var fileUrl = window.URL.createObjectURL(file);
+         var a = document.createElement("a");
+         a.href = fileUrl;
+          a.download = metaData.fileName;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(fileUrl);
     } catch (err) {
       console.error(err);
     }

@@ -13,11 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphBeta", "GraphBeta\GraphBeta.csproj", "{B5731F5D-3A90-4694-9FDD-4F0473B0BA53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructucture", "Infrastructucture\Infrastructucture.csproj", "{E2259300-38CF-4D85-88B2-CD002585BB14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructucture", "Infrastructucture\Infrastructucture.csproj", "{E2259300-38CF-4D85-88B2-CD002585BB14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-3.		Debug|Any CPU = Debug|Any CPU
+		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution

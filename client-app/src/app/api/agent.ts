@@ -30,6 +30,7 @@ import { UserRole } from '../models/userRole';
 import { ArmyWarCollegeUser } from '../models/armyWarCollegeUser';
 import { EnlistedAideChecklist } from '../models/enlistedAideChecklist';
 import { ActivityNotification } from '../models/activityNotification';
+import { SyncCalendarNotificationDTO } from '../models/syncCalendarNotificationDTO';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -197,6 +198,10 @@ const ActivityNotifications = {
     create: (data : ActivityNotification) => axiosRequest.post<void>('/ActivityNotification', data),
 }
 
+const SyncCalendarNotifications = {
+    create: (data : SyncCalendarNotificationDTO ) => axiosRequest.post<void>('/SyncCalendarNotification', data),
+}
+
 
 
 const Organizations = {
@@ -331,7 +336,8 @@ const agent = {
     UserRoles,
     AddToEEMCalendars,
     EnlistedAide,
-    ActivityNotifications
+    ActivityNotifications,
+    SyncCalendarNotifications
 }
 
 export default agent;
