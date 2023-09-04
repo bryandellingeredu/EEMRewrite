@@ -3742,7 +3742,7 @@ export default observer(function ActivityForm() {
                       placeholder="Not Applicable"
                       label="Cooking: (Leave Blank for Not Applicable, Pick from the list, or type your own)"
                       dataListId="enlistedAideCooking"
-                      options={["Buffet", "Hours d' oeuvres", "Plated Meal"]}
+                      options={["Buffet", "Hors d' oeuvres", "Plated Meal"]}
                     />
 
                   <MyTextInput name="enlistedAideDietaryRestrictions" placeholder="None Known" label = "Dietary Restrictions (Leave Blank for no dietary restrictions)"/>
