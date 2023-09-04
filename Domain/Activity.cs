@@ -217,6 +217,7 @@ namespace Domain
         public string EnlistedAideNumOfServers { get; set; }
         public string EnlistedAideSupportNeeded{ get; set; }
         public bool EnlistedAideSetup { get; set; }
+        public string EnlistedAideAdditionalRemarks {get; set;}
         public bool NewEnlistedAideEventToAideNotificationSent { get; set; }
         public bool NewEnlistedAideEventToESDNotificationSent { get; set; }
         public bool SendEnlistedAideConfirmationNotification { get; set; }
@@ -248,7 +249,6 @@ namespace Domain
          public string EventPlanningNumOfPeripherals {get; set;}
         public string EventPlanningNumOfMonitors {get; set;}
         public DateTime? EventPlanningSetUpDate {get; set;}
-
 
     }
 }

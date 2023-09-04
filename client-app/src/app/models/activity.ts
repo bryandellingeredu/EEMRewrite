@@ -225,6 +225,7 @@ export interface Activity{
     eventPlanningNumOfPeripherals : string
     eventPlanningNumOfMonitors : string
     eventPlanningSetUpDate: Date | null
+    enlistedAideAdditionalRemarks : string
 }
 
 export class Activity implements Activity{
@@ -449,6 +450,7 @@ export class ActivityFormValues{
     eventPlanningNumOfPeripherals : string = ''
     eventPlanningNumOfMonitors : string = ''
     eventPlanningSetUpDate: Date | null = null
+    enlistedAideAdditionalRemarks : string = ''
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -666,6 +668,7 @@ export class ActivityFormValues{
     this.eventPlanningNumOfPeripherals = activity.eventPlanningNumOfPeripherals
     this.eventPlanningNumOfMonitors = activity.eventPlanningNumOfMonitors
     this.eventPlanningSetUpDate = activity.eventPlanningSetUpDate
+    this.enlistedAideAdditionalRemarks = activity.enlistedAideAdditionalRemarks
 
        } 
     }

@@ -3769,6 +3769,13 @@ export default observer(function ActivityForm() {
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
+                    <Divider />
+                      <MyTextArea
+              label="Additional Remarks:"
+              rows={3}
+              placeholder=""
+              name="enlistedAideAdditionalRemarks"
+            />
 
                 </Segment>
 

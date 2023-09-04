@@ -681,7 +681,8 @@ export default class ActivityStore {
     eventPlanningNumOfPrinters : '',
     eventPlanningNumOfPeripherals : '',
     eventPlanningNumOfMonitors : '',
-    eventPlanningSetUpDate : null
+    eventPlanningSetUpDate : null,
+    enlistedAideAdditionalRemarks : ''
     }
     return activity;
   }
