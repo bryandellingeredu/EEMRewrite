@@ -8,9 +8,10 @@ import { format } from 'date-fns';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import Pikaday from "pikaday";
-import { Loader, Modal, Button, Header } from 'semantic-ui-react'; 
+import { Loader, Modal, Button, Header, Message, Form, Input, Label, Divider } from 'semantic-ui-react'; 
 import agent from '../../app/api/agent';
 import LoadingComponent from '../../app/layout/LoadingComponent';
+import { toast } from "react-toastify";
 
 interface EventInfo{
   title: string
@@ -29,6 +30,10 @@ interface EventInfo{
 }
 
 export default function FullScreenStudentCalendar (){
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState(false);
+    const [email, setEmail] = useState('');
+    const [showCalendar, setShowCalendar] = useState(true);
     const [view, setView] = useState(localStorage.getItem("calendarViewSC") || "timeGridWeek");
     const [height, setHeight] = useState(window.innerHeight - 100);
     const calendarRef = useRef<FullCalendar>(null);
@@ -84,9 +89,40 @@ export default function FullScreenStudentCalendar (){
         picker.destroy();
       };
     }
-  },[calendarRef]);
+  },[calendarRef, showCalendar]);
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setError(false);
+        setEmail(e.target.value);
+      };
 
+            const handleSubmit = async () => {
+        setError(false);
+        if (email && /\S+@\S+\.\S+/.test(email)) {
+          setSaving(true);
+          try {
+            await agent.SyncCalendarNotifications.create({ email, route: 'studentCalendar' });
+                // Show the toast notification
+                toast.info('Success: You have been added to the synchronization notifications', {
+                  position: "top-left",
+                  autoClose: 20000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                });
+      
+          } catch (error) {
+            console.error("An error occurred:", error);
+            setError(true);
+          } finally {
+            setSaving(false);
+            setShowCalendar(!showCalendar)
+          }
+        } else {
+          setError(true);
+        }
+      };
 
 const  handleMouseEnter = async (arg : EventClickArg) =>{
   var content = `<p> ${ getTime(arg)}</p>              
@@ -245,7 +281,36 @@ const eventDidMount = (info : any) => {
          </Loader>
          )}
 
-           <FullCalendar
+         <Button size='large' primary content="Subscribe to Changes"
+          onClick= {() => setShowCalendar(!showCalendar)}/>
+         <Divider/>
+
+         {!showCalendar && 
+         <Message info>
+         <Message.Header>Subscribe to Changes</Message.Header>
+         If you subscribe you will receive an email with any changes to the Student Calendar that are within 3 days, please enter your email and click "Submit."<p/>
+         <Form>
+           <Input
+             fluid
+             size="large"
+             label={{ icon: 'asterisk' }}
+             labelPosition='left corner'
+             placeholder='Email...'
+             onChange={handleInputChange}
+             value={email}
+             error={error}
+           />
+           <p>
+           <Button type='button' size="large"  onClick={() => setShowCalendar(!showCalendar)} loading={saving}>Cancel </Button>
+           <Button type='button' size="large" primary onClick={handleSubmit} loading={saving}>Submit </Button>
+     
+           </p>
+           {error && <Label basic color='red' pointing='left'>Please enter a valid email</Label>}
+         </Form>
+       </Message>
+}
+
+       {showCalendar &&    <FullCalendar
            ref={calendarRef}
             height= {height}
             initialView={view}
@@ -257,7 +322,7 @@ const eventDidMount = (info : any) => {
               customButtons={{
                 datepicker: {
                 text: "go to date",
-                },
+                }
               }}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/studentCalendar`}
@@ -273,6 +338,7 @@ const eventDidMount = (info : any) => {
               setView(arg.view.type);
             }}
           />
+        }    
         </>
     )
 }

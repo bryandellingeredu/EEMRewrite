@@ -57,6 +57,7 @@ import StudentCalendarWrapper from '../../features/studentCalendar/studentCalend
 import MSFPCalendarWrapper from '../../features/msfp/msfpCalendarWrapper';
 import CommunityCalendarWrapper from '../../features/community/communityCalendarWrapper';
 import AddToMyCalendar from '../../features/activities/details/AddToMyCalendar';
+import Unsubscribe from '../../features/fullCalendar/Unsubscribe';
 
 function App() {
   const location = useLocation();
@@ -150,6 +151,7 @@ function App() {
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageRoleForm/:id`} component={ManageRolesForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper/:id`} component={usahecMeetingSummaryByLocationWrapper}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/requestRoomDelegateChanges/:id`} component={RequestRoomDelegateChanges}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/unsubscribe/:id`} component={Unsubscribe}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />
                 <Route path={`${process.env.PUBLIC_URL}/account/verifyEmail`} component={ConfirmEmail} />

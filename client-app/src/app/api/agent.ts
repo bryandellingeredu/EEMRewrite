@@ -304,6 +304,7 @@ const UserRoles = {
 
 const AddToEEMCalendars = {
     update: (activityCalendarInformationDTO: any, id: string) => axiosRequest.put<void>(`/addToEEMCalendars/${id}`, activityCalendarInformationDTO),
+    delete: (id: string) => axiosRequest.del<void>(`/addToEEMCalendars/${id}`)
 }
 
 const EnlistedAide = {

@@ -100,12 +100,12 @@ namespace Application
             if (_activity.SendEnlistedAideConfirmationNotification && _activity.EnlistedAideEvent) await this.SendEnlistedAideConfirmationNotification();
             if (!_activity.EventPlanningNotificationSent && _activity.EventPlanningNotifyPOC && !string.IsNullOrEmpty(_activity.EventPlanningExternalEventPOCEmail)) await this.sendEventPlanningNotification();
             await this.SendAddToMyCalendarEmails();
-            if ((_activity.Start - DateTime.Now).TotalHours <= 24) await this.SendSyncCalendarNotificationEmails();
+            if ((_activity.Start - DateTime.Now).TotalHours <= 24  ||   ((_activity.Start - DateTime.Now).TotalHours <= 72 && _activity.CopiedTostudentCalendar)) await this.SendSyncCalendarNotificationEmails();
         }
 
         private async Task SendSyncCalendarNotificationEmails()
         {
-            var emails =
+            var items =
               await _context.SyncToCalendarNotifications
               .Where(x =>
               (x.CopiedToacademic && _activity.CopiedToacademic) ||
@@ -133,12 +133,15 @@ namespace Application
               (x.CopiedTousahecFacilitiesUsage && _activity.CopiedTousahecFacilitiesUsage) ||
               (x.CopiedTovisitsAndTours && _activity.CopiedTovisitsAndTours) ||
               (x.IMC && _activity.IMC)
-              ).Select(x => x.Email)
-              .ToArrayAsync();
-            if (emails.Any())
+              ).ToArrayAsync();
+            if (items.Any())
             {
-                string title = $"{_activity.Title} has been updated or added";
-                string body = $@"<p> {_activity.Title} , an event you synced to your calendar, has been updated or added within 24 hours of its start time.</p>
+                foreach (var item in items)
+                {
+
+
+                    string title = $"{_activity.Title} has been updated or added";
+                    string body = $@"<p> {_activity.Title} , an event you synced to your calendar, has been updated or added within 24 hours of its start time.</p>
                       <h2>Event Request Details</h2><p></p>
                        <p><strong>Title: </strong> {_activity.Title} </p>
                        <p><strong>Start Time: </strong> {GetStartTime()} </p>
@@ -146,24 +149,45 @@ namespace Application
                       <p><strong>Action Officer: </strong> {_activity.ActionOfficer}</p>
                            <p><strong>Action Office Phoner: </strong> {_activity.ActionOfficerPhone}</p> ";
 
-                if (!string.IsNullOrEmpty(_activity.Description))
-                {
-                    body = body + $"<p><strong>Event Details: </strong> {_activity.Description}</p>";
-                }
+                    if (!string.IsNullOrEmpty(_activity.Description))
+                    {
+                        body = body + $"<p><strong>Event Details: </strong> {_activity.Description}</p>";
+                    }
 
-                if (!string.IsNullOrEmpty(GetLocation()))
-                {
-                    body = body + $"<p><strong>Location: </strong> {GetLocation()}</p>";
-                }
-                body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
-                if(!string.IsNullOrEmpty( _activity.LastUpdatedBy)){
-                    body = body + $"<p><strong>Event Updated By: </strong> {_activity.LastUpdatedBy} </p>";
-                }
-              
+                    if (!string.IsNullOrEmpty(GetLocation()))
+                    {
+                        body = body + $"<p><strong>Location: </strong> {GetLocation()}</p>";
+                    }
+                    if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarUniform))
+                    {
+                        body = body + $"<p><strong>Uniform: </strong> {_activity.StudentCalendarUniform} </p>";
+                    }
+                    if (_activity.CopiedTostudentCalendar && _activity.StudentCalendarMandatory)
+                    {
+                        body = body + $"<p><strong>Attendance: </strong> Attendance is Mandatory </p>";
+                    }
+                    if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarPresenter))
+                    {
+                        body = body + $"<p><strong>Presenter: </strong> {_activity.StudentCalendarPresenter} </p>";
+                    }
+                    if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarNotes))
+                    {
+                        body = body + $"<p><strong>Notes: </strong> {_activity.StudentCalendarNotes} </p>";
+                    }
+                    body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
+                    if (!string.IsNullOrEmpty(_activity.LastUpdatedBy))
+                    {
+                        body = body + $"<p><strong>Event Updated By: </strong> {_activity.LastUpdatedBy} </p>";
+                    }
 
-                body = body + $@"<p><p/><p><p/><p> To view in the Enterprise Event Manager (EEM), click the: <a href='{_settings.BaseUrl}?id={_activity.Id}&categoryid={_activity.CategoryId}'> EEM Link </a></p>
-              <p></p><p></p><p>DO NOT REPLY TO THIS E-MAIL. THIS MESSAGE WAS AUTOMATICALLY GENERATED BY THE SYSTEM AND IS NOT MONITORED.</p>";
-                await GraphHelper.SendEmail(emails, title, body);
+
+
+
+                    body = body + $@"<p><p/><p><p/><p> To view in the Enterprise Event Manager (EEM), click the: <a href='{_settings.BaseUrl}?id={_activity.Id}&categoryid={_activity.CategoryId}'> EEM Link </a></p>
+              <p></p><p></p><p>DO NOT REPLY TO THIS E-MAIL. THIS MESSAGE WAS AUTOMATICALLY GENERATED BY THE SYSTEM AND IS NOT MONITORED.</p>
+              <p></p><p></p><p>YOU HAVE RECEIVED THIS EMAIL BECAUSE YOU SUBSCRIBED TO NOTIFICATIONS. TO STOP RECEIVING THESE NOTIFICATIONS <a href='{_settings.BaseUrl}?redirecttopage=unsubscribe/{item.Id}'> UNSUBSCRIBE </a> </p>";
+                    await GraphHelper.SendEmail(new[] { item.Email }, title, body);
+                }
             }
         }
       

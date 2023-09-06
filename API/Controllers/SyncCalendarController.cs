@@ -145,7 +145,7 @@ namespace API.Controllers
                         query = query.Where(a => a.CopiedTocio);
                         break;
                     default:
-                        throw new Exception($"Unknown route: {route}");
+                         throw new Exception($"Unknown route: {route}");
                 }
 
 
@@ -520,8 +520,6 @@ namespace API.Controllers
             string retval;
             switch (route)
             {
-                default:
-                    throw new Exception($"Unknown route: {route}");
                 case "academic":
                     retval =  "Academic Calendar";
                     break;
@@ -593,6 +591,9 @@ namespace API.Controllers
                     break;
                 case "cio":
                     retval = "CIO Event Planning Calendar";
+                    break;
+                default:
+                    retval = "Unknown";
                     break;
             }
 

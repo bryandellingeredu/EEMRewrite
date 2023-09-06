@@ -48,6 +48,7 @@ const cases = [
       { routeName: "militaryFamilyAndSpouseProgram", title: "Military Family and Spouse Program" },
       { routeName: "battlerhythm", title: "Battle Rhythm Calendar" },
       { routeName: "staff", title: "Staff Calendar" },
+      { routeName: "studentCalendar", title: "Student Calendar" },
       { routeName: "imc", title: "Integrated Master Calendar (IMC)" }];
 
 
@@ -205,8 +206,16 @@ export default function SyncCalendarInformation({routeName} : Props){
              </Header>
 
              <Message info>
-      <Message.Header>Calendar Update Timing</Message.Header>
-      Most external calendars update within a 3 to 5-hour window. However, if you require notifications for changes occurring within 24 hours prior to an event, please enter your email and click "Submit."<p/>
+      <Message.Header>Subscribe to Changes</Message.Header>
+      {routeName !== 'studentCalendar' && 
+         <span>
+           Most external calendars update within a 3 to 5-hour window. However, if you require notifications for changes occurring within 24 hours prior to an event, please enter your email and click "Submit." 
+           </span>}
+      {routeName === 'studentCalendar' && 
+         <span>
+          If you subscribe you will receive an email with any changes to the Student Calendar that are within 3 days, please enter your email and click "Submit."
+           </span>}
+      <p/>
       <Form>
         <Input
           style={{ width: '600px' }}
