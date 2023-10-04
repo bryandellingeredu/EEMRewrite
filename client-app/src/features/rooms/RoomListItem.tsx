@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import RoomPictureModal from "./RoomPictureModal";
 import { NavLink } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 interface Props{
     room: GraphRoom
@@ -15,11 +16,12 @@ interface Props{
 }
 
 export default observer (function RoomListItem(
-  {room, showAvailabilityIndicatorList, addIdToShowAvailabilityIndicatorList } : Props) {
+  {room, showAvailabilityIndicatorList, addIdToShowAvailabilityIndicatorList} : Props) {
 
-    const {graphRoomStore, modalStore} = useStore();
+    const {graphRoomStore, modalStore, userStore} = useStore();
     const{ roomDelegates, loadingInitial, loadRoomDelegates} = graphRoomStore;
     const {openModal} = modalStore;
+    const{user} = userStore;
 
     useEffect(() => {
       if(!roomDelegates || roomDelegates.length < 1) loadRoomDelegates(); 
@@ -29,6 +31,17 @@ export default observer (function RoomListItem(
     return (
             <Card>
             <Card.Content>
+            {user && !loadingInitial && roomDelegates && roomDelegates.length > 0 &&
+            roomDelegates.filter(x => x.roomEmail === room.emailAddress)
+            .some(
+              (delegate) => delegate.delegateEmail === user.userName
+            ) && 
+            <Button color="orange" basic
+      style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 1 }} 
+      content="Approve Room Reservations" 
+      as={Link} to={`${process.env.PUBLIC_URL}/approveroomreservations/${room.id}`}
+    />
+            }
             <Label as='a' color='green' ribbon='right'>
               Capacity: {room.capacity}
             </Label>

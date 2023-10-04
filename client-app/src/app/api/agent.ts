@@ -102,6 +102,14 @@ const academicCalendarURL = `/groups/17422b10-09fc-42c9-8d98-f0e7c2c97899/calend
 const getGraphClient = () => Providers.globalProvider.graph.client;
 const IsEDUSignedIn = () => Providers.globalProvider.state === ProviderState.SignedIn;
 
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const todayUTC = today.toISOString();
+
+const oneYearFromNow = new Date(today);
+oneYearFromNow.setFullYear(today.getFullYear() + 1);
+const oneYearFromNowUTC = oneYearFromNow.toISOString();
+
 const graphRequests = {
     isInAcademicCalendarGroup: () => getGraphClient().api("/me/transitiveMemberOf/microsoft.graph.group?$select=id&$filter=id eq '17422b10-09fc-42c9-8d98-f0e7c2c97899'")
   .get()
@@ -127,6 +135,12 @@ const graphRequests = {
     update: (url: string, body:{}) => getGraphClient().api(url).update(body),
     create: (url: string, body:{}) => getGraphClient().api(url).create(body).then(graphResponseBody),
     delete: (url: string) => getGraphClient().api(url).delete(),
+    getMail: () => 
+    getGraphClient().api('/me/mailFolders/Inbox/messages')
+    .orderby('receivedDateTime desc')
+    .top(1000)
+    .get()
+    .then(graphResponseBody),
 }
 
 const axiosRequest = {
@@ -313,6 +327,12 @@ const EnlistedAide = {
     update: (enlistedAideChecklist: EnlistedAideChecklist) => axiosRequest.post<void>('/enlistedAide', enlistedAideChecklist),
 }
 
+const ApproveEvents = {
+    list: (id: string) => axiosRequest.get<GraphEvent[]>(`/approveevents/${id}`),
+    changeStatus: (id: string, roomEmail: string, status: string) =>axiosRequest.post<void>('approveevents/changestatus', {id, roomEmail, status}),
+    getEmail: () => graphRequests.getMail(),
+}
+
 const agent = {
     Activities,
     Account,
@@ -338,7 +358,8 @@ const agent = {
     AddToEEMCalendars,
     EnlistedAide,
     ActivityNotifications,
-    SyncCalendarNotifications
+    SyncCalendarNotifications,
+    ApproveEvents
 }
 
 export default agent;

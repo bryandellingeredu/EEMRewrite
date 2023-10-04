@@ -58,6 +58,8 @@ import MSFPCalendarWrapper from '../../features/msfp/msfpCalendarWrapper';
 import CommunityCalendarWrapper from '../../features/community/communityCalendarWrapper';
 import AddToMyCalendar from '../../features/activities/details/AddToMyCalendar';
 import Unsubscribe from '../../features/fullCalendar/Unsubscribe';
+import ApproveRoomReservations from '../../features/rooms/ApproveRoomReservations';
+import ApproveAnyRoomReservation from '../../features/rooms/ApproveAnyRoomReservation';
 
 function App() {
   const location = useLocation();
@@ -129,6 +131,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/roomCalendarLinks`} component={RoomCalendarLinks}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/rooms`} component={RoomDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/authenticatetoarmy`} component={AuthenticateToArmy}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/approveanyroomreservation`} component={ApproveAnyRoomReservation}/>
                 <Route path={`${process.env.PUBLIC_URL}/activities/:id/:categoryId`} component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/itinerary/:id/:categoryId`} component={Itinerary}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/downloadbio/:id/:categoryId`} component={DownloadBio}/>
@@ -152,6 +155,7 @@ function App() {
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper/:id`} component={usahecMeetingSummaryByLocationWrapper}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/requestRoomDelegateChanges/:id`} component={RequestRoomDelegateChanges}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/unsubscribe/:id`} component={Unsubscribe}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/approveroomreservations/:id`} component={ApproveRoomReservations}/>
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />
                 <Route path={`${process.env.PUBLIC_URL}/account/verifyEmail`} component={ConfirmEmail} />

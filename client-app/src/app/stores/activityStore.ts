@@ -80,6 +80,7 @@ export default class ActivityStore {
     
   }
 
+
   getAcademicCalendarEvents = async (start: string, end: string) => {
     const isMemberOfAcademicCalendar = await this.isEDUUserAMemberOfTheAcademicCalendar();
     if(isMemberOfAcademicCalendar){
@@ -457,7 +458,8 @@ export default class ActivityStore {
       start,
       end,
       isAllDay: activity.allDayEvent,
-      location
+      location,
+      webLink: ''
     }
   }
 

@@ -37,7 +37,8 @@ export default observer(function NavbarEEM() {
     userStore: { user, logout, isLoggedIn },
     graphRoomStore: { graphRooms, loadGraphRooms },
     categoryStore: {categories, loadCategories},
-    graphUserStore: {armyProfile}
+    graphUserStore: {armyProfile},
+    graphRoomStore: {roomDelegates, loadRoomDelegates}
   } = useStore();
   const [isSignedIn] = useIsSignedIn();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -50,6 +51,10 @@ export default observer(function NavbarEEM() {
   const handleToggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  useEffect(() => {
+    if (!roomDelegates || roomDelegates.length < 1) loadRoomDelegates();
+  }, [roomDelegates]);
 
   useEffect(() => {
     if (!graphRooms.length) loadGraphRooms();
@@ -161,7 +166,13 @@ export default observer(function NavbarEEM() {
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
               Rooms
             </Menu.Item>
-
+            { isSignedIn && user && roomDelegates && roomDelegates.some(
+               (delegate) => delegate.delegateEmail === user.userName
+             ) &&
+            <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/approveanyroomreservation`}>
+              Approve Room Reservations
+            </Menu.Item>
+         }
             <Dropdown item text="Reports">
             <Dropdown.Menu>            
             <Dropdown.Header icon='tags' content='Hosting Reports' />
@@ -188,7 +199,6 @@ export default observer(function NavbarEEM() {
             <DropdownDivider/>
             </Dropdown.Menu>
             </Dropdown>
-
             <Dropdown item text="Feedback and Links">
             <Dropdown.Menu>            
             <Dropdown.Header icon='comments' content='Provide Feedback and Report Problems' />
@@ -216,8 +226,7 @@ export default observer(function NavbarEEM() {
             </Dropdown.Item>
             </Dropdown.Menu>
             </Dropdown>
-
-
+        
 
             {user && user.roles && user.roles.includes("admin") &&
             <Dropdown item text="Admin">

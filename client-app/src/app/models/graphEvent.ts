@@ -17,4 +17,5 @@ export interface GraphEvent{
     body: GraphBody
     isAllDay: boolean
     organizer?: GraphOrganizer
+    webLink: string
 }

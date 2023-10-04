@@ -360,6 +360,36 @@
             return events.CurrentPage.ToArray();
         }
 
+        public static async Task<Event> ChangeRoomStatus(string id, string roomEmail, string status)
+        {
+            var existingEvent = await _appClient.Users[roomEmail].Events[id]
+                .Request()
+                .Select(e => new { e.Attendees })
+                .GetAsync();
+
+            var attendeeToUpdate = existingEvent.Attendees.FirstOrDefault(a => a.EmailAddress.Address == roomEmail);
+
+            if (attendeeToUpdate != null)
+            {
+                // Update the attendee's status
+                attendeeToUpdate.Status.Response = status == "Approved" ? ResponseType.Accepted : ResponseType.Declined;
+                attendeeToUpdate.Status.Time = DateTimeOffset.Now;
+
+                // Update only the Attendees property of the existing event
+                var updatedEvent = await _appClient.Users[roomEmail].Events[id]
+                    .Request()
+                    .Header("Prefer", "outlook.allow-unsafe-updates=true")
+                    .UpdateAsync(existingEvent);
+
+                return updatedEvent;
+            }
+            else
+            {
+                // Handle the case where the attendee is not found
+                throw new Exception("Attendee not found");
+            }
+        }
+
         public static async Task SendEmail(string[] emails, string subject, string body)
         {
             EnsureGraphForAppOnlyAuth();
@@ -430,6 +460,6 @@
         }
         }
 
-   
+    
     }
 }

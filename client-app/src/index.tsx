@@ -60,7 +60,9 @@ Providers.globalProvider = new Msal2Provider({
            'profile',
           'people.read',
           'user.readbasic.all',
-          'group.read.all'
+          'group.read.all',
+          'Mail.Read',
+          'Mail.ReadBasic'
         ]
 });
 
