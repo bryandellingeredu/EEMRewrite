@@ -224,6 +224,11 @@ export default observer(function NavbarEEM() {
                  <span style={{ color: 'black' }}>Bldg 651 Floor Plans</span>
             </a>
             </Dropdown.Item>
+            <Dropdown.Item>
+            <a href="https://armyeitaas.sharepoint-mil.us/sites/USAWC-eemarchive" target='_blank'>
+            <span style={{ color: 'black' }}>EEM Archives</span>
+            </a>
+            </Dropdown.Item>
             </Dropdown.Menu>
             </Dropdown>
         
