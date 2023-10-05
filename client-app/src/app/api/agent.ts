@@ -311,7 +311,7 @@ const Calendars = {
 
 const UserRoles = {
     list: () => axiosRequest.get<UserRole[]>('/UserRoles'),
-    delete: (id: string, email: string) => axiosRequest.del<void>(`/UserRoles/${id}/${email}`),
+    delete: (id: string, email: string) => axiosRequest.post<void>('/UserRoles/delete',{id, email}),
     create: (id: string, email: string) => axiosRequest.post<void>('/UserRoles',{id, email}),
     listArmyWarCollegeUsers: () => axiosRequest.get<ArmyWarCollegeUser[]>('/UserRoles/armywarcollegeusers')
 }

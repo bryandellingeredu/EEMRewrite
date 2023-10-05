@@ -53,7 +53,6 @@ export default function IMCCalendarWithoutAcademicEvents(this: any) {
         field: document.querySelector(".fc-datepicker-button") as HTMLElement,
         format: "YYYY-MM-DD",
         onSelect: function (dateString) {
-          debugger;
           picker.gotoDate(new Date(dateString));
           calendarApi.gotoDate(new Date(dateString));
         },

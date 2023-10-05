@@ -1,6 +1,7 @@
 ﻿using API.DTOs;
 using API.Services;
 using Application.Core;
+using Application.Emails;
 using Application.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -94,6 +95,30 @@ namespace API.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteRole(RoleUserDTOForDelete roleUserDTO)
+        {
+            var user = await _userManager.FindByEmailAsync(roleUserDTO.Email);
+            if (user == null)
+            {
+                return NotFound("User not Found");
+            }
+            var role = await _roleManager.FindByIdAsync(roleUserDTO.Id);
+          
+            if (role == null)
+            {
+                return NotFound("Role not Found");
+            }
+            var result = await _userManager.RemoveFromRoleAsync(user, role.Name);
+            if (!result.Succeeded)
+            {
+                // Handle the error situation if you need to...
+                return BadRequest("Failed to remove role from user");
+            }
+            return Ok();
+        }
+
         [AllowAnonymous]
         [HttpGet("armywarcollegeusers")]
         public async Task<IActionResult> GetArmyWarCollegeUsers()
@@ -123,6 +148,11 @@ namespace API.Controllers
         {
             public string Id { get; set; }
             public string email { get; set; }
+        }
+        public class RoleUserDTOForDelete
+        {
+            public string Id { get; set; }
+            public string Email { get; set; }
         }
     }
 }
