@@ -18,37 +18,50 @@ interface RoomEvent {
     const [loadingEmails, setLoadingEmails] = useState<boolean>(true);
     const [roomEvents, setRoomEvents] = useState<RoomEvent[]>([]);
     
-    useEffect(() =>{
-        agent.ApproveEvents.getEmail()
-        .then(result => {
+    useEffect(() => {
+      const fetchEmailsInBatches = async () => {
+        const roomEvents: RoomEvent[] = [];
+    
+        for (let i = 0; i < 100; i++) {
+          try {
+            const skip = i * 10;
+            const result = await agent.ApproveEvents.getEmail(skip); // Assuming getEmail takes skip as a parameter
+    
             // @ts-ignore
             const filteredMessages = result.filter(message => {
-                return  message.meetingRequestType && message.meetingRequestType === 'newMeetingRequest';
-              });
-              // @ts-ignore
-            filteredMessages.forEach((message) => {
-                const startUtc = new Date(message.startDateTime.dateTime + 'Z');
-                const endUtc = new Date(message.endDateTime.dateTime + 'Z');
-                const start = utcToZonedTime(startUtc, 'America/New_York');
-                const end = utcToZonedTime(endUtc, 'America/New_York');
-                const roomEvent : RoomEvent = {
-                    roomName: message.location.displayName,
-                    title:  message.subject.startsWith('FW: ') ? message.subject.substring(4) : message.subject,
-                    webLink: message.webLink,
-                    start: start,
-                    end: end,
-                    allDay: message.isAllDay
-                  }
-                  roomEvents.push(roomEvent);
+              return message.meetingRequestType && message.meetingRequestType === 'newMeetingRequest';
             });
-            setRoomEvents(roomEvents);
-            setLoadingEmails(false);
-        })
-         .catch(error => {
-            setLoadingEmails(false);
-            console.log("Error fetching Emails:", error);
-          });
-    },[])
+    
+            // @ts-ignore
+            filteredMessages.forEach((message) => {
+              const startUtc = new Date(message.startDateTime.dateTime + 'Z');
+              const endUtc = new Date(message.endDateTime.dateTime + 'Z');
+              const start = utcToZonedTime(startUtc, 'America/New_York');
+              const end = utcToZonedTime(endUtc, 'America/New_York');
+              const roomEvent: RoomEvent = {
+                roomName: message.location.displayName,
+                title: message.subject.startsWith('FW: ') ? message.subject.substring(4) : message.subject,
+                webLink: message.webLink,
+                start: start,
+                end: end,
+                allDay: message.isAllDay,
+              };
+              roomEvents.push(roomEvent);
+            });
+    
+          } catch (error) {
+            console.log(`Error fetching Emails for batch ${i + 1}:`, error);
+            // Decide whether to continue or stop the loop
+          }
+        }
+    
+        setRoomEvents(roomEvents);
+        setLoadingEmails(false);
+      };
+    
+      fetchEmailsInBatches();
+    }, []);
+    
     return (
         <div>
         <Divider horizontal>

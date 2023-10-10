@@ -135,10 +135,11 @@ const graphRequests = {
     update: (url: string, body:{}) => getGraphClient().api(url).update(body),
     create: (url: string, body:{}) => getGraphClient().api(url).create(body).then(graphResponseBody),
     delete: (url: string) => getGraphClient().api(url).delete(),
-    getMail: () => 
+    getMail: (skip: number) => 
     getGraphClient().api('/me/mailFolders/Inbox/messages')
     .orderby('receivedDateTime desc')
-    .top(1000)
+    .skip(skip)
+    .top(10)
     .get()
     .then(graphResponseBody),
 }
@@ -330,7 +331,7 @@ const EnlistedAide = {
 const ApproveEvents = {
     list: (id: string) => axiosRequest.get<GraphEvent[]>(`/approveevents/${id}`),
     changeStatus: (id: string, roomEmail: string, status: string) =>axiosRequest.post<void>('approveevents/changestatus', {id, roomEmail, status}),
-    getEmail: () => graphRequests.getMail(),
+    getEmail: (skip: number) => graphRequests.getMail(skip),
 }
 
 const agent = {
