@@ -224,6 +224,52 @@ export default observer(function RoomList() {
   />
 </Grid.Column>
 
+<Grid.Column width={4} style={{marginTop: '20px'}}>
+                <SemanticForm.Group inline>
+                <MySemanticCheckBox
+                  label='BYOD'
+                  name='byod'
+                  /> 
+                   <MySemanticCheckBox
+                  label='Casting'
+                  name='casting'
+                  /> 
+                 <MySemanticCheckBox
+                  label='Commercial'
+                  name='commercial'
+                  /> 
+                   </SemanticForm.Group>
+                   <SemanticForm.Group inline>
+                   <MySemanticCheckBox
+                  label='Individual Study'
+                  name='individualStudy'
+                  /> 
+                <MySemanticCheckBox
+                  label='NIPR'
+                  name='nipr'
+                  />  
+                  <MySemanticCheckBox
+                  label='SVTC'
+                  name='vtc'
+                  /> 
+                 </SemanticForm.Group>  
+                 <SemanticForm.Group inline> 
+                 <MySemanticCheckBox
+                  label='VTC(MS Teams)'
+                  name='vtcMSTeams'
+                  />    
+                    <MySemanticCheckBox
+                  label='Wheelchair'
+                  name='isWheelChairAccessible'
+                  />  
+                       <MySemanticCheckBox
+                  label='Wireless'
+                  name='wireless'
+                  />  
+               
+                  </SemanticForm.Group>    
+                </Grid.Column>
+
                 <Grid.Column width={1}>
                   <Button.Group style={{marginTop: '20px'}}>
                     <Button icon color='violet' size='small' type='submit'>
