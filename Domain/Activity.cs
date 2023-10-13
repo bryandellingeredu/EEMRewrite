@@ -34,6 +34,7 @@ namespace Domain
         public string CoordinatorDisplayName{ get; set; }
 
         public string EventLookup { get; set; }
+        public string TeamLookup { get; set; }
 
         [NotMapped]
         public string CoordinatorFirstName { get; set; }
@@ -49,6 +50,12 @@ namespace Domain
 
         [NotMapped]
         public IEnumerable<ActivityRoom> ActivityRooms { get; set; }
+
+        [NotMapped]
+        public IEnumerable<TextValueUser> TeamInvites { get; set; }
+
+        [NotMapped]
+        public bool MakeTeamMeeting { get; set; }
 
         public bool RecurrenceInd { get; set; }
         public Guid? RecurrenceId { get; set; }

@@ -3,9 +3,11 @@
     using Application.Activities;
     using Application.GraphSchedules;
     using Azure.Identity;
+    using Domain;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Graph;
+    using System;
     using System.IO;
     using static System.Net.WebRequestMethods;
     using File = File;
@@ -66,6 +68,80 @@
               // Sort by display name
               .OrderBy("DisplayName")
               .GetAsync();
+        }
+
+        public static async Task<List<TextValueUser>> GetAllUsersTextValueAsync()
+        {
+            const string cacheKey = "AllUsers";
+            if (!_cache.TryGetValue(cacheKey, out List<TextValueUser> users))
+            {
+                EnsureGraphForAppOnlyAuth();
+                _ = _appClient ?? throw new NullReferenceException("Graph has not been initialized for app-only auth");
+
+                users = new List<TextValueUser>();
+                IGraphServiceUsersCollectionPage usersPage = await _appClient.Users
+                    .Request()
+                    .Select(u => new {
+                        u.DisplayName,
+                        u.Mail,
+                        u.UserType,
+                    })
+                    .GetAsync();
+
+                if (usersPage?.Count > 0)
+                {
+                    // Map and add the first page of results to your list after filtering
+                    users.AddRange(
+                        FilterGraphUsers(usersPage.CurrentPage)
+                    );
+
+                    // Get and map additional pages
+                    while (usersPage.NextPageRequest != null)
+                    {
+                        usersPage = await usersPage.NextPageRequest.GetAsync();
+                        users.AddRange(
+                            FilterGraphUsers(usersPage.CurrentPage)
+                        );
+                    }
+                }
+
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    // Cache for 24 hours
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24)
+                };
+                _cache.Set(cacheKey, users, cacheEntryOptions);
+            }
+
+            return users;
+        }
+
+
+        private static IEnumerable<TextValueUser> FilterGraphUsers(IEnumerable<User> usersPage)
+        {
+            return usersPage
+                .Where(u =>
+                    (string.IsNullOrEmpty(u.UserType) || u.UserType.Equals("Member")) &&
+                    !string.IsNullOrEmpty(u.Mail) &&
+                    !u.Mail.Contains("USAWC") &&
+                    !u.Mail.Contains("Bldg") &&
+                    !u.Mail.Contains("bldg") 
+                )
+                .Select(u => new TextValueUser { DisplayName = u.DisplayName, Email = u.Mail, });
+        }
+
+       
+
+        private static IEnumerable<TextValueUser> FilterUsers(IEnumerable<User> usersPage)
+        {
+            return usersPage
+                .Where(u =>
+                    (string.IsNullOrEmpty(u.UserType) || u.UserType.Equals("Member")) &&
+                    !string.IsNullOrEmpty(u.Mail) &&
+                    !u.Mail.Contains("USAWC") &&
+                    !u.Mail.Contains("Bldg")
+                )
+                .Select(u => new TextValueUser { DisplayName = u.DisplayName, Email = u.Mail});
         }
 
         public static Task<IUserEventsCollectionPage> GetEventsAsync(string email)
@@ -199,6 +275,77 @@
             }
             return combinedResult;
         }
+
+        public static async Task<Event> CreateTeamsMeeting(GraphEventDTO graphEventDTO)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                  throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            var calendar = await _appClient.Users[graphEventDTO.RequesterEmail].Calendar
+              .Request()
+              .GetAsync();
+
+            List<Attendee> attendees = new List<Attendee>
+    {
+        new Attendee
+        {
+            EmailAddress = new EmailAddress
+            {
+                Address = graphEventDTO.RequesterEmail,
+                Name = graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName,
+            },
+            Type = AttendeeType.Required
+        }
+    };
+
+            foreach (var invitee in graphEventDTO.TeamInvites)
+            {
+                attendees.Add(
+                    new Attendee
+                    {
+                        EmailAddress = new EmailAddress
+                        {
+                            Address = invitee.Email,
+                            Name = invitee.DisplayName
+                        },
+                        Type = AttendeeType.Optional
+                    }
+                   );
+            }
+
+            var @event = new Event
+            {
+                Subject = graphEventDTO.EventTitle,
+                IsAllDay = graphEventDTO.IsAllDay,
+                Body = new ItemBody
+                {
+                    ContentType = BodyType.Html,
+                    Content = graphEventDTO.EventDescription
+                },
+                Start = new DateTimeTimeZone
+                {
+                    DateTime = graphEventDTO.Start,
+                    TimeZone = "Eastern Standard Time"
+                },
+                End = new DateTimeTimeZone
+                {
+                    DateTime = graphEventDTO.End,
+                    TimeZone = "Eastern Standard Time"
+                },
+                Attendees = attendees,
+                IsOnlineMeeting = true,
+                OnlineMeetingProvider = OnlineMeetingProviderType.TeamsForBusiness
+            };
+
+            var result = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events
+              .Request()
+              .AddAsync(@event);
+
+            return result;
+        }
+
+
         public static async Task<Event> CreateEvent(GraphEventDTO graphEventDTO)
         {
             EnsureGraphForAppOnlyAuth();
@@ -270,7 +417,7 @@
             if (graphEventDTO.RoomEmails.Any())
             {
 
-                Location location = new Location
+                Microsoft.Graph.Location location = new Microsoft.Graph.Location
                 {
                     DisplayName = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == graphEventDTO.RoomEmails[0]).FirstOrDefault().DisplayName
                 };

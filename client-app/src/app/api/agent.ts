@@ -31,6 +31,7 @@ import { ArmyWarCollegeUser } from '../models/armyWarCollegeUser';
 import { EnlistedAideChecklist } from '../models/enlistedAideChecklist';
 import { ActivityNotification } from '../models/activityNotification';
 import { SyncCalendarNotificationDTO } from '../models/syncCalendarNotificationDTO';
+import { UserEmail } from '../models/userEmail';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -334,6 +335,10 @@ const ApproveEvents = {
     getEmail: (skip: number) => graphRequests.getMail(skip),
 }
 
+const EduEmails = {
+    list: () => axiosRequest.get<UserEmail[]>('/GraphUsers/textvalue')
+}
+
 const agent = {
     Activities,
     Account,
@@ -360,7 +365,8 @@ const agent = {
     EnlistedAide,
     ActivityNotifications,
     SyncCalendarNotifications,
-    ApproveEvents
+    ApproveEvents,
+    EduEmails,
 }
 
 export default agent;

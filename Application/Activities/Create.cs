@@ -153,6 +153,26 @@ namespace Application.Activities
                             a.CreatedAt = DateTime.Now;
                             _context.Activities.Add(a);
                         }
+                        // create a teams meeting
+                        if (a.MakeTeamMeeting)
+                        {
+                            GraphEventDTO graphEventDTO = new GraphEventDTO
+                            {
+                                EventTitle = a.Title,
+                                EventDescription = a.Description,
+                                Start = a.StartDateAsString,
+                                End = a.EndDateAsString,
+                                RoomEmails = a.RoomEmails,
+                                RequesterEmail = a.CoordinatorEmail,
+                                RequesterFirstName = a.CoordinatorFirstName,
+                                RequesterLastName = a.CoordinatorLastName,
+                                IsAllDay = a.AllDayEvent,
+                                UserEmail = user.Email,
+                                TeamInvites = (List<TextValueUser>)(a.TeamInvites.Any()? a.TeamInvites : new List<TextValueUser>())
+                            };
+                            Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO);
+                            a.TeamLookup = teamsMeeting.Id;
+                        }
                         a.CreatedBy = user.Email;
                         a.CreatedAt = DateTime.Now;
 

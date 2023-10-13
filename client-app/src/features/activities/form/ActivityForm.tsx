@@ -61,6 +61,8 @@ import ActivityAttachmentComponent from "./ActivityAttachmentComponent";
 import SubCalendarInformation from "./SubCalendarInformation";
 import CUIWarningModal from "./CUIWarningModal";
 import MyTextAreaWithTypeahead from "../../../app/common/form/MyTextAreaWithTypeAhead";
+import TeamsButton from "./TeamsButton";
+import { UserEmail } from "../../../app/models/userEmail";
 
 
 
@@ -117,6 +119,10 @@ export default observer(function ActivityForm() {
     setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
     setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
 }, [user]);
+  const [attendees, setAttendees] = useState<UserEmail[]>([]);
+  const updateAttendees = (newAttendees: UserEmail[]) => {setAttendees(newAttendees);};
+  const [makeTeamMeeting, setMakeTeamMeeting] = useState(false);
+  const updateMakeTeamMeeting = () => {setMakeTeamMeeting(true)};
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const { categoryOptions, categories, loadCategories } = categoryStore;
   const { eduGraphUser, loadEDUGraphUser, armyProfile } = graphUserStore;
@@ -646,6 +652,8 @@ export default observer(function ActivityForm() {
       activity.organizationId = activity.organizationId || null;
       activity.category = category;
       activity.organization = organization;
+      activity.teamInvites = attendees;
+      if(!activity.id && makeTeamMeeting) activity.makeTeamMeeting = true;
       if(removeEventLookup) activity.eventLookup = '';
       if (!activity.id || (copy && copy === 'true' )) {
         let newActivity = {
@@ -927,7 +935,6 @@ export default observer(function ActivityForm() {
 
             <FormObserver />
             <ScrollToFieldError />
-
          
             {id && originalRoomEmails && originalRoomEmails.length > 0 && (
               <Grid columns={4}>
@@ -1047,6 +1054,13 @@ export default observer(function ActivityForm() {
                   </Popup>
                 </Grid.Column>
                 <Grid.Column>
+                  <ButtonGroup>
+                  <TeamsButton
+                  attendees={attendees}
+                  setAttendees={updateAttendees}
+                  setTeamMeeting={updateMakeTeamMeeting}
+                  makeTeamMeeting = {makeTeamMeeting}
+                   />
                   <RepeatingEventButton
                     id={id}
                     manageSeries={manageSeries}
@@ -1064,6 +1078,8 @@ export default observer(function ActivityForm() {
                     handleSetConfirmModalOpen={handleSetConfirmModalOpen}
                     cancellingRooms={cancellingRooms}
                   />
+               
+                  </ButtonGroup>
                 </Grid.Column>
               </Grid>
             )}
@@ -1150,6 +1166,13 @@ export default observer(function ActivityForm() {
                   </Grid.Column>
                   <Grid.Column>
                     <Grid.Column>
+                      <ButtonGroup>
+                      <TeamsButton 
+                    attendees={attendees}
+                    setAttendees={updateAttendees}
+                    setTeamMeeting={updateMakeTeamMeeting}
+                    makeTeamMeeting = {makeTeamMeeting}
+                    />
                     <RepeatingEventButton
                     id={id}
                     manageSeries={manageSeries}
@@ -1167,6 +1190,8 @@ export default observer(function ActivityForm() {
                     handleSetConfirmModalOpen={handleSetConfirmModalOpen}
                     cancellingRooms={cancellingRooms}
                   />
+                
+                  </ButtonGroup>
                     </Grid.Column>
                   </Grid.Column>
                 </Grid>
@@ -1257,6 +1282,13 @@ export default observer(function ActivityForm() {
                     </SemanticForm.Field>
                     <SemanticForm.Field>
                       <Grid.Column>
+                        <ButtonGroup style={{marginTop: '25px'}}>
+                        <TeamsButton 
+                    attendees={attendees}
+                    setAttendees={updateAttendees}
+                    setTeamMeeting={updateMakeTeamMeeting}
+                    makeTeamMeeting = {makeTeamMeeting}
+                  />
                       <RepeatingEventButton
                     id={id}
                     manageSeries={manageSeries}
@@ -1274,6 +1306,8 @@ export default observer(function ActivityForm() {
                     handleSetConfirmModalOpen={handleSetConfirmModalOpen}
                     cancellingRooms={cancellingRooms}
                   />
+                
+                  </ButtonGroup>
                       </Grid.Column>
                     </SemanticForm.Field>
                   </SemanticForm.Group>

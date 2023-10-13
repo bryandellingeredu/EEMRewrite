@@ -4,6 +4,7 @@ import { Organization } from "./organization";
 import { ActivityRoom } from "./activityRoom"
 import { Recurrence } from "./recurrence";
 import { HostingReport } from "./hostingReport";
+import { UserEmail } from "./userEmail";
 
 
 const commonStore = store.commonStore;
@@ -32,7 +33,10 @@ export interface Activity{
     coordinatorLastName: string,
     coordinatorName: string,
     eventLookup: string,
+    teamLookup: string
+    makeTeamMeeting: boolean,
     activityRooms: ActivityRoom[] | [],
+    teamInvites: UserEmail[] | [],
     recurrenceInd: boolean,
     recurrenceId: string | null,
     recurrence: Recurrence | null
@@ -256,8 +260,11 @@ export class ActivityFormValues{
     coordinatorFirstName: string = ''
     coordinatorLastName: string = ''
     coordinatorName: string = '';
+    makeTeamMeeting: boolean = false;
     activityRooms: ActivityRoom[] | [] = [];
+    teamInvites: UserEmail[] | [] = [];
     eventLookup: string = '';
+    teamLookup: string = '';
     recurrenceInd: boolean = false;
     recurrenceId: string | null = null;
     recurrence: Recurrence | null = null;
@@ -476,7 +483,10 @@ export class ActivityFormValues{
         this.coordinatorLastName = activity.coordinatorLastName;
         this.coordinatorName = activity.coordinatorLastName;
         this.activityRooms = activity.activityRooms;
+        this.makeTeamMeeting = activity.makeTeamMeeting;
+        this.teamInvites = activity.teamInvites;
         this.eventLookup = activity.eventLookup;
+        this.teamLookup = activity.teamLookup;
         this.recurrenceInd = activity.recurrenceInd;
         this.recurrenceId = activity.recurrenceId;
         this.recurrence = activity.recurrence;

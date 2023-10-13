@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Domain;
 
 namespace Application.Activities
 {
@@ -14,5 +15,6 @@ namespace Application.Activities
         public string RequesterEmail { get; set; }
         public bool IsAllDay { get; set; }
         public string UserEmail { get; set; }
+        public List<TextValueUser> TeamInvites { get; set; }
     }
 }
