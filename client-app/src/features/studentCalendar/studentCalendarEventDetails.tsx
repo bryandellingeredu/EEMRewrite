@@ -14,6 +14,7 @@ interface EventInfo{
     notes: string
     hyperLink: string
     hyperLinkDescription: string
+    teamLink: string
   }
 
 interface Props {
@@ -43,6 +44,13 @@ export default function StudentCalendarEventDetails({eventInfo} : Props) {
       {eventInfo.hyperLinkDescription.length > 500 
        ? `${eventInfo.hyperLinkDescription.substring(0, 500)}...` 
        : eventInfo.hyperLinkDescription}
+    </a>
+    </Segment>
+}
+{eventInfo.teamLink && 
+  <Segment> 
+   <a href={eventInfo.teamLink} className="ui teal button" target="_blank">
+     Join Team Meeting
     </a>
     </Segment>
 }

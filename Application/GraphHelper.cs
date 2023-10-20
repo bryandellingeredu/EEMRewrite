@@ -90,7 +90,7 @@
 
                 if (usersPage?.Count > 0)
                 {
-                    // Map and add the first page of results to your list after filtering
+                    // Map and add the first page of results to your list
                     users.AddRange(
                         FilterGraphUsers(usersPage.CurrentPage)
                     );
@@ -105,6 +105,32 @@
                     }
                 }
 
+                // Fetch distribution groups
+                var groupsPage = await _appClient.Groups
+                    .Request()
+                    .Filter("groupTypes/any(a:a eq 'Unified')")
+                    .Select(g => new {
+                        g.DisplayName,
+                        g.Id
+                    })
+                    .GetAsync();
+
+                do
+                {
+                    foreach (var group in groupsPage.CurrentPage)
+                    {
+                        users.Add(new TextValueUser
+                        {
+                            DisplayName = group.DisplayName,
+                            Email = group.Id  // using Id as the Email for groups
+                        });
+                    }
+                    if (groupsPage.NextPageRequest != null)
+                    {
+                        groupsPage = await groupsPage.NextPageRequest.GetAsync();
+                    }
+                } while (groupsPage.NextPageRequest != null);
+
                 var cacheEntryOptions = new MemoryCacheEntryOptions
                 {
                     // Cache for 24 hours
@@ -115,6 +141,7 @@
 
             return users;
         }
+
 
 
         private static IEnumerable<TextValueUser> FilterGraphUsers(IEnumerable<User> usersPage)
@@ -301,22 +328,46 @@
 
             foreach (var invitee in graphEventDTO.TeamInvites)
             {
-                attendees.Add(
-                    new Attendee
+                // If invitee.Email is actually a distribution list ID
+                if (IsDistributionListId(invitee.Email))
+                {
+                    // Expand the distribution list to get all email addresses
+                    var distributionListMembers = await ExpandDistributionList(invitee.Email);
+
+                    foreach (var member in distributionListMembers)
                     {
-                        EmailAddress = new EmailAddress
-                        {
-                            Address = invitee.Email,
-                            Name = invitee.DisplayName
-                        },
-                        Type = AttendeeType.Optional
+                        attendees.Add(
+                            new Attendee
+                            {
+                                EmailAddress = new EmailAddress
+                                {
+                                    Address = member.Email,
+                                    Name = member.DisplayName
+                                },
+                                Type = AttendeeType.Optional
+                            }
+                        );
                     }
-                   );
+                }
+                else
+                {
+                    attendees.Add(
+                        new Attendee
+                        {
+                            EmailAddress = new EmailAddress
+                            {
+                                Address = invitee.Email,
+                                Name = invitee.DisplayName
+                            },
+                            Type = AttendeeType.Optional
+                        }
+                    );
+                }
             }
 
             var @event = new Event
             {
-                Subject = graphEventDTO.EventTitle,
+                Subject = $"{graphEventDTO.EventTitle} (Teams Meeting)",
                 IsAllDay = graphEventDTO.IsAllDay,
                 Body = new ItemBody
                 {
@@ -338,11 +389,201 @@
                 OnlineMeetingProvider = OnlineMeetingProviderType.TeamsForBusiness
             };
 
-            var result = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events
+
+            var createdEvent = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events
               .Request()
               .AddAsync(@event);
 
-            return result;
+
+            return createdEvent;
+        }
+
+        private static async Task<List<TextValueUser>> ExpandDistributionList(string id)
+        {
+            List<TextValueUser> allMembers = new List<TextValueUser>();
+
+            var membersPage = await _appClient.Groups[id].Members
+                .Request()
+                .GetAsync();
+
+            if (membersPage?.Count > 0)
+            {
+                foreach (var directoryObject in membersPage.CurrentPage)
+                {
+                    if (directoryObject is User user)
+                    {
+                        allMembers.Add(new TextValueUser
+                        {
+                            Email = user.Mail,
+                            DisplayName = user.DisplayName
+                        });
+                    }
+                    else if (directoryObject is Group group)
+                    {
+                        allMembers.Add(new TextValueUser
+                        {
+                            Email = group.Mail,
+                            DisplayName = group.DisplayName
+                        });
+                    }
+                    // Add handling for other types if necessary
+                }
+
+                // Handle pagination
+                while (membersPage.NextPageRequest != null)
+                {
+                    membersPage = await membersPage.NextPageRequest.GetAsync();
+
+                    foreach (var directoryObject in membersPage.CurrentPage)
+                    {
+                        if (directoryObject is User user)
+                        {
+                            allMembers.Add(new TextValueUser
+                            {
+                                Email = user.Mail,
+                                DisplayName = user.DisplayName
+                            });
+                        }
+                        else if (directoryObject is Group group)
+                        {
+                            allMembers.Add(new TextValueUser
+                            {
+                                Email = group.Mail,
+                                DisplayName = group.DisplayName
+                            });
+                        }
+                        // Add handling for other types if necessary
+                    }
+                }
+            }
+
+            return allMembers;
+        }
+        private static bool IsDistributionListId(string emailOrId)
+        {
+            return !emailOrId.Contains("@") || !emailOrId.EndsWith("armywarcollege.edu", StringComparison.OrdinalIgnoreCase);
+        }
+
+
+
+        public static async Task UpdateTeamsMeeting(GraphEventDTO graphEventDTO, string eventId)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            // Fetch the existing event
+            var existingEvent = await _appClient.Users[graphEventDTO.RequesterEmail].Events[eventId]
+                .Request()
+                .GetAsync();
+
+            if (existingEvent == null || string.IsNullOrEmpty(existingEvent.Id))
+            {
+                throw new Exception("Team Event Not Found.");
+            }
+
+            // Update event details
+            existingEvent.Subject = $"{graphEventDTO.EventTitle} (Teams Meeting)";
+            existingEvent.IsAllDay = graphEventDTO.IsAllDay;
+            existingEvent.Body = new ItemBody
+            {
+                ContentType = BodyType.Html,
+                Content = graphEventDTO.EventDescription
+            };
+            existingEvent.Start = new DateTimeTimeZone
+            {
+                DateTime = graphEventDTO.Start,
+                TimeZone = "Eastern Standard Time"
+            };
+            existingEvent.End = new DateTimeTimeZone
+            {
+                DateTime = graphEventDTO.End,
+                TimeZone = "Eastern Standard Time"
+            };
+
+            // Update the attendees
+            List<Attendee> attendees = new List<Attendee>
+    {
+        new Attendee
+        {
+            EmailAddress = new EmailAddress
+            {
+                Address = graphEventDTO.RequesterEmail,
+                Name = graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName,
+            },
+            Type = AttendeeType.Required
+        }
+    };
+            foreach (var invitee in graphEventDTO.TeamInvites)
+            {
+                attendees.Add(
+                    new Attendee
+                    {
+                        EmailAddress = new EmailAddress
+                        {
+                            Address = invitee.Email,
+                            Name = invitee.DisplayName
+                        },
+                        Type = AttendeeType.Optional
+                    }
+                );
+            }
+            existingEvent.Attendees = attendees;
+
+            // Update the event
+            await _appClient.Users[graphEventDTO.RequesterEmail].Events[eventId]
+                .Request()
+                .UpdateAsync(existingEvent);
+
+        }
+
+
+        public static async Task<List<TextValueUser>> GetTeamsEventAttendees(string eventId, string excludedEmail)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+                  throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            // Fetch the event by its ID
+            var @event = await _appClient.Users[excludedEmail].Events[eventId]
+              .Request()
+              .GetAsync();
+
+            List<TextValueUser> attendeesList = new List<TextValueUser>();
+
+            // Iterate through the attendees
+            foreach (var attendee in @event.Attendees)
+            {
+                // Exclude the given email from the list
+                if (attendee.EmailAddress.Address.ToLower() != excludedEmail.ToLower())
+                {
+                    attendeesList.Add(new TextValueUser
+                    {
+                        DisplayName = attendee.EmailAddress.Name,
+                        Email = attendee.EmailAddress.Address
+                    });
+                }
+            }
+
+            return attendeesList;
+        }
+
+        public static async Task DeleteTeamsMeeting(string teamId, string requesterEmail)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            try
+            {
+                await _appClient.Users[requesterEmail].Events[teamId]
+                    .Request()
+                    .DeleteAsync();
+            }
+            catch (ServiceException ex)
+            {
+                // Log the exception or handle it further here if needed
+                throw ex;
+            }
         }
 
 
@@ -453,21 +694,33 @@
                 .UpdateAsync(@event);
         }
 
-        public static async Task DeleteEvent(string eventLookup, string coordinatorEmail)
+        public static async Task<bool> DeleteEvent(string eventLookup, string coordinatorEmail)
         {
-            EnsureGraphForAppOnlyAuth();
-            _ = _appClient ??
-              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
-            string derivedCoordinatorEmail = coordinatorEmail;
-            
-            if(!coordinatorEmail.EndsWith(GetEEMServiceAccount().Split('@')[1])){
-               derivedCoordinatorEmail = GetEEMServiceAccount();
-            }
-            await _appClient.Users[derivedCoordinatorEmail].Events[eventLookup]
-              .Request()
-              .DeleteAsync();
+            try
+            {
+                EnsureGraphForAppOnlyAuth();
+                _ = _appClient ??
+                    throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
+                string derivedCoordinatorEmail = coordinatorEmail;
+
+                if (!coordinatorEmail.EndsWith(GetEEMServiceAccount().Split('@')[1]))
+                {
+                    derivedCoordinatorEmail = GetEEMServiceAccount();
+                }
+
+                await _appClient.Users[derivedCoordinatorEmail].Events[eventLookup]
+                    .Request()
+                    .DeleteAsync();
+
+                return true; // Return true if delete is successful
+            }
+            catch (Exception)
+            {
+                return false; // Return false if an exception occurs
+            }
         }
+
 
         public static async Task DeleteRoomCalendarEvents(string roomEmail)
         {

@@ -158,6 +158,20 @@ function addIconToEvent(event: EventApi, el: HTMLElement) {
   }
 }
 
+function addTeamIconToEvent(event: EventApi, el: HTMLElement) {
+  const iconName = 'tv';
+
+  // Create an element for the icon
+  const iconElement = `<i class="icon ${iconName} event-icon"></i>`;
+
+  // Find the event content element and insert the icon in it
+  const contentElement = el.querySelector('.fc-event-main-frame');
+  if (contentElement) {
+    (contentElement as HTMLElement).style.position = 'relative';
+    contentElement.insertAdjacentHTML('beforeend', iconElement);
+  }
+}
+
 
   return (
     <>
@@ -191,6 +205,9 @@ function addIconToEvent(event: EventApi, el: HTMLElement) {
       eventDidMount={({ event, el }) => {
         if (event.extendedProps.recurring) {
           addIconToEvent(event, el);
+        }
+        if (event.extendedProps.teamInd){
+          addTeamIconToEvent(event, el);
         }
       }}
       datesSet={(arg) => {

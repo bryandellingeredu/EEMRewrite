@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Hosting;
+using System.ComponentModel;
 
 namespace Application.Activities
 {
@@ -233,6 +234,44 @@ namespace Application.Activities
                 activity.LastUpdatedAt = DateTime.Now;
                 activity.CreatedBy = createdBy;
                 activity.CreatedAt = createdAt;
+
+                //create or update team event.
+                if (!string.IsNullOrEmpty(request.Activity.TeamLookup) && !string.IsNullOrEmpty(request.Activity.TeamRequester))
+                {
+                    GraphEventDTO graphEventDTO = new GraphEventDTO
+                    {
+                        EventTitle = request.Activity.Title,
+                        EventDescription = request.Activity.Description,
+                        Start = request.Activity.StartDateAsString,
+                        End = request.Activity.EndDateAsString,
+                        IsAllDay = request.Activity.AllDayEvent,
+                        RequesterEmail = request.Activity.TeamRequester,
+                        TeamInvites = (List<TextValueUser>)(request.Activity.TeamInvites.Any() ? request.Activity.TeamInvites : new List<TextValueUser>())
+                    };
+                    await GraphHelper.UpdateTeamsMeeting(graphEventDTO, request.Activity.TeamLookup);
+                }
+                else
+                {
+                    if (request.Activity.MakeTeamMeeting)
+                    {
+                        GraphEventDTO graphEventDTO = new GraphEventDTO
+                        {
+                            EventTitle = request.Activity.Title,
+                            EventDescription = request.Activity.Description,
+                            Start = request.Activity.StartDateAsString,
+                            End = request.Activity.EndDateAsString,
+                            IsAllDay = request.Activity.AllDayEvent,
+                            RequesterEmail = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
+                            TeamInvites = (List<TextValueUser>)(request.Activity.TeamInvites.Any() ? request.Activity.TeamInvites : new List<TextValueUser>())
+                        };
+                        Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO);
+                        activity.TeamLookup = teamsMeeting.Id;
+                        activity.TeamLink = teamsMeeting.OnlineMeeting.JoinUrl;
+                        activity.TeamRequester = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount();
+                    }
+                }
+
+
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return Result<Unit>.Failure("Failed to Update Activity");
                 WorkflowHelper workflowHelper = new WorkflowHelper(activity, settings, _context, _webHostEnvironment);

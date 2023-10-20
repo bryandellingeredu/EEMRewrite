@@ -69,7 +69,7 @@ namespace API.Controllers
                 //     query = query.Where(a => a.Start > startDateLimit && a.End < endDateLimit);
                 query = query.Where(a => a.Start > startDateLimit);
                 query = query.Where(a => !a.LogicalDeleteInd);
-
+                route = route.Trim();
                 switch (route)
                 {
                     case "academic":
@@ -163,6 +163,10 @@ namespace API.Controllers
                     if (!string.IsNullOrEmpty(activity.Hyperlink) && !string.IsNullOrEmpty(activity.HyperlinkDescription))
                     {
                         description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
+                    }
+                    if (!string.IsNullOrEmpty(activity.TeamLink))
+                    {
+                        description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink}";
                     }
 
                     if (activity.CopiedTostudentCalendar && (route == "studentCalendar" || route == "studentcalendar"))
@@ -518,6 +522,7 @@ namespace API.Controllers
         private string GetCalendarName(string route)
         {
             string retval;
+            route = route.Trim();
             switch (route)
             {
                 case "academic":

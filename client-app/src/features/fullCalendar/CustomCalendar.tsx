@@ -275,6 +275,7 @@ const handleLabelClick = (id: string) => {
         const eventColor = info.event.backgroundColor;
         const eventDot = info.el.querySelector('.fc-daygrid-event-dot');
         const recurring = info.event.extendedProps.recurring;
+        const teamInd = info.event.extendedProps.teamInd;
         if (eventDot) {
           eventDot.style.borderColor = eventColor;
         }
@@ -283,6 +284,14 @@ const handleLabelClick = (id: string) => {
           if (eventContent) {
             const icon = document.createElement('i');
             icon.className = 'redo alternate icon'; // The Semantic UI class for the repeating icon
+            eventContent.prepend(icon);
+          }
+        }
+        if (teamInd) {
+          const eventContent = info.el.querySelector('.fc-event-title');
+          if (eventContent) {
+            const icon = document.createElement('i');
+            icon.className = 'tv icon'; // The Semantic UI class for the repeating icon
             eventContent.prepend(icon);
           }
         }

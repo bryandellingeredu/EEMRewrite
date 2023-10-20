@@ -6,7 +6,6 @@ using Persistence;
 using Microsoft.Extensions.Configuration;
 using Application.GraphSchedules;
 using Domain;
-using Microsoft.Graph;
 
 namespace Application.Activities
 {
@@ -108,7 +107,9 @@ namespace Application.Activities
                         EducationalCategory = activity.EducationalCategory,
                         EventPlanningPAX = activity.EventPlanningPAX,
                         EventPlanningStatus = activity.EventPlanningStatus,
-                        EventClearanceLevel = activity.EventClearanceLevel
+                        EventClearanceLevel = activity.EventClearanceLevel,
+                        TeamInd = !string.IsNullOrEmpty(activity.TeamLink),
+                        TeamLink = activity.TeamLink,
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);

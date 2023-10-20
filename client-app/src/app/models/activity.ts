@@ -33,7 +33,9 @@ export interface Activity{
     coordinatorLastName: string,
     coordinatorName: string,
     eventLookup: string,
-    teamLookup: string
+    teamLookup: string,
+    teamLink: string,
+    teamRequester: string,
     makeTeamMeeting: boolean,
     activityRooms: ActivityRoom[] | [],
     teamInvites: UserEmail[] | [],
@@ -265,6 +267,8 @@ export class ActivityFormValues{
     teamInvites: UserEmail[] | [] = [];
     eventLookup: string = '';
     teamLookup: string = '';
+    teamLink: string = '';
+    teamRequester: string = '';
     recurrenceInd: boolean = false;
     recurrenceId: string | null = null;
     recurrence: Recurrence | null = null;
@@ -487,6 +491,8 @@ export class ActivityFormValues{
         this.teamInvites = activity.teamInvites;
         this.eventLookup = activity.eventLookup;
         this.teamLookup = activity.teamLookup;
+        this.teamLink = activity.teamLink;
+        this.teamRequester = activity.teamRequester;
         this.recurrenceInd = activity.recurrenceInd;
         this.recurrenceId = activity.recurrenceId;
         this.recurrence = activity.recurrence;

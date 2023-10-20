@@ -161,17 +161,16 @@ namespace Application.Activities
                                 EventTitle = a.Title,
                                 EventDescription = a.Description,
                                 Start = a.StartDateAsString,
-                                End = a.EndDateAsString,
-                                RoomEmails = a.RoomEmails,
-                                RequesterEmail = a.CoordinatorEmail,
-                                RequesterFirstName = a.CoordinatorFirstName,
-                                RequesterLastName = a.CoordinatorLastName,
+                                End = a.EndDateAsString,                             
+                                RequesterEmail = a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? a.CoordinatorEmail : GraphHelper.GetEEMServiceAccount(),
                                 IsAllDay = a.AllDayEvent,
                                 UserEmail = user.Email,
                                 TeamInvites = (List<TextValueUser>)(a.TeamInvites.Any()? a.TeamInvites : new List<TextValueUser>())
                             };
                             Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO);
                             a.TeamLookup = teamsMeeting.Id;
+                            a.TeamLink = teamsMeeting.OnlineMeeting.JoinUrl;
+                            a.TeamRequester = a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? a.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
                         }
                         a.CreatedBy = user.Email;
                         a.CreatedAt = DateTime.Now;

@@ -123,6 +123,8 @@ export default observer(function ActivityForm() {
   const updateAttendees = (newAttendees: UserEmail[]) => {setAttendees(newAttendees);};
   const [makeTeamMeeting, setMakeTeamMeeting] = useState(false);
   const updateMakeTeamMeeting = () => {setMakeTeamMeeting(true)};
+  const[teamIsDeleted, setTeamIsDeleted] = useState(false);
+  const[teamAttendeesLoading, setTeamAttendeesLoading] = useState(true);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const { categoryOptions, categories, loadCategories } = categoryStore;
   const { eduGraphUser, loadEDUGraphUser, armyProfile } = graphUserStore;
@@ -304,6 +306,44 @@ export default observer(function ActivityForm() {
     });
   }
 
+  const deleteTeamMeeting = async () => {
+    try{
+      if(id && manageSeries && manageSeries === "true"){
+        await agent.Teams.deleteSeries(id);
+      }else{
+        await agent.Teams.delete(activity.teamLookup, activity.teamRequester);
+      }
+    
+      setTeamIsDeleted(true);
+      activity.teamLink = '';
+      activity.teamInvites = [];
+      activity.teamRequester = '';
+      activity.teamLookup = '';
+      setMakeTeamMeeting(false);
+      toast.success("the team meeting has been deleted", {
+        position: "top-center",
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
+      
+    } catch (err) {
+      console.error(err);
+      toast.error("an error occured deleting teams meeting", {
+        position: "top-center",
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
+    }
+  }
+
   /*const handleDownloadAttachment = async () => {
     try {
       const token = commonStore.token;
@@ -477,6 +517,11 @@ export default observer(function ActivityForm() {
         if(copy && copy === 'true' && response && response.activityRooms) response.activityRooms = [];
         if(copy && copy === 'true' && response && response.recurrenceInd) response.recurrenceInd = false;
         if(copy && copy === 'true' && response && response.eventLookup) response.eventLookup = '';
+        if(copy && copy === 'true' && response && response.teamLookup && response.teamRequester){
+          setMakeTeamMeeting(true);
+        } 
+
+        
         setActivity(new ActivityFormValues(response));
         if (response?.attachmentLookup && response?.attachmentLookup > 0 && (!copy || copy === 'false')) {
           setAttachment({
@@ -501,6 +546,17 @@ export default observer(function ActivityForm() {
           setRecurrenceInd(true);
         }
 
+        if(response?.teamLookup && response?.teamRequester){
+          agent.Teams.attendees(response?.teamLookup, response?.teamRequester).then((attendeeArray) => {
+            setTeamAttendeesLoading(false);
+              if(attendeeArray.length){
+                  setAttendees(attendeeArray);
+              }
+          });
+      }else{
+        setTeamAttendeesLoading(false);
+      }
+
         if (response?.hostingReport?.guestItinerary  && (!copy || copy === 'false')) {
           setEditorState(
             EditorState.createWithContent(
@@ -516,6 +572,7 @@ export default observer(function ActivityForm() {
       loadOrganizations();
       loadLocations();
     } else {
+      setTeamAttendeesLoading(false);
       loadCategories();
       loadOrganizations();
       loadLocations();
@@ -653,12 +710,24 @@ export default observer(function ActivityForm() {
       activity.category = category;
       activity.organization = organization;
       activity.teamInvites = attendees;
-      if(!activity.id && makeTeamMeeting) activity.makeTeamMeeting = true;
+      if(!activity.teamLink && makeTeamMeeting) activity.makeTeamMeeting = true;
+      if(teamIsDeleted) {
+        activity.teamInvites = [];
+        activity.teamLink = '';
+        activity.teamLookup = '';
+        activity.teamRequester = '';
+        activity.makeTeamMeeting = false;
+      }
       if(removeEventLookup) activity.eventLookup = '';
       if (!activity.id || (copy && copy === 'true' )) {
         let newActivity = {
           ...activity,
           id: category.name === "Academic Calendar" ? "" : uuid(),
+          teamLink: "",
+          teamRequestor: "",
+          teamLookup: "",
+          teamInvites: attendees,
+          makeTeamMeeting: makeTeamMeeting
         };
         category.name === "Academic Calendar"
           ? createGraphEvent(newActivity).then(() =>
@@ -1053,14 +1122,27 @@ export default observer(function ActivityForm() {
                     </Popup.Content>
                   </Popup>
                 </Grid.Column>
+
+               
+
                 <Grid.Column>
-                  <ButtonGroup>
-                  <TeamsButton
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ flex: '0 0 auto', marginTop: '25px' }}>
+                <TeamsButton
                   attendees={attendees}
                   setAttendees={updateAttendees}
                   setTeamMeeting={updateMakeTeamMeeting}
                   makeTeamMeeting = {makeTeamMeeting}
+                  teamLink = {activity.teamLink}
+                  teamLookup = {activity.teamLookup}
+                  teamIsDeleted = {teamIsDeleted}
+                  deleteTeamMeeting = {deleteTeamMeeting}
+                  teamAttendeesLoading = {teamAttendeesLoading}
+                  manageSeries={manageSeries}
+                  id={id}
                    />
+                 </div>
+                 <div style={{ flex: '1 1 auto' }}>
                   <RepeatingEventButton
                     id={id}
                     manageSeries={manageSeries}
@@ -1078,8 +1160,8 @@ export default observer(function ActivityForm() {
                     handleSetConfirmModalOpen={handleSetConfirmModalOpen}
                     cancellingRooms={cancellingRooms}
                   />
-               
-                  </ButtonGroup>
+                </div>
+                </div>
                 </Grid.Column>
               </Grid>
             )}
@@ -1165,14 +1247,23 @@ export default observer(function ActivityForm() {
                     </Popup>
                   </Grid.Column>
                   <Grid.Column>
-                    <Grid.Column>
-                      <ButtonGroup>
+                  <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <div style={{ flex: '0 0 auto', marginTop: '25px' }}>
                       <TeamsButton 
                     attendees={attendees}
                     setAttendees={updateAttendees}
                     setTeamMeeting={updateMakeTeamMeeting}
                     makeTeamMeeting = {makeTeamMeeting}
-                    />
+                    teamLink = {activity.teamLink}
+                    teamLookup = {activity.teamLookup}
+                    teamIsDeleted = {teamIsDeleted}
+                    deleteTeamMeeting = {deleteTeamMeeting}
+                    teamAttendeesLoading = {teamAttendeesLoading}
+                    manageSeries={manageSeries}
+                    id={id}
+                    /> 
+                    </div>
+                    <div style={{ flex: '1 1 auto' }}>
                     <RepeatingEventButton
                     id={id}
                     manageSeries={manageSeries}
@@ -1190,10 +1281,9 @@ export default observer(function ActivityForm() {
                     handleSetConfirmModalOpen={handleSetConfirmModalOpen}
                     cancellingRooms={cancellingRooms}
                   />
-                
-                  </ButtonGroup>
+                      </div>
+                  </div>
                     </Grid.Column>
-                  </Grid.Column>
                 </Grid>
               )}
 
@@ -1280,15 +1370,26 @@ export default observer(function ActivityForm() {
                         }
                       />
                     </SemanticForm.Field>
+            
                     <SemanticForm.Field>
-                      <Grid.Column>
-                        <ButtonGroup style={{marginTop: '25px'}}>
-                        <TeamsButton 
+     
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div style={{ flex: '0 0 auto', marginTop: '25px' }}>
+                      <TeamsButton 
                     attendees={attendees}
                     setAttendees={updateAttendees}
                     setTeamMeeting={updateMakeTeamMeeting}
                     makeTeamMeeting = {makeTeamMeeting}
+                    teamLink = {activity.teamLink}
+                    teamLookup = {activity.teamLookup}
+                    teamIsDeleted = {teamIsDeleted}
+                    deleteTeamMeeting = {deleteTeamMeeting}
+                    teamAttendeesLoading = {teamAttendeesLoading}
+                    manageSeries={manageSeries}
+                    id={id}
                   />
+                  </div>
+                  <div style={{ flex: '1 1 auto' }}>
                       <RepeatingEventButton
                     id={id}
                     manageSeries={manageSeries}
@@ -1306,9 +1407,9 @@ export default observer(function ActivityForm() {
                     handleSetConfirmModalOpen={handleSetConfirmModalOpen}
                     cancellingRooms={cancellingRooms}
                   />
-                
-                  </ButtonGroup>
-                      </Grid.Column>
+                    </div>
+                 </div>
+      
                     </SemanticForm.Field>
                   </SemanticForm.Group>
                   <Divider />

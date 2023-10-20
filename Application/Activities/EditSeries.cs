@@ -96,11 +96,19 @@ namespace Application.Activities
                     var createdAt = activitiesToBeDeleted.FirstOrDefault().CreatedAt;
                     var originalTitle = activitiesToBeDeleted.FirstOrDefault().Title;
                     var originalCoordinatorEmail = activitiesToBeDeleted.FirstOrDefault().CoordinatorEmail;
+                    bool shouldTeamEventsBeCreated = !string.IsNullOrEmpty(activitiesToBeDeleted.FirstOrDefault().TeamLookup) || request.Activity.MakeTeamMeeting;
+                    var originalTeamRequestor = activitiesToBeDeleted.FirstOrDefault().TeamRequester;
                     //delete the old activities and the recurrence we will make new ones
                     bool shouldGraphEventsBeRegenerated = await GetShouldGraphEventsBeRegenerated(request.Activity, allrooms);
+                    
 
                     foreach (var item in activitiesToBeDeleted)
                     {
+                        //delete the team event if it exists.
+                        if(!string.IsNullOrEmpty(item.TeamRequester) && !string.IsNullOrEmpty(item.TeamLookup))
+                        {
+                            await GraphHelper.DeleteTeamsMeeting(item.TeamLookup, item.TeamRequester);
+                        }
 
                         if (
                             !string.IsNullOrEmpty(request.Activity.EventLookup) &&
@@ -256,6 +264,30 @@ namespace Application.Activities
                       a.CreatedBy = createdBy;
                      a.CreatedAt = createdAt;
                         a.HostingReport = null;
+                        a.TeamLink = null;
+                        a.TeamRequester = null;
+                        a.TeamLookup = null;
+                        //create new team events
+                        if (shouldTeamEventsBeCreated)
+                        {
+                            GraphEventDTO graphEventDTO = new GraphEventDTO
+                            {
+                                EventTitle = a.Title,
+                                EventDescription = a.Description,
+                                Start = a.StartDateAsString,
+                                End = a.EndDateAsString,
+                                RequesterEmail = string.IsNullOrEmpty(originalTeamRequestor) ?
+                                    a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? a.CoordinatorEmail : GraphHelper.GetEEMServiceAccount() :
+                                    originalTeamRequestor,
+                                TeamInvites = (List<TextValueUser>)(request.Activity.TeamInvites.Any() ? request.Activity.TeamInvites : new List<TextValueUser>())
+                            };
+                            Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO);
+                            a.TeamLookup = teamsMeeting.Id;
+                            a.TeamLink = teamsMeeting.OnlineMeeting.JoinUrl;
+                            a.TeamRequester = string.IsNullOrEmpty(originalTeamRequestor) ?
+                                    a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? a.CoordinatorEmail : GraphHelper.GetEEMServiceAccount() :
+                                    originalTeamRequestor;
+                        }
                       newActivities.Add(a);
                     }
                     newRecurrence.Activities = newActivities;   
@@ -276,6 +308,8 @@ namespace Application.Activities
                     throw;
                 }
             }
+
+      
 
             private async Task<bool> GetShouldGraphEventsBeRegenerated(Activity updatedActivity, IGraphServicePlacesCollectionPage allrooms)
             {

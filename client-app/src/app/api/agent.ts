@@ -111,6 +111,7 @@ const oneYearFromNow = new Date(today);
 oneYearFromNow.setFullYear(today.getFullYear() + 1);
 const oneYearFromNowUTC = oneYearFromNow.toISOString();
 
+
 const graphRequests = {
     isInAcademicCalendarGroup: () => getGraphClient().api("/me/transitiveMemberOf/microsoft.graph.group?$select=id&$filter=id eq '17422b10-09fc-42c9-8d98-f0e7c2c97899'")
   .get()
@@ -339,6 +340,12 @@ const EduEmails = {
     list: () => axiosRequest.get<UserEmail[]>('/GraphUsers/textvalue')
 }
 
+const Teams = {
+    delete: (id: string, teamRequester: string) => axiosRequest.post<void>('/teams/delete', {id,  teamRequester}),
+    deleteSeries: (id: string) => axiosRequest.del<void>(`teams/deleteseries/${id}`),
+    attendees: (id: string, teamRequester: string) => axiosRequest.post<UserEmail[]>('/teams/attendees', {id,  teamRequester}),
+}
+
 const agent = {
     Activities,
     Account,
@@ -367,6 +374,7 @@ const agent = {
     SyncCalendarNotifications,
     ApproveEvents,
     EduEmails,
+    Teams,
 }
 
 export default agent;

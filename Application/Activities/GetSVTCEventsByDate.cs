@@ -76,7 +76,8 @@ namespace Application.Activities
                         SiteIDDistantEnd = activity.SiteIDDistantEnd,
                         SeniorAttendeeNameRank = activity.SeniorAttendeeNameRank,
                         AdditionalVTCInfo = activity.AdditionalVTCInfo,
-                        VTCStatus = activity.VTCStatus
+                        VTCStatus = activity.VTCStatus,
+                        TeamInd = !string.IsNullOrEmpty(activity.TeamLink)
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);

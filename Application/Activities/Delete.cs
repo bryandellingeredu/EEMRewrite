@@ -60,7 +60,22 @@ namespace Application.Activities
                     }
                   
                 }
+                // delete team events
+                if(!string.IsNullOrEmpty(activity.TeamLookup) && !string.IsNullOrEmpty(activity.TeamRequester)) {
+                    try
+                    {
+                       await GraphHelper.DeleteTeamsMeeting(activity.TeamLookup, activity.TeamRequester);
+                    }
+                    catch (Exception)
+                    {
+
+                        //event does not exist
+                    }
+                }
                 activity.EventLookup = null;
+                activity.TeamLookup= null;  
+                activity.TeamRequester = null;
+                activity.TeamLink= null;    
                 activity.LogicalDeleteInd = true;
                 activity.DeletedBy = user.Email;
                 activity.DeletedAt = DateTime.Now;

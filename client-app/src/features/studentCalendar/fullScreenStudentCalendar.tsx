@@ -27,6 +27,7 @@ interface EventInfo{
   notes: string
   hyperLink: string
   hyperLinkDescription: string
+  teamLink: string
 }
 
 export default function FullScreenStudentCalendar (){
@@ -53,7 +54,8 @@ export default function FullScreenStudentCalendar (){
        uniform: '',
        notes: '',
        hyperLink: '',
-       hyperLinkDescription: ''
+       hyperLinkDescription: '',
+       teamLink: '',
       }
       )
     const [loadingEvent, setLoadingEvent] = useState(false);
@@ -192,7 +194,8 @@ const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     uniform: clickInfo.event.extendedProps.studentCalendarUniform,
     notes: clickInfo.event.extendedProps.studentCalendarNotes,
     hyperLink: clickInfo.event.extendedProps.hyperLink,
-    hyperLinkDescription: clickInfo.event.extendedProps.hyperLinkDescription || 'Go To Link'
+    hyperLinkDescription: clickInfo.event.extendedProps.hyperLinkDescription || 'Go To Link',
+    teamLink: clickInfo.event.extendedProps.teamLink,
   };
 
   if (clickInfo.event.extendedProps.eventLookup && clickInfo.event.extendedProps.coordinatorEmail) { 
@@ -222,6 +225,7 @@ const eventDidMount = (info : any) => {
     const eventColor = info.event.backgroundColor;
     const eventDot = info.el.querySelector('.fc-daygrid-event-dot');
     const recurring = info.event.extendedProps.recurring;
+    const teamsInd = info.event.extendedProps.teamsInd;
   
     if (eventDot) {
       eventDot.style.borderColor = eventColor;
@@ -231,6 +235,14 @@ const eventDidMount = (info : any) => {
       if (eventContent) {
         const icon = document.createElement('i');
         icon.className = 'redo alternate icon'; // The Semantic UI class for the repeating icon
+        eventContent.prepend(icon);
+      }
+    }
+    if (teamsInd) {
+      const eventContent = info.el.querySelector('.fc-event-title');
+      if (eventContent) {
+        const icon = document.createElement('i');
+        icon.className = 'tv icon'; 
         eventContent.prepend(icon);
       }
     }
@@ -259,6 +271,13 @@ const eventDidMount = (info : any) => {
       {eventInfo.hyperLinkDescription.length > 500 
        ? `${eventInfo.hyperLinkDescription.substring(0, 500)}...` 
        : eventInfo.hyperLinkDescription}
+    </a>
+  </p>
+}
+{eventInfo.teamLink && 
+  <p> 
+    <a href={eventInfo.teamLink} className="ui teal button" target="_blank">
+     Join Team Meeting
     </a>
   </p>
 }

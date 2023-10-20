@@ -68,7 +68,8 @@ namespace Application.Activities
                         ActionOfficerPhone = activity.ActionOfficerPhone,
                         EventLookup = activity.EventLookup,
                         CoordinatorEmail = activity.CoordinatorEmail,
-                        Recurring = activity.RecurrenceInd
+                        Recurring = activity.RecurrenceInd,
+                        TeamInd = !string.IsNullOrEmpty(activity.TeamLink)
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);

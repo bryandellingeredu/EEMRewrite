@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
-import { Button, Header, Item, Segment, Image, Confirm, Label, ButtonGroup, Grid, Icon, Message, Divider } from 'semantic-ui-react'
+import { Button, Header, Item, Segment, Image, Confirm, Label, ButtonGroup, Grid, Icon, Message, Divider, } from 'semantic-ui-react'
 import { Activity } from '../../../app/models/activity';
 import RecurrenceMessageWrapper from '../recurrenceMessage/RecurrenceMessageWrapper';
 import { useStore } from "../../../app/stores/store";
@@ -216,8 +216,8 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                   open={showConfirm}
                   onCancel={() => setShowConfirm(false)}
                   onConfirm={handleRestoreEvent}
-                  header='You are about to restore this event. Please note that this action will not restore any associated room reservations.'
-                  content='This will restore the deleted event, but will not re-instate any room reservations that were associated with it. If new room reservations are needed, those will have to be made separately.'
+                  header='You are about to restore this event. Please note that this action will not restore any associated room reservations or EDU Team Events.'
+                  content='This will restore the deleted event, but will not re-instate any room reservations or EDU Team Events that were associated with it. If new room reservations are needed, those will have to be made separately.'
                 />
         </>
     }
@@ -323,6 +323,44 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
         </Grid>
     </Segment>
    
+     }
+
+     {activity.teamLink && 
+      <Segment>
+        <Grid>
+            <Grid.Column width={1}>
+            <Icon name='microsoft' size='large' color='teal' />
+            </Grid.Column>
+            <Grid.Column width={5}>
+           This Event has an EDU Microsoft Teams Meeting       
+        </Grid.Column>
+        <Grid.Column width={10}>
+        <ButtonGroup  floated='right' fluid >
+        <Button color='black' 
+        onClick = {() => {window.open(activity.teamLink, "_blank");}}
+        >
+            Join EDU Teams Meeting
+        </Button>
+        <Button color='brown' 
+        onClick={() => {
+            navigator.clipboard.writeText(activity.teamLink)
+              .then(() => {
+                toast.success('Team Link copied to clipboard', {
+                  position: toast.POSITION.TOP_CENTER
+                });
+              })
+              .catch(err => {
+                toast.error('Failed to copy link: ' + err, {
+                  position: toast.POSITION.TOP_CENTER
+                });
+              });
+          }}>
+            Copy EDU Teams Link
+        </Button>
+        </ButtonGroup>
+        </Grid.Column>
+        </Grid>
+      </Segment>
      }
 
 {activity.cancelled && activity.cancelledAt &&

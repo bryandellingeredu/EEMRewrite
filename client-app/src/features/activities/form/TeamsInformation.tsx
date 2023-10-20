@@ -1,21 +1,29 @@
-import { Button, Divider, Header, Icon, Image, Segment, Search, SegmentGroup, Message, Confirm } from "semantic-ui-react";
+import { Button, Divider, Header, Icon, Image, Segment, Search, SegmentGroup, Message, Confirm, ButtonGroup, Loader, Dimmer } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { useState, useEffect, Fragment } from "react";
 import { UserEmail } from "../../../app/models/userEmail"
 import agent from "../../../app/api/agent";
 import { SearchProps } from "semantic-ui-react";
 import { v4 as uuid } from "uuid";
+import { toast } from "react-toastify";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 interface Props{
     attendees: UserEmail[];
     setAttendees:  (newAttendees: UserEmail[]) => void;
     setTeamMeeting: () => void;
+    teamLink : string;
+    teamLookup : string;
+    deleteTeamMeeting: () => void;
+    id: string;
+    manageSeries: string;
   }
 
-export default function TeamsInformation({attendees, setAttendees,  setTeamMeeting} : Props)
+export default function TeamsInformation(
+  {attendees, setAttendees,  setTeamMeeting, teamLink, teamLookup, deleteTeamMeeting, id, manageSeries} : Props)
 {
     const {modalStore} = useStore();
-    const [section, setSection] = useState('addMeeting');
+    const [section, setSection] = useState(teamLink ? 'showMeeting' : 'addMeeting');
     const [loadingEmails, setLoadingEmails] = useState(true);
     const [emails, setEmails] = useState<UserEmail[]>([]);
     const [attendeesCopy, setAttendeesCopy] = useState<UserEmail[]>([]);  // attendees is not causing modal to re render
@@ -72,6 +80,11 @@ const source = uniqueEmails.map(email => ({
         setUserToDelete(user);
     }
 
+    const handleDeleteTeamConfirmClick = () =>{
+      deleteTeamMeeting();
+      modalStore.closeModal();
+    }
+
     const handleSaveClick = () =>{
         setTeamMeeting();
         modalStore.closeModal()
@@ -84,10 +97,14 @@ const source = uniqueEmails.map(email => ({
         setAttendeesCopy(filteredAttendees);
       };
 
+      const handleGoToTeamsClick = () => {
+         window.open(teamLink, "_blank");
+         modalStore.closeModal();
+      }
+
 
     return(
         <>
-        <span>attendees: {attendees.length}</span>
          <Button
         floated="right"
         icon
@@ -100,12 +117,71 @@ const source = uniqueEmails.map(email => ({
       </Button>
       <Header as="h2">
       <Image  src={`${process.env.PUBLIC_URL}/assets/teams.svg`}  />
+      {!teamLink && 
         <Header.Content>
-          Add an EDU Teams Meeting to this event.
-          <Header.Subheader>Set your preferences</Header.Subheader>
+          Add an EDU Teams Meeting to this Event.
+          <Header.Subheader>This will create an EDU Teams Meeting, You Can Not Create
+            an Army Teams Meeting from the EEM.
+          </Header.Subheader>
         </Header.Content>
+      }
+        {teamLink && 
+        <Header.Content>
+          EDU Teams Meeting
+          <Header.Subheader>View and Edit this Teams Meeting</Header.Subheader>
+        </Header.Content>
+      }
       </Header>
+
       <Divider />
+      {section === 'deleteMeeting' &&
+        <Segment textAlign="center">
+          <Button.Group size="massive">
+        <Button
+         color = 'red'
+         onClick={handleDeleteTeamConfirmClick}
+        >
+          {id && manageSeries && manageSeries === "true" ?
+          'I Am Sure I Want To Delete All Teams Meeting for this Series' :
+          'I Am Sure I Want To Delete This Teams Meeting'}
+          </Button>
+        <Button.Or />
+        <Button  onClick={() => setSection('showMeeting')}>Cancel</Button>
+      </Button.Group>
+    </Segment>
+      }
+      {section === 'showMeeting' &&
+        <Segment textAlign="center">
+          <ButtonGroup size='massive'>
+           <Button primary onClick={handleGoToTeamsClick}>
+           Join Team Meeting
+         </Button>
+         <Button secondary onClick={() => {
+  navigator.clipboard.writeText(teamLink)
+    .then(() => {
+      toast.success('Team Link copied to clipboard', {
+        position: toast.POSITION.TOP_CENTER
+      });
+    })
+    .catch(err => {
+      toast.error('Failed to copy link: ' + err, {
+        position: toast.POSITION.TOP_CENTER
+      });
+    });
+}}>
+  Copy Team Link
+</Button>
+         <Button color='teal'
+         onClick={() => setSection('addAttendees')}
+         >
+           View / Edit Team Invites
+         </Button>
+         <Button color='red' onClick={() => setSection('deleteMeeting')}>
+           Delete
+         </Button>
+       </ButtonGroup>
+        </Segment>
+      }
       {section === 'addMeeting' && 
       <Segment textAlign="center">
       <Button.Group size="massive">
@@ -173,15 +249,29 @@ const source = uniqueEmails.map(email => ({
                  </Segment.Inline>
               }
    <Segment color='teal'>
-   <Header icon color="teal" textAlign="center">
-                <Icon name="plus" />
-                Invite EDU users, Start Typing in the Search Box then Select
-              </Header>
+  
+    <>
+    <Header icon color="teal" textAlign="center">
+      {loadingEmails ? (
+        <>
+        <Icon name="circle notched" className="spin" />
+        <span> Loading EDU Users and Distribution Lists...</span>
+        </>
+      ) : (
+        <>
+        <Icon name="plus" />
+        <span> Invite EDU users, Start Typing in the Search Box then Select </span>
+        </>
+      )}
+     
+    </Header>
+        
     <Search
         fluid
         input={{ fluid: true }}
         loading={loadingEmails}
-        placeholder='Search for an Edu Attendee...'
+        disabled={loadingEmails}
+        placeholder={loadingEmails ? 'Loading...' : 'Search for an Edu Attendee...'}
         onSearchChange={handleSearchChange}
         results={source.filter(result =>
           result.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -190,9 +280,11 @@ const source = uniqueEmails.map(email => ({
         value={searchTerm}
         onResultSelect={handleResultSelect}
       />
+      </>
+        
 
       </Segment>
-      <Segment>
+      <Segment clearing>
         <Button floated="right" primary onClick={handleSaveClick} size='large'content='Save and Close'/>
       </Segment>
       </SegmentGroup>

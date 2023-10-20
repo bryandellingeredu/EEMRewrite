@@ -100,6 +100,7 @@ namespace Application.Activities
                     CoordinatorEmail = activity.CoordinatorEmail,
                     Recurring = activity.RecurrenceInd,
                     BorderColor = activity.IMC ? "#EE4B2B" : string.Empty,
+                    TeamInd = !string.IsNullOrEmpty(activity.TeamLink)
                 };
             }
         }

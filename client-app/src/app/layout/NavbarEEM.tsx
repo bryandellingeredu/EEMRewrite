@@ -137,11 +137,6 @@ export default observer(function NavbarEEM() {
                     as={Link}
                     to={`${process.env.PUBLIC_URL}/bldg651Calendar/651`}
                   />
-                  <Dropdown.Item
-                    text="Root Hall Bldg 122 Calendar"
-                    as={Link}
-                    to={`${process.env.PUBLIC_URL}/bldg651Calendar/122`}
-                  />
             {
   categories
     .filter(x => x.routeName && x.name !== "Other" && !(x.name === 'CIO Event Planning Calendar' && (!user || !user.roles || !user.roles.includes("CIOEventPlanningAdmin"))))

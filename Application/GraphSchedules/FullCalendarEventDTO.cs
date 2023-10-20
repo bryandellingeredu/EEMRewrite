@@ -61,5 +61,7 @@ namespace Application.GraphSchedules
         public string EventPlanningPAX { get; set; }
         public string EventPlanningStatus { get; set; }
         public string EventClearanceLevel { get; set; }
+        public bool TeamInd { get; set; }
+        public string TeamLink { get; set; }
     }
 }

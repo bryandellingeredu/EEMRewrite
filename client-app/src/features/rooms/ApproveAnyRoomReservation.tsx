@@ -29,7 +29,8 @@ interface RoomEvent {
     
             // @ts-ignore
             const filteredMessages = result.filter(message => {
-              return message.meetingRequestType && message.meetingRequestType === 'newMeetingRequest';
+              return message.meetingRequestType && message.meetingRequestType === 'newMeetingRequest'
+              && message.subject.startsWith('FW:')
             });
     
             // @ts-ignore

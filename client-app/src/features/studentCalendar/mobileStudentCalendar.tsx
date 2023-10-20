@@ -23,6 +23,7 @@ interface EventInfo{
     notes: string
     hyperLink: string
     hyperLinkDescription: string
+    teamLink: string
   }
 
 export default function MobileStudentCalendar (){
@@ -48,7 +49,8 @@ export default function MobileStudentCalendar (){
          uniform: '',
          notes: '',
          hyperLink: '',
-         hyperLinkDescription: ''
+         hyperLinkDescription: '',
+         teamLink: '',
         }
         )
       const [loadingEvent, setLoadingEvent] = useState(false);
@@ -139,7 +141,8 @@ export default function MobileStudentCalendar (){
             uniform: clickInfo.event.extendedProps.studentCalendarUniform,
             notes: clickInfo.event.extendedProps.studentCalendarNotes,
             hyperLink: clickInfo.event.extendedProps.hyperLink,
-            hyperLinkDescription: clickInfo.event.extendedProps.hyperLinkDescription || 'Go To Link'
+            hyperLinkDescription: clickInfo.event.extendedProps.hyperLinkDescription || 'Go To Link',
+            teamLink: clickInfo.event.extendedProps.teamLink
           };
 
           if (clickInfo.event.extendedProps.eventLookup && clickInfo.event.extendedProps.coordinatorEmail) { 

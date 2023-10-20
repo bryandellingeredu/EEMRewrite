@@ -495,6 +495,8 @@ export default class ActivityStore {
       makeTeamMeeting: false,
       eventLookup: graphEvent.id,
       teamLookup: '',
+      teamLink: '',
+      teamRequester: '',
       recurrenceInd: false,
       recurrenceId: '',
       recurrence: null,
