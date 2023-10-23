@@ -13,6 +13,7 @@ import EmailGroupStore from "./emailGroupStore";
 import CSLCalendarLegendStore from "./cslCalendarLegendStore";
 import USAHECFacilitiesUsageLegendStore from "./usahecFacilitiesUsageLegendStore";
 import NavbarStore from "./navbarStore";
+import BackToCalendarStore from "./backToCalendarStore";
 
 interface Store{
     activityStore: ActivityStore
@@ -29,6 +30,7 @@ interface Store{
     cslCalendarLegendStore: CSLCalendarLegendStore
     usahecFacilitiesUsageLegendStore: USAHECFacilitiesUsageLegendStore
     navbarStore: NavbarStore
+    backToCalendarStore: BackToCalendarStore
 }
 
 export const store: Store = {
@@ -45,7 +47,8 @@ export const store: Store = {
     emailGroupStore: new EmailGroupStore(),
     cslCalendarLegendStore: new CSLCalendarLegendStore(),
     usahecFacilitiesUsageLegendStore: new USAHECFacilitiesUsageLegendStore(),
-    navbarStore: new NavbarStore()
+    navbarStore: new NavbarStore(),
+    backToCalendarStore: new BackToCalendarStore(),
 }
 
 export const StoreContext = createContext(store);

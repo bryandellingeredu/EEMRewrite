@@ -17,17 +17,21 @@ import GenericCalendarTable from "./GenericCalendarTable";
 import Pikaday from "pikaday";
 import { Loader } from "semantic-ui-react";
 import CIOEventPlanningTable from "./CIOEventPlanningTable";
+import BackToCalendarStore from "../../app/stores/backToCalendarStore";
+import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
+
 
 export default observer(function GenericCalendar() {
   const [view, setView] = useState(localStorage.getItem("calendarViewGeneric") || "dayGridMonth");
   const [isLoading, setIsLoading] = useState(true);
-  const { id } = useParams<{ id: string }>();
-  const { categoryStore, activityStore, userStore } = useStore();
+  const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
+  const { categoryStore, activityStore, userStore, backToCalendarStore } = useStore();
   const { categories, loadingInitial } = categoryStore;
   const {addCalendarEventParameters} = activityStore;
+  const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
   const history = useHistory();
   const [height, setHeight] = useState(window.innerHeight - 100);
-
+  const [isInitialDateSet, setIsInitialDateSet] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
   const {user} = userStore
   useEffect(() => {
@@ -48,39 +52,74 @@ export default observer(function GenericCalendar() {
 
 
      const calendarRef = useRef<FullCalendar>(null);
+     const [initialDate, setInitialDate] = useState<Date | null>(null);
 
 
-  useEffect(() => {
-    const calendarApi = calendarRef.current?.getApi();
-    if (calendarApi) {
-      // Initialize Pikaday
-      const picker = new Pikaday({
-        field: document.querySelector(".fc-datepicker-button") as HTMLElement,
-        format: "YYYY-MM-DD",
-        onSelect: function (dateString) {
-          picker.gotoDate(new Date(dateString));
-          calendarApi.gotoDate(new Date(dateString));
-        },
-      });
-  
-      return () => {
-        picker.destroy();
-      };
-    }
-  },[calendarRef]);
+     useEffect(() => {
+      const calendarApi = calendarRef.current?.getApi();
+   
+      if (calendarApi) {
+        // Initialize Pikaday
+        const picker = new Pikaday({
+          field: document.querySelector(".fc-datepicker-button") as HTMLElement,
+          format: "YYYY-MM-DD",
+          onSelect: function (dateString) {
+            picker.gotoDate(new Date(dateString));
+            calendarApi.gotoDate(new Date(dateString));
+          },
+        });
+    
+        return () => {
+          picker.destroy();
+        };
+      }
+    }, [calendarRef]); 
+
+    useEffect(() => {
+      let backToCalendarRecord: BackToCalendarInfo | undefined = undefined;
+      if (backToCalendarId && !isInitialDateSet) {
+        backToCalendarRecord = getBackToCalendarInfoRecord(backToCalendarId);
+        if (backToCalendarRecord) {
+          console.log("About to set initial date to:", new Date(backToCalendarRecord.goToDate));
+          setInitialDate(backToCalendarRecord.goToDate);
+          const calendarApi = calendarRef.current?.getApi();
+          if(calendarApi){
+            calendarApi.gotoDate(backToCalendarRecord.goToDate);
+          }
+          setIsInitialDateSet(true);
+        }
+      }
+    }, [backToCalendarId, isInitialDateSet, calendarRef]);
 
   const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     const category = categories.find(x => x.routeName === id);
-    history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${category?.id}`);
+    
+    const backToCalendarInfo : BackToCalendarInfo = {
+      id: uuid(),
+      goToDate: clickInfo.event.start || new Date(),
+      url: `${process.env.PUBLIC_URL}/genericcalendar/${id}`
+    };
+    addBackToCalendarInfoRecord(backToCalendarInfo);
+       
+    history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${category?.id}/${backToCalendarInfo.id}`);
   }, [ categories, history]);
 
   const handleDateClick = useCallback((info : any) => {
+ 
+    const backToCalendarInfo : BackToCalendarInfo = {
+      id: uuid(),
+      goToDate: info.date,
+      url: `${process.env.PUBLIC_URL}/genericcalendar/${id}`
+    };
+    addBackToCalendarInfoRecord(backToCalendarInfo);
+
     const category = categories.find(x => x.routeName === id);
     const paramId = uuid();
-    
+      
     const currentDate = info.date;
     let formattedDate = "";
     let adjustedDate = "";
+
     
     if (info.allDay) {
       currentDate.setHours(new Date().getHours() + 1);
@@ -94,7 +133,7 @@ export default observer(function GenericCalendar() {
     }
 
     addCalendarEventParameters({id: paramId, allDay: false, dateStr: formattedDate, date:new Date(adjustedDate), categoryId: category?.id || '', needRoom: false})
-    history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`);
+    history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}/${backToCalendarInfo.id}`);
   }, [ categories, history]);
 
   const getTime = (clickInfo: EventClickArg) => {
@@ -213,6 +252,7 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
           <GenericCalendarHeader id={id} />
           {(id !== 'cio' || cioEventPlanningAdmin) &&
           <FullCalendar
+          initialDate={initialDate || new Date()}
            ref={calendarRef}
             height= {height}
             initialView={view}

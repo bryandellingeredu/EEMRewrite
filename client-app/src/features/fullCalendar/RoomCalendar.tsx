@@ -17,18 +17,24 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import { v4 as uuid } from "uuid";
 import Pikaday from "pikaday";
+import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
+
 
 
 export default observer(function RoomCalendar() {
-    const { id } = useParams<{ id: string }>();
+  const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
     const [view, setView] = useState(localStorage.getItem("calendarViewRoom") || "dayGridMonth");
-    const {graphRoomStore, activityStore, categoryStore} = useStore();
+    const {graphRoomStore, activityStore, categoryStore, backToCalendarStore} = useStore();
+    const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
+    const [isInitialDateSet, setIsInitialDateSet] = useState(false);
+    const [initialDate, setInitialDate] = useState<Date | null>(null);
     const{loadingInitial, graphRooms, loadGraphRooms} = graphRoomStore;
     const { categories } = categoryStore;
     const{ getActivityIdByRoom, addCalendarEventParameters } = activityStore;
     const history = useHistory();
     const [height, setHeight] = useState(window.innerHeight - 100);
     const [isLoading, setIsLoading] = useState(true);
+    const [triggerFetch, setTriggerFetch] = useState(0);
   
     const[graphRoom, setGraphRoom] = useState<GraphRoom>({
         address: {
@@ -61,6 +67,13 @@ picURL: '',
       const category = categories.find(x => x.routeName === id);
       const paramId = uuid();
 
+      const backToCalendarInfo : BackToCalendarInfo = {
+        id: uuid(),
+        goToDate: info.date,
+        url: `${process.env.PUBLIC_URL}/roomcalendar/${id}`
+      };
+      addBackToCalendarInfoRecord(backToCalendarInfo);
+
        const currentDate = info.date;
       let formattedDate = "";
       let adjustedDate = "";
@@ -79,10 +92,18 @@ picURL: '',
 
 
       addCalendarEventParameters({id: paramId, allDay: false, dateStr: formattedDate, date:new Date(adjustedDate), categoryId: '', needRoom: true})
-      history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`);
+      history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}/${backToCalendarInfo.id}`);
     }, [ categories, history]);
 
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
+      
+      const backToCalendarInfo : BackToCalendarInfo = {
+        id: uuid(),
+        goToDate: clickInfo.event.start || new Date(),
+        url: `${process.env.PUBLIC_URL}/roomcalendar/${id}`
+      };
+      addBackToCalendarInfoRecord(backToCalendarInfo);
+
       var sanitizedTitle = clickInfo.event.title.replace(/\//g, '');
       getActivityIdByRoom( sanitizedTitle, clickInfo.event.startStr, clickInfo.event.endStr, id).then((activity) => {
         if(!activity || activity.id === '00000000-0000-0000-0000-000000000000' ){
@@ -98,7 +119,7 @@ picURL: '',
             });
         } else {
           const category = categories.find(x => x.id === activity.categoryId);
-          history.push(`${process.env.PUBLIC_URL}/activities/${activity.id}/${category?.id}`);
+          history.push(`${process.env.PUBLIC_URL}/activities/${activity.id}/${category?.id}/${backToCalendarInfo.id}`);
         }
       });
     }, [categories, history]);
@@ -150,6 +171,18 @@ picURL: '',
         console.log(error);
       }
   }
+
+  useEffect(() => {
+    if (backToCalendarId) {
+      setTriggerFetch(prevTrigger => prevTrigger + 1);
+  
+      const timer = setTimeout(() => {
+        setTriggerFetch(prevTrigger => prevTrigger + 1);
+      }, 3000);
+  
+      return () => clearTimeout(timer);
+    }
+  }, [backToCalendarId]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -207,6 +240,22 @@ picURL: '',
       eventDot.style.borderColor = eventColor;
     }
   };
+
+  useEffect(() => {
+    let backToCalendarRecord: BackToCalendarInfo | undefined = undefined;
+    if (backToCalendarId && !isInitialDateSet) {
+      backToCalendarRecord = getBackToCalendarInfoRecord(backToCalendarId);
+      if (backToCalendarRecord) {
+        console.log("About to set initial date to:", new Date(backToCalendarRecord.goToDate));
+        setInitialDate(backToCalendarRecord.goToDate);
+        const calendarApi = calendarRef.current?.getApi();
+        if(calendarApi){
+          calendarApi.gotoDate(backToCalendarRecord.goToDate);
+        }
+        setIsInitialDateSet(true);
+      }
+    }
+  }, [backToCalendarId, isInitialDateSet, calendarRef]);
   
 
     return(
@@ -228,6 +277,7 @@ picURL: '',
       </Divider>
 
       <FullCalendar
+       initialDate={initialDate || new Date()}
             ref={calendarRef}
             height={height}
             initialView={view}
@@ -244,7 +294,7 @@ picURL: '',
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             eventClick={handleEventClick}
             dateClick={handleDateClick}
-            events={`${process.env.REACT_APP_API_URL}/roomEvents/${id}`}
+            events={`${process.env.REACT_APP_API_URL}/roomEvents/${id}?trigger=${triggerFetch}`}
             eventMouseEnter={handleMouseEnter}
             slotMinTime={'07:00:00'}
             slotMaxTime={'21:00:00'}

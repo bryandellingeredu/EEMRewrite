@@ -9,10 +9,12 @@ import SyncCalendarInformation from "./SyncCalendarInformation";
 import { useStore } from "../../app/stores/store";
 import GenericCalendarTable from "./GenericCalendarTable";
 import SubCalendarInformation from "../activities/form/SubCalendarInformation";
+import { useParams } from "react-router-dom";
 
 
   
 export default observer(function IMCCalendarDashboard(){
+  const { backToCalendarId } = useParams<{backToCalendarId?: string }>();
   const { modalStore } = useStore();
   const {openModal} = modalStore;
     return(
@@ -46,7 +48,7 @@ export default observer(function IMCCalendarDashboard(){
     </Header>
   </Divider>
   <IMCLegend />
-  <IMCCalendarWithoutAcademicEvents/> 
+  <IMCCalendarWithoutAcademicEvents backToCalendarId = {backToCalendarId}/> 
   <GenericCalendarTable id={'imc'} />
     </>
     )

@@ -8,7 +8,7 @@ import agent from "../../app/api/agent";
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import { useCallback, useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { useStore } from "../../app/stores/store";
 import Pikaday from "pikaday";
@@ -16,6 +16,8 @@ import { Divider, Header, Icon, Label, Loader } from "semantic-ui-react";
 import { Category } from "../../app/models/category";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
+import BackToCalendarStore from "../../app/stores/backToCalendarStore";
+import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 
 interface CategoryWithSelected extends Category {
   selected: boolean;
@@ -24,18 +26,28 @@ interface CategoryWithSelected extends Category {
 
 export default observer(function customCalendar() {
   const [categoriesWithSelected, setCategoriesWithSelected] = useState<CategoryWithSelected[]>([]);
-  const { categoryStore } = useStore();
+  const { categoryStore, backToCalendarStore } = useStore();
+  const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
+  const [isInitialDateSet, setIsInitialDateSet] = useState(false);
   const { categories, loadingInitial } = categoryStore;
   const [view, setView] = useState(localStorage.getItem("calendarViewCustom") || "timeGridWeek");
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
   const { activityStore } = useStore();
   const { addCalendarEventParameters } = activityStore;
+  const { backToCalendarId } = useParams<{ backToCalendarId?: string }>();
+  const [initialDate, setInitialDate] = useState<Date | null>(null);
 
   const handleEventClick = useCallback(
     (clickInfo: EventClickArg) => {
+      const backToCalendarInfo : BackToCalendarInfo = {
+        id: uuid(),
+        goToDate: clickInfo.event.start || new Date(),
+        url: `${process.env.PUBLIC_URL}/customcalendar`
+      };
+      addBackToCalendarInfoRecord(backToCalendarInfo);
       history.push(
-        `${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${clickInfo.event.extendedProps.activityCategoryId}`
+        `${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${clickInfo.event.extendedProps.activityCategoryId}/${backToCalendarInfo.id}`
       );
     },
     [history]
@@ -57,6 +69,23 @@ export default observer(function customCalendar() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    let backToCalendarRecord: BackToCalendarInfo | undefined = undefined;
+    if (backToCalendarId && !isInitialDateSet) {
+      backToCalendarRecord = getBackToCalendarInfoRecord(backToCalendarId);
+      if (backToCalendarRecord) {
+        console.log("About to set initial date to:", new Date(backToCalendarRecord.goToDate));
+        setInitialDate(backToCalendarRecord.goToDate);
+        const calendarApi = calendarRef.current?.getApi();
+        if(calendarApi){
+          calendarApi.gotoDate(backToCalendarRecord.goToDate);
+        }
+        setIsInitialDateSet(true);
+      }
+    }
+  }, [backToCalendarId, isInitialDateSet, calendarRef]);
+
 
   useEffect(() => {
     // Initialize or update the categories
@@ -89,11 +118,21 @@ export default observer(function customCalendar() {
         setCategoriesWithSelected(newCategories);
       }
     }
+
+ 
   }, [categories.length, categoriesWithSelected]);
 
 
   const handleDateClick = useCallback(
     (info: any) => {
+
+      const backToCalendarInfo : BackToCalendarInfo = {
+        id: uuid(),
+        goToDate: info.date,
+        url: `${process.env.PUBLIC_URL}/customcalendar`
+      };
+      addBackToCalendarInfoRecord(backToCalendarInfo);
+
       const paramId = uuid();
       const currentDate = info.date;
       let formattedDate = "";
@@ -119,7 +158,7 @@ export default observer(function customCalendar() {
         needRoom: false,
       });
       history.push(
-        `${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`
+        `${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}/${backToCalendarInfo.id}`
       );
     },
     [addCalendarEventParameters, history]
@@ -150,7 +189,7 @@ export default observer(function customCalendar() {
     ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: </strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
     ${arg.event.extendedProps.actionOfficer ? '<p><strong>Action Officer: </strong>' + arg.event.extendedProps.actionOfficer + '</p>' : ''}
     ${arg.event.extendedProps.actionOfficerPhone ? '<p><strong>Action Officer Phone: </strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
-    ${arg.event.extendedProps.categoryName ? '<p><strong>Sub Calendar: </strong>' + (arg.event.extendedProps.categoryName === 'Academic IMC Event' ? 'Faculty Calendar' : arg.event.extendedProps.category.name === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program':  arg.event.extendedProps.categoryName === 'SSL Calendar' ? 'SSL Admin Calendar' : arg.event.extendedProps.categoryName) + '</p>' : ''}
+    ${arg.event.extendedProps.categoryName ? '<p><strong>Sub Calendar: </strong>' + (arg.event.extendedProps.categoryName === 'Academic IMC Event' ? 'Faculty Calendar' : arg.event.extendedProps.categoryName === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program':  arg.event.extendedProps.categoryName === 'SSL Calendar' ? 'SSL Admin Calendar' : arg.event.extendedProps.categoryName) + '</p>' : ''}
      `;
    var tooltip : any = tippy(arg.el, {     
       content,
@@ -228,6 +267,7 @@ const handleLabelClick = (id: string) => {
 
 
    <FullCalendar
+    initialDate={initialDate || new Date()}
       ref={calendarRef}
       height={height}
       key={categoriesWithSelected.map(category => category.selected).join(',')}

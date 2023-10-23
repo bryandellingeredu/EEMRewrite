@@ -14,15 +14,21 @@ import 'tippy.js/dist/tippy.css';
 import { v4 as uuid } from "uuid";
 import Pikaday from "pikaday";
 import { useStore } from "../../app/stores/store";
+import BackToCalendarStore from "../../app/stores/backToCalendarStore";
+import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
+
 
 export default function Bldg651Calendar (){
   const [view, setView] = useState(localStorage.getItem("calendarView651") || "timeGridWeek");
-    const { id } = useParams<{ id: string }>();
+    const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
     const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
     const [height, setHeight] = useState(window.innerHeight - 100);
-    const {activityStore} = useStore();
+    const {activityStore, backToCalendarStore} = useStore();
     const{ getActivityIdByRoom , addCalendarEventParameters} = activityStore;
+    const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
+    const [isInitialDateSet, setIsInitialDateSet] = useState(false);
+    const [initialDate, setInitialDate] = useState<Date | null>(null);
 
     useEffect(() => {
         const handleResize = () => {
@@ -56,6 +62,22 @@ export default function Bldg651Calendar (){
           };
         }
       }, [calendarRef])
+
+      useEffect(() => {
+        let backToCalendarRecord: BackToCalendarInfo | undefined = undefined;
+        if (backToCalendarId && !isInitialDateSet) {
+          backToCalendarRecord = getBackToCalendarInfoRecord(backToCalendarId);
+          if (backToCalendarRecord) {
+            console.log("About to set initial date to:", new Date(backToCalendarRecord.goToDate));
+            setInitialDate(backToCalendarRecord.goToDate);
+            const calendarApi = calendarRef.current?.getApi();
+            if(calendarApi){
+              calendarApi.gotoDate(backToCalendarRecord.goToDate);
+            }
+            setIsInitialDateSet(true);
+          }
+        }
+      }, [backToCalendarId, isInitialDateSet, calendarRef]);
 
       const getTime = (clickInfo: EventClickArg) => {
         let time : string = ''
@@ -107,6 +129,13 @@ export default function Bldg651Calendar (){
     }
 
     const handleEventClick = useCallback((clickInfo: EventClickArg) => {
+
+      const backToCalendarInfo : BackToCalendarInfo = {
+        id: uuid(),
+        goToDate: clickInfo.event.start || new Date(),
+        url: `${process.env.PUBLIC_URL}/bldg651Calendar/651`
+      };
+      addBackToCalendarInfoRecord(backToCalendarInfo);
       var sanitizedTitle = clickInfo.event.title.split('(Bldg')[0].replace(/\//g, '');
         getActivityIdByRoom( sanitizedTitle, clickInfo.event.startStr, clickInfo.event.endStr, clickInfo.event.extendedProps.roomId).then((activity) => {
           if(!activity || activity.id === '00000000-0000-0000-0000-000000000000' ){
@@ -121,7 +150,7 @@ export default function Bldg651Calendar (){
               theme: "light",
               });
           } else {
-            history.push(`${process.env.PUBLIC_URL}/activities/${activity.id}/${activity.categoryId}`);
+            history.push(`${process.env.PUBLIC_URL}/activities/${activity.id}/${activity.categoryId}/${backToCalendarInfo.id}`);
           }
         });
       }, [ history]);
@@ -136,6 +165,13 @@ export default function Bldg651Calendar (){
       };
 
       const handleDateClick = useCallback((info : any) => {
+
+        const backToCalendarInfo : BackToCalendarInfo = {
+          id: uuid(),
+          goToDate: info.start || new Date(),
+          url: `${process.env.PUBLIC_URL}/bldg651Calendar/651`
+        };
+        addBackToCalendarInfoRecord(backToCalendarInfo);
       
         const paramId = uuid();
   
@@ -157,7 +193,7 @@ export default function Bldg651Calendar (){
   
   
         addCalendarEventParameters({id: paramId, allDay: false, dateStr: formattedDate, date:new Date(adjustedDate), categoryId: '', needRoom: true})
-        history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`);
+        history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}/${backToCalendarInfo.id}`);
       }, [ history]);
 
     return(
@@ -175,6 +211,7 @@ export default function Bldg651Calendar (){
          </Loader>
         )}
 <FullCalendar
+  initialDate={initialDate || new Date()}
 ref={calendarRef}
 height={height}
 initialView={view}

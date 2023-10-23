@@ -12,6 +12,7 @@ import { useState } from 'react';
 import agent from '../../../app/api/agent';
 import { toast } from 'react-toastify';
 import CancelEventForm from './CancelEventForm';
+import { BackToCalendarInfo } from '../../../app/models/backToCalendarInfo';
 
 
 
@@ -30,18 +31,35 @@ const activityImageTextStyle = {
 
 interface Props {
     activity: Activity
-    setReloadTrigger: () => void
+    setReloadTrigger: () => void,
+    backToCalendarId: string | undefined
 }
 
-export default observer(function ActivityDetailedHeader({ activity, setReloadTrigger }: Props) {
-    const {modalStore, activityStore} = useStore();
+export default observer(function ActivityDetailedHeader({ activity, setReloadTrigger, backToCalendarId }: Props) {
+    const {modalStore, activityStore, backToCalendarStore} = useStore();
     const {createICSFile} = activityStore;
+    const {getBackToCalendarInfoRecord} = backToCalendarStore
     const history = useHistory();
     const [showConfirm, setShowConfirm] = useState(false);
     const [showCopyConfirm, setShowCopyConfirm] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [restoring, setRestoring] = useState(false);
-    const [reload, setReloading] = useState(false)
+    const [reload, setReloading] = useState(false);
+
+    const handleGoBackClick = () =>{
+        if(backToCalendarId){
+           const backToCalendarRecord : BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
+           if(backToCalendarRecord){
+            const url : string = `${backToCalendarRecord.url}/${backToCalendarRecord.id}`
+            history.push(url);
+           }else{
+            history.goBack();
+           }   
+        }else{
+            history.goBack();
+        }
+       
+    }
     const handleCopyEvent = () => {
         history.push(`${process.env.PUBLIC_URL}/copy/${activity.id}/${activity.categoryId}/true`);
     }
@@ -164,7 +182,9 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
             </Segment>
             <Segment clearing  textAlign='center'>
             <ButtonGroup size='tiny' fluid>
-           <Button icon  color='brown' onClick={() => history.goBack()} >
+            
+           <Button icon  color='brown'
+            onClick={handleGoBackClick} >
             <FontAwesomeIcon icon={faBackward} style={{paddingRight: '5px'}} />
             Back
            </Button>

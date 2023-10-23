@@ -121,18 +121,28 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/activities`} component={ActivityDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/academiccalendar`} component={AcademicCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar`} component={IMCCalendarDashboard}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/imccalendar/:backToCalendarId`} component={IMCCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper`} component={EnlistedAideCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/studentcalendar`} component={StudentCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/msfp`} component={MSFPCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/community`} component={CommunityCalendarWrapper}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/customcalendar/:backToCalendarId`} component={CustomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/customcalendar`} component={CustomCalendar}/>
-                <Route exact path={`${process.env.PUBLIC_URL}/genericcalendar/:id`} component={GenericCalendar}/>
+
+                <Route exact path={[
+                  `${process.env.PUBLIC_URL}/genericcalendar/:id`,
+                  `${process.env.PUBLIC_URL}/genericcalendar/:id/:backToCalendarId`]} component={GenericCalendar}/>
+                <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/roomcalendar/:id/:backToCalendarId`} component={RoomCalendar}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/roomcalendar/:id`} component={RoomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/roomCalendarLinks`} component={RoomCalendarLinks}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/rooms`} component={RoomDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/authenticatetoarmy`} component={AuthenticateToArmy}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/approveanyroomreservation`} component={ApproveAnyRoomReservation}/>
-                <Route path={`${process.env.PUBLIC_URL}/activities/:id/:categoryId`} component={ActivityDetails} sensitive/>
+                <Route exact path={[
+                                    `${process.env.PUBLIC_URL}/activities/:id/:categoryId`, 
+                                    `${process.env.PUBLIC_URL}/activities/:id/:categoryId/:backToCalendarId`
+                                    ]}
+                        component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/itinerary/:id/:categoryId`} component={Itinerary}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/downloadbio/:id/:categoryId`} component={DownloadBio}/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/downloadActivityAttachment/:id`} component={DownloadActivityAttachment}/>   
@@ -143,6 +153,7 @@ function App() {
                   `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries`,
                   `${process.env.PUBLIC_URL}/createActivityWithRoom/:roomid`,
                   `${process.env.PUBLIC_URL}/createActivityWithCalendar/:calendarid`,
+                  `${process.env.PUBLIC_URL}/createActivityWithCalendar/:calendarid/:backToCalendarId`,
                   `${process.env.PUBLIC_URL}/copy/:id/:categoryId/:copy`,
                   ]} component={ActivityForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/enlistedAideConfirmation/:id/:categoryId`} component={enlistedAideConfirmation}/>
@@ -150,6 +161,7 @@ function App() {
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/addToCalendars/:id/:categoryId`} component={AddToCalendars}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/addtomycalendar/:id/:categoryId`} component={AddToMyCalendar}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageEmailGroupForm/:id`} component={EmailGroupForm}/>
+                <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/bldg651Calendar/:id/:backToCalendarId`} component={Bldg651Calendar}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/bldg651Calendar/:id`} component={Bldg651Calendar}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/manageRoleForm/:id`} component={ManageRolesForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/usahecMeetingSummaryByLocationWrapper/:id`} component={usahecMeetingSummaryByLocationWrapper}/>

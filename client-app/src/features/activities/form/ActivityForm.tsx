@@ -63,6 +63,7 @@ import CUIWarningModal from "./CUIWarningModal";
 import MyTextAreaWithTypeahead from "../../../app/common/form/MyTextAreaWithTypeAhead";
 import TeamsButton from "./TeamsButton";
 import { UserEmail } from "../../../app/models/userEmail";
+import { BackToCalendarInfo } from "../../../app/models/backToCalendarInfo";
 
 
 
@@ -96,7 +97,8 @@ export default observer(function ActivityForm() {
     graphUserStore,
     graphRoomStore,
     modalStore,
-    userStore
+    userStore,
+    backToCalendarStore
   } = useStore();
   const {
     createGraphEvent,
@@ -111,6 +113,7 @@ export default observer(function ActivityForm() {
     calendarEventParameters,
   } = activityStore;
   const {user} = userStore
+  const {getBackToCalendarInfoRecord} = backToCalendarStore;
   const [enlistedAidAdmin, setEnlistedAidAdmin] = useState(false);
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
@@ -140,6 +143,7 @@ export default observer(function ActivityForm() {
   const { manageSeries } = useParams<{ manageSeries: string }>();
   const { copy } = useParams<{ copy: string }>();
   const { categoryId } = useParams<{ categoryId: string }>();
+  const { backToCalendarId } = useParams<{ backToCalendarId: string }>();
   const [activity, setActivity] = useState<ActivityFormValues>(
     new ActivityFormValues()
   );
@@ -730,16 +734,41 @@ export default observer(function ActivityForm() {
           makeTeamMeeting: makeTeamMeeting
         };
         category.name === "Academic Calendar"
-          ? createGraphEvent(newActivity).then(() =>
+          ? createGraphEvent(newActivity).then(() =>{
+              if(backToCalendarId){
+                const backToCalendarRecord : BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
+                if(backToCalendarRecord){
+                 const url : string = `${backToCalendarRecord.url}/${backToCalendarRecord.id}`
+                 history.push(url);
+                }else{
+                  history.push(
+                    `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
+                  )
+                }   
+              }else{
+                history.push(
+                  `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
+                )
+              }
+             
+          })
+          : createActivity(newActivity)
+          .then(() => {
+            if(backToCalendarId){
+              const backToCalendarRecord : BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
+              if(backToCalendarRecord){
+               const url : string = `${backToCalendarRecord.url}/${backToCalendarRecord.id}`
+               history.push(url);
+              }else{
+                history.push(
+                  `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
+                )
+              }   
+            }else{
               history.push(
                 `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
               )
-            )
-          : createActivity(newActivity)
-          .then(() => {
-            history.push(
-              `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
-            );
+            }
           })
           .catch((error) => {
             console.log(error);

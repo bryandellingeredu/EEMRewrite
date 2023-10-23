@@ -8,23 +8,38 @@ import agent from "../../app/api/agent";
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import { useCallback, useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { useStore } from "../../app/stores/store";
 import Pikaday from "pikaday";
 import { EventApi } from '@fullcalendar/react';
 import { Loader } from "semantic-ui-react";
+import BackToCalendarStore from "../../app/stores/backToCalendarStore";
+import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 
-export default function IMCCalendarWithoutAcademicEvents(this: any) {
+interface Props{
+  backToCalendarId: string | undefined
+}
+
+export default function IMCCalendarWithoutAcademicEvents({backToCalendarId} : Props) {
   const [view, setView] = useState(localStorage.getItem("calendarViewIMC") || "timeGridWeek");
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
-  const { activityStore } = useStore();
+  const { activityStore, backToCalendarStore } = useStore();
   const { addCalendarEventParameters } = activityStore;
+  const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
+  const [isInitialDateSet, setIsInitialDateSet] = useState(false);
+  const [initialDate, setInitialDate] = useState<Date | null>(null);
   const handleEventClick = useCallback(
     (clickInfo: EventClickArg) => {
+      const backToCalendarInfo : BackToCalendarInfo = {
+        id: uuid(),
+        goToDate: clickInfo.event.start || new Date(),
+        url: `${process.env.PUBLIC_URL}/imccalendar`
+      };
+      addBackToCalendarInfoRecord(backToCalendarInfo);
       history.push(
-        `${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${clickInfo.event.extendedProps.categoryId}`
+        `${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${clickInfo.event.extendedProps.categoryId}/${backToCalendarInfo.id}`
       );
     },
     [history]
@@ -32,6 +47,22 @@ export default function IMCCalendarWithoutAcademicEvents(this: any) {
   const [height, setHeight] = useState(window.innerHeight - 200);
 
   const calendarRef = useRef<FullCalendar>(null);
+
+  useEffect(() => {
+    let backToCalendarRecord: BackToCalendarInfo | undefined = undefined;
+    if (backToCalendarId && !isInitialDateSet) {
+      backToCalendarRecord = getBackToCalendarInfoRecord(backToCalendarId);
+      if (backToCalendarRecord) {
+        console.log("About to set initial date to:", new Date(backToCalendarRecord.goToDate));
+        setInitialDate(backToCalendarRecord.goToDate);
+        const calendarApi = calendarRef.current?.getApi();
+        if(calendarApi){
+          calendarApi.gotoDate(backToCalendarRecord.goToDate);
+        }
+        setIsInitialDateSet(true);
+      }
+    }
+  }, [backToCalendarId, isInitialDateSet, calendarRef]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -66,6 +97,13 @@ export default function IMCCalendarWithoutAcademicEvents(this: any) {
 
   const handleDateClick = useCallback(
     (info: any) => {
+      const backToCalendarInfo : BackToCalendarInfo = {
+        id: uuid(),
+        goToDate: info.date,
+        url: `${process.env.PUBLIC_URL}/imccalendar`
+      };
+      addBackToCalendarInfoRecord(backToCalendarInfo);
+
       const paramId = uuid();
       const currentDate = info.date;
       let formattedDate = "";
@@ -91,7 +129,7 @@ export default function IMCCalendarWithoutAcademicEvents(this: any) {
         needRoom: false,
       });
       history.push(
-        `${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}`
+        `${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}/${backToCalendarInfo.id}`
       );
     },
     [addCalendarEventParameters, history]
@@ -181,6 +219,7 @@ function addTeamIconToEvent(event: EventApi, el: HTMLElement) {
          </Loader>
         )}
    <FullCalendar
+    initialDate={initialDate || new Date()}
       ref={calendarRef}
       height={height}
       initialView={view}
