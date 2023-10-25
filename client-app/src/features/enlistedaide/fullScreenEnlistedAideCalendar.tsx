@@ -11,9 +11,14 @@ import Pikaday from "pikaday";
 import { Button, Divider, Header, Icon, Loader } from "semantic-ui-react";
 import { useStore } from '../../app/stores/store';
 import SyncCalendarInformation from '../fullCalendar/SyncCalendarInformation';
+import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
+import { v4 as uuid } from "uuid";
 
+interface Props{
+  backToCalendarId : string | undefined
+}
 
-export default function FullScreenEnlistedAideCalendar (){
+export default function FullScreenEnlistedAideCalendar ({backToCalendarId} : Props){
     const [view, setView] = useState(localStorage.getItem("calendarViewEnlistedAide") || "dayGridMonth");
     const [height, setHeight] = useState(window.innerHeight - 100);
     const calendarRef = useRef<FullCalendar>(null);
@@ -21,6 +26,26 @@ export default function FullScreenEnlistedAideCalendar (){
     const history = useHistory();
     const { modalStore } = useStore();
     const {openModal} = modalStore;
+    const { backToCalendarStore } = useStore();
+    const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
+    const [isInitialDateSet, setIsInitialDateSet] = useState(false);
+    const [initialDate, setInitialDate] = useState<Date | null>(null);
+
+    useEffect(() => {
+      let backToCalendarRecord: BackToCalendarInfo | undefined = undefined;
+      if (backToCalendarId && !isInitialDateSet) {
+        backToCalendarRecord = getBackToCalendarInfoRecord(backToCalendarId);
+        if (backToCalendarRecord) {
+          console.log("About to set initial date to:", new Date(backToCalendarRecord.goToDate));
+          setInitialDate(backToCalendarRecord.goToDate);
+          const calendarApi = calendarRef.current?.getApi();
+          if(calendarApi){
+            calendarApi.gotoDate(backToCalendarRecord.goToDate);
+          }
+          setIsInitialDateSet(true);
+        }
+      }
+    }, [backToCalendarId, isInitialDateSet, calendarRef]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -33,8 +58,19 @@ export default function FullScreenEnlistedAideCalendar (){
       }, []);
 
       const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-  
-        history.push(`${process.env.PUBLIC_URL}/enlistedAideCheckListForm/${clickInfo.event.extendedProps.activityId}/${clickInfo.event.extendedProps.categoryId}`);
+        if (clickInfo.event.extendedProps.task.startsWith('Event')) {
+          const backToCalendarInfo : BackToCalendarInfo = {
+            id: uuid(),
+            goToDate: clickInfo.event.start || new Date(),
+            url: `${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper`
+          };
+          addBackToCalendarInfoRecord(backToCalendarInfo);
+             
+          history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.extendedProps.activityId}}/${clickInfo.event.extendedProps.categoryId}/${backToCalendarInfo.id}`);
+        }else{
+          history.push(`${process.env.PUBLIC_URL}/enlistedAideCheckListForm/${clickInfo.event.extendedProps.activityId}/${clickInfo.event.extendedProps.categoryId}`);
+        }
+       
       }, [ history]);
 
       

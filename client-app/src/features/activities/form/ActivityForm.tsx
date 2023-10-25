@@ -144,6 +144,7 @@ export default observer(function ActivityForm() {
   const { copy } = useParams<{ copy: string }>();
   const { categoryId } = useParams<{ categoryId: string }>();
   const { backToCalendarId } = useParams<{ backToCalendarId: string }>();
+  const { enlistedaideid } = useParams<{ enlistedaideid: string }>();
   const [activity, setActivity] = useState<ActivityFormValues>(
     new ActivityFormValues()
   );
@@ -776,19 +777,48 @@ export default observer(function ActivityForm() {
           });
         
       } else {
+        debugger;
         category.name === "Academic Calendar"
           ? updateGraphEvent({ ...activity, id: activity!.id }).then(() =>
+          {
+            if(enlistedaideid){
+              history.push(
+                `${process.env.PUBLIC_URL}/enlistedAideCheckListForm/${activity.id}/${category.id}`
+              )
+            }else{
               history.push(
                 `${process.env.PUBLIC_URL}/activities/${activity.id}/${category.id}`
               )
+            }
+          }
             )
           : updateActivity(
               { ...activity, id: activity!.id },
               manageSeries
-            ).then(() =>
-              history.push(
-                `${process.env.PUBLIC_URL}/activities/${activity.id}/${category.id}`
-              )
+            ).then(() =>{
+              if(enlistedaideid){
+                history.push(
+                  `${process.env.PUBLIC_URL}/enlistedAideCheckListForm/${activity.id}/${category.id}`
+                )
+              }else{  
+                debugger;     
+                if(backToCalendarId){
+                  const backToCalendarRecord : BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
+                  if(backToCalendarRecord){
+                   const url : string = `${backToCalendarRecord.url}/${backToCalendarRecord.id}`
+                   history.push(url);
+                  }else{
+                    history.push(
+                      `${process.env.PUBLIC_URL}/activities/${activity.id}/${category.id}`
+                    )
+                  }
+                } else {
+                history.push(
+                  `${process.env.PUBLIC_URL}/activities/${activity.id}/${category.id}`
+                )
+                }            
+              }
+            }
             );
       }
     }

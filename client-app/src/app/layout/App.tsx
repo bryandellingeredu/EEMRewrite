@@ -122,6 +122,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/academiccalendar`} component={AcademicCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar`} component={IMCCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar/:backToCalendarId`} component={IMCCalendarDashboard}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper/:backToCalendarId`} component={EnlistedAideCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper`} component={EnlistedAideCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/studentcalendar`} component={StudentCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/msfp`} component={MSFPCalendarWrapper}/>
@@ -151,10 +152,12 @@ function App() {
                   `${process.env.PUBLIC_URL}/createActivity`,
                   `${process.env.PUBLIC_URL}/manage/:id/:categoryId`,
                   `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries`,
+                  `${process.env.PUBLIC_URL}/manage/:id/:categoryId/:manageSeries/:backToCalendarId`,
                   `${process.env.PUBLIC_URL}/createActivityWithRoom/:roomid`,
                   `${process.env.PUBLIC_URL}/createActivityWithCalendar/:calendarid`,
                   `${process.env.PUBLIC_URL}/createActivityWithCalendar/:calendarid/:backToCalendarId`,
                   `${process.env.PUBLIC_URL}/copy/:id/:categoryId/:copy`,
+                  `${process.env.PUBLIC_URL}/managefromenlistedaide/:id/:categoryId/:enlistedaideid`,
                   ]} component={ActivityForm}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/enlistedAideConfirmation/:id/:categoryId`} component={enlistedAideConfirmation}/>
                 <Route key={location.key} exact path={ `${process.env.PUBLIC_URL}/enlistedAideChecklistForm/:id/:categoryId`} component={enlistedAideChecklistForm}/>

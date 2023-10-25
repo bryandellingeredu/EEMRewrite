@@ -410,6 +410,9 @@ export default observer(function EnlistedAideChecklistForm(){
             <Button  color='orange'  as={Link} to={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper`}>
                     Go To Calendar
                 </Button>
+                <Button  color='teal'  as={Link} to={`${process.env.PUBLIC_URL}/managefromenlistedaide/${activity.id}/${activity.categoryId}/${id}`}>
+                    Update Event
+                </Button>
             <Button
               positive
               type="submit"

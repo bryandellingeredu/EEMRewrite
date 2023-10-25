@@ -244,10 +244,17 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
 
    { activity.category.name !== 'Academic Calendar' && !activity.logicalDeleteInd &&
    <>
-            
-                <Button  color='orange'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
-                    Update Event
-                </Button>
+            {backToCalendarId &&
+               <Button  color='orange'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}/false/${backToCalendarId}`}>
+               Update Event
+           </Button>
+               }
+                 {!backToCalendarId &&
+               <Button  color='orange'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
+               Update Event
+           </Button>
+               }
+                
               
                 <Button  color='teal'  as={Link} to={`${process.env.PUBLIC_URL}/addtomycalendar/${activity.id}/${activity.categoryId}`}>
                     Add to My Calendar
@@ -331,13 +338,26 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
       >
        Repeating Event Info
      </Button>
-
+     {backToCalendarId && 
+        <>
+        <Button color='purple'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}/true/${backToCalendarId}`}>
+            Update Entire Series
+        </Button>
+        <Button  color='orange'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}/false/${backToCalendarId}`}>
+                    Update Just This Event
+        </Button>
+        </>
+        }
+        {!backToCalendarId && 
+        <>
         <Button color='purple'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}/true`}>
             Update Entire Series
         </Button>
         <Button  color='orange'  as={Link} to={`${process.env.PUBLIC_URL}/manage/${activity.id}/${activity.categoryId}`}>
                     Update Just This Event
         </Button>
+        </>
+        }
         </ButtonGroup>
         </Grid.Column>
         </Grid>
