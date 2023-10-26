@@ -22,6 +22,7 @@ interface OptionType {
 }
 
 interface Props {
+  id: string;
   start: Date;
   end: Date;
   setRoomEmails: (emails: string[]) => void;
@@ -31,6 +32,7 @@ interface Props {
 }
 
 export default observer(function RoomPicker({
+  id,
   start,
   end,
   setRoomEmails,
@@ -39,9 +41,10 @@ export default observer(function RoomPicker({
   recurrenceInd,
 }: Props) {
   const animatedComponents = makeAnimated();
-  const { availabilityStore, graphRoomStore, commonStore } = useStore();
+  const { availabilityStore, graphRoomStore, commonStore, activityStore} = useStore();
   const { loadingInitial, loadSchedule } = availabilityStore;
   const { loadGraphRooms } = graphRoomStore;
+  const { getTempRoomEmails} = activityStore
   const [roomOptions, setRoomOptions] = useState<Option[]>([
     { label: "", value: "", isDisabled: false },
   ]);
@@ -82,6 +85,19 @@ export default observer(function RoomPicker({
               })
             );
             setRoomOptions(o);
+            if(id && getTempRoomEmails(id) ){
+              setRoomEmails([]);
+              const tempRoomEmails = getTempRoomEmails(id);
+            const enabledTempRoomEmails = tempRoomEmails!.filter(email => {
+              const option = o.find(option => option.value === email);
+              return option && !option.isDisabled;
+            });
+            if (enabledTempRoomEmails.length > 0) {
+              setRoomEmails(enabledTempRoomEmails);
+            }else{
+              setRoomEmails([]);
+            }
+          }
 
             });
           }         
@@ -102,6 +118,25 @@ export default observer(function RoomPicker({
                 })
               );
               setRoomOptions(o);
+
+
+              if(id && getTempRoomEmails(id) ){
+                setRoomEmails([]);
+                const tempRoomEmails = getTempRoomEmails(id);
+              const enabledTempRoomEmails = tempRoomEmails!.filter(email => {
+                const option = o.find(option => option.value === email);
+                return option && !option.isDisabled;
+              });
+
+              if (enabledTempRoomEmails.length > 0) {
+                setRoomEmails(enabledTempRoomEmails);
+              }else{
+                setRoomEmails([]);
+              }
+            }
+
+
+              
             });
           }
         });
@@ -153,11 +188,6 @@ export default observer(function RoomPicker({
   }
 
   return (
-
- 
-
-    
-
 
       <>
       {roomEmails.length < 1 && 

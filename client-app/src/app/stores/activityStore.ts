@@ -21,6 +21,7 @@ export default class ActivityStore {
   day = new Date();
   uploading = false;
   calendarEventParametersRegistry = new Map<string, CalendarEventParameters>();
+  tempRoomEmailsRegistry = new Map<string,  string[]>();
   
 
   constructor() {
@@ -51,6 +52,19 @@ export default class ActivityStore {
   addCalendarEventParameters = (response: CalendarEventParameters) => {
     this.calendarEventParametersRegistry.set(response.id, response);
   }
+
+  setTempRoomEmails = (id :string, tempRoomEmails : string[]) : void =>{
+    this.tempRoomEmailsRegistry.set(id, tempRoomEmails)
+  }
+
+  getTempRoomEmails = (id: string): string[] | undefined => {
+    return this.tempRoomEmailsRegistry.get(id);
+  }
+
+  removeTempRoomEmails = (id: string): void => {
+    this.tempRoomEmailsRegistry.delete(id);
+}
+
 
 
   getActivityIdByRoom = async(title: string, startStr: string, endStr: string, id: string)  =>{

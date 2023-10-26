@@ -111,6 +111,9 @@ export default observer(function ActivityForm() {
     uploadActivityDocument,
     uploading,
     calendarEventParameters,
+    setTempRoomEmails,
+    getTempRoomEmails,
+    removeTempRoomEmails
   } = activityStore;
   const {user} = userStore
   const {getBackToCalendarInfoRecord} = backToCalendarStore;
@@ -201,8 +204,9 @@ export default observer(function ActivityForm() {
     setCancellingRooms(true);
     agent.Activities.cancelRoomReservations(id, manageSeries)
     .then(() => {
+      setTempRoomEmails(id, roomEmails);
       setRemoveEventLookup(true);
-      setRoomRequired(false);
+     setRoomRequired(false);
       setRoomEmails([]);
       setOriginalRoomEmails([]);
       setCancellingRooms(false);
@@ -585,9 +589,15 @@ export default observer(function ActivityForm() {
     if (isSignedIn) {
       loadEDUGraphUser();
     }
+    if(getTempRoomEmails(id)){
+      setRoomRequired(true);
+    }
   }, [isSignedIn, graphRooms]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
+    if(id && getTempRoomEmails(id)){
+      removeTempRoomEmails(id);
+    }
     let hostingReportError = false;
     let distantTechErrorIndicator = false;
     let subCalendarErrorIndicator = false;
@@ -933,13 +943,14 @@ export default observer(function ActivityForm() {
 
   const renderConfirmModal = () => (
     <Modal
+    style={{ marginTop: '300px' }}
       size="mini"
       open={confirmModalOpen}
       onClose={() => setConfirmModalOpen(false)}
     >
-      <Modal.Header>Cancel Room Reservation</Modal.Header>
+      <Modal.Header>Change Room Reservation Time</Modal.Header>
       <Modal.Content>
-        <p>Are you sure you want to cancel this room reservation?</p>
+        <p>Are you sure you want to change the time of this room reservation?</p>
       </Modal.Content>
       <Modal.Actions>
         <Button negative onClick={() => setConfirmModalOpen(false)}>
@@ -1117,20 +1128,19 @@ export default observer(function ActivityForm() {
             size="mini"
             color="black"
             compact
-            onClick={() => setPopupStartOpen(false)}
+            onClick={() => {setPopupStartOpen(false)}}
           >
             <Icon name="close" />
           </Button>
                       Why can't I change the start date?
                     </Popup.Header>
                     <Popup.Content>
-               
-                      This event has a current room reservation. To change the
-                      start date you must first cancel the room reservation. 
+                      This event has a current room reservation. Changing the start date will
+                      require the room to be re-approved by the room delegate. 
                          <Divider />
                       <Button type='button' primary
-                        onClick={() => {setConfirmModalOpen(true);}} loading={cancellingRooms}>
-                        Cancel Room Reservation
+                        onClick={() => { setConfirmModalOpen(true);}} loading={cancellingRooms}>
+                        Change Room Reservation Time
                       </Button> 
                       {renderConfirmModal()}
                     </Popup.Content>
@@ -1138,7 +1148,7 @@ export default observer(function ActivityForm() {
                 </Grid.Column>
                 <Grid.Column>
                   <Popup
-                   open={popupEndOpen}
+                   open={popupEndOpen }
                    onOpen={handleEndOpen}
                     trigger={
                       <SemanticForm.Field>
@@ -1170,20 +1180,17 @@ export default observer(function ActivityForm() {
                     </Popup.Header>
                     <Popup.Content>
                
-                      This event has a current room reservation. To change the
-                      end date you must first cancel the room reservation. 
+                    This event has a current room reservation. Changing the end date will
+                      require the room to be re-approved by the room delegate. 
                          <Divider />
                       <Button type='button' primary
                         onClick={() => {setConfirmModalOpen(true);}} loading={cancellingRooms}>
-                        Cancel Room Reservation
+                        Change Room Reservation Time
                       </Button> 
                       {renderConfirmModal()}
                     </Popup.Content>
                   </Popup>
-                </Grid.Column>
-
-               
-
+                </Grid.Column>    
                 <Grid.Column>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div style={{ flex: '0 0 auto', marginTop: '25px' }}>
@@ -1553,6 +1560,7 @@ export default observer(function ActivityForm() {
                     <span style={{ color: "purple" }}>Book a Room</span>
                   </Header>
                   <RoomPicker
+                    id={id}
                     start={values.start}
                     end={values.end}
                     setRoomEmails={handleSetRoomEmails}
