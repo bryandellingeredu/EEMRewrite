@@ -108,7 +108,7 @@
                 // Fetch distribution groups
                 var groupsPage = await _appClient.Groups
                     .Request()
-                    .Filter("groupTypes/any(a:a eq 'Unified')")
+                   // .Filter("groupTypes/any(a:a eq 'Unified')")
                     .Select(g => new {
                         g.DisplayName,
                         g.Id
