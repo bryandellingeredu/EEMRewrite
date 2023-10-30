@@ -120,10 +120,12 @@ export default observer(function ActivityForm() {
   const [enlistedAidAdmin, setEnlistedAidAdmin] = useState(false);
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
+  const [memberOfExecServices, setMemberOfExecServices] = useState(false);
   useEffect(() => {
     setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
     setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
     setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
+    setMemberOfExecServices((user && user.roles && user.roles.includes("ExecServices")) || false);
 }, [user]);
   const [attendees, setAttendees] = useState<UserEmail[]>([]);
   const updateAttendees = (newAttendees: UserEmail[]) => {setAttendees(newAttendees);};
@@ -1827,7 +1829,8 @@ export default observer(function ActivityForm() {
               </Grid>
             </Segment>
 
-            {!studentCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
+            {!studentCalendarAdmin && !memberOfExecServices
+             &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
   <div style={{
     display: 'flex',
     flexDirection: 'column',
@@ -1855,7 +1858,7 @@ export default observer(function ActivityForm() {
 
 
             {(categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" || values.copiedTostudentCalendar) &&
-               studentCalendarAdmin &&
+               studentCalendarAdmin  &&
                <Segment style={{ backgroundColor: "#f4e9f7" }} >
                    <Header as="h5" icon textAlign="center" color="purple">
                   <Icon name="graduation cap" />
@@ -4020,7 +4023,7 @@ export default observer(function ActivityForm() {
                           <Divider color="black" />
             <Button
               disabled={submitting || activity.cancelled ||
-                 (!studentCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar")}
+                 (!studentCalendarAdmin && !memberOfExecServices && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar")}
               loading={submitting}
               floated="right"
               positive
@@ -4039,7 +4042,7 @@ export default observer(function ActivityForm() {
               content="Cancel"
             />
       
-      {!studentCalendarAdmin && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
+      {!studentCalendarAdmin &&  !memberOfExecServices  && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
   <div style={{
     display: 'flex',
     flexDirection: 'column',
