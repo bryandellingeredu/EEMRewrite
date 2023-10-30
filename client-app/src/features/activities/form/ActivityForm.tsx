@@ -4022,7 +4022,7 @@ export default observer(function ActivityForm() {
                           </Grid>
                           <Divider color="black" />
             <Button
-              disabled={submitting || activity.cancelled ||
+              disabled={submitting || 
                  (!studentCalendarAdmin && !memberOfExecServices && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar")}
               loading={submitting}
               floated="right"
