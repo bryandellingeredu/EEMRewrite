@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Hosting;
-using System.ComponentModel;
 
 namespace Application.Activities
 {
@@ -41,7 +40,8 @@ namespace Application.Activities
             private readonly ICACAccessor _cacAccessor;
             private readonly IWebHostEnvironment _webHostEnvironment;
 
-            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor, IWebHostEnvironment webHostEnvironment)
+            public Handler(DataContext context, IMapper mapper, IConfiguration config, IUserAccessor userAccessor, ICACAccessor cacAccessor,
+                IWebHostEnvironment webHostEnvironment)
             {
                 _context = context;
                 _mapper = mapper;

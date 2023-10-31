@@ -152,6 +152,8 @@ namespace Application
                     if (_oldActivity != null && _oldActivity.Start != _activity.Start) sendNotifictaion = true;
                     if (_oldActivity != null && _oldActivity.End != _activity.End) sendNotifictaion = true;
                     if (_oldActivity != null && _oldActivity.EventLookup != _activity.EventLookup) sendNotifictaion = true;
+                    if (_oldActivity != null && _oldActivity.Cancelled != _activity.Cancelled) sendNotifictaion = true;
+                    if (_oldActivity != null && _oldActivity.LogicalDeleteInd != _activity.LogicalDeleteInd) sendNotifictaion = true;
 
                     if (sendNotifictaion)
                     {
@@ -162,9 +164,24 @@ namespace Application
                       <h2>Event Request Details</h2><p></p>
                        <p><strong>Title: </strong> {_activity.Title} </p>";
 
+                        if (_oldActivity != null && _oldActivity.Cancelled != _activity.Cancelled)
+                        {
+                            body = body + $" <p><strong>This Event Has Been Cancelled </strong> </p>";
+                        }
 
+                        if (_oldActivity != null && _oldActivity.LogicalDeleteInd != _activity.LogicalDeleteInd)
+                        {
+                            if (_activity.LogicalDeleteInd)
+                            {
+                                body = body + $" <p><strong>This Event Has Been Deleted </strong> </p>";
+                            }
+                            else
+                            {
+                                body = body + $" <p><strong>This Event Has Been Restored </strong> </p>";
+                            }
+                        }
 
-                        if(_oldActivity != null && _oldActivity.Start != _activity.Start)
+                        if (_oldActivity != null && _oldActivity.Start != _activity.Start)
                         {
                             body = body + $" <p><strong>Old Start Time: </strong> {GetOldStartTime()} </p>";
                             body = body + $" <p><strong>New Start Time: </strong> {GetStartTime()} </p>";
@@ -717,20 +734,22 @@ namespace Application
         private async Task< IEnumerable<ActivityRoom>> GetActivityRooms()
         {
             List<ActivityRoom> activityRooms = new List<ActivityRoom>();
-            var allrooms = await GraphHelper.GetRoomsAsync();
-
-            var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();
-            int index = 0;
-            foreach (var item in _activity.RoomEmails.Where(x => allroomEmails.Contains(x)))
+            if (_activity.RoomEmails != null && _activity.RoomEmails.Any())
             {
-                activityRooms.Add(new ActivityRoom
+                var allrooms = await GraphHelper.GetRoomsAsync();
+
+                var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();
+                int index = 0;
+                foreach (var item in _activity.RoomEmails.Where(x => allroomEmails.Contains(x)))
                 {
-                    Id = index++,
-                    Name = allrooms.Where(x => x.AdditionalData["emailAddress"].ToString() == item).FirstOrDefault().DisplayName,
-                    Email = item,
-                });
+                    activityRooms.Add(new ActivityRoom
+                    {
+                        Id = index++,
+                        Name = allrooms.Where(x => x.AdditionalData["emailAddress"].ToString() == item).FirstOrDefault().DisplayName,
+                        Email = item,
+                    });
+                }
             }
-        
             return activityRooms;
         }
     }
