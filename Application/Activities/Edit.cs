@@ -57,10 +57,11 @@ namespace Application.Activities
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
+                Activity oldActivity = null;
 
                 try
                 {
-                    var oldActivity = _context.Activities.AsNoTracking().FirstOrDefault(a => a.Id == request.Activity.Id);
+                    oldActivity = _context.Activities.AsNoTracking().FirstOrDefault(a => a.Id == request.Activity.Id);
                     if(oldActivity != null)
                     {
                         request.Activity.CoordinatorEmail = oldActivity.CoordinatorEmail;
@@ -274,7 +275,7 @@ namespace Application.Activities
 
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return Result<Unit>.Failure("Failed to Update Activity");
-                WorkflowHelper workflowHelper = new WorkflowHelper(activity, settings, _context, _webHostEnvironment);
+                WorkflowHelper workflowHelper = new WorkflowHelper(activity, settings, _context, _webHostEnvironment, oldActivity);
                 await workflowHelper.SendNotifications();
                 if (!_cacAccessor.IsCACAuthenticated() && activity.HostingReport != null)
                 {
@@ -304,9 +305,11 @@ namespace Application.Activities
                     return true;
                 }
 
+                Activity oldActivity = _context.Activities.AsNoTracking().First(a => a.Id == activity.Id);
+
                 if (!string.IsNullOrEmpty(originalEventLookup) && !string.IsNullOrEmpty(originalCoordinatorEmail))
                 {
-                    var oldActivity = _context.Activities.AsNoTracking().First(a => a.Id == activity.Id);
+                  
 
                     string coordinatorEmail = oldActivity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
                         ? activity.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();

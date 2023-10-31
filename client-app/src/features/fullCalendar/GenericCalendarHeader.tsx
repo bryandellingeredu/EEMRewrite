@@ -42,12 +42,26 @@ if (id === 'cio' && !cioEventPlanningAdmin) {
             openModal(
               <SyncCalendarInformation
                 routeName={id}
+                showSyncInfo={true}
               />, 'large'
             )
           }
         >
       <Icon name='sync'/>
        &nbsp; Sync To My Calendar
+    </Button>
+    <Button icon  floated="right" color='black' size='tiny'
+          onClick={() =>
+            openModal(
+              <SyncCalendarInformation
+                routeName={id}
+                showSyncInfo={false}
+              />, 'large'
+            )
+          }
+        >
+      <Icon name='bell'/>
+       &nbsp; Subscribe to Changes
     </Button>
     <Divider horizontal>
 

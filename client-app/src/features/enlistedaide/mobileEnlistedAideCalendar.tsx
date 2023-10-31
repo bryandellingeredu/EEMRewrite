@@ -97,6 +97,7 @@ export default function MobileEnlistedAideCalendar (){
             openModal(
               <SyncCalendarInformation
                 routeName={'enlistedAide'}
+                showSyncInfo={true}
               />, 'large'
             )
           }

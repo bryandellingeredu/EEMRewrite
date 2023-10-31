@@ -146,6 +146,7 @@ const eventDidMount = (info : any) => {
             openModal(
               <SyncCalendarInformation
                 routeName={'enlistedAide'}
+                showSyncInfo={true}
               />, 'large'
             )
           }

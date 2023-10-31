@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Header, Icon, Input, Label, List, Message, Tab } from "semantic-ui-react";
+import { Button, Divider, Form, Header, Icon, Input, Label, List, Message, Segment, Tab } from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
 import {useState} from 'react';
 import { FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -19,6 +19,7 @@ const faAndroidPropIcon = faAndroid as IconProp;
 
 interface Props {
     routeName: string
+    showSyncInfo: boolean
 }
 
 interface Dictionary {
@@ -54,7 +55,7 @@ const cases = [
 
 
 
-export default function SyncCalendarInformation({routeName} : Props){
+export default function SyncCalendarInformation({routeName, showSyncInfo} : Props){
 
     const { modalStore } = useStore();
      const {closeModal} = modalStore;
@@ -167,6 +168,7 @@ export default function SyncCalendarInformation({routeName} : Props){
                 pauseOnHover: true,
                 draggable: true,
               });
+              if(!showSyncInfo) closeModal();
     
         } catch (error) {
           console.error("An error occurred:", error);
@@ -191,6 +193,8 @@ export default function SyncCalendarInformation({routeName} : Props){
           >
             <Icon name="close" />
           </Button>
+          {showSyncInfo &&
+          <>
           <Header as="h2">
             <Icon name="sync" />
             <Header.Content>
@@ -204,17 +208,16 @@ export default function SyncCalendarInformation({routeName} : Props){
              <Header as="h4" >
               Copy the iCal feed Url:  {`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}`}   <CopyToClipboard text={`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}` } />
              </Header>
+             </>
+          }
 
-             <Message info>
+             <Message info style={{marginTop: '30px'}} >
       <Message.Header>Subscribe to Changes</Message.Header>
-      {routeName !== 'studentCalendar' && 
+     
+   
          <span>
-           Most external calendars update within a 3 to 5-hour window. However, if you require notifications for changes occurring within 24 hours prior to an event, please enter your email and click "Submit." 
-           </span>}
-      {routeName === 'studentCalendar' && 
-         <span>
-          If you subscribe you will receive an email with any changes to the Student Calendar that are within 3 days, please enter your email and click "Submit."
-           </span>}
+          If you subscribe you will receive an email with any changes to the Calendar that are within 3 days, please enter your email and click "Submit."
+           </span>
       <p/>
       <Form>
         <Input
@@ -232,6 +235,8 @@ export default function SyncCalendarInformation({routeName} : Props){
       </Form>
     </Message>
 
+    {showSyncInfo &&
+    <>
              <Tab panes={panes} />
 
              <Message warning>
@@ -239,6 +244,7 @@ export default function SyncCalendarInformation({routeName} : Props){
     <p>When you synchronize your personal calendar with the IMC or an organizational calendar, be aware that you will be importing a large volume of data. This may lead to a significant increase in the data within your personal calendar.</p>
     <p>It's important to note that your personal calendar will display only the essential event details: title, location, description, and date/time. You will not have access to any other information about the event.</p>
   </Message>
-    
+   </>
+    }
     </>
     )};

@@ -11,12 +11,19 @@ namespace Application
     public class WorkflowHelper
     {
         private Activity _activity;
+        private Activity _oldActivity;
         private readonly DataContext _context;
         private readonly Settings _settings;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private string GetLocation() => _activity.ActivityRooms.Any() ? string.Join(", ", _activity.ActivityRooms.Select(x => x.Name).ToArray()) : _activity.PrimaryLocation;
+        private async Task<string> GetLocation()
+        {
+            var activityRooms = await GetActivityRooms();
+            return activityRooms.Any() ? string.Join(", ", activityRooms.Select(x => x.Name).ToArray()) : _activity.PrimaryLocation;
+        }
         private string GetStartTime() => _activity.AllDayEvent ? _activity.Start.ToString("MMMM dd, yyyy") : _activity.Start.ToString("MMMM dd, yyyy h:mm tt");
         private string GetEndTime() => _activity.AllDayEvent ? _activity.End.ToString("MMMM dd, yyyy") : _activity.End.ToString("MMMM dd, yyyy h:mm tt");
+        private string GetOldStartTime() => _oldActivity == null ? string.Empty : (_oldActivity.AllDayEvent ? _oldActivity.Start.ToString("MMMM dd, yyyy") : _oldActivity.Start.ToString("MMMM dd, yyyy h:mm tt"));
+        private string GetOldEndTime() => _oldActivity == null ? string.Empty : (_oldActivity.AllDayEvent ? _oldActivity.End.ToString("MMMM dd, yyyy") : _oldActivity.End.ToString("MMMM dd, yyyy h:mm tt"));
         private string[] GetEmails(string name)
         {
             if (_webHostEnvironment.IsDevelopment())
@@ -66,9 +73,10 @@ namespace Application
         }
 
 
-        public WorkflowHelper(Activity activity, Settings settings, DataContext context, IWebHostEnvironment webHostEnvironment)
+        public WorkflowHelper(Activity activity, Settings settings, DataContext context, IWebHostEnvironment webHostEnvironment, Activity oldActivity = null)
         {
             _activity = activity;
+            _oldActivity = oldActivity;
             _settings = settings;
              GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
             _context = context;
@@ -100,7 +108,7 @@ namespace Application
             if (_activity.SendEnlistedAideConfirmationNotification && _activity.EnlistedAideEvent) await this.SendEnlistedAideConfirmationNotification();
             if (!_activity.EventPlanningNotificationSent && _activity.EventPlanningNotifyPOC && !string.IsNullOrEmpty(_activity.EventPlanningExternalEventPOCEmail)) await this.sendEventPlanningNotification();
             await this.SendAddToMyCalendarEmails();
-            if ((_activity.Start - DateTime.Now).TotalHours <= 24  ||   ((_activity.Start - DateTime.Now).TotalHours <= 72 && _activity.CopiedTostudentCalendar)) await this.SendSyncCalendarNotificationEmails();
+            if ((_activity.Start - DateTime.Now).TotalHours <= 72 ) await this.SendSyncCalendarNotificationEmails();
         }
 
         private async Task SendSyncCalendarNotificationEmails()
@@ -138,55 +146,87 @@ namespace Application
             {
                 foreach (var item in items)
                 {
+                    bool sendNotifictaion = false;
+                    if (string.IsNullOrEmpty(_activity.LastUpdatedBy)) sendNotifictaion = true;
+                    if (_oldActivity == null) sendNotifictaion = true;
+                    if (_oldActivity != null && _oldActivity.Start != _activity.Start) sendNotifictaion = true;
+                    if (_oldActivity != null && _oldActivity.End != _activity.End) sendNotifictaion = true;
+                    if (_oldActivity != null && _oldActivity.EventLookup != _activity.EventLookup) sendNotifictaion = true;
 
+                    if (sendNotifictaion)
+                    {
+                        string updatedOrAdded = string.IsNullOrEmpty(_activity.LastUpdatedBy) ? "added" : "updated";
 
-                    string title = $"{_activity.Title} has been updated or added";
-                    string body = $@"<p> {_activity.Title} , an event you synced to your calendar, has been updated or added within 24 hours of its start time.</p>
+                        string title = $"{_activity.Title} has been {updatedOrAdded}";
+                        string body = $@"<p> {_activity.Title} , an event you subscribed to has been {updatedOrAdded} within 3 days of its start time.</p>
                       <h2>Event Request Details</h2><p></p>
-                       <p><strong>Title: </strong> {_activity.Title} </p>
-                       <p><strong>Start Time: </strong> {GetStartTime()} </p>
-                      <p><strong>End Time: </strong> {GetEndTime()} </p> 
-                      <p><strong>Action Officer: </strong> {_activity.ActionOfficer}</p>
+                       <p><strong>Title: </strong> {_activity.Title} </p>";
+
+
+
+                        if(_oldActivity != null && _oldActivity.Start != _activity.Start)
+                        {
+                            body = body + $" <p><strong>Old Start Time: </strong> {GetOldStartTime()} </p>";
+                            body = body + $" <p><strong>New Start Time: </strong> {GetStartTime()} </p>";
+                        }
+                        else
+                        {
+                            body = body + $"  <p><strong>Start Time: </strong> {GetStartTime()} </p>";
+                        }
+
+                        if (_oldActivity != null && _oldActivity.End != _activity.End)
+                        {
+                            body = body + $" <p><strong>Old End Time: </strong> {GetOldEndTime()} </p>";
+                            body = body + $" <p><strong>New End Time: </strong> {GetEndTime()} </p>";
+                        }
+                        else
+                        {
+                            body = body + $"  <p><strong>End Time: </strong> {GetEndTime()} </p>";
+                        }
+
+
+                       body = body + $@"<p><strong>Action Officer: </strong> {_activity.ActionOfficer}</p>
                            <p><strong>Action Office Phoner: </strong> {_activity.ActionOfficerPhone}</p> ";
 
-                    if (!string.IsNullOrEmpty(_activity.Description))
-                    {
-                        body = body + $"<p><strong>Event Details: </strong> {_activity.Description}</p>";
-                    }
+                        if (!string.IsNullOrEmpty(_activity.Description))
+                        {
+                            body = body + $"<p><strong>Event Details: </strong> {_activity.Description}</p>";
+                        }
 
-                    if (!string.IsNullOrEmpty(GetLocation()))
-                    {
-                        body = body + $"<p><strong>Location: </strong> {GetLocation()}</p>";
-                    }
-                    if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarUniform))
-                    {
-                        body = body + $"<p><strong>Uniform: </strong> {_activity.StudentCalendarUniform} </p>";
-                    }
-                    if (_activity.CopiedTostudentCalendar && _activity.StudentCalendarMandatory)
-                    {
-                        body = body + $"<p><strong>Attendance: </strong> Attendance is Mandatory </p>";
-                    }
-                    if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarPresenter))
-                    {
-                        body = body + $"<p><strong>Presenter: </strong> {_activity.StudentCalendarPresenter} </p>";
-                    }
-                    if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarNotes))
-                    {
-                        body = body + $"<p><strong>Notes: </strong> {_activity.StudentCalendarNotes} </p>";
-                    }
-                    body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
-                    if (!string.IsNullOrEmpty(_activity.LastUpdatedBy))
-                    {
-                        body = body + $"<p><strong>Event Updated By: </strong> {_activity.LastUpdatedBy} </p>";
-                    }
-
-
+                        if (!string.IsNullOrEmpty(await GetLocation()))
+                        {
+                            body = body + $"<p><strong>Location: </strong> {await GetLocation()}</p>";
+                        }
+                        if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarUniform))
+                        {
+                            body = body + $"<p><strong>Uniform: </strong> {_activity.StudentCalendarUniform} </p>";
+                        }
+                        if (_activity.CopiedTostudentCalendar && _activity.StudentCalendarMandatory)
+                        {
+                            body = body + $"<p><strong>Attendance: </strong> Attendance is Mandatory </p>";
+                        }
+                        if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarPresenter))
+                        {
+                            body = body + $"<p><strong>Presenter: </strong> {_activity.StudentCalendarPresenter} </p>";
+                        }
+                        if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarNotes))
+                        {
+                            body = body + $"<p><strong>Notes: </strong> {_activity.StudentCalendarNotes} </p>";
+                        }
+                        body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
+                        if (!string.IsNullOrEmpty(_activity.LastUpdatedBy))
+                        {
+                            body = body + $"<p><strong>Event Updated By: </strong> {_activity.LastUpdatedBy} </p>";
+                        }
 
 
-                    body = body + $@"<p><p/><p><p/><p> To view in the Enterprise Event Manager (EEM), click the: <a href='{_settings.BaseUrl}?id={_activity.Id}&categoryid={_activity.CategoryId}'> EEM Link </a></p>
+
+
+                        body = body + $@"<p><p/><p><p/><p> To view in the Enterprise Event Manager (EEM), click the: <a href='{_settings.BaseUrl}?id={_activity.Id}&categoryid={_activity.CategoryId}'> EEM Link </a></p>
               <p></p><p></p><p>DO NOT REPLY TO THIS E-MAIL. THIS MESSAGE WAS AUTOMATICALLY GENERATED BY THE SYSTEM AND IS NOT MONITORED.</p>
               <p></p><p></p><p>YOU HAVE RECEIVED THIS EMAIL BECAUSE YOU SUBSCRIBED TO NOTIFICATIONS. TO STOP RECEIVING THESE NOTIFICATIONS <a href='{_settings.BaseUrl}?redirecttopage=unsubscribe/{item.Id}'> UNSUBSCRIBE </a> </p>";
-                    await GraphHelper.SendEmail(new[] { item.Email }, title, body);
+                        await GraphHelper.SendEmail(new[] { item.Email }, title, body);
+                    }
                 }
             }
         }
@@ -218,9 +258,9 @@ namespace Application
                 body = body + $"<p><strong>Event Details: </strong> {_activity.Description}</p>";
             }
 
-            if (!string.IsNullOrEmpty(GetLocation()))
+            if (!string.IsNullOrEmpty(await GetLocation()))
             {
-                body = body + $"<p><strong>Location: </strong> {GetLocation()}</p>";
+                body = body + $"<p><strong>Location: </strong> {await GetLocation()}</p>";
             }
             body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
                 if (!string.IsNullOrEmpty(_activity.LastUpdatedBy))
@@ -523,7 +563,7 @@ namespace Application
 
            body = body + $@"<p></p><h3>Event Request Details</h3><hr><p></p>
                         <p><strong>Title: </strong> {_activity.Title}</p>
-                        <p><strong>Location: </strong> {GetLocation()}</p>
+                        <p><strong>Location: </strong> {await GetLocation()}</p>
                         <p><strong>Start Time: </strong> {GetStartTime()} </p>
                         <p><strong>End Time: </strong> {GetEndTime()} </p>";
         
@@ -568,9 +608,9 @@ namespace Application
                 body = body + $"<p><strong>Event Details: </strong> {_activity.Description}</p>";
             }
 
-            if (!string.IsNullOrEmpty(GetLocation()))
+            if (!string.IsNullOrEmpty(await GetLocation()))
             {
-                body = body + $"<p><strong>Location: </strong> {GetLocation()}</p>";
+                body = body + $"<p><strong>Location: </strong> {await GetLocation()}</p>";
             }
             body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
 
@@ -612,9 +652,9 @@ namespace Application
                              <p>This does not guarentee their attenance at your event. This only notifies the admin assistant of your request. Please coordinate further with the admin assistant to verify leader availability at your event.</p>
                              <p><strong>Event Title: </strong> {_activity.Title} </p>";
 
-            if (!string.IsNullOrEmpty(GetLocation())){
-                body = body + $"<p><strong>Location/s: </strong> {GetLocation()} <p>";
-                bodyForRequester = bodyForRequester + $"<p><strong>Location/s: </strong> {GetLocation()} <p>";
+            if (!string.IsNullOrEmpty(await GetLocation())){
+                body = body + $"<p><strong>Location/s: </strong> {await GetLocation()} <p>";
+                bodyForRequester = bodyForRequester + $"<p><strong>Location/s: </strong> {await GetLocation()} <p>";
             }
 
              body = body + $@"<p><strong>Start Time: </strong> {GetStartTime()} </p>
