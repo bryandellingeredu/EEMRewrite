@@ -9,6 +9,7 @@ import agent from "../../../app/api/agent";
 import { GraphScheduleItem } from "../../../app/models/graphScheduleItem";
 import { Activity } from "../../../app/models/activity";
 import { GraphScheduleResponse } from "../../../app/models/graphScheduleResponse";
+import { toast } from "react-toastify";
 
 interface Option {
   label: string;
@@ -85,20 +86,6 @@ export default observer(function RoomPicker({
               })
             );
             setRoomOptions(o);
-            if(id && getTempRoomEmails(id) ){
-              setRoomEmails([]);
-              const tempRoomEmails = getTempRoomEmails(id);
-            const enabledTempRoomEmails = tempRoomEmails!.filter(email => {
-              const option = o.find(option => option.value === email);
-              return option && !option.isDisabled;
-            });
-            if (enabledTempRoomEmails.length > 0) {
-              setRoomEmails(enabledTempRoomEmails);
-            }else{
-              setRoomEmails([]);
-            }
-          }
-
             });
           }         
           });
@@ -118,31 +105,74 @@ export default observer(function RoomPicker({
                 })
               );
               setRoomOptions(o);
-
-
-              if(id && getTempRoomEmails(id) ){
-                setRoomEmails([]);
-                const tempRoomEmails = getTempRoomEmails(id);
-              const enabledTempRoomEmails = tempRoomEmails!.filter(email => {
-                const option = o.find(option => option.value === email);
-                return option && !option.isDisabled;
-              });
-
-              if (enabledTempRoomEmails.length > 0) {
-                setRoomEmails(enabledTempRoomEmails);
-              }else{
-                setRoomEmails([]);
-              }
-            }
-
-
-              
             });
           }
         });
       }
     }
   }, [start, end, loadSchedule, loadGraphRooms, recurrenceInd, recurrence]);
+
+ /* useEffect(() => {
+    if (id && getTempRoomEmails(id)) {
+      const tempRoomEmails = getTempRoomEmails(id);
+      const enabledTempRoomEmails = tempRoomEmails!.filter(email => {
+        const option = roomOptions.find(option => option.value === email);
+        return option && !option.isDisabled;
+      });
+  
+      if (enabledTempRoomEmails.length > 0) {
+        setRoomEmails(enabledTempRoomEmails);
+      } else {
+        setRoomEmails([]);
+      }
+    }
+  }, [roomOptions, id]);*/
+
+  const toastId = "my_unique_toast_id"; // define a unique toastId
+
+  useEffect(() => {
+    if (id && getTempRoomEmails(id)) {
+      const tempRoomEmails = getTempRoomEmails(id);
+      const disabledTempRoomEmails: string[] = [];
+  
+      const enabledTempRoomEmails = tempRoomEmails!.filter(email => {
+        const option = roomOptions.find(option => option.value === email);
+        if (option && !option.isDisabled) {
+          return true;
+        } else {
+          if (option) {
+            disabledTempRoomEmails.push(email);
+          }
+          return false;
+        }
+      });
+  
+      if (enabledTempRoomEmails.length > 0) {
+        setRoomEmails(enabledTempRoomEmails);
+      } else {
+        setRoomEmails([]);
+      }
+  
+      if (disabledTempRoomEmails.length > 0 && !toast.isActive(toastId)) {
+        toast.error(
+          <>
+            <h4>Room(s) {disabledTempRoomEmails.join(', ')} are not available for that time.</h4>
+            <p>Please pick a different time or a different room.</p>
+          </>,
+          {
+            toastId,
+            position: "top-center",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: { backgroundColor: 'red', color: 'white' }
+          }
+        );
+      }
+    }
+  }, [roomOptions, id]);
 
   function getIsRecurrenceDisabled(room: GraphScheduleResponse, activities: Activity[]){
        let result = false;

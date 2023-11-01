@@ -154,6 +154,14 @@ namespace Application
                     if (_oldActivity != null && _oldActivity.EventLookup != _activity.EventLookup) sendNotifictaion = true;
                     if (_oldActivity != null && _oldActivity.Cancelled != _activity.Cancelled) sendNotifictaion = true;
                     if (_oldActivity != null && _oldActivity.LogicalDeleteInd != _activity.LogicalDeleteInd) sendNotifictaion = true;
+                    if (_oldActivity != null && _oldActivity.Title != _activity.Title) sendNotifictaion = true;
+                    if (_oldActivity != null && _oldActivity.ActionOfficerPhone != _activity.ActionOfficerPhone) sendNotifictaion = true;
+                    if (_oldActivity != null && _oldActivity.ActionOfficer != _activity.ActionOfficer) sendNotifictaion = true;
+                    if (_oldActivity != null && _oldActivity.Description != _activity.Description) sendNotifictaion = true;
+                    if (_oldActivity != null && _activity.CopiedTostudentCalendar && _oldActivity.StudentCalendarUniform != _activity.StudentCalendarUniform) sendNotifictaion = true;
+                    if (_oldActivity != null && _activity.CopiedTostudentCalendar && _oldActivity.StudentCalendarMandatory != _activity.StudentCalendarMandatory) sendNotifictaion = true;
+                    if (_oldActivity != null && _activity.CopiedTostudentCalendar && _oldActivity.StudentCalendarPresenter != _activity.StudentCalendarPresenter) sendNotifictaion = true;
+                    if (_oldActivity != null && _activity.CopiedTostudentCalendar && _oldActivity.StudentCalendarNotes != _activity.StudentCalendarNotes) sendNotifictaion = true;
 
                     if (sendNotifictaion)
                     {
@@ -161,30 +169,40 @@ namespace Application
 
                         string title = $"{_activity.Title} has been {updatedOrAdded}";
                         string body = $@"<p> {_activity.Title} , an event you subscribed to has been {updatedOrAdded} within 3 days of its start time.</p>
-                      <h2>Event Request Details</h2><p></p>
-                       <p><strong>Title: </strong> {_activity.Title} </p>";
+                      <h2>Event Request Details</h2><p></p>";
+
+                        if (_oldActivity != null && _oldActivity.Title != _activity.Title)
+                        {
+                            body = body + $" <p style='color: darkred;'><strong>Old Title: </strong> {_oldActivity.Title} </p>";
+                            body = body + $" <p style='color: darkred;'><strong>New Title: </strong> {_activity.Title} </p>";
+                        }
+                        else
+                        {
+                            body = body + $"<p><strong>Title: </strong> {_activity.Title} </p>";
+                        }
+
 
                         if (_oldActivity != null && _oldActivity.Cancelled != _activity.Cancelled)
                         {
-                            body = body + $" <p><strong>This Event Has Been Cancelled </strong> </p>";
+                            body = body + $" <p style='color: darkred;'><strong>This Event Has Been Cancelled </strong> </p>";
                         }
 
                         if (_oldActivity != null && _oldActivity.LogicalDeleteInd != _activity.LogicalDeleteInd)
                         {
                             if (_activity.LogicalDeleteInd)
                             {
-                                body = body + $" <p><strong>This Event Has Been Deleted </strong> </p>";
+                                body = body + $" <p style='color: darkred;'><strong>This Event Has Been Deleted </strong> </p>";
                             }
                             else
                             {
-                                body = body + $" <p><strong>This Event Has Been Restored </strong> </p>";
+                                body = body + $" <p style='color: darkred;'><strong>This Event Has Been Restored </strong> </p>";
                             }
                         }
 
                         if (_oldActivity != null && _oldActivity.Start != _activity.Start)
                         {
-                            body = body + $" <p><strong>Old Start Time: </strong> {GetOldStartTime()} </p>";
-                            body = body + $" <p><strong>New Start Time: </strong> {GetStartTime()} </p>";
+                            body = body + $" <p style='color: darkred;'><strong>Old Start Time: </strong> {GetOldStartTime()} </p>";
+                            body = body + $" <p style='color: darkred;'><strong>New Start Time: </strong> {GetStartTime()} </p>";
                         }
                         else
                         {
@@ -193,8 +211,8 @@ namespace Application
 
                         if (_oldActivity != null && _oldActivity.End != _activity.End)
                         {
-                            body = body + $" <p><strong>Old End Time: </strong> {GetOldEndTime()} </p>";
-                            body = body + $" <p><strong>New End Time: </strong> {GetEndTime()} </p>";
+                            body = body + $" <p style='color: darkred;'><strong>Old End Time: </strong> {GetOldEndTime()} </p>";
+                            body = body + $" <p style='color: darkred;'><strong>New End Time: </strong> {GetEndTime()} </p>";
                         }
                         else
                         {
@@ -202,33 +220,93 @@ namespace Application
                         }
 
 
-                       body = body + $@"<p><strong>Action Officer: </strong> {_activity.ActionOfficer}</p>
-                           <p><strong>Action Office Phoner: </strong> {_activity.ActionOfficerPhone}</p> ";
-
-                        if (!string.IsNullOrEmpty(_activity.Description))
+                        if (_oldActivity != null && _oldActivity.ActionOfficer != _activity.ActionOfficer)
                         {
-                            body = body + $"<p><strong>Event Details: </strong> {_activity.Description}</p>";
+                            body = body + $" <p style='color: darkred;'><strong>Old Action Officer: </strong> {_oldActivity.ActionOfficer} </p>";
+                            body = body + $" <p style='color: darkred;'><strong>New Action Officer: </strong> {_activity.ActionOfficer} </p>";
                         }
+                        else
+                        {
+                            body = body + $" <p><strong>Action Officer: </strong> {_activity.ActionOfficer} </p>";
+                        }
+
+                        if (_oldActivity != null && _oldActivity.ActionOfficerPhone != _activity.ActionOfficerPhone)
+                        {
+                            body = body + $" <p style='color: darkred;'><strong>Old Action Officer Phone: </strong> {_oldActivity.ActionOfficerPhone} </p>";
+                            body = body + $" <p style='color: darkred;'><strong>New Action Officer Phone: </strong> {_activity.ActionOfficerPhone} </p>";
+                        }
+                        else
+                        {
+                            body = body + $" <p><strong>Action Officer Phone: </strong> {_activity.ActionOfficerPhone} </p>";
+                        }
+
+                        if (_oldActivity != null && _oldActivity.Description != _activity.Description)
+                        {
+                            body = body + $" <p style='color: darkred;'><strong>Old Description: </strong> {_oldActivity.Description} </p>";
+                            body = body + $" <p style='color: darkred;'><strong>New Description: </strong> {_activity.Description} </p>";
+                        }
+                        else
+                        {
+                            body = body + $" <p><strong>Description: </strong> {_activity.Description} </p>";
+                        }
+
+                  
 
                         if (!string.IsNullOrEmpty(await GetLocation()))
                         {
-                            body = body + $"<p><strong>Location: </strong> {await GetLocation()}</p>";
+                          
+                                body = body + $"<p><strong>Location: </strong> {await GetLocation()}</p>";
                         }
                         if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarUniform))
+
+
                         {
-                            body = body + $"<p><strong>Uniform: </strong> {_activity.StudentCalendarUniform} </p>";
+                            if (_oldActivity != null && _oldActivity.StudentCalendarUniform != _activity.StudentCalendarUniform)
+                            {
+                                body = body + $" <p style='color: darkred;'><strong>Old Uniform: </strong> {_oldActivity.StudentCalendarUniform} </p>";
+                                body = body + $" <p style='color: darkred;'><strong>New Uniform: </strong> {_activity.StudentCalendarUniform} </p>";
+                            }
+                            else
+                            {
+                                body = body + $" <p><strong>Uniform: </strong> {_activity.StudentCalendarUniform} </p>";
+                            }
                         }
                         if (_activity.CopiedTostudentCalendar && _activity.StudentCalendarMandatory)
                         {
+                            if (_activity.StudentCalendarMandatory!= _activity.StudentCalendarMandatory)
+                            {
+                                body = body + $"<p style='color: darkred;'><strong>Attendance: </strong> Attendance was optional but was changed to  Mandatory </p>";
+                            }
                             body = body + $"<p><strong>Attendance: </strong> Attendance is Mandatory </p>";
                         }
-                        if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarPresenter))
+                        if (_activity.CopiedTostudentCalendar && !_activity.StudentCalendarMandatory && _oldActivity.StudentCalendarMandatory)
                         {
-                            body = body + $"<p><strong>Presenter: </strong> {_activity.StudentCalendarPresenter} </p>";
+                            body = body + $"<p><strong>Attendance: </strong> Attendance was Mandatory but is now Optional </p>";
+                        }
+                       
+                            if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarPresenter))
+                        {
+                            if (_oldActivity != null && _oldActivity.StudentCalendarPresenter != _activity.StudentCalendarPresenter)
+                            {
+                                body = body + $" <p style='color: darkred;'><strong>Old Presenter: </strong> {_oldActivity.StudentCalendarPresenter} </p>";
+                                body = body + $" <p style='color: darkred;'><strong>New Presenter: </strong> {_activity.StudentCalendarPresenter} </p>";
+                            }
+                            else
+                            {
+                                body = body + $" <p><strong>Presenter: </strong> {_activity.StudentCalendarPresenter} </p>";
+                            }
                         }
                         if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarNotes))
                         {
-                            body = body + $"<p><strong>Notes: </strong> {_activity.StudentCalendarNotes} </p>";
+                            if (_oldActivity != null && _oldActivity.StudentCalendarNotes != _activity.StudentCalendarNotes)
+                            {
+                                body = body + $" <p style='color: darkred;'><strong>Old Notes: </strong> {_oldActivity.StudentCalendarNotes} </p>";
+                                body = body + $" <p style='color: darkred;'><strong>New Notes: </strong> {_activity.StudentCalendarNotes} </p>";
+                            }
+                            else
+                            {
+                                body = body + $" <p><strong>Notes: </strong> {_activity.StudentCalendarNotes} </p>";
+                            }
                         }
                         body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
                         if (!string.IsNullOrEmpty(_activity.LastUpdatedBy))

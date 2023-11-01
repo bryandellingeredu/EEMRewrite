@@ -163,6 +163,7 @@ export default observer(function ActivityForm() {
   const [distantTechError, setDistantTechError] = useState(false);
   const [attachNoAttachmentError, setAttachNoAttachmentError] = useState(false);
   const [subCalendarError, setSubCalendarError] = useState(false);
+  const [noRoomError, setNoRoomError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [recurrenceDisabled, setRecurrenceDisabled] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
@@ -603,10 +604,12 @@ export default observer(function ActivityForm() {
     let hostingReportError = false;
     let distantTechErrorIndicator = false;
     let subCalendarErrorIndicator = false;
+    let noRoomErrorIndicator = false;
     setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
     setSubCalendarError(false);
+    setNoRoomError(false);
     
     if(!roomRequired && (activity.categoryId == '' || categories.find((x) => x.id === activity.categoryId)?.name ==="Other")){
       setSubCalendarError(true);
@@ -614,6 +617,18 @@ export default observer(function ActivityForm() {
       const subCalendarAnchor = document.getElementById("subCalendarAnchor");
       if (subCalendarAnchor) {
         subCalendarAnchor.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+
+    if (roomRequired && roomEmails.length < 1){
+      setNoRoomError(true);
+      noRoomErrorIndicator = true;
+      const noRoomErrorAnchor = document.getElementById("noRoomErrorAnchor");
+      if (noRoomErrorAnchor) {
+        noRoomErrorAnchor.scrollIntoView({
           behavior: "smooth",
           block: "center",
         });
@@ -663,7 +678,7 @@ export default observer(function ActivityForm() {
         }
       }
     }
-    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator) {
+    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator) {
       setSubmitting(true);
       if (!activity.categoryId)
         activity.categoryId = categories.find((x) => x.name === "Other")!.id;
@@ -1559,7 +1574,14 @@ export default observer(function ActivityForm() {
                       style={{ marginRight: "10px" }}
                       color="purple"
                     />
-                    <span style={{ color: "purple" }}>Book a Room</span>
+                    <span style={{ color: "purple" }} id="noRoomErrorAnchor">Book a Room</span>
+                                {noRoomError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      Pick at least one Room. (If rooms are still loading please wait)
+                                    </Label>
+                                  </p>
+                                )}
                   </Header>
                   <RoomPicker
                     id={id}
