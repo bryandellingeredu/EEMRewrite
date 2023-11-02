@@ -10,6 +10,7 @@ import { GraphScheduleItem } from "../../../app/models/graphScheduleItem";
 import { Activity } from "../../../app/models/activity";
 import { GraphScheduleResponse } from "../../../app/models/graphScheduleResponse";
 import { toast } from "react-toastify";
+import { useRef } from 'react';
 
 interface Option {
   label: string;
@@ -30,6 +31,8 @@ interface Props {
   roomEmails: string[];
   recurrenceInd: boolean;
   recurrence: Recurrence;
+  unlockDateInput: () => void;
+  lockDateInput: () => void;
 }
 
 export default observer(function RoomPicker({
@@ -40,6 +43,8 @@ export default observer(function RoomPicker({
   roomEmails,
   recurrence,
   recurrenceInd,
+  unlockDateInput,
+  lockDateInput
 }: Props) {
   const animatedComponents = makeAnimated();
   const { availabilityStore, graphRoomStore, commonStore, activityStore} = useStore();
@@ -48,9 +53,11 @@ export default observer(function RoomPicker({
   const { getTempRoomEmails} = activityStore
   const [roomOptions, setRoomOptions] = useState<Option[]>([
     { label: "", value: "", isDisabled: false },
+
   ]);
   const [dirty, setDirty] = useState<boolean>(false);
   const [selectedBuilding, setSelectedBuilding] = useState('');
+  const isFirstRun = useRef(true);
 
   const handleBuildingChange = (selectedOption: OptionType | null) => {
     setSelectedBuilding(selectedOption ? selectedOption.value : '');
@@ -64,6 +71,7 @@ export default observer(function RoomPicker({
 
 
   useEffect(() => {
+
     console.log('starting use effect');
     const diff = Math.abs(+end - +start);
     var minutes = Math.floor(diff / 1000 / 60);
@@ -91,6 +99,7 @@ export default observer(function RoomPicker({
           });
         });
       } else {
+        if(getTempRoomEmails(id)) lockDateInput();
         loadSchedule(start, end).then((schedule) => {
           if (schedule) {
             let o: Option[] = [];
@@ -105,6 +114,10 @@ export default observer(function RoomPicker({
                 })
               );
               setRoomOptions(o);
+              if(o && o.length > 0 && getTempRoomEmails(id) ){
+                setTempRoomEmails(o, getTempRoomEmails(id));
+              }
+              unlockDateInput();
             });
           }
         });
@@ -112,55 +125,32 @@ export default observer(function RoomPicker({
     }
   }, [start, end, loadSchedule, loadGraphRooms, recurrenceInd, recurrence]);
 
- /* useEffect(() => {
-    if (id && getTempRoomEmails(id)) {
-      const tempRoomEmails = getTempRoomEmails(id);
-      const enabledTempRoomEmails = tempRoomEmails!.filter(email => {
-        const option = roomOptions.find(option => option.value === email);
-        return option && !option.isDisabled;
-      });
-  
-      if (enabledTempRoomEmails.length > 0) {
-        setRoomEmails(enabledTempRoomEmails);
-      } else {
-        setRoomEmails([]);
-      }
-    }
-  }, [roomOptions, id]);*/
-
-  const toastId = "my_unique_toast_id"; // define a unique toastId
-
-  useEffect(() => {
-    if (id && getTempRoomEmails(id)) {
-      const tempRoomEmails = getTempRoomEmails(id);
+  function setTempRoomEmails(o: Option[], tRoomEmails: string[] | undefined,) {
+ 
+    // If tRoomEmails are provided, proceed with the logic
+    if (tRoomEmails) {
       const disabledTempRoomEmails: string[] = [];
-  
-      const enabledTempRoomEmails = tempRoomEmails!.filter(email => {
-        const option = roomOptions.find(option => option.value === email);
+      const enabledTempRoomEmails = tRoomEmails.filter(email => {
+        const option = o.find(option => option.value === email);
         if (option && !option.isDisabled) {
           return true;
         } else {
-          if (option) {
-            disabledTempRoomEmails.push(email);
-          }
+          disabledTempRoomEmails.push(email);  // Add email to disabled list if not enabled
           return false;
         }
       });
   
-      if (enabledTempRoomEmails.length > 0) {
-        setRoomEmails(enabledTempRoomEmails);
-      } else {
-        setRoomEmails([]);
-      }
+      // Update the roomEmails state with only the enabled emails
+      setRoomEmails(enabledTempRoomEmails);
   
-      if (disabledTempRoomEmails.length > 0 && !toast.isActive(toastId)) {
+      // Show a toast for any disabled emails
+      if (disabledTempRoomEmails.length > 0 && !isFirstRun.current) {
         toast.error(
           <>
             <h4>Room(s) {disabledTempRoomEmails.join(', ')} are not available for that time.</h4>
             <p>Please pick a different time or a different room.</p>
           </>,
           {
-            toastId,
             position: "top-center",
             autoClose: 10000,
             hideProgressBar: false,
@@ -171,8 +161,21 @@ export default observer(function RoomPicker({
           }
         );
       }
+      if (disabledTempRoomEmails.length > 0 && isFirstRun.current) {
+        setRoomEmails(tRoomEmails);
+      }
+      
     }
-  }, [roomOptions, id]);
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+  }
+  }
+  
+
+
+
+
 
   function getIsRecurrenceDisabled(room: GraphScheduleResponse, activities: Activity[]){
        let result = false;

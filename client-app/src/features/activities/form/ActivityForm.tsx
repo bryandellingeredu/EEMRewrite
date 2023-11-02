@@ -134,6 +134,9 @@ export default observer(function ActivityForm() {
   const[teamIsDeleted, setTeamIsDeleted] = useState(false);
   const[teamAttendeesLoading, setTeamAttendeesLoading] = useState(true);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [lockDateInput, setLockDateInput] = useState(false);
+  const setLockDateInputLocked = () => setLockDateInput(true);
+  const setlockDateInputUnlocked = () => setLockDateInput(false); 
   const { categoryOptions, categories, loadCategories } = categoryStore;
   const { eduGraphUser, loadEDUGraphUser, armyProfile } = graphUserStore;
   const { locationOptions, loadLocations } = locationStore;
@@ -1406,6 +1409,9 @@ export default observer(function ActivityForm() {
                       </Grid.Column>
                     </SemanticForm.Field>
                     <SemanticForm.Field>
+                
+
+
                       <MyDateInput
                         placeholderText={
                           values.allDayEvent
@@ -1418,15 +1424,15 @@ export default observer(function ActivityForm() {
                             ? "MMMM d, yyyy"
                             : "MMMM d, yyyy h:mm aa"
                         }
-                        title="*Start:"
+                        title={lockDateInput ? "Loading Rooms Please Wait..." : "*Start:"}
                         minDate={new Date()}
                         showTimeSelect={!values.allDayEvent}
                         timeIntervals={!values.allDayEvent ? 15 : undefined}
                         timeCaption="time"
-                        disabled={
-                          id && originalRoomEmails && originalRoomEmails.length
+                        disabled={ lockDateInput ||
+                          (id && originalRoomEmails && originalRoomEmails.length
                             ? true
-                            : false
+                            : false)
                         }
                       />
                     </SemanticForm.Field>
@@ -1441,15 +1447,15 @@ export default observer(function ActivityForm() {
                             ? "MMMM d, yyyy"
                             : "MMMM d, yyyy h:mm aa"
                         }
-                        title="*End:"
+                        title={lockDateInput ? "Loading Rooms Please Wait..." : "*End:"}
                         minDate={values.start}
                         showTimeSelect={!values.allDayEvent}
                         timeIntervals={!values.allDayEvent ? 15 : undefined}
                         timeCaption="time"
-                        disabled={
-                          id && originalRoomEmails && originalRoomEmails.length
+                        disabled={ lockDateInput ||
+                          (id && originalRoomEmails && originalRoomEmails.length
                             ? true
-                            : false
+                            : false)
                         }
                       />
                     </SemanticForm.Field>
@@ -1591,6 +1597,8 @@ export default observer(function ActivityForm() {
                     roomEmails={roomEmails}
                     recurrenceInd={recurrenceInd}
                     recurrence={recurrence}
+                    unlockDateInput={setlockDateInputUnlocked}
+                    lockDateInput={setLockDateInputLocked}
                   />
                   <MyTextInput
                     name="numberAttending"
