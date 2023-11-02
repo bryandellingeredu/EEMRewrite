@@ -1599,6 +1599,7 @@ export default observer(function ActivityForm() {
                     recurrence={recurrence}
                     unlockDateInput={setlockDateInputUnlocked}
                     lockDateInput={setLockDateInputLocked}
+                    roomRequired={roomRequired}
                   />
                   <MyTextInput
                     name="numberAttending"

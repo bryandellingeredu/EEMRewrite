@@ -33,6 +33,7 @@ interface Props {
   recurrence: Recurrence;
   unlockDateInput: () => void;
   lockDateInput: () => void;
+  roomRequired: boolean
 }
 
 export default observer(function RoomPicker({
@@ -44,7 +45,8 @@ export default observer(function RoomPicker({
   recurrence,
   recurrenceInd,
   unlockDateInput,
-  lockDateInput
+  lockDateInput,
+  roomRequired
 }: Props) {
   const animatedComponents = makeAnimated();
   const { availabilityStore, graphRoomStore, commonStore, activityStore} = useStore();
@@ -77,6 +79,7 @@ export default observer(function RoomPicker({
     var minutes = Math.floor(diff / 1000 / 60);
     if (minutes >= 15 && start < end) {
       if (recurrenceInd) {
+        if(roomRequired) lockDateInput();
         recurrence.activityStart = start;
         recurrence.activityEnd = end;
         agent.Activities.listPossibleByRecurrence(recurrence).then( (activities) => {
@@ -94,12 +97,17 @@ export default observer(function RoomPicker({
               })
             );
             setRoomOptions(o);
+            unlockDateInput();
+
             });
-          }         
+
+          } else{
+            unlockDateInput();
+          }        
           });
         });
       } else {
-        if(getTempRoomEmails(id)) lockDateInput();
+        if(roomRequired) lockDateInput();
         loadSchedule(start, end).then((schedule) => {
           if (schedule) {
             let o: Option[] = [];
