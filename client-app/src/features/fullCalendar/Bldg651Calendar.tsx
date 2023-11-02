@@ -16,6 +16,7 @@ import Pikaday from "pikaday";
 import { useStore } from "../../app/stores/store";
 import BackToCalendarStore from "../../app/stores/backToCalendarStore";
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
+import { saveAs } from 'file-saver';
 
 
 export default function Bldg651Calendar (){
@@ -196,6 +197,36 @@ export default function Bldg651Calendar (){
         history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}/${backToCalendarInfo.id}`);
       }, [ history]);
 
+      function escapeCsvValue(value : string) {
+        if (value.includes(',') || value.includes('"')) {
+          return `"${value.replace(/"/g, '""')}"`;
+        }
+        return value;
+      }
+
+      const handleExportToExcel = () => {
+        const calendarApi = calendarRef.current?.getApi();
+        if (!calendarApi) return;
+      
+        const events = calendarApi.getEvents();
+        let csv = 'Title,Start,End\n';
+      
+        function escapeCsvValue(value: string) {
+          if (value.includes(',') || value.includes('"')) {
+            return `"${value.replace(/"/g, '""')}"`;
+          }
+          return value;
+        }
+      
+        events.forEach(event => {
+          const eventData = event.toPlainObject();
+          csv += `${escapeCsvValue(eventData.title)},${escapeCsvValue(eventData.start.toString())},${escapeCsvValue(eventData.end.toString())}\n`;
+        });
+      
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'calendarData.csv');
+      };
+
     return(
       <>
       <Divider horizontal>
@@ -218,12 +249,16 @@ initialView={view}
 headerToolbar={{
   left: "prev,next",
   center: "title",
-  right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay"
+  right: "exportToExcel,datepicker,dayGridMonth,timeGridWeek,timeGridDay"
 }}
 customButtons={{
   datepicker: {
   text: "go to date",
 },
+exportToExcel: {
+  text: "Export to Excel",
+  click: handleExportToExcel,
+}
 }}
 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 eventClick={handleEventClick}
