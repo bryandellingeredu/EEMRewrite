@@ -205,35 +205,46 @@ export default function Bldg651Calendar (){
         history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}/${backToCalendarInfo.id}`);
       }, [ history]);
 
-      function escapeCsvValue(value : string) {
-        if (value.includes(',') || value.includes('"')) {
-          return `"${value.replace(/"/g, '""')}"`;
-        }
-        return value;
-      }
+
 
       const handleExportToExcel = () => {
         const calendarApi = calendarRef.current?.getApi();
         if (!calendarApi) return;
-      
+    
         const events = calendarApi.getEvents();
-        let csv = 'Title,Start,End\n';
-      
+        let csv = 'Title,Room,Start,End\n';
+    
         function escapeCsvValue(value: string) {
-          if (value.includes(',') || value.includes('"')) {
-            return `"${value.replace(/"/g, '""')}"`;
-          }
-          return value;
+            if (value.includes(',') || value.includes('"')) {
+                return `"${value.replace(/"/g, '""')}"`;
+            }
+            return value;
         }
-      
+    
+        function extractRoom(title: string) {
+            const startIndex = title.indexOf('(Bldg');
+            if (startIndex !== -1) {
+                const roomString = title.slice(startIndex);
+                return roomString.slice(1, -1).split(';').map(r => r.trim());  // Splits by semicolon
+            }
+            return [];
+        }
+    
         events.forEach(event => {
-          const eventData = event.toPlainObject();
-          csv += `${escapeCsvValue(eventData.title)},${escapeCsvValue(eventData.start.toString())},${escapeCsvValue(eventData.end.toString())}\n`;
+            const eventData = event.toPlainObject();
+            const rooms = extractRoom(eventData.title);
+            const titleWithoutRooms = eventData.title.replace(/\(Bldg.*\)/, '').trim();
+    
+            rooms.forEach(room => {
+                csv += `${escapeCsvValue(titleWithoutRooms)},${escapeCsvValue(room)},${escapeCsvValue(eventData.start.toString())},${escapeCsvValue(eventData.end.toString())}\n`;
+            });
         });
-      
+    
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         saveAs(blob, 'calendarData.csv');
-      };
+    };
+    
+    
 
       const highlightMatchingEvents = (query: string) => {
         const calendarDOMNode = ReactDOM.findDOMNode(calendarRef.current);
