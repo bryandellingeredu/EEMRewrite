@@ -1,6 +1,6 @@
 import { faBuilding } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider, Header, Loader } from "semantic-ui-react";
+import { Divider, Header, Input, Loader } from "semantic-ui-react";
 import { useCallback, useEffect, useState, useRef } from "react";
 import FullCalendar, { EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -17,6 +17,8 @@ import { useStore } from "../../app/stores/store";
 import BackToCalendarStore from "../../app/stores/backToCalendarStore";
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 import { saveAs } from 'file-saver';
+import ReactDOM from 'react-dom';
+
 
 
 export default function Bldg651Calendar (){
@@ -30,6 +32,8 @@ export default function Bldg651Calendar (){
     const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
     const [isInitialDateSet, setIsInitialDateSet] = useState(false);
     const [initialDate, setInitialDate] = useState<Date | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -163,6 +167,10 @@ export default function Bldg651Calendar (){
         if (eventDot) {
           eventDot.style.borderColor = eventColor;
         }
+        if(searchQuery){
+          highlightMatchingEvents(searchQuery)
+        }
+     
       };
 
       const handleDateClick = useCallback((info : any) => {
@@ -227,6 +235,45 @@ export default function Bldg651Calendar (){
         saveAs(blob, 'calendarData.csv');
       };
 
+      const highlightMatchingEvents = (query: string) => {
+        const calendarDOMNode = ReactDOM.findDOMNode(calendarRef.current);
+        
+        if (calendarDOMNode instanceof Element) {
+            const eventTitles = document.querySelectorAll('.fc-event-title');
+    
+            // If query is empty, remove borders and animation and return
+            if (!query.trim()) {
+                eventTitles.forEach(titleEl => {
+                    const parentDiv = (titleEl as HTMLElement).closest('div');
+                    if (parentDiv) {
+                        parentDiv.style.border = 'none';
+                        parentDiv.style.animation = 'none';  // Remove animation
+                    }
+                });
+                return;
+            }
+            
+            eventTitles.forEach(titleEl => {
+                const title = titleEl.textContent;
+                const parentDiv = (titleEl as HTMLElement).closest('div');
+    
+                if (title && title.toLowerCase().includes(query.toLowerCase())) {
+                    if (parentDiv) {
+                        parentDiv.style.border = '7px solid darkred';
+                        parentDiv.style.animation = 'pulse 1.5s infinite';  // Add animation
+                    }
+                } else {
+                    if (parentDiv) {
+                        parentDiv.style.border = 'none';
+                        parentDiv.style.animation = 'none';  // Remove animation
+                    }
+                }
+            });
+        }
+    };
+    
+    
+
     return(
       <>
       <Divider horizontal>
@@ -241,6 +288,18 @@ export default function Bldg651Calendar (){
            Loading events...
          </Loader>
         )}
+  <Input 
+    icon='search' 
+    placeholder='Search event titles...' 
+    value={searchQuery} 
+    onChange={e => {
+        setSearchQuery(e.target.value);
+        highlightMatchingEvents(e.target.value);
+    }} 
+/>
+
+
+
 <FullCalendar
   initialDate={initialDate || new Date()}
 ref={calendarRef}
@@ -273,8 +332,7 @@ datesSet={(arg) => {
   // Save the user's view selection
   localStorage.setItem("calendarView651", arg.view.type);
   setView(arg.view.type);
-}}
-//eventContent={renderEventContent}  
+}} 
 />
 </>
     )
