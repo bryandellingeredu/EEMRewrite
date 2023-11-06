@@ -14,7 +14,6 @@ import 'tippy.js/dist/tippy.css';
 import { v4 as uuid } from "uuid";
 import Pikaday from "pikaday";
 import { useStore } from "../../app/stores/store";
-import BackToCalendarStore from "../../app/stores/backToCalendarStore";
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 import { saveAs } from 'file-saver';
 import ReactDOM from 'react-dom';
@@ -246,43 +245,51 @@ export default function Bldg651Calendar (){
     
     
 
-      const highlightMatchingEvents = (query: string) => {
-        const calendarDOMNode = ReactDOM.findDOMNode(calendarRef.current);
-        
-        if (calendarDOMNode instanceof Element) {
-            const eventTitles = document.querySelectorAll('.fc-event-title');
+    const highlightMatchingEvents = (query: string) => {
+      const calendarDOMNode = ReactDOM.findDOMNode(calendarRef.current);
+      
+      if (calendarDOMNode instanceof Element) {
+          const eventTitles = document.querySelectorAll('.fc-event-title');
     
-            // If query is empty, remove borders and animation and return
-            if (!query.trim()) {
-                eventTitles.forEach(titleEl => {
-                    const parentDiv = (titleEl as HTMLElement).closest('div');
-                    if (parentDiv) {
-                        parentDiv.style.border = 'none';
-                        parentDiv.style.animation = 'none';  // Remove animation
-                    }
-                });
-                return;
-            }
-            
-            eventTitles.forEach(titleEl => {
-                const title = titleEl.textContent;
-                const parentDiv = (titleEl as HTMLElement).closest('div');
+          // If query is empty, reset styles and return
+          if (!query.trim()) {
+              eventTitles.forEach(titleEl => {
+                  const parentDiv = (titleEl as HTMLElement).closest('div');
+                  if (parentDiv) {
+                      parentDiv.style.border = 'none';
+                      parentDiv.style.animation = 'none';  // Remove animation
+                      parentDiv.style.minHeight = '';  // Reset min height
+                      parentDiv.style.zIndex = '';  // Reset z-index
+                      parentDiv.style.backgroundColor = '';  // Reset background color
+                  }
+              });
+              return;
+          }
+          
+          eventTitles.forEach(titleEl => {
+              const title = titleEl.textContent;
+              const parentDiv = (titleEl as HTMLElement).closest('div');
     
-                if (title && title.toLowerCase().includes(query.toLowerCase())) {
-                    if (parentDiv) {
-                        parentDiv.style.border = '7px solid darkred';
-                        parentDiv.style.animation = 'pulse 1.5s infinite';  // Add animation
-                    }
-                } else {
-                    if (parentDiv) {
-                        parentDiv.style.border = 'none';
-                        parentDiv.style.animation = 'none';  // Remove animation
-                    }
-                }
-            });
-        }
+              if (title && title.toLowerCase().includes(query.toLowerCase())) {
+                  if (parentDiv) {
+                      parentDiv.style.border = '7px solid darkred';
+                      parentDiv.style.animation = 'pulse 1.5s infinite';  // Add animation
+                      parentDiv.style.minHeight = '50px';  // Set min height
+                      parentDiv.style.zIndex = '1000';  // Increase z-index by a lot
+                      parentDiv.style.backgroundColor = 'darkorange';  // Set background to dark orange
+                  }
+              } else {
+                  if (parentDiv) {
+                      parentDiv.style.border = 'none';
+                      parentDiv.style.animation = 'none';  // Remove animation
+                      parentDiv.style.minHeight = '';  // Reset min height
+                      parentDiv.style.zIndex = '';  // Reset z-index
+                      parentDiv.style.backgroundColor = '';  // Reset background color
+                  }
+              }
+          });
+      }
     };
-    
     
 
     return(
