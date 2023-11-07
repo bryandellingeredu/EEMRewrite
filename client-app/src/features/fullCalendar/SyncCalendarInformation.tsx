@@ -213,11 +213,17 @@ export default function SyncCalendarInformation({routeName, showSyncInfo} : Prop
 
              <Message info style={{marginTop: '30px'}} >
       <Message.Header>Subscribe to Changes</Message.Header>
+      {routeName !== "symposiumAndConferences" && 
+         <span>
+          If you subscribe you will receive an email with any changes to the Symposiums and Conferences Calendar , please enter your email and click "Submit."
+           </span>
+       }
      
-   
+        {routeName !== "symposiumAndConferences" && 
          <span>
           If you subscribe you will receive an email with any changes to the Calendar that are within 3 days, please enter your email and click "Submit."
            </span>
+       }
       <p/>
       <Form>
         <Input

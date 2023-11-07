@@ -108,7 +108,7 @@ namespace Application
             if (_activity.SendEnlistedAideConfirmationNotification && _activity.EnlistedAideEvent) await this.SendEnlistedAideConfirmationNotification();
             if (!_activity.EventPlanningNotificationSent && _activity.EventPlanningNotifyPOC && !string.IsNullOrEmpty(_activity.EventPlanningExternalEventPOCEmail)) await this.sendEventPlanningNotification();
             await this.SendAddToMyCalendarEmails();
-            if ((_activity.Start - DateTime.Now).TotalHours <= 72 ) await this.SendSyncCalendarNotificationEmails();
+            if ((_activity.Start - DateTime.Now).TotalHours <= 72 || _activity.CopiedTosymposiumAndConferences ) await this.SendSyncCalendarNotificationEmails();
         }
 
         private async Task SendSyncCalendarNotificationEmails()
@@ -166,10 +166,25 @@ namespace Application
                     if (sendNotifictaion)
                     {
                         string updatedOrAdded = string.IsNullOrEmpty(_activity.LastUpdatedBy) ? "added" : "updated";
+                        if (!_activity.CopiedTosymposiumAndConferences)
+                        {
+                            updatedOrAdded = updatedOrAdded + " within 3 days of its start time";
+                        }
+
+                        string body = string.Empty;
 
                         string title = $"{_activity.Title} has been {updatedOrAdded}";
-                        string body = $@"<p> {_activity.Title} , an event you subscribed to has been {updatedOrAdded} within 3 days of its start time.</p>
+
+                        if (string.IsNullOrEmpty(_activity.LastUpdatedBy) && _activity.CopiedTosymposiumAndConferences)
+                        {
+                             body = $@"<p> {_activity.Title} has been added to the Symposium and Conferences Calendar. You received this because you subscribed to the Symposium and Conferences Calendar.</p>
+                             <h2>Event Request Details</h2><p></p>";
+                        }
+                        else
+                        {
+                             body = $@"<p> {_activity.Title} , an event you subscribed to has been {updatedOrAdded}.</p>
                       <h2>Event Request Details</h2><p></p>";
+                        }
 
                         if (_oldActivity != null && _oldActivity.Title != _activity.Title)
                         {
@@ -273,13 +288,17 @@ namespace Application
                         }
                         if (_activity.CopiedTostudentCalendar && _activity.StudentCalendarMandatory)
                         {
-                            if (_activity.StudentCalendarMandatory!= _activity.StudentCalendarMandatory)
+                            if (_oldActivity != null && _activity.StudentCalendarMandatory != _oldActivity.StudentCalendarMandatory)
                             {
                                 body = body + $"<p style='color: darkred;'><strong>Attendance: </strong> Attendance was optional but was changed to  Mandatory </p>";
                             }
-                            body = body + $"<p><strong>Attendance: </strong> Attendance is Mandatory </p>";
+                            else
+                            {
+                                body = body + $"<p><strong>Attendance: </strong> Attendance is Mandatory </p>";
+                            }
+                           
                         }
-                        if (_activity.CopiedTostudentCalendar && !_activity.StudentCalendarMandatory && _oldActivity.StudentCalendarMandatory)
+                        if (_oldActivity != null && _activity.CopiedTostudentCalendar && !_activity.StudentCalendarMandatory && _oldActivity.StudentCalendarMandatory)
                         {
                             body = body + $"<p><strong>Attendance: </strong> Attendance was Mandatory but is now Optional </p>";
                         }
@@ -312,6 +331,10 @@ namespace Application
                         if (!string.IsNullOrEmpty(_activity.LastUpdatedBy))
                         {
                             body = body + $"<p><strong>Event Updated By: </strong> {_activity.LastUpdatedBy} </p>";
+                        }
+
+                        if(_activity.CopiedTosymposiumAndConferences && _activity.SymposiumLinkInd && !(string.IsNullOrEmpty(_activity.SymposiumLink))){
+                            body = body + $"<p><a href='{_activity.SymposiumLink}'> Register for {_activity.Title} </a></p>";
                         }
 
 

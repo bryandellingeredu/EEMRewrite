@@ -32,10 +32,11 @@ const activityImageTextStyle = {
 interface Props {
     activity: Activity
     setReloadTrigger: () => void,
-    backToCalendarId: string | undefined
+    backToCalendarId: string | undefined,
+    fromForm: string | undefined
 }
 
-export default observer(function ActivityDetailedHeader({ activity, setReloadTrigger, backToCalendarId }: Props) {
+export default observer(function ActivityDetailedHeader({ activity, setReloadTrigger, backToCalendarId, fromForm }: Props) {
     const {modalStore, activityStore, backToCalendarStore} = useStore();
     const {createICSFile} = activityStore;
     const {getBackToCalendarInfoRecord} = backToCalendarStore
@@ -46,20 +47,21 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
     const [restoring, setRestoring] = useState(false);
     const [reload, setReloading] = useState(false);
 
-    const handleGoBackClick = () =>{
-        if(backToCalendarId){
-           const backToCalendarRecord : BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
-           if(backToCalendarRecord){
-            const url : string = `${backToCalendarRecord.url}/${backToCalendarRecord.id}`
-            history.push(url);
-           }else{
-            history.goBack();
-           }   
-        }else{
-            history.goBack();
-        }
-       
-    }
+    const handleGoBackClick = () => {
+      if (backToCalendarId) {
+          const backToCalendarRecord: BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
+          if (backToCalendarRecord) {
+              const url: string = `${backToCalendarRecord.url}/${backToCalendarRecord.id}`;
+              history.push(url);
+          } else {
+              history.goBack();
+          }
+      } else if (fromForm === "true") {
+          history.go(-3);
+      } else {
+          history.goBack();
+      }
+  }
     const handleCopyEvent = () => {
         history.push(`${process.env.PUBLIC_URL}/copy/${activity.id}/${activity.categoryId}/true`);
     }
@@ -396,6 +398,44 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
               });
           }}>
             Copy EDU Teams Link
+        </Button>
+        </ButtonGroup>
+        </Grid.Column>
+        </Grid>
+      </Segment>
+     }
+
+{activity.copiedTosymposiumAndConferences && activity.symposiumLinkInd && activity.symposiumLink &&
+      <Segment> 
+        <Grid>
+            <Grid.Column width={1}>
+            <Icon name='users' size='large' color='teal' />
+            </Grid.Column>
+            <Grid.Column width={5}>
+           This Symposium / Conference has a Registration Site      
+        </Grid.Column>
+        <Grid.Column width={10}>
+        <ButtonGroup  floated='right' fluid >
+        <Button color='black' 
+        onClick = {() => {window.open(activity.symposiumLink, "_blank");}}
+        >
+            Register for Symposium / Conference
+        </Button>
+        <Button color='brown' 
+        onClick={() => {
+            navigator.clipboard.writeText(activity.symposiumLink)
+              .then(() => {
+                toast.success('Registration Link copied to clipboard', {
+                  position: toast.POSITION.TOP_CENTER
+                });
+              })
+              .catch(err => {
+                toast.error('Failed to copy link: ' + err, {
+                  position: toast.POSITION.TOP_CENTER
+                });
+              });
+          }}>
+            Copy Registration Link
         </Button>
         </ButtonGroup>
         </Grid.Column>

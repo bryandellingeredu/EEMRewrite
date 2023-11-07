@@ -63,5 +63,9 @@ namespace Application.GraphSchedules
         public string EventClearanceLevel { get; set; }
         public bool TeamInd { get; set; }
         public string TeamLink { get; set; }
+        public bool CopiedTosymposiumAndConferences { get; set; }
+        public bool SymposiumLinkInd { get; set; }
+        public string SymposiumLink { get; set; }
+
     }
 }

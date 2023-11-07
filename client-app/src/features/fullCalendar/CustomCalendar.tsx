@@ -12,11 +12,11 @@ import { useHistory, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { useStore } from "../../app/stores/store";
 import Pikaday from "pikaday";
-import { Divider, Header, Icon, Label, Loader } from "semantic-ui-react";
+import { Divider, Header, Icon, Input, Label, Loader } from "semantic-ui-react";
 import { Category } from "../../app/models/category";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
-import BackToCalendarStore from "../../app/stores/backToCalendarStore";
+import ReactDOM from 'react-dom';
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 
 interface CategoryWithSelected extends Category {
@@ -37,6 +37,7 @@ export default observer(function customCalendar() {
   const { addCalendarEventParameters } = activityStore;
   const { backToCalendarId } = useParams<{ backToCalendarId?: string }>();
   const [initialDate, setInitialDate] = useState<Date | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleEventClick = useCallback(
     (clickInfo: EventClickArg) => {
@@ -225,6 +226,52 @@ const handleLabelClick = (id: string) => {
   localStorage.setItem("categoriesWithSelected", JSON.stringify(newCategories));
 };
 
+const highlightMatchingEvents = (query: string) => {
+  const calendarDOMNode = ReactDOM.findDOMNode(calendarRef.current);
+  
+  if (calendarDOMNode instanceof Element) {
+      const eventTitles = document.querySelectorAll('.fc-event-title');
+
+      // If query is empty, reset styles and return
+      if (!query.trim()) {
+          eventTitles.forEach(titleEl => {
+              const parentDiv = (titleEl as HTMLElement).closest('div');
+              if (parentDiv) {
+                  parentDiv.style.border = 'none';
+                  parentDiv.style.animation = 'none';  // Remove animation
+                  parentDiv.style.minHeight = '';  // Reset min height
+                  parentDiv.style.zIndex = '';  // Reset z-index
+                  parentDiv.style.backgroundColor = '';  // Reset background color
+              }
+          });
+          return;
+      }
+      
+      eventTitles.forEach(titleEl => {
+          const title = titleEl.textContent;
+          const parentDiv = (titleEl as HTMLElement).closest('div');
+
+          if (title && title.toLowerCase().includes(query.toLowerCase())) {
+              if (parentDiv) {
+                  parentDiv.style.border = '7px solid darkred';
+                  parentDiv.style.animation = 'pulse 1.5s infinite';  // Add animation
+                  parentDiv.style.minHeight = '50px';  // Set min height
+                  parentDiv.style.zIndex = '1000';  // Increase z-index by a lot
+                  parentDiv.style.backgroundColor = 'darkorange';  // Set background to dark orange
+              }
+          } else {
+              if (parentDiv) {
+                  parentDiv.style.border = 'none';
+                  parentDiv.style.animation = 'none';  // Remove animation
+                  parentDiv.style.minHeight = '';  // Reset min height
+                  parentDiv.style.zIndex = '';  // Reset z-index
+                  parentDiv.style.backgroundColor = '';  // Reset background color
+              }
+          }
+      });
+  }
+}; 
+
 
   return (
     <>
@@ -265,7 +312,17 @@ const handleLabelClick = (id: string) => {
       ))}
       </div>
 
-
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+      <Input
+          icon='search' 
+          placeholder='Search event titles...' 
+          value={searchQuery} 
+          onChange={e => {
+              setSearchQuery(e.target.value);
+              highlightMatchingEvents(e.target.value);
+          }} 
+      />
+        </div> 
    <FullCalendar
     initialDate={initialDate || new Date()}
       ref={calendarRef}
@@ -334,6 +391,9 @@ const handleLabelClick = (id: string) => {
             icon.className = 'tv icon'; // The Semantic UI class for the repeating icon
             eventContent.prepend(icon);
           }
+        }
+        if(searchQuery){
+          highlightMatchingEvents(searchQuery)
         }
       }
       }} 

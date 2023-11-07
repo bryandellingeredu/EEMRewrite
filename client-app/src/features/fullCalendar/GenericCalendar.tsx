@@ -15,13 +15,14 @@ import agent from "../../app/api/agent";
 import { v4 as uuid } from "uuid";
 import GenericCalendarTable from "./GenericCalendarTable";
 import Pikaday from "pikaday";
-import { Loader } from "semantic-ui-react";
+import { Input, Loader } from "semantic-ui-react";
 import CIOEventPlanningTable from "./CIOEventPlanningTable";
-import BackToCalendarStore from "../../app/stores/backToCalendarStore";
+import ReactDOM from 'react-dom';
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 
 
 export default observer(function GenericCalendar() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [view, setView] = useState(localStorage.getItem("calendarViewGeneric") || "dayGridMonth");
   const [isLoading, setIsLoading] = useState(true);
   const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
@@ -161,6 +162,7 @@ export default observer(function GenericCalendar() {
     ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: <strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
     ${arg.event.extendedProps.actionOfficer ? '<p><strong>Action Officer: <strong>' + arg.event.extendedProps.actionOfficer + '</p>' : ''}
     ${arg.event.extendedProps.actionOfficerPhone ?'<p><strong>Action Officer Phone: <strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
+    ${arg.event.extendedProps.copiedTosymposiumAndConferences && arg.event.extendedProps.symposiumLinkInd && arg.event.extendedProps.symposiumLink?'<p><strong>Click to view registration link<strong></p>' : ''}
     ${id === "cio" && arg.event.extendedProps.eventPlanningPAX?'<p><strong>PAX: <strong>' + arg.event.extendedProps.eventPlanningPAX + '</p>' : ''}
     ${id === "cio" && arg.event.extendedProps.eventPlanningStatus?'<p><strong>Status: <strong>' + arg.event.extendedProps.eventPlanningStatus + '</p>' : ''}
     ${id === "cio" && arg.event.extendedProps.eventClearanceLevel?'<p><strong>Event Clearance Level: <strong>' + arg.event.extendedProps.eventClearanceLevel + '</p>' : '<p><strong>Event Clearance Level: <strong> Undetermined </p>'}
@@ -235,7 +237,57 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
         eventContent.prepend(icon);
       }
     }
+    if(searchQuery){
+      highlightMatchingEvents(searchQuery)
+    }
   };
+
+  const highlightMatchingEvents = (query: string) => {
+    const calendarDOMNode = ReactDOM.findDOMNode(calendarRef.current);
+    
+    if (calendarDOMNode instanceof Element) {
+        const eventTitles = document.querySelectorAll('.fc-event-title');
+  
+        // If query is empty, reset styles and return
+        if (!query.trim()) {
+            eventTitles.forEach(titleEl => {
+                const parentDiv = (titleEl as HTMLElement).closest('div');
+                if (parentDiv) {
+                    parentDiv.style.border = 'none';
+                    parentDiv.style.animation = 'none';  // Remove animation
+                    parentDiv.style.minHeight = '';  // Reset min height
+                    parentDiv.style.zIndex = '';  // Reset z-index
+                    parentDiv.style.backgroundColor = '';  // Reset background color
+                }
+            });
+            return;
+        }
+        
+        eventTitles.forEach(titleEl => {
+            const title = titleEl.textContent;
+            const parentDiv = (titleEl as HTMLElement).closest('div');
+  
+            if (title && title.toLowerCase().includes(query.toLowerCase())) {
+                if (parentDiv) {
+                    parentDiv.style.border = '7px solid darkred';
+                    parentDiv.style.animation = 'pulse 1.5s infinite';  // Add animation
+                    parentDiv.style.minHeight = '50px';  // Set min height
+                    parentDiv.style.zIndex = '1000';  // Increase z-index by a lot
+                    parentDiv.style.backgroundColor = 'darkorange';  // Set background to dark orange
+                }
+            } else {
+                if (parentDiv) {
+                    parentDiv.style.border = 'none';
+                    parentDiv.style.animation = 'none';  // Remove animation
+                    parentDiv.style.minHeight = '';  // Reset min height
+                    parentDiv.style.zIndex = '';  // Reset z-index
+                    parentDiv.style.backgroundColor = '';  // Reset background color
+                }
+            }
+        });
+    }
+  }; 
+  
 
   return (
     <>
@@ -251,6 +303,18 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
         )}
           <GenericCalendarHeader id={id} />
           {(id !== 'cio' || cioEventPlanningAdmin) &&
+          <>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+          <Input 
+              icon='search' 
+              placeholder='Search event titles...' 
+              value={searchQuery} 
+              onChange={e => {
+                  setSearchQuery(e.target.value);
+                  highlightMatchingEvents(e.target.value);
+              }} 
+          />
+            </div> 
           <FullCalendar
           initialDate={initialDate || new Date()}
            ref={calendarRef}
@@ -281,6 +345,7 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
               setView(arg.view.type);
             }}
           />
+          </>
       }
            {id !== 'cio' && <GenericCalendarTable id={id} />}
            {id === 'cio' && cioEventPlanningAdmin && <CIOEventPlanningTable  />}

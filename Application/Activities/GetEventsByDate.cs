@@ -110,6 +110,9 @@ namespace Application.Activities
                         EventClearanceLevel = activity.EventClearanceLevel,
                         TeamInd = !string.IsNullOrEmpty(activity.TeamLink),
                         TeamLink = activity.TeamLink,
+                        CopiedTosymposiumAndConferences = activity.CopiedTosymposiumAndConferences,
+                        SymposiumLinkInd = activity.SymposiumLinkInd,
+                        SymposiumLink = activity.SymposiumLink
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);

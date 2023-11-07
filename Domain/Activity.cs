@@ -258,6 +258,8 @@ namespace Domain
          public string EventPlanningNumOfPeripherals {get; set;}
         public string EventPlanningNumOfMonitors {get; set;}
         public DateTime? EventPlanningSetUpDate {get; set;}
+         public bool SymposiumLinkInd { get; set; }
+        public string SymposiumLink {get; set;}
 
     }
 }

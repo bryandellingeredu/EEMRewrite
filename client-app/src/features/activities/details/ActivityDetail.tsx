@@ -14,8 +14,8 @@ export default observer (function ActivityDetails() {
     const{activityStore, commonStore} = useStore();
     const {setRedirectId, setRedirectCategoryId} = commonStore
     const {selectedActivity: activity, loadActivity, loadingInitial} = activityStore
-    const { id, categoryId, backToCalendarId } = useParams<{
-       id: string, categoryId: string, backToCalendarId?: string }>();
+    const { id, categoryId, backToCalendarId, fromForm } = useParams<{
+       id: string, categoryId: string, backToCalendarId?: string, fromForm?: string }>();
     const [reloadTrigger, setReloadTrigger] = useState(false);
     const handleReloadTrigger = () => setReloadTrigger(true);
 
@@ -36,6 +36,7 @@ export default observer (function ActivityDetails() {
              activity={activity}
               setReloadTrigger={handleReloadTrigger}
               backToCalendarId={backToCalendarId}
+              fromForm={fromForm}
               />
             <ActivityDetailedInfo activity={activity}/>
          </Grid.Column>

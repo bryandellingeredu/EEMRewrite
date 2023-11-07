@@ -232,6 +232,8 @@ export interface Activity{
     eventPlanningNumOfMonitors : string
     eventPlanningSetUpDate: Date | null
     enlistedAideAdditionalRemarks : string
+    symposiumLinkInd : boolean
+    symposiumLink : string
 }
 
 export class Activity implements Activity{
@@ -462,6 +464,8 @@ export class ActivityFormValues{
     eventPlanningNumOfMonitors : string = ''
     eventPlanningSetUpDate: Date | null = null
     enlistedAideAdditionalRemarks : string = ''
+    symposiumLinkInd : boolean = false
+    symposiumLink : string = ''
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -685,6 +689,8 @@ export class ActivityFormValues{
     this.eventPlanningNumOfMonitors = activity.eventPlanningNumOfMonitors
     this.eventPlanningSetUpDate = activity.eventPlanningSetUpDate
     this.enlistedAideAdditionalRemarks = activity.enlistedAideAdditionalRemarks
+    this.symposiumLinkInd = activity.symposiumLinkInd 
+    this.symposiumLink =  activity.symposiumLink
 
        } 
     }

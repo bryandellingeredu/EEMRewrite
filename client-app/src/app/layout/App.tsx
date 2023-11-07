@@ -141,7 +141,8 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/approveanyroomreservation`} component={ApproveAnyRoomReservation}/>
                 <Route exact path={[
                                     `${process.env.PUBLIC_URL}/activities/:id/:categoryId`, 
-                                    `${process.env.PUBLIC_URL}/activities/:id/:categoryId/:backToCalendarId`
+                                    `${process.env.PUBLIC_URL}/activities/:id/:categoryId/:backToCalendarId`,
+                                    `${process.env.PUBLIC_URL}/activitydetail/:id/:categoryId/:fromForm`, 
                                     ]}
                         component={ActivityDetails} sensitive/>
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/itinerary/:id/:categoryId`} component={Itinerary}/>

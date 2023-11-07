@@ -167,6 +167,7 @@ export default observer(function ActivityForm() {
   const [attachNoAttachmentError, setAttachNoAttachmentError] = useState(false);
   const [subCalendarError, setSubCalendarError] = useState(false);
   const [noRoomError, setNoRoomError] = useState(false);
+  const [noRegistrationSiteError, setNoRegistrationSiteError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [recurrenceDisabled, setRecurrenceDisabled] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
@@ -608,11 +609,13 @@ export default observer(function ActivityForm() {
     let distantTechErrorIndicator = false;
     let subCalendarErrorIndicator = false;
     let noRoomErrorIndicator = false;
+    let noRegistrationSiteErrorIndicator = false;
     setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
     setSubCalendarError(false);
     setNoRoomError(false);
+    setNoRegistrationSiteError(false);
     
     if(!roomRequired && (activity.categoryId == '' || categories.find((x) => x.id === activity.categoryId)?.name ==="Other")){
       setSubCalendarError(true);
@@ -632,6 +635,18 @@ export default observer(function ActivityForm() {
       const noRoomErrorAnchor = document.getElementById("noRoomErrorAnchor");
       if (noRoomErrorAnchor) {
         noRoomErrorAnchor.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+
+    if(activity.copiedTosymposiumAndConferences && activity.symposiumLinkInd && !activity.symposiumLink){
+      setNoRegistrationSiteError(true);
+      noRegistrationSiteErrorIndicator = true;
+      const noRegistrationSiteErrorAnchor = document.getElementById("noRegistrationSiteErrorAnchor")
+      if(noRegistrationSiteErrorAnchor){
+        noRegistrationSiteErrorAnchor.scrollIntoView({
           behavior: "smooth",
           block: "center",
         });
@@ -681,7 +696,7 @@ export default observer(function ActivityForm() {
         }
       }
     }
-    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator) {
+    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator) {
       setSubmitting(true);
       if (!activity.categoryId)
         activity.categoryId = categories.find((x) => x.name === "Other")!.id;
@@ -792,12 +807,12 @@ export default observer(function ActivityForm() {
                history.push(url);
               }else{
                 history.push(
-                  `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
+                  `${process.env.PUBLIC_URL}/activitydetail/${newActivity.id}/${category.id}/true`
                 )
               }   
             }else{
               history.push(
-                `${process.env.PUBLIC_URL}/activities/${newActivity.id}/${category.id}`
+                `${process.env.PUBLIC_URL}/activitydetail/${newActivity.id}/${category.id}/true`
               )
             }
           })
@@ -817,7 +832,7 @@ export default observer(function ActivityForm() {
               )
             }else{
               history.push(
-                `${process.env.PUBLIC_URL}/activities/${activity.id}/${category.id}`
+                `${process.env.PUBLIC_URL}/activitydetail/${activity.id}/${category.id}/true`
               )
             }
           }
@@ -839,12 +854,12 @@ export default observer(function ActivityForm() {
                    history.push(url);
                   }else{
                     history.push(
-                      `${process.env.PUBLIC_URL}/activities/${activity.id}/${category.id}`
+                      `${process.env.PUBLIC_URL}/activitydetail/${activity.id}/${category.id}/true`
                     )
                   }
                 } else {
                 history.push(
-                  `${process.env.PUBLIC_URL}/activities/${activity.id}/${category.id}`
+                  `${process.env.PUBLIC_URL}/activitydetail/${activity.id}/${category.id}/true`
                 )
                 }            
               }
@@ -1885,7 +1900,44 @@ export default observer(function ActivityForm() {
 }
 
 
-
+{(categories.find((x) => x.id === values.categoryId)?.name ==="Symposium and Conferences Calendar" || values.copiedTosymposiumAndConferences) &&
+   <Segment style={{ backgroundColor: "#e1e9b7" }} >
+      <Header as="h5" icon textAlign="center" color="brown">
+      <Icon name="group" />
+                  <Header.Content>Symposium and Conferences</Header.Content>          
+      </Header>
+      <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={2}>
+                      <strong>Does this event have a registration link?:</strong>
+                    </Grid.Column>
+                    <Grid.Column width={14}>
+                      <SemanticForm.Group inline>
+                        <MySemanticCheckBox name="symposiumLinkInd" />
+                      </SemanticForm.Group>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+                <Divider />
+                {values.symposiumLinkInd && 
+                <>
+                <MyTextInput
+                name="symposiumLink"
+                placeholder="https://"
+                label="Enter Registration URL"
+              />
+              <p><i id="noRegistrationSiteErrorAnchor">A Registration link MUST be provided</i></p>
+              {noRegistrationSiteError && (
+                <p>
+                  <Label basic color="red">
+                  You have checked there is a registration link, please enter a Registration URL 
+                  </Label>
+                </p>
+              )}
+              </>
+                }
+   </Segment>
+}
 
 
             {(categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" || values.copiedTostudentCalendar) &&
@@ -4065,7 +4117,7 @@ export default observer(function ActivityForm() {
               as={Link}
               to={
                 id && id.length > 0
-                  ? `${process.env.PUBLIC_URL}/activities/${id}/${categoryId}`
+                  ? `${process.env.PUBLIC_URL}/activitydetail/${id}/${categoryId}/true`
                   : `${process.env.PUBLIC_URL}/activityTable`
               }
               floated="right"

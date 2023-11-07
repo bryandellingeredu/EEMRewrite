@@ -703,7 +703,9 @@ export default class ActivityStore {
     eventPlanningNumOfPeripherals : '',
     eventPlanningNumOfMonitors : '',
     eventPlanningSetUpDate : null,
-    enlistedAideAdditionalRemarks : ''
+    enlistedAideAdditionalRemarks : '',
+    symposiumLinkInd: false,
+    symposiumLink: ''
     }
     return activity;
   }

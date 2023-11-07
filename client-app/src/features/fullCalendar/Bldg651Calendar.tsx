@@ -19,7 +19,6 @@ import { saveAs } from 'file-saver';
 import ReactDOM from 'react-dom';
 
 
-
 export default function Bldg651Calendar (){
   const [view, setView] = useState(localStorage.getItem("calendarView651") || "timeGridWeek");
     const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
@@ -289,7 +288,7 @@ export default function Bldg651Calendar (){
               }
           });
       }
-    };
+    }; 
     
 
     return(
@@ -306,15 +305,19 @@ export default function Bldg651Calendar (){
            Loading events...
          </Loader>
         )}
-  <Input 
-    icon='search' 
-    placeholder='Search event titles...' 
-    value={searchQuery} 
-    onChange={e => {
-        setSearchQuery(e.target.value);
-        highlightMatchingEvents(e.target.value);
-    }} 
-/>
+
+<div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+      <Input 
+          icon='search' 
+          placeholder='Search event titles...' 
+          value={searchQuery} 
+          onChange={e => {
+              setSearchQuery(e.target.value);
+              highlightMatchingEvents(e.target.value);
+          }} 
+      />
+        </div> 
+
 
 
 
