@@ -61,7 +61,7 @@ namespace API.MiddleWare
 
                     await GraphHelper.SendEmail(new[] { "bryan.d.dellinger.civ@army.mil", "bryan.dellinger.civ@armywarcollege.edu", "robert.h.hoss.civ@army.mil" }, "An EEM Error Occured", body);
                 }
-                catch (Exception e)
+                catch (Exception )
                 {
 
                 }

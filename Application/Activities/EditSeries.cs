@@ -302,7 +302,7 @@ namespace Application.Activities
 
                     return Result<Unit>.Success(Unit.Value);
                 }
-                catch (Exception ex )
+                catch (Exception  )
                 {
 
                     throw;

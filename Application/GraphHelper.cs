@@ -284,7 +284,7 @@
 
                         success = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         retries--;
                         if (retries > 0)
@@ -739,7 +739,7 @@
                      .Request()
                       .DeleteAsync();
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
                     // if something goes wrong deleting the event try the next one
 
