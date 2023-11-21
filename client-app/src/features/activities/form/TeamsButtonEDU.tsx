@@ -1,6 +1,6 @@
 import { Button, Icon, Image } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
-import TeamsInformation from "./TeamsInformation";
+import TeamsInformationEDU from "./TeamsInformationEDU";
 import { UserEmail } from "../../../app/models/userEmail";
 
 interface Props{
@@ -18,7 +18,7 @@ interface Props{
 }
 
 
-export default function TeamsButton(
+export default function TeamsButtonEDU(
   {attendees, setAttendees, setTeamMeeting,
    makeTeamMeeting, teamLink,  teamLookup, teamIsDeleted,
     deleteTeamMeeting, teamAttendeesLoading, id, manageSeries} : Props){
@@ -26,6 +26,7 @@ export default function TeamsButton(
     const {openModal} = modalStore;
     return(
         <Button
+        primary
         type="button"
          icon
          labelPosition="left" 
@@ -33,7 +34,7 @@ export default function TeamsButton(
          loading={teamAttendeesLoading}
          onClick={() =>
             openModal(
-              <TeamsInformation
+              <TeamsInformationEDU
               attendees={attendees}
               setAttendees={setAttendees}
               setTeamMeeting={setTeamMeeting}
@@ -50,8 +51,8 @@ export default function TeamsButton(
          EDU Teams Meeting  
          {teamIsDeleted ? (<Icon name="square outline" />) : (
             (makeTeamMeeting || teamLink) ?
-             <Icon name="check square outline" /> :
-             <Icon name="square outline" />
+             <Icon name="check square outline" size="large"/> :
+             <Icon name="square outline" size="large" />
           )}
        </Button>   
     )

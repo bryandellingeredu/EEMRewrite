@@ -367,17 +367,19 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
    
      }
 
-     {activity.teamLink && 
+     {(activity.teamLink || activity.armyTeamLink) &&
       <Segment>
         <Grid>
             <Grid.Column width={1}>
             <Icon name='microsoft' size='large' color='teal' />
             </Grid.Column>
             <Grid.Column width={5}>
-           This Event has an EDU Microsoft Teams Meeting       
+           This Event has a Microsoft Teams Meeting       
         </Grid.Column>
         <Grid.Column width={10}>
         <ButtonGroup  floated='right' fluid >
+        {activity.teamLink && 
+        <>
         <Button color='black' 
         onClick = {() => {window.open(activity.teamLink, "_blank");}}
         >
@@ -399,6 +401,33 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
           }}>
             Copy EDU Teams Link
         </Button>
+        </>
+       }
+        {activity.armyTeamLink && 
+        <>
+        <Button color='black' 
+        onClick = {() => {window.open(activity.armyTeamLink, "_blank");}}
+        >
+            Join Army Teams Meeting
+        </Button>
+        <Button color='brown' 
+        onClick={() => {
+            navigator.clipboard.writeText(activity.armyTeamLink)
+              .then(() => {
+                toast.success('Team Link copied to clipboard', {
+                  position: toast.POSITION.TOP_CENTER
+                });
+              })
+              .catch(err => {
+                toast.error('Failed to copy link: ' + err, {
+                  position: toast.POSITION.TOP_CENTER
+                });
+              });
+          }}>
+            Copy Army Teams Link
+        </Button>
+        </>
+       }
         </ButtonGroup>
         </Grid.Column>
         </Grid>

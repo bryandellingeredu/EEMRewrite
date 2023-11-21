@@ -168,6 +168,10 @@ namespace API.Controllers
                     {
                         description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink}";
                     }
+                    if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
+                    {
+                        description = description + $"---ARMY TEAM MEETING LINK--- {activity.ArmyTeamLink}";
+                    }
 
                     if (activity.CopiedTostudentCalendar && (route == "studentCalendar" || route == "studentcalendar"))
                     {

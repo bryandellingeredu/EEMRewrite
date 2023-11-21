@@ -13,7 +13,8 @@ import {
   Label,
   ButtonGroup,
   Modal,
-  Message
+  Message,
+  Image
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -61,9 +62,10 @@ import ActivityAttachmentComponent from "./ActivityAttachmentComponent";
 import SubCalendarInformation from "./SubCalendarInformation";
 import CUIWarningModal from "./CUIWarningModal";
 import MyTextAreaWithTypeahead from "../../../app/common/form/MyTextAreaWithTypeAhead";
-import TeamsButton from "./TeamsButton";
+import TeamsButtonEDU from "./TeamsButtonEDU";
 import { UserEmail } from "../../../app/models/userEmail";
 import { BackToCalendarInfo } from "../../../app/models/backToCalendarInfo";
+import TeamsButtonArmy from "./TeamsButtonArmy";
 
 
 
@@ -117,6 +119,9 @@ export default observer(function ActivityForm() {
   } = activityStore;
   const {user} = userStore
   const {getBackToCalendarInfoRecord} = backToCalendarStore;
+  const [armyTeamLink, setArmyTeamLink] = useState('');
+  const [armyTeamLinkWarning, setArmyTeamLinkWarning ] = useState(false);
+  const updateArmyTeamLink  = (newArmyTeamLink: string) => {setArmyTeamLink(newArmyTeamLink)};
   const [enlistedAidAdmin, setEnlistedAidAdmin] = useState(false);
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
@@ -524,7 +529,7 @@ export default observer(function ActivityForm() {
         if(calendarParameters.needRoom)  setRoomRequired(true);
       }
     }
-    if (id) {
+    if (id) {0
       loadActivity(id, categoryId).then((response) => {
         if (response && !response.report) response.report = "none" ;
         if(copy && copy === 'true' && response && response.hostingReport) response.hostingReport = null;
@@ -536,8 +541,12 @@ export default observer(function ActivityForm() {
         if(copy && copy === 'true' && response && response.teamLookup && response.teamRequester){
           setMakeTeamMeeting(true);
         } 
+        if(response && response.armyTeamLink){
+          setArmyTeamLink(response.armyTeamLink);
+          setArmyTeamLinkWarning(true);
+        }
 
-        
+       
         setActivity(new ActivityFormValues(response));
         if (response?.attachmentLookup && response?.attachmentLookup > 0 && (!copy || copy === 'false')) {
           setAttachment({
@@ -760,6 +769,7 @@ export default observer(function ActivityForm() {
       activity.category = category;
       activity.organization = organization;
       activity.teamInvites = attendees;
+      activity.armyTeamLink = armyTeamLink;
       if(!activity.teamLink && makeTeamMeeting) activity.makeTeamMeeting = true;
       if(teamIsDeleted) {
         activity.teamInvites = [];
@@ -1043,6 +1053,17 @@ export default observer(function ActivityForm() {
         </div>
       )}
 
+      {armyTeamLinkWarning &&
+           <div className="ui yellow message">
+           <div className="header">
+             This Event has an associated Army Teams Meeting.
+           <span style={{ paddingRight: "10px" }}>
+             If you make changes to this event make sure you also update the Team Meeting in Outlook.{" "}
+           </span>
+           </div>
+         </div>
+      }
+
 <Modal
         open={blissHallModalOpen}
         onClose={handleCloseBlissHallModal}
@@ -1228,21 +1249,6 @@ export default observer(function ActivityForm() {
                 </Grid.Column>    
                 <Grid.Column>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div style={{ flex: '0 0 auto', marginTop: '25px' }}>
-                <TeamsButton
-                  attendees={attendees}
-                  setAttendees={updateAttendees}
-                  setTeamMeeting={updateMakeTeamMeeting}
-                  makeTeamMeeting = {makeTeamMeeting}
-                  teamLink = {activity.teamLink}
-                  teamLookup = {activity.teamLookup}
-                  teamIsDeleted = {teamIsDeleted}
-                  deleteTeamMeeting = {deleteTeamMeeting}
-                  teamAttendeesLoading = {teamAttendeesLoading}
-                  manageSeries={manageSeries}
-                  id={id}
-                   />
-                 </div>
                  <div style={{ flex: '1 1 auto' }}>
                   <RepeatingEventButton
                     id={id}
@@ -1349,21 +1355,7 @@ export default observer(function ActivityForm() {
                   </Grid.Column>
                   <Grid.Column>
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <div style={{ flex: '0 0 auto', marginTop: '25px' }}>
-                      <TeamsButton 
-                    attendees={attendees}
-                    setAttendees={updateAttendees}
-                    setTeamMeeting={updateMakeTeamMeeting}
-                    makeTeamMeeting = {makeTeamMeeting}
-                    teamLink = {activity.teamLink}
-                    teamLookup = {activity.teamLookup}
-                    teamIsDeleted = {teamIsDeleted}
-                    deleteTeamMeeting = {deleteTeamMeeting}
-                    teamAttendeesLoading = {teamAttendeesLoading}
-                    manageSeries={manageSeries}
-                    id={id}
-                    /> 
-                    </div>
+                 
                     <div style={{ flex: '1 1 auto' }}>
                     <RepeatingEventButton
                     id={id}
@@ -1478,21 +1470,7 @@ export default observer(function ActivityForm() {
                     <SemanticForm.Field>
      
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <div style={{ flex: '0 0 auto', marginTop: '25px' }}>
-                      <TeamsButton 
-                    attendees={attendees}
-                    setAttendees={updateAttendees}
-                    setTeamMeeting={updateMakeTeamMeeting}
-                    makeTeamMeeting = {makeTeamMeeting}
-                    teamLink = {activity.teamLink}
-                    teamLookup = {activity.teamLookup}
-                    teamIsDeleted = {teamIsDeleted}
-                    deleteTeamMeeting = {deleteTeamMeeting}
-                    teamAttendeesLoading = {teamAttendeesLoading}
-                    manageSeries={manageSeries}
-                    id={id}
-                  />
-                  </div>
+                  
                   <div style={{ flex: '1 1 auto' }}>
                       <RepeatingEventButton
                     id={id}
@@ -1549,7 +1527,50 @@ export default observer(function ActivityForm() {
                 placeholder="Action Officer Duty Phone"
                 label="*Action Officer Duty Phone:"
               />
-            </SemanticForm.Group>
+           </SemanticForm.Group>
+
+           <Segment style={{backgroundColor: '#FFE4E1'}}>
+            <SemanticForm.Group inline >
+            <SemanticForm.Field style={{ paddingRight: "50px" }}>
+            <Image  src={`${process.env.PUBLIC_URL}/assets/teams.svg`}  size='tiny' floated="left"/>
+            </SemanticForm.Field>
+            <SemanticForm.Field>
+             Create and Manage a Microsoft Teams Meeting:
+            </SemanticForm.Field>
+            <SemanticForm.Field>
+            <TeamsButtonEDU 
+                    attendees={attendees}
+                    setAttendees={updateAttendees}
+                    setTeamMeeting={updateMakeTeamMeeting}
+                    makeTeamMeeting = {makeTeamMeeting}
+                    teamLink = {activity.teamLink}
+                    teamLookup = {activity.teamLookup}
+                    teamIsDeleted = {teamIsDeleted}
+                    deleteTeamMeeting = {deleteTeamMeeting}
+                    teamAttendeesLoading = {teamAttendeesLoading}
+                    manageSeries={manageSeries}
+                    id={id}
+                  />
+            </SemanticForm.Field>
+            <SemanticForm.Field>
+              <TeamsButtonArmy
+               allDayEvent={values.allDayEvent}
+               start={values.start}
+               end={values.end}
+               title={values.title}
+               armyTeamLink={armyTeamLink}
+               updateArmyTeamLink={updateArmyTeamLink}
+               recurrenceInd={recurrenceInd}
+               />
+            </SemanticForm.Field>
+            <SemanticForm.Field>
+              Use the Edu and Army Teams Meeting buttons to create, associate, and manage Microsoft Teams Meetings
+            </SemanticForm.Field>
+            </SemanticForm.Group>                               
+          </Segment>
+
+
+         
             <LocationRadioButtons
               roomRequired={roomRequired}
               setRoomRequired={handleSetRoomRequired}

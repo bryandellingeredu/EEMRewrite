@@ -108,7 +108,7 @@ namespace Application.Activities
                         EventPlanningPAX = activity.EventPlanningPAX,
                         EventPlanningStatus = activity.EventPlanningStatus,
                         EventClearanceLevel = activity.EventClearanceLevel,
-                        TeamInd = !string.IsNullOrEmpty(activity.TeamLink),
+                        TeamInd = !string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.ArmyTeamLink),
                         TeamLink = activity.TeamLink,
                         CopiedTosymposiumAndConferences = activity.CopiedTosymposiumAndConferences,
                         SymposiumLinkInd = activity.SymposiumLinkInd,

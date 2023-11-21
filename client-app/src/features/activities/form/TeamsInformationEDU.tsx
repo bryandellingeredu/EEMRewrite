@@ -19,7 +19,7 @@ interface Props{
     manageSeries: string;
   }
 
-export default function TeamsInformation(
+export default function TeamsInformationEDU(
   {attendees, setAttendees,  setTeamMeeting, teamLink, teamLookup, deleteTeamMeeting, id, manageSeries} : Props)
 {
     const {modalStore} = useStore();
@@ -120,8 +120,7 @@ const source = uniqueEmails.map(email => ({
       {!teamLink && 
         <Header.Content>
           Add an EDU Teams Meeting to this Event.
-          <Header.Subheader>This will create an EDU Teams Meeting, You Can Not Create
-            an Army Teams Meeting from the EEM.
+          <Header.Subheader>This will create an EDU Teams Meeting
           </Header.Subheader>
         </Header.Content>
       }
@@ -188,7 +187,7 @@ const source = uniqueEmails.map(email => ({
     <Button
      positive
      onClick={() => setSection('needAttendees')}
-    >I Want to Add a Teams Meeting</Button>
+    >I Want to Add an EDU Teams Meeting</Button>
     <Button.Or />
     <Button  onClick={() => modalStore.closeModal()}>Cancel</Button>
   </Button.Group>

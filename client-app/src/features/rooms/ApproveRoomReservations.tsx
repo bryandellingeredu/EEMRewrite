@@ -84,6 +84,9 @@ export default observer(function ApproveRoomReservations() {
           setGraphRoom(foundRoom);
           const fetchEmails = async () => {
             const allRoomEvents: RoomEvent[] = [];
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            yesterday.setHours(0, 0, 0, 0); // Set time to start of the day
             
             for (let i = 0; i < 100; i++) {
               const skip = i * 10; // Incrementing by 100 each time
@@ -102,15 +105,19 @@ export default observer(function ApproveRoomReservations() {
                   const start = utcToZonedTime(startUtc, 'America/New_York');
                   const end = utcToZonedTime(endUtc, 'America/New_York');
                   
-                  return {
-                    roomName: message.location.displayName,
-                    title: message.subject.startsWith('FW: ') ? message.subject.substring(4) : message.subject,
-                    webLink: message.webLink,
-                    start: start,
-                    end: end,
-                    allDay: message.isAllDay
-                  };
-                });
+                
+                  if (start >= yesterday) { // Check if the start date is greater than or equal to yesterday
+                    return {
+                      roomName: message.location.displayName,
+                      title: message.subject.startsWith('FW: ') ? message.subject.substring(4) : message.subject,
+                      webLink: message.webLink,
+                      start: start,
+                      end: end,
+                      allDay: message.isAllDay
+                    };
+                  }
+                  // @ts-ignore
+                }).filter(event  => event); // Filter out undefined values
                 
                 allRoomEvents.push(...newRoomEvents);
               } catch (error) {

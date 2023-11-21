@@ -510,6 +510,7 @@ export default class ActivityStore {
       eventLookup: graphEvent.id,
       teamLookup: '',
       teamLink: '',
+      armyTeamLink: '',
       teamRequester: '',
       recurrenceInd: false,
       recurrenceId: '',

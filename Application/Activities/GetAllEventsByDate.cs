@@ -100,7 +100,7 @@ namespace Application.Activities
                     CoordinatorEmail = activity.CoordinatorEmail,
                     Recurring = activity.RecurrenceInd,
                     BorderColor = activity.IMC ? "#EE4B2B" : string.Empty,
-                    TeamInd = !string.IsNullOrEmpty(activity.TeamLink),
+                    TeamInd = !string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.ArmyTeamLink),
                     CopiedTosymposiumAndConferences = activity.CopiedTosymposiumAndConferences,
                     SymposiumLinkInd = activity.SymposiumLinkInd,
                     SymposiumLink = activity.SymposiumLink

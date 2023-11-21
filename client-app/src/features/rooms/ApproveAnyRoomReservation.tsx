@@ -21,16 +21,19 @@ interface RoomEvent {
     useEffect(() => {
       const fetchEmailsInBatches = async () => {
         const roomEvents: RoomEvent[] = [];
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        yesterday.setHours(0, 0, 0, 0); // Set time to start of the day
     
         for (let i = 0; i < 100; i++) {
           try {
             const skip = i * 10;
-            const result = await agent.ApproveEvents.getEmail(skip); // Assuming getEmail takes skip as a parameter
+            const result = await agent.ApproveEvents.getEmail(skip);
     
             // @ts-ignore
             const filteredMessages = result.filter(message => {
               return message.meetingRequestType && message.meetingRequestType === 'newMeetingRequest'
-              && message.subject.startsWith('FW:')
+              && message.subject.startsWith('FW:');
             });
     
             // @ts-ignore
@@ -39,15 +42,18 @@ interface RoomEvent {
               const endUtc = new Date(message.endDateTime.dateTime + 'Z');
               const start = utcToZonedTime(startUtc, 'America/New_York');
               const end = utcToZonedTime(endUtc, 'America/New_York');
-              const roomEvent: RoomEvent = {
-                roomName: message.location.displayName,
-                title: message.subject.startsWith('FW: ') ? message.subject.substring(4) : message.subject,
-                webLink: message.webLink,
-                start: start,
-                end: end,
-                allDay: message.isAllDay,
-              };
-              roomEvents.push(roomEvent);
+    
+              if (start >= yesterday) { // Check if the start date is greater than or equal to yesterday
+                const roomEvent: RoomEvent = {
+                  roomName: message.location.displayName,
+                  title: message.subject.startsWith('FW: ') ? message.subject.substring(4) : message.subject,
+                  webLink: message.webLink,
+                  start: start,
+                  end: end,
+                  allDay: message.isAllDay,
+                };
+                roomEvents.push(roomEvent);
+              }
             });
     
           } catch (error) {
@@ -62,6 +68,7 @@ interface RoomEvent {
     
       fetchEmailsInBatches();
     }, []);
+    
     
     return (
         <div>
