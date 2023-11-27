@@ -1,6 +1,6 @@
-import { Button, Divider, Header, Icon, Image, Segment, Search, SegmentGroup, Message, Confirm, ButtonGroup, Loader, Dimmer } from "semantic-ui-react";
+import { Button, Divider, Header, Icon, Image, Segment, Search, SegmentGroup, Message, Confirm, ButtonGroup, Loader, Dimmer, Input, Grid } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment} from "react";
 import { UserEmail } from "../../../app/models/userEmail"
 import agent from "../../../app/api/agent";
 import { SearchProps } from "semantic-ui-react";
@@ -30,6 +30,7 @@ export default function TeamsInformationEDU(
     const [searchTerm, setSearchTerm] = useState('');
     const [openConfirm, setOpenConfirm] = useState(false);
     const [userToDelete, setUserToDelete] = useState<UserEmail>({displayName: '', email: ''});
+
 
     const uniqueDisplayName = new Set();
 const uniqueEmail = new Set();
@@ -65,7 +66,35 @@ const source = uniqueEmails.map(email => ({
         setSearchTerm(value as string);
       };
 
- 
+      const addNonEDUUser = () => {
+        const displayNameElement = document.getElementById('displayName') as HTMLInputElement;
+        const emailElement = document.getElementById('email') as HTMLInputElement;
+      
+        const displayName = displayNameElement ? displayNameElement.value : '';
+        const email = emailElement ? emailElement.value : '';
+    
+        // Check for empty inputs
+        if (displayName.trim() === '' || email.trim() === '') {
+          console.log('Display Name and Email cannot be empty');
+          return;
+        }
+    
+        const isDuplicate = attendeesCopy.some(
+          attendee => attendee.email === email || attendee.displayName === displayName
+        );
+
+        if (!isDuplicate) {
+          const newAttendee = { displayName: displayName, email: email };
+          setAttendees([...attendeesCopy, newAttendee]);
+          setAttendeesCopy([...attendeesCopy, newAttendee]);
+        } else {
+          console.log('Attendee already exists');
+        }
+        if (displayNameElement) displayNameElement.value = '';
+        if (emailElement) emailElement.value = '';
+      };
+    
+
 
       const handleResultSelect = (e: React.MouseEvent, { result }: SearchProps) => {
         if (!attendeesCopy.some(att => att.email === result.description)) {
@@ -283,8 +312,48 @@ const source = uniqueEmails.map(email => ({
         
 
       </Segment>
+      <Segment color='teal'>
+      <Header icon color="teal" textAlign="center">
+      <Icon name="envelope" />
+      <span> Invite Non EDU users, Enter a Display Name, and an Email </span>
+      </Header>
+      <Grid>
+        <Grid.Row>
+          <Grid.Column width={7}>
+            <Input
+              icon='user'
+              iconPosition='left'
+              label={{ tag: true, content: 'Name' }}
+              labelPosition='right'
+              placeholder='Enter Display Name'
+              id="displayName"
+              fluid
+            />
+          </Grid.Column>
+          <Grid.Column width={7}>
+            <Input
+              icon='envelope'
+              iconPosition='left'
+              label={{ tag: true, content: 'Email' }}
+              labelPosition='right'
+              placeholder='Enter Email'
+              id="email"
+              fluid
+            />
+          </Grid.Column>
+          <Grid.Column width={2}>
+            <Button 
+              type="button" 
+              circular 
+              icon='plus' 
+              onClick={addNonEDUUser}
+            />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+      </Segment>
       <Segment clearing>
-        <Button floated="right" primary onClick={handleSaveClick} size='large'content='Save and Close'/>
+        <Button floated="right" primary onClick={handleSaveClick} size='large'content='Save and Close' />
       </Segment>
       </SegmentGroup>
      }

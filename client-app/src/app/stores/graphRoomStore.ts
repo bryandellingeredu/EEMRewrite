@@ -64,26 +64,66 @@ constructor() {
   }
 
   roomAssets: { [emailAddress: string]: { picURL: string; thumbURL: string } } = {
-    'BlissHallTestAuditorium@armywarcollege.edu': {
-      picURL: `${process.env.PUBLIC_URL}/assets/rooms/BlissHallThumb.png`,
-      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/BlissHall.jpg`
+    'Bldg650CollinsHall18thInfConferenceRoom@armywarcollege.edu':{
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/EighteenInfConfRoom.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/EighteenInfConfRoomThumb.png`
     },
-    'Test_Room_1@armywarcollege.edu': {
-      picURL: `${process.env.PUBLIC_URL}/assets/rooms/CherbourgThumb.png`,
-      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Cherbourg.jpg`
+    'Bldg650CollinsHall22ndInfConferenceRoomSVTC@armywarcollege.edu':{
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/TwentyTwoInfConfRoom.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/TwentyTwoInfConfRoomThumb.png`
     },
-    'ReynoldsTheater@armywarcollege.edu': {
-      picURL: `${process.env.PUBLIC_URL}/assets/rooms/ReynoldsThumb.png`,
-      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Reynolds_Theater.jpg`
+    'Bldg650CollinsHallAachenRoomSVTC@armywarcollege.edu':{
+    picURL: `${process.env.PUBLIC_URL}/assets/rooms/AachenRoom.png`,
+    thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/AachenRoomThumb.png`
     },
-    'Test_Room_2@armywarcollege.edu': {
-      picURL: `${process.env.PUBLIC_URL}/assets/rooms/RidgewayHallThumb.png`,
-      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Ridgway_Hall_Conf_Rm.jpg`
+    'Bldg650CollinsHallArdennesRoomCafeteria@armywarcollege.edu':{
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/ArdennesRoom.png`,
+    thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/ArdennesRoomThumb.png`
     },
-    'UptonHallTestConfRoom@armywarcollege.edu': {
-      picURL: `${process.env.PUBLIC_URL}/assets/rooms/UptonAuditoriumThumb.png`,
-      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/UptonAuditoriumThumb.jpg`
-    }
+    'Bldg650CollinsHallB030@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/B030.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/B030Thumb.png`
+    },
+    'Bldg650CollinsHallB033ASVTC@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/B033A.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/B033AThumb.png`
+    },
+    'Bldg650CollinsHallB037SVTC@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/B037.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/B037Thumb.png`
+    },
+    'Bldg650CollinsHallCherbourgRoomRm1015@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/CherbourgRoom.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/CherbourgRoomThumb.png`
+    },
+    'Bldg650CollinsHallGuadalcanalRoomRm3013@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/GuadalcanalRoom.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/GuadalcanalRoomThumb.png`
+    },
+    'Bldg650CollinsHallJayhawkLoungeRm1028@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/JayhawkLounge.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/JayhawkLoungeThumb.png`
+    },
+    'Bldg650CollinsHallMediaRoom@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/MediaRoom.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/MediaRoomThumb.png`
+    },
+    'Bldg650CollinsHallNormandyConferenceRoomSVTC@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/NormandyConferenceRoom.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/NormandyConferenceRoomThumb.png`
+    },
+    'Bldg650CollinsHallStLoRoomRm3006@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/StLoRoom.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/StLoRoomThumb.png`
+    },
+    'Bldg650CollinsHallToyRoomRm1018@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/ToyRoom.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/ToyRoomThumb.png`
+    },
+    'Bldg650CollinsHallTriangleRoomSVTC@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/TriangleRoom.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/TriangleRoomThumb.png`
+    },
   };
 
   loadGraphRooms = async () => {

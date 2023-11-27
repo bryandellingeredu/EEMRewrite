@@ -461,7 +461,7 @@
         }
         private static bool IsDistributionListId(string emailOrId)
         {
-            return !emailOrId.Contains("@") || !emailOrId.EndsWith("armywarcollege.edu", StringComparison.OrdinalIgnoreCase);
+            return !emailOrId.Contains("@"); 
         }
 
 
