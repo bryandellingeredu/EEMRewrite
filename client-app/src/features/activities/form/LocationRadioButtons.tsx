@@ -41,7 +41,7 @@ const handleNoRoomRequiredClicked = () => {
       </Form.Field>
       <Form.Field>
         <Radio
-          label='Need a Room(I know which one)'
+          label='Need a Room (I know which one)'
           name='roomRequiredRadioGroup'
           value='that'
           checked={roomRequired && !showRoomWizard}
@@ -50,7 +50,7 @@ const handleNoRoomRequiredClicked = () => {
       </Form.Field>
       <Form.Field>
         <Radio
-          label='Need a Room(Need help selecting)'
+          label='Need a Room (Need help selecting)'
           name='roomRequiredRadioGroup'
           value='RoomHelpNeeded'
           checked={roomRequired && showRoomWizard}

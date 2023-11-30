@@ -240,7 +240,8 @@ export default observer( function SelectRoomWizard(
       {text: '25', value: '25'},
       {text: '50', value: '50'},
       {text: '100', value: '100'},
-      {text: '300', value: '300'}
+      {text: '300', value: '300'},
+      {text: '600', value: '600'}
     ]}
     placeholder="Minimum Capacity"
     name="minCapacity"
@@ -257,7 +258,8 @@ export default observer( function SelectRoomWizard(
       {text: '25', value: '25'},
       {text: '50', value: '50'},
       {text: '100', value: '100'},
-      {text: '300', value: '300'}
+      {text: '300', value: '300'},
+      {text: '600', value: '600'}
     ]}
     placeholder="Maximum Capacity"
     name="maxCapacity"
