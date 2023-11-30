@@ -66,6 +66,7 @@ import TeamsButtonEDU from "./TeamsButtonEDU";
 import { UserEmail } from "../../../app/models/userEmail";
 import { BackToCalendarInfo } from "../../../app/models/backToCalendarInfo";
 import TeamsButtonArmy from "./TeamsButtonArmy";
+import SelectRoomWizard from "./SelectRoomWizard";
 
 
 
@@ -132,6 +133,7 @@ export default observer(function ActivityForm() {
     setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
     setMemberOfExecServices((user && user.roles && user.roles.includes("ExecServices")) || false);
 }, [user]);
+  const [roomOptionRegistryId, setRoomOptionRegistryId] = useState<string>(uuid())
   const [attendees, setAttendees] = useState<UserEmail[]>([]);
   const updateAttendees = (newAttendees: UserEmail[]) => {setAttendees(newAttendees);};
   const [makeTeamMeeting, setMakeTeamMeeting] = useState(false);
@@ -176,6 +178,7 @@ export default observer(function ActivityForm() {
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [recurrenceDisabled, setRecurrenceDisabled] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
+  const [showRoomWizard,setShowRoomWizard] = useState<boolean>(false);
   const [roomEmails, setRoomEmails] = useState<string[]>([]);
   const [originalRoomEmails, setOriginalRoomEmails] = useState<string[]>([]);
   const [uploadDifferentBioIndicator, setUploadDifferentBioIndicator] =
@@ -237,7 +240,18 @@ export default observer(function ActivityForm() {
     });
   }
 
-  const handleSetRoomRequired = () => setRoomRequired(!roomRequired);
+  const handleSetRoomRequired = (newRoomRequired : boolean) => setRoomRequired(newRoomRequired);
+  const handleSetShowRoomWizard = (newShowRoomWizard: boolean) => setShowRoomWizard(newShowRoomWizard);
+  const handleCloseSelectRoomWizard = () => {
+    setShowRoomWizard(false);
+    const noRoomErrorAnchor = document.getElementById("noRoomErrorAnchor");
+    if (noRoomErrorAnchor) {
+      noRoomErrorAnchor.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }
   const handleUploadDifferentBioClick = () =>
     setUploadDifferentBioIndicator(true);
 
@@ -611,6 +625,7 @@ export default observer(function ActivityForm() {
   }, [isSignedIn, graphRooms]);
 
   function handleFormSubmit(activity: ActivityFormValues) {
+    setShowRoomWizard(false);
     if(id && getTempRoomEmails(id)){
       removeTempRoomEmails(id);
     }
@@ -1573,8 +1588,21 @@ export default observer(function ActivityForm() {
          
             <LocationRadioButtons
               roomRequired={roomRequired}
+              showRoomWizard={showRoomWizard}
               setRoomRequired={handleSetRoomRequired}
+              setShowRoomWizard={handleSetShowRoomWizard}
             />
+
+            {showRoomWizard &&
+            <SelectRoomWizard
+            roomOptionRegistryId={roomOptionRegistryId}
+            lockDateInput={lockDateInput}
+            setRoomEmails={handleSetRoomEmails}
+            roomEmails={roomEmails}
+            setShowRoomWizard={setShowRoomWizard}
+            closeSelectRoomWizard={handleCloseSelectRoomWizard}
+             />
+            }
 
 
             {!roomRequired && (
@@ -1605,9 +1633,9 @@ export default observer(function ActivityForm() {
 
           
                 <Segment color="purple"   style={{
-      position: roomRequired ? "static" : "absolute",
-      zIndex: roomRequired ? "auto" : -1,
-      opacity: roomRequired ? 1 : 0,
+      position: (roomRequired && !showRoomWizard) ? "static" : "absolute",
+      zIndex: (roomRequired && !showRoomWizard) ? "auto" : -1,
+      opacity: (roomRequired && !showRoomWizard) ? 1 : 0,
     }}>
                   <Header as="h5" textAlign="center">
                     <FontAwesomeIcon
@@ -1636,6 +1664,7 @@ export default observer(function ActivityForm() {
                     unlockDateInput={setlockDateInputUnlocked}
                     lockDateInput={setLockDateInputLocked}
                     roomRequired={roomRequired}
+                    roomOptionRegistryId={roomOptionRegistryId}
                   />
                   <MyTextInput
                     name="numberAttending"

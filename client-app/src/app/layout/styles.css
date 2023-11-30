@@ -144,5 +144,24 @@ mgt-login {
   100% { transform: rotate(360deg); }
 }
 
+.warningMessage {
+  color: #573a08;
+  background-color: #fffaf3;
+  border-color: #ffebcc;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.warningMessageHeader {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.warningMessageContent {
+  margin-top: 5px;
+}
+
 
 

@@ -33,7 +33,8 @@ interface Props {
   recurrence: Recurrence;
   unlockDateInput: () => void;
   lockDateInput: () => void;
-  roomRequired: boolean
+  roomRequired: boolean,
+  roomOptionRegistryId: string
 }
 
 export default observer(function RoomPicker({
@@ -46,12 +47,13 @@ export default observer(function RoomPicker({
   recurrenceInd,
   unlockDateInput,
   lockDateInput,
-  roomRequired
+  roomRequired,
+  roomOptionRegistryId
 }: Props) {
   const animatedComponents = makeAnimated();
   const { availabilityStore, graphRoomStore, commonStore, activityStore} = useStore();
   const { loadingInitial, loadSchedule } = availabilityStore;
-  const { loadGraphRooms } = graphRoomStore;
+  const { loadGraphRooms, addUpdateRoomOptions } = graphRoomStore;
   const { getTempRoomEmails} = activityStore
   const [roomOptions, setRoomOptions] = useState<Option[]>([
     { label: "", value: "", isDisabled: false },
@@ -97,6 +99,7 @@ export default observer(function RoomPicker({
               })
             );
             setRoomOptions(o);
+            addUpdateRoomOptions(roomOptionRegistryId, o);
             unlockDateInput();
 
             });
@@ -122,6 +125,7 @@ export default observer(function RoomPicker({
                 })
               );
               setRoomOptions(o);
+              addUpdateRoomOptions(roomOptionRegistryId, o);
               if(o && o.length > 0 && getTempRoomEmails(id) ){
                 setTempRoomEmails(o, getTempRoomEmails(id));
               }

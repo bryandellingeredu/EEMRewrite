@@ -2,10 +2,27 @@ import { Form, Header, Radio, Segment } from "semantic-ui-react";
 
 interface Props{
     roomRequired: boolean
-    setRoomRequired: () => void
+    showRoomWizard: boolean
+    setRoomRequired: (value: boolean) => void;
+    setShowRoomWizard: (value: boolean) => void;
 }
 
-export default function LocationRadioButtons({roomRequired, setRoomRequired} : Props) {
+export default function LocationRadioButtons({roomRequired, setRoomRequired, setShowRoomWizard, showRoomWizard} : Props) {
+
+const handleNeedHelpClicked = () => {
+  setRoomRequired(true);
+  setShowRoomWizard(true);
+}
+
+const handleIKnowWhichOneClicked = () => {
+  setRoomRequired(true);
+  setShowRoomWizard(false);
+}
+
+const handleNoRoomRequiredClicked = () => {
+  setRoomRequired(false);
+  setShowRoomWizard(false);
+}
     
     return(
        <Segment inverted color='purple'>
@@ -19,16 +36,25 @@ export default function LocationRadioButtons({roomRequired, setRoomRequired} : P
           name='roomRequiredRadioGroup'
           value='NoRoomRequired'
           checked={!roomRequired}
-          onChange={setRoomRequired}
+          onChange={handleNoRoomRequiredClicked}
         />
       </Form.Field>
       <Form.Field>
         <Radio
-          label='Need a Room'
+          label='Need a Room(I know which one)'
           name='roomRequiredRadioGroup'
           value='that'
-          checked={roomRequired}
-          onChange={setRoomRequired}
+          checked={roomRequired && !showRoomWizard}
+          onChange={handleIKnowWhichOneClicked}
+        />
+      </Form.Field>
+      <Form.Field>
+        <Radio
+          label='Need a Room(Need help selecting)'
+          name='roomRequiredRadioGroup'
+          value='RoomHelpNeeded'
+          checked={roomRequired && showRoomWizard}
+          onChange={handleNeedHelpClicked}
         />
       </Form.Field>
       <Form.Field>

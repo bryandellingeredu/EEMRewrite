@@ -4,10 +4,17 @@ import agent from "../api/agent";
 import { GraphRoomReservationParameters } from "../models/graphRoomReservationParameters";
 import { RoomDelegate } from "../models/roomDelegate";
 
+interface Option {
+  label: string;
+  value: string;
+  isDisabled: boolean;
+}
+
 export default class GraphRoomStore {
     graphRoomRegistry = new Map<string, GraphRoom>();
     graphRoomReservationParametersRegistry = new Map<string, GraphRoomReservationParameters>();
     roomDelegatesRegistry = new Map<string, RoomDelegate>();
+    roomOptionRegistry = new Map<string, Option[]>()
     loadingInitial = false;
 
 
@@ -18,6 +25,10 @@ constructor() {
   get graphRooms() {
     return Array.from(this.graphRoomRegistry.values()).sort((a, b) =>
     a.displayName > b.displayName ? 1 : -1);
+  }
+
+  get allRoomOptions() {
+    return Array.from(this.roomOptionRegistry.values());
   }
 
   get graphReservationParameters() {
@@ -36,6 +47,13 @@ constructor() {
     return options
   }
 
+  addUpdateRoomOptions = (id: string, options: Option[]) =>{
+    this.roomOptionRegistry.set(id, options)
+  }
+
+  loadRoomOptions = (id: string): Option[] => {
+    return this.roomOptionRegistry.get(id) || [];
+}
   
   addGraphRoomReservation = (response: GraphRoomReservationParameters) => {
     this.graphRoomReservationParametersRegistry.set(response.id, response);
