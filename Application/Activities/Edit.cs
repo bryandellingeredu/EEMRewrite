@@ -95,6 +95,62 @@ namespace Application.Activities
                 if(activity.EventPlanningSetUpDate != null){
                             activity.EventPlanningSetUpDate = TimeZoneInfo.ConvertTime(activity.EventPlanningSetUpDate.Value, TimeZoneInfo.Local);
                 }
+                if (activity.CommandantStart != null)
+                {
+                    activity.CommandantStart = TimeZoneInfo.ConvertTime(activity.CommandantStart.Value, TimeZoneInfo.Local);
+                }
+                if (activity.CommandantEnd != null)
+                {
+                    activity.CommandantEnd = TimeZoneInfo.ConvertTime(activity.CommandantEnd.Value, TimeZoneInfo.Local);
+                }
+                if (activity.DptCmdtStart != null)
+                {
+                    activity.DptCmdtStart = TimeZoneInfo.ConvertTime(activity.DptCmdtStart.Value, TimeZoneInfo.Local);
+                }
+                if (activity.DptCmdtEnd != null)
+                {
+                    activity.DptCmdtEnd = TimeZoneInfo.ConvertTime(activity.DptCmdtEnd.Value, TimeZoneInfo.Local);
+                }
+                if (activity.ProvostStart != null)
+                {
+                    activity.ProvostStart = TimeZoneInfo.ConvertTime(activity.ProvostStart.Value, TimeZoneInfo.Local);
+                }
+                if (activity.ProvostEnd != null)
+                {
+                    activity.ProvostEnd = TimeZoneInfo.ConvertTime(activity.ProvostEnd.Value, TimeZoneInfo.Local);
+                }
+                if (activity.CofsStart != null)
+                {
+                    activity.CofsStart = TimeZoneInfo.ConvertTime(activity.CofsStart.Value, TimeZoneInfo.Local);
+                }
+                if (activity.CofsEnd != null)
+                {
+                    activity.CofsEnd = TimeZoneInfo.ConvertTime(activity.CofsEnd.Value, TimeZoneInfo.Local);
+                }
+                if (activity.DeanStart != null)
+                {
+                    activity.DeanStart = TimeZoneInfo.ConvertTime(activity.DeanStart.Value, TimeZoneInfo.Local);
+                }
+                if (activity.DeanEnd != null)
+                {
+                    activity.DeanEnd = TimeZoneInfo.ConvertTime(activity.DeanEnd.Value, TimeZoneInfo.Local);
+                }
+                if (activity.AmbassadorStart != null)
+                {
+                    activity.AmbassadorStart = TimeZoneInfo.ConvertTime(activity.AmbassadorStart.Value, TimeZoneInfo.Local);
+                }
+                if (activity.AmbassadorEnd != null)
+                {
+                    activity.AmbassadorEnd = TimeZoneInfo.ConvertTime(activity.AmbassadorEnd.Value, TimeZoneInfo.Local);
+                }
+                if (activity.CSMStart != null)
+                {
+                    activity.CSMStart = TimeZoneInfo.ConvertTime(activity.CSMStart.Value, TimeZoneInfo.Local);
+                }
+                if (activity.CSMEnd != null)
+                {
+                    activity.CSMEnd = TimeZoneInfo.ConvertTime(activity.CSMEnd.Value, TimeZoneInfo.Local);
+                }
                 if (activity.HostingReport != null && activity.HostingReport.Arrival != null) {
                     activity.HostingReport.Arrival = TimeZoneInfo.ConvertTime(activity.HostingReport.Arrival.Value, TimeZoneInfo.Local);
                 }

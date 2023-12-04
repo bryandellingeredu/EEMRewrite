@@ -350,6 +350,48 @@ export default class ActivityStore {
           if(activity.eventPlanningSetUpDate){
             activity.eventPlanningSetUpDate = new Date(activity.eventPlanningSetUpDate);
           }
+           if(activity.commandantStart){
+            activity.commandantStart = new Date(activity.commandantStart);
+          }
+          if(activity.commandantEnd){
+            activity.commandantEnd = new Date(activity.commandantEnd);
+          }
+          if(activity.dptCmdtStart){
+            activity.dptCmdtStart = new Date(activity.dptCmdtStart);
+          }
+          if(activity.dptCmdtEnd){
+            activity.dptCmdtEnd = new Date(activity.dptCmdtEnd);
+          }
+          if(activity.provostStart){
+            activity.provostStart = new Date(activity.provostStart);
+          }
+          if(activity.provostEnd){
+            activity.provostEnd = new Date(activity.provostEnd);
+          }
+          if(activity.cofsStart){
+            activity.cofsStart = new Date(activity.cofsStart);
+          }
+          if(activity.cofsEnd){
+            activity.cofsEnd = new Date(activity.cofsEnd);
+          }
+          if(activity.deanStart){
+            activity.deanStart = new Date(activity.deanStart);
+          }
+          if(activity.deanEnd){
+            activity.deanEnd = new Date(activity.deanEnd);
+          }
+          if(activity.ambassadorStart){
+            activity.ambassadorStart = new Date(activity.ambassadorStart);
+          }
+          if(activity.ambassadorEnd){
+            activity.ambassadorEnd = new Date(activity.ambassadorEnd);
+          }
+          if(activity.csmStart){
+            activity.csmStart = new Date(activity.csmStart);
+          }
+          if(activity.csmEnd){
+            activity.csmEnd = new Date(activity.csmEnd);
+          }
           this.activityRegistry.set(activity.id, activity);
           runInAction(() => {
             this.setLoadingInitial(false);
@@ -706,7 +748,21 @@ export default class ActivityStore {
     eventPlanningSetUpDate : null,
     enlistedAideAdditionalRemarks : '',
     symposiumLinkInd: false,
-    symposiumLink: ''
+    symposiumLink: '',
+    commandantStart: null,
+    commandantEnd: null,
+    dptCmdtStart: null,
+    dptCmdtEnd: null,
+    provostStart: null,
+    provostEnd: null,
+    cofsStart: null,
+    cofsEnd: null,
+    deanStart: null,
+    deanEnd: null,
+    ambassadorStart: null,
+    ambassadorEnd: null,
+    csmStart: null,
+    csmEnd: null
     }
     return activity;
   }

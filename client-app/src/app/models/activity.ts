@@ -235,6 +235,20 @@ export interface Activity{
     enlistedAideAdditionalRemarks : string
     symposiumLinkInd : boolean
     symposiumLink : string
+    commandantStart: Date | null
+    commandantEnd: Date | null
+    dptCmdtStart: Date | null
+    dptCmdtEnd: Date | null
+    provostStart: Date | null
+    provostEnd: Date | null
+    cofsStart: Date | null
+    cofsEnd: Date | null
+    deanStart: Date | null
+    deanEnd: Date | null
+    ambassadorStart: Date | null
+    ambassadorEnd: Date | null
+    csmStart: Date | null
+    csmEnd: Date | null
 }
 
 export class Activity implements Activity{
@@ -468,6 +482,20 @@ export class ActivityFormValues{
     enlistedAideAdditionalRemarks : string = ''
     symposiumLinkInd : boolean = false
     symposiumLink : string = ''
+    commandantStart: Date | null = null
+    commandantEnd: Date | null = null
+    dptCmdtStart: Date | null = null
+    dptCmdtEnd: Date | null = null
+    provostStart: Date | null = null
+    provostEnd: Date | null = null
+    cofsStart: Date | null = null
+    cofsEnd: Date | null = null
+    deanStart: Date | null = null
+    deanEnd: Date | null = null
+    ambassadorStart: Date | null = null
+    ambassadorEnd: Date | null = null
+    csmStart: Date | null = null
+    csmEnd: Date | null = null
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -694,7 +722,20 @@ export class ActivityFormValues{
     this.enlistedAideAdditionalRemarks = activity.enlistedAideAdditionalRemarks
     this.symposiumLinkInd = activity.symposiumLinkInd 
     this.symposiumLink =  activity.symposiumLink
-
+    this.commandantStart =  activity.commandantStart
+    this.commandantEnd =  activity.commandantEnd
+    this.dptCmdtStart =  activity.dptCmdtStart
+    this.dptCmdtEnd =  activity.dptCmdtEnd
+    this.provostStart =  activity.provostStart
+    this.provostEnd =  activity.provostEnd
+    this.cofsStart =  activity.cofsStart
+    this.cofsEnd =  activity.cofsEnd
+    this.deanStart =  activity.deanStart
+    this.deanEnd =  activity.deanEnd
+    this.ambassadorStart =  activity.ambassadorStart
+    this.ambassadorEnd =  activity.ambassadorEnd
+    this.csmStart =  activity.csmStart
+    this.csmEnd =  activity.csmEnd
        } 
     }
 }

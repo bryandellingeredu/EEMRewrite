@@ -175,6 +175,7 @@ export default observer(function ActivityForm() {
   const [subCalendarError, setSubCalendarError] = useState(false);
   const [noRoomError, setNoRoomError] = useState(false);
   const [noRegistrationSiteError, setNoRegistrationSiteError] = useState(false);
+  const [noLeaderDateError, setNoLeaderDateError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [recurrenceDisabled, setRecurrenceDisabled] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
@@ -634,12 +635,15 @@ export default observer(function ActivityForm() {
     let subCalendarErrorIndicator = false;
     let noRoomErrorIndicator = false;
     let noRegistrationSiteErrorIndicator = false;
+    let noLeaderDateErrorIndicator = false;
     setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
     setSubCalendarError(false);
     setNoRoomError(false);
     setNoRegistrationSiteError(false);
+    setNoLeaderDateError(false);
+
     
     if(!roomRequired && (activity.categoryId == '' || categories.find((x) => x.id === activity.categoryId)?.name ==="Other")){
       setSubCalendarError(true);
@@ -675,6 +679,26 @@ export default observer(function ActivityForm() {
           block: "center",
         });
       }
+    }
+
+    if(
+      (activity.commandantRequested && (!activity.commandantStart || !activity.commandantEnd )) ||
+      (activity.dptCmdtRequested && (!activity.dptCmdtStart || !activity.dptCmdtEnd)) ||
+      (activity.provostRequested && (!activity.provostStart || !activity.provostEnd)) ||
+      (activity.csmRequested && (!activity.csmStart || !activity.csmEnd)) ||
+      (activity.deanRequested && (!activity.deanStart || !activity.deanEnd)) ||
+      (activity.cofsRequested && (!activity.cofsStart || !activity.cofsEnd)) ||
+      (activity.ambassadorRequested && (!activity.ambassadorStart || !activity.ambassadorEnd)) 
+    ){
+       setNoLeaderDateError(true);
+       noLeaderDateErrorIndicator = true;
+       const noLeaderDateErrorAnchor = document.getElementById("noLeaderDateErrorAnchor");
+       if(noLeaderDateErrorAnchor){
+        noLeaderDateErrorAnchor.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+       }
     }
 
     if (activity.vtc && !activity.distantTechPhoneNumber){
@@ -720,7 +744,7 @@ export default observer(function ActivityForm() {
         }
       }
     }
-    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator) {
+    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator && !noLeaderDateErrorIndicator) {
       setSubmitting(true);
       if (!activity.categoryId)
         activity.categoryId = categories.find((x) => x.name === "Other")!.id;
@@ -3224,32 +3248,208 @@ export default observer(function ActivityForm() {
             <Divider />
             <Grid>
               <Grid.Row>
-                <Grid.Column width={3}>
-                  <strong>Request Presence:</strong>
-                </Grid.Column>
-                <Grid.Column width={13}>
-                  <SemanticForm.Group inline>
+                <Grid.Column width={16}>
+                <Segment.Group horizontal>
+                  <Segment>
+                    <strong>Request Presence:</strong>
+                  </Segment>
+                  <Segment>
                     <MySemanticCheckBox
                       name="commandantRequested"
                       label="Commandant"
                     />
+                    {values.commandantRequested && 
+                    <div>
+                    <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="Commandant Start Time"
+                          name="commandantStart"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                           <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="Commandant End Time"
+                          name="commandantEnd"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                    </div>
+                    }
+                    </Segment>
+                    <Segment>
                     <MySemanticCheckBox name="dptCmdtRequested" label="DCOM" />
+                    {values.dptCmdtRequested && 
+                    <div>
+                    <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="DCOM Start Time"
+                          name="dptCmdtStart"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                           <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="DCOM End Time"
+                          name="dptCmdtEnd"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                    </div>
+                    }
+                    </Segment>
+                    <Segment>
                     <MySemanticCheckBox
                       name="provostRequested"
                       label="Provost"
                     />
+                     {values.provostRequested && 
+                    <div>
+                    <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="Provost Start Time"
+                          name="provostStart"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                           <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="Provost End Time"
+                          name="provostEnd"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                    </div>
+                    }
+                    </Segment>
+                    <Segment>
                     <MySemanticCheckBox name="cofsRequested" label="COS" />
+                    {values.cofsRequested && 
+                    <div>
+                    <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="COS Start Time"
+                          name="cofsStart"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                           <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="COS End Time"
+                          name="cofsEnd"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                    </div>
+                    }
+                    </Segment>
+                    <Segment>
                     <MySemanticCheckBox name="deanRequested" label="Dean" />
+                    {values.deanRequested && 
+                    <div>
+                    <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="Dean Start Time"
+                          name="deanStart"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                           <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="Dean End Time"
+                          name="deanEnd"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                    </div>
+                    }
+                    </Segment>
+                    <Segment>
                     <MySemanticCheckBox
                       name="ambassadorRequested"
                       label="AMB"
                     />
+                      {values.ambassadorRequested && 
+                    <div>
+                    <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="AMB Start Time"
+                          name="ambassadorStart"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                           <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="AMB End Time"
+                          name="ambassadorEnd"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                    </div>
+                    }
+                     </Segment>
+                     <Segment>
                     <MySemanticCheckBox name="csmRequested" label="CSM" />
-                  </SemanticForm.Group>
-                  <i>
+                    {values.csmRequested && 
+                    <div>
+                    <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="CSM Start Time"
+                          name="csmStart"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                           <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="CSM End Time"
+                          name="csmEnd"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          minDate={new Date()}
+                        />
+                    </div>
+                    }
+                    </Segment>
+                </Segment.Group>
+            
+                  <i id="noLeaderDateErrorAnchor">
                     Request the presence of the leader. (Sends an e-mail invite
                     to the leader's admin assistant.)
                   </i>
+                  {noLeaderDateError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      Start and end times for the visit are required
+                                    </Label>
+                                  </p>
+                                )}
                 </Grid.Column>
               </Grid.Row>
             </Grid>

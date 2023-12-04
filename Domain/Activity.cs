@@ -85,18 +85,32 @@ namespace Domain
         public string EducationalCategory { get; set; }
         public bool CommandantRequested { get; set; }
          public bool CommandantRequestedNotificationSent { get; set; }
+        public DateTime? CommandantStart {get; set;}
+        public DateTime? CommandantEnd {get; set;}
         public bool DptCmdtRequested { get; set; }
-          public bool DptCmdtRequestedNotificationSent { get; set; }
+        public bool DptCmdtRequestedNotificationSent { get; set; }
+        public DateTime? DptCmdtStart {get; set;}
+        public DateTime? DptCmdtEnd {get; set;}
         public bool ProvostRequested { get; set; }
         public bool ProvostRequestedNotificationSent { get; set; }
+        public DateTime? ProvostStart {get; set;}
+        public DateTime? ProvostEnd {get; set;}
          public bool CofsRequested { get; set; }
-            public bool CofsRequestedNotificationSent { get; set; }
+        public bool CofsRequestedNotificationSent { get; set; }
+        public DateTime? CofsStart {get; set;}
+        public DateTime? CofsEnd {get; set;}
         public bool DeanRequested { get; set; }
-         public bool DeanRequestedNotificationSent { get; set; }
+        public bool DeanRequestedNotificationSent { get; set; }
+        public DateTime? DeanStart {get; set;}
+        public DateTime? DeanEnd {get; set;}
         public bool AmbassadorRequested { get; set; }
         public bool AmbassadorRequestedNotificationSent { get; set; }
+        public DateTime? AmbassadorStart {get; set;}
+        public DateTime? AmbassadorEnd {get; set;}
         public bool CSMRequested { get; set; }
         public bool CSMRequestedNotificationSent { get; set; }
+        public DateTime? CSMStart {get; set;}
+        public DateTime? CSMEnd {get; set;}
         public string Report { get; set; }
         public bool IMC { get; set; }
         public string Type { get; set; }
@@ -254,13 +268,11 @@ namespace Domain
         public string EventPlanningNumOfPC {get; set;}
         public string EventPlanningNumOfBYADS {get; set;}
         public string EventPlanningNumOfVOIPs {get; set;}
-        
         public string EventPlanningNumOfPrinters {get; set;}
          public string EventPlanningNumOfPeripherals {get; set;}
         public string EventPlanningNumOfMonitors {get; set;}
         public DateTime? EventPlanningSetUpDate {get; set;}
          public bool SymposiumLinkInd { get; set; }
         public string SymposiumLink {get; set;}
-
     }
 }

@@ -70,6 +70,8 @@ namespace Application
             public string OfficerType { get; set; }
             public string EmailGroupName { get; set; }
             public string EmailHeader {get; set;}
+            public string Start { get; set;}
+            public string End { get; set;}
         }
 
 
@@ -81,12 +83,12 @@ namespace Application
              GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
             _context = context;
             _webHostEnvironment = webHostEnvironment;
-            officerTypeLookup.Add("Commandant", new OfficerInformation {OfficerType = "Commandant", EmailGroupName = "Request Commandt Presence", EmailHeader = "Commandant's" });
-            officerTypeLookup.Add("DptCmdt",    new OfficerInformation {OfficerType = "DptCmdt", EmailGroupName = "Request Dep Cmdt Presence", EmailHeader = "Deputy Commandant's" });
-            officerTypeLookup.Add("Provost",    new OfficerInformation {OfficerType = "Provost", EmailGroupName = "Request Provost Presence", EmailHeader = "Provost's" });
-            officerTypeLookup.Add("Cofs",       new OfficerInformation {OfficerType = "Cofs", EmailGroupName = "Request Cofs Presence", EmailHeader = "Cof's"});
-            officerTypeLookup.Add("Dean",       new OfficerInformation {OfficerType = "Cofs", EmailGroupName = "Request Deans Presence", EmailHeader = "Dean's"});
-            officerTypeLookup.Add("Ambassador", new OfficerInformation {OfficerType = "Ambassador", EmailGroupName = "Request Ambassador Presence", EmailHeader = "Ambassador's"});
+            officerTypeLookup.Add("Commandant", new OfficerInformation {OfficerType = "Commandant", EmailGroupName = "Request Commandt Presence", EmailHeader = "Commandant's", Start = "CommandantStart", End = "CommandantEnd" });
+            officerTypeLookup.Add("DptCmdt",    new OfficerInformation {OfficerType = "DptCmdt", EmailGroupName = "Request Dep Cmdt Presence", EmailHeader = "Deputy Commandant's", Start = "DptCmdtStart", End = "DptCmdtEnd" });
+            officerTypeLookup.Add("Provost",    new OfficerInformation {OfficerType = "Provost", EmailGroupName = "Request Provost Presence", EmailHeader = "Provost's", Start = "ProvostStart", End = "ProvostEnd" });
+            officerTypeLookup.Add("Cofs",       new OfficerInformation {OfficerType = "Cofs", EmailGroupName = "Request Cofs Presence", EmailHeader = "Cof's", Start = "CofsStart", End = "CofsEnd" });
+            officerTypeLookup.Add("Dean",       new OfficerInformation {OfficerType = "Cofs", EmailGroupName = "Request Deans Presence", EmailHeader = "Dean's", Start = "DeanStart", End = "DeanEnd" });
+            officerTypeLookup.Add("Ambassador", new OfficerInformation {OfficerType = "Ambassador", EmailGroupName = "Request Ambassador Presence", EmailHeader = "Ambassador's", Start = "AmbassadorStart", End = "AmbassadorEnd" });
         }
 
         internal async Task SendNotifications()
@@ -96,7 +98,14 @@ namespace Application
             {
                 PropertyInfo requestedProp = _activity.GetType().GetProperty(officerType + "Requested");
                 PropertyInfo requestedNotificationSentProp = _activity.GetType().GetProperty(officerType + "RequestedNotificationSent");
-                if ((bool)requestedProp.GetValue(_activity) && !(bool)requestedNotificationSentProp.GetValue(_activity)) await this.SendOfficerRequestedNotification(officerType);
+                PropertyInfo startProp = _activity.GetType().GetProperty(officerType + "Start");
+                PropertyInfo endProp = _activity.GetType().GetProperty(officerType + "End");
+                if ((bool)requestedProp.GetValue(_activity) && !(bool)requestedNotificationSentProp.GetValue(_activity))
+                {
+                    DateTime? startDate = (DateTime?)startProp.GetValue(_activity);
+                    DateTime? endDate = (DateTime?)endProp.GetValue(_activity);
+                    await this.SendOfficerRequestedNotification(officerType, startDate, endDate);
+                }
             }
             if (!_activity.EventClearanceLevelNotificationSent && (_activity.EventClearanceLevel == "Secret" || _activity.EventClearanceLevel == "Top Secret" || _activity.EventClearanceLevel == "TS-SCI"))  await this.SendEventClearanceLevelNotification();   
             if (!_activity.BlissHallAVNotificationSent && (_activity.BlissHallSupport || !string.IsNullOrEmpty(_activity.EventClearanceLevel))) await this.SendBlissHallNotification();   
@@ -730,6 +739,8 @@ namespace Application
             {
                 body = body + $"<p><strong>Location: </strong> {await GetLocation()}</p>";
             }
+
+
             body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
 
             body = body + $"<p></p><p></p><p> To view in the Enterprise Event Manager (EEM), click the: <a href='{_settings.BaseUrl}?id={_activity.Id}&categoryid={_activity.CategoryId}'> EEM Link </a></p>";
@@ -743,7 +754,7 @@ namespace Application
 
        
      
-        private async Task SendOfficerRequestedNotification(string officerType)
+        private async Task SendOfficerRequestedNotification(string officerType, DateTime? startDate, DateTime? endDate)
         {
 
             string[] emails = _context.EmailGroups
@@ -796,6 +807,12 @@ namespace Application
                 body = body + $"<p><strong>Action Officer: </strong> {_activity.ActionOfficer} </p>";
                 bodyForRequester = bodyForRequester + $"<p><strong>Action Officer: </strong> {_activity.ActionOfficer} </p>";
             }
+
+            string startTimeInfo = startDate.HasValue ? $"<p><strong>Visit Start Time: </strong> {startDate.Value.ToString("f")} </p>" : "";
+            string endTimeInfo = endDate.HasValue ? $"<p><strong>Visit End Time: </strong> {endDate.Value.ToString("f")} </p>" : "";
+
+            body += startTimeInfo + endTimeInfo;
+            bodyForRequester += startTimeInfo + endTimeInfo;
 
             body = body + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
             bodyForRequester = bodyForRequester + $"<p><strong>Event Created By: </strong> {_activity.CreatedBy} </p>";
