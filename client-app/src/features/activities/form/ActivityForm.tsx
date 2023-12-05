@@ -13,8 +13,8 @@ import {
   Label,
   ButtonGroup,
   Modal,
-  Message,
-  Image
+  Image,
+  FormInput
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -746,6 +746,9 @@ export default observer(function ActivityForm() {
     }
     if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator && !noLeaderDateErrorIndicator) {
       setSubmitting(true);
+      if(roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu')){
+        activity.eventClearanceLevel = 'Secret';
+      }
       if (!activity.categoryId)
         activity.categoryId = categories.find((x) => x.name === "Other")!.id;
       if (
@@ -3230,6 +3233,7 @@ export default observer(function ActivityForm() {
                 placeholder="desciption for the link"
                 label="Public Hyperlink Description:"
               />
+              {!roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu') &&
               <MySelectInput
                 options={[
                   { text: "", value: "" },
@@ -3243,6 +3247,10 @@ export default observer(function ActivityForm() {
                 name="eventClearanceLevel"
                 label="Event Clearance Level:"
               />
+                }
+                {roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu') &&
+                 <FormInput value='Secret' label='Event Clearance Level:' readonly/>   
+                }
             </SemanticForm.Group>
 
             <Divider />
