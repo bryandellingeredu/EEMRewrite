@@ -762,7 +762,14 @@ export default class ActivityStore {
     ambassadorStart: null,
     ambassadorEnd: null,
     csmStart: null,
-    csmEnd: null
+    csmEnd: null,
+    studentCalendarResident: false,
+    studentCalendarDistanceGroup1 : false,
+    studentCalendarDistanceGroup2 : false,
+    studentCalendarDistanceGroup3 : false,
+    studentCalendarDistanceGroup1Mandatory : false,
+    studentCalendarDistanceGroup2Mandatory : false,
+    studentCalendarDistanceGroup3Mandatory : false
     }
     return activity;
   }

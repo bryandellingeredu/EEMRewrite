@@ -60,6 +60,7 @@ import AddToMyCalendar from '../../features/activities/details/AddToMyCalendar';
 import Unsubscribe from '../../features/fullCalendar/Unsubscribe';
 import ApproveRoomReservations from '../../features/rooms/ApproveRoomReservations';
 import ApproveAnyRoomReservation from '../../features/rooms/ApproveAnyRoomReservation';
+import ResidentAndDistanceStudentCalendar from '../../features/fullCalendar/ResidentAndDistanceStudentCalendar';
 
 function App() {
   const location = useLocation();
@@ -129,6 +130,8 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/community`} component={CommunityCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/customcalendar/:backToCalendarId`} component={CustomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/customcalendar`} component={CustomCalendar}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/residentAndDistanceStudentCalendar/:backToCalendarId`} component={ResidentAndDistanceStudentCalendar}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/residentAndDistanceStudentCalendar`} component={ResidentAndDistanceStudentCalendar}/>
 
                 <Route exact path={[
                   `${process.env.PUBLIC_URL}/genericcalendar/:id`,

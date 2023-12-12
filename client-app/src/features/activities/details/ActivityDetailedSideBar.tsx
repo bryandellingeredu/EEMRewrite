@@ -8,6 +8,7 @@ import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, f
 import agent from '../../../app/api/agent';
 import ActivityAttachmentSideBarComponent from './ActivityAttachmentSideBarComponent';
 import format from 'date-fns/format';
+import ResidentAndDistanceStudentCalendar from '../../fullCalendar/ResidentAndDistanceStudentCalendar';
 
 interface Props {
     activity: Activity
@@ -1385,6 +1386,77 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
          </Segment>
  }
 
+{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) &&
+   !activity.studentCalendarResident && !activity.studentCalendarDistanceGroup1  && !activity.studentCalendarDistanceGroup2 && !activity.studentCalendarDistanceGroup3 &&
+   <Segment attached>
+   <Grid verticalAlign='middle'>
+       <Grid.Column width={1}>
+       <Icon name='user' size='large' color='teal' />
+       </Grid.Column>
+       <Grid.Column width={14}>
+        Student Type:  Resident
+       </Grid.Column>
+   </Grid>
+</Segment>
+}
+
+{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) &&
+   activity.studentCalendarResident &&
+   <Segment attached>
+   <Grid verticalAlign='middle'>
+       <Grid.Column width={1}>
+       <Icon name='user' size='large' color='teal' />
+       </Grid.Column>
+       <Grid.Column width={14}>
+        Student Type:  Resident
+       </Grid.Column>
+   </Grid>
+</Segment>
+}
+
+{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) &&
+   activity.studentCalendarDistanceGroup1 &&
+   <Segment attached>
+   <Grid verticalAlign='middle'>
+       <Grid.Column width={1}>
+       <Icon name='user' size='large' color='teal' />
+       </Grid.Column>
+       <Grid.Column width={14}>
+        Student Type:  DEP 2024
+       </Grid.Column>
+   </Grid>
+</Segment>
+}
+
+{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) &&
+   activity.studentCalendarDistanceGroup2 &&
+   <Segment attached>
+   <Grid verticalAlign='middle'>
+       <Grid.Column width={1}>
+       <Icon name='user' size='large' color='teal' />
+       </Grid.Column>
+       <Grid.Column width={14}>
+        Student Type:  DEP 2025
+       </Grid.Column>
+   </Grid>
+</Segment>
+}
+
+{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) &&
+   activity.studentCalendarDistanceGroup3 &&
+   <Segment attached>
+   <Grid verticalAlign='middle'>
+       <Grid.Column width={1}>
+       <Icon name='user' size='large' color='teal' />
+       </Grid.Column>
+       <Grid.Column width={14}>
+        Student Type:  DEP 2026
+       </Grid.Column>
+   </Grid>
+</Segment>
+}
+
+
 {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarMandatory &&
              <Segment attached>
              <Grid verticalAlign='middle'>
@@ -1392,7 +1464,43 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <Icon name='street view' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={14}>
-                   Attendance is Mandatory
+                  Resident Attendance is Mandatory
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+ {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarDistanceGroup1 && activity.studentCalendarDistanceGroup1Mandatory &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='street view' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                  DEP 2024 Attendance is Mandatory
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+  {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarDistanceGroup2 && activity.studentCalendarDistanceGroup2Mandatory &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='street view' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                  DEP 2025 Attendance is Mandatory
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+   {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarDistanceGroup3 && activity.studentCalendarDistanceGroup3Mandatory &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='street view' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                  DEP 2026 Attendance is Mandatory
                  </Grid.Column>
              </Grid>
  </Segment>

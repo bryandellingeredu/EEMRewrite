@@ -127,11 +127,13 @@ export default observer(function ActivityForm() {
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
   const [memberOfExecServices, setMemberOfExecServices] = useState(false);
+  const [newStudentCalendarView, setNewStudentCalendarView] = useState(false);
   useEffect(() => {
     setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
     setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
     setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
     setMemberOfExecServices((user && user.roles && user.roles.includes("ExecServices")) || false);
+    setNewStudentCalendarView((user && user.roles && user.roles.includes("newStudentCalendarView")) || false);
 }, [user]);
   const [roomOptionRegistryId, setRoomOptionRegistryId] = useState<string>(uuid())
   const [attendees, setAttendees] = useState<UserEmail[]>([]);
@@ -2024,7 +2026,77 @@ export default observer(function ActivityForm() {
                   <Icon name="graduation cap" />
                   <Header.Content>Student Calendar</Header.Content>               
                 </Header>
-
+           {newStudentCalendarView && 
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={16}>
+                <Segment.Group horizontal>
+                  <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                    <strong>Student Type:</strong>
+                  </Segment>
+                  <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                    <MySemanticCheckBox
+                      name="studentCalendarResident"
+                      label="Resident"
+                    />
+                      {(values.studentCalendarResident || values.studentCalendarMandatory) && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarMandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                     }
+                    </Segment>
+                    <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                    <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup1"
+                      label="DEP 2024"
+                    />
+                      {values.studentCalendarDistanceGroup1 && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup1Mandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                     }
+                    </Segment>
+                    <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                    <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup2"
+                      label="DEP 2025"
+                    />
+                      {values.studentCalendarDistanceGroup2 && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup2Mandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                     }
+                    </Segment>
+                    <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                    <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup3"
+                      label="DEP 2026"
+                    />
+                      {values.studentCalendarDistanceGroup3 && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup3Mandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                     }
+                    </Segment>
+                  </Segment.Group>
+                  </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+            }
+             
+             {!newStudentCalendarView && 
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={2}>
@@ -2037,6 +2109,7 @@ export default observer(function ActivityForm() {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
+                }
                 <Divider />
 
       

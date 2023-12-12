@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231206160221_Resident")]
+    partial class Resident
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -640,19 +643,10 @@ namespace Persistence.Migrations
                     b.Property<bool>("StudentCalendarDistanceGroup1")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("StudentCalendarDistanceGroup1Mandatory")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("StudentCalendarDistanceGroup2")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("StudentCalendarDistanceGroup2Mandatory")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("StudentCalendarDistanceGroup3")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("StudentCalendarDistanceGroup3Mandatory")
                         .HasColumnType("bit");
 
                     b.Property<bool>("StudentCalendarMandatory")

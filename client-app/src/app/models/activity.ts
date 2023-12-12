@@ -249,6 +249,13 @@ export interface Activity{
     ambassadorEnd: Date | null
     csmStart: Date | null
     csmEnd: Date | null
+    studentCalendarResident: boolean
+    studentCalendarDistanceGroup1 : boolean
+    studentCalendarDistanceGroup2 : boolean
+    studentCalendarDistanceGroup3 : boolean
+    studentCalendarDistanceGroup1Mandatory : boolean
+    studentCalendarDistanceGroup2Mandatory : boolean
+    studentCalendarDistanceGroup3Mandatory : boolean
 }
 
 export class Activity implements Activity{
@@ -496,6 +503,13 @@ export class ActivityFormValues{
     ambassadorEnd: Date | null = null
     csmStart: Date | null = null
     csmEnd: Date | null = null
+    studentCalendarResident: boolean = false
+    studentCalendarDistanceGroup1 : boolean = false
+    studentCalendarDistanceGroup2 : boolean = false
+    studentCalendarDistanceGroup3 : boolean = false
+    studentCalendarDistanceGroup1Mandatory : boolean = false
+    studentCalendarDistanceGroup2Mandatory : boolean = false
+    studentCalendarDistanceGroup3Mandatory : boolean = false
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -736,6 +750,13 @@ export class ActivityFormValues{
     this.ambassadorEnd =  activity.ambassadorEnd
     this.csmStart =  activity.csmStart
     this.csmEnd =  activity.csmEnd
+    this.studentCalendarResident =  activity.studentCalendarResident
+    this.studentCalendarDistanceGroup1 =  activity.studentCalendarDistanceGroup1
+    this.studentCalendarDistanceGroup2 =  activity.studentCalendarDistanceGroup2
+    this.studentCalendarDistanceGroup3 =  activity.studentCalendarDistanceGroup3
+    this.studentCalendarDistanceGroup1Mandatory  =  activity.studentCalendarDistanceGroup1Mandatory
+    this.studentCalendarDistanceGroup2Mandatory  =  activity.studentCalendarDistanceGroup2Mandatory
+    this.studentCalendarDistanceGroup3Mandatory  =  activity.studentCalendarDistanceGroup3Mandatory
        } 
     }
 }
