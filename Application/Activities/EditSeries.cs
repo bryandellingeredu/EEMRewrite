@@ -272,6 +272,7 @@ namespace Application.Activities
                         {
                             GraphEventDTO graphEventDTO = new GraphEventDTO
                             {
+                                RoomEmails = a.RoomEmails,
                                 EventTitle = a.Title,
                                 EventDescription = a.Description,
                                 Start = a.StartDateAsString,

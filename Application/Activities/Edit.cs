@@ -297,6 +297,7 @@ namespace Application.Activities
                 {
                     GraphEventDTO graphEventDTO = new GraphEventDTO
                     {
+                        RoomEmails = request.Activity.RoomEmails,
                         EventTitle = request.Activity.Title,
                         EventDescription = request.Activity.Description,
                         Start = request.Activity.StartDateAsString,
@@ -313,6 +314,7 @@ namespace Application.Activities
                     {
                         GraphEventDTO graphEventDTO = new GraphEventDTO
                         {
+                            RoomEmails = request.Activity.RoomEmails,
                             EventTitle = request.Activity.Title,
                             EventDescription = request.Activity.Description,
                             Start = request.Activity.StartDateAsString,
