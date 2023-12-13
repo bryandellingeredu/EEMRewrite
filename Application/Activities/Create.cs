@@ -221,7 +221,8 @@ namespace Application.Activities
                                 RequesterEmail = a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? a.CoordinatorEmail : GraphHelper.GetEEMServiceAccount(),
                                 IsAllDay = a.AllDayEvent,
                                 UserEmail = user.Email,
-                                TeamInvites = (List<TextValueUser>)(a.TeamInvites.Any()? a.TeamInvites : new List<TextValueUser>())
+                                TeamInvites = (List<TextValueUser>)(a.TeamInvites.Any()? a.TeamInvites : new List<TextValueUser>()),
+                                RoomEmails = a.RoomEmails,
                             };
                             Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO);
                             a.TeamLookup = teamsMeeting.Id;

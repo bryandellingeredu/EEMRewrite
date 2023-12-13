@@ -368,6 +368,14 @@
             var @event = new Event
             {
                 Subject = $"{graphEventDTO.EventTitle} (Teams Meeting)",
+
+
+                Location = new Microsoft.Graph.Location
+                {
+                      DisplayName = graphEventDTO.RoomEmails.Any() ? await GetRoomNames(graphEventDTO.RoomEmails) : "Teams Meeting Only"
+                },
+
+
                 IsAllDay = graphEventDTO.IsAllDay,
                 Body = new ItemBody
                 {
@@ -396,6 +404,19 @@
 
 
             return createdEvent;
+        }
+
+        private async static Task<string> GetRoomNames(string[] roomEmails)
+        {
+            var allRooms = await GetRoomsAsync();
+
+            // Filter rooms based on provided emails and extract their names
+            var roomNames = allRooms
+                .Where(room => roomEmails.Any(email => string.Equals(email, room.AdditionalData["emailAddress"]?.ToString(), StringComparison.OrdinalIgnoreCase)))
+                .Select(room => room.DisplayName);
+
+            // Join names into a semicolon-separated string
+            return string.Join(";", roomNames);
         }
 
         private static async Task<List<TextValueUser>> ExpandDistributionList(string id)
@@ -482,7 +503,12 @@
                 throw new Exception("Team Event Not Found.");
             }
 
+
             // Update event details
+            existingEvent.Location = new Microsoft.Graph.Location
+            {
+                DisplayName = graphEventDTO.RoomEmails.Any() ? await GetRoomNames(graphEventDTO.RoomEmails) : "Teams Meeting Only"
+            };
             existingEvent.Subject = $"{graphEventDTO.EventTitle} (Teams Meeting)";
             existingEvent.IsAllDay = graphEventDTO.IsAllDay;
             existingEvent.Body = new ItemBody
