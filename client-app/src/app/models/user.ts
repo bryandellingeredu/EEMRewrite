@@ -4,6 +4,7 @@ export interface User{
     token: string;
     image?: string
     roles?: string[]
+    studentType: string
 }
 
 export interface UserFormValues{

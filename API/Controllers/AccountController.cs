@@ -23,16 +23,20 @@ namespace API.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
         private readonly ICACAccessor _cacAccessor;
+        private readonly IUserAccessor _userAccessor;
 
         public AccountController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             TokenService tokenService,
-            ICACAccessor cacAccessor)
+            ICACAccessor cacAccessor,
+            IUserAccessor userAccessor)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _cacAccessor = cacAccessor; 
+            _userAccessor = userAccessor;
+            
         }
 
         [AllowAnonymous]
@@ -41,77 +45,6 @@ namespace API.Controllers
         {
            return HandleResult(await Mediator.Send(new SendEmail.Command()));
         }
-
-
-        /*
-        [AllowAnonymous]
-        [HttpPost("signInCACUser")]
-        public async Task<ActionResult<UserDto>> LoginCac()
-        {
-            bool isLocal = Request.HttpContext.Request.Host.Value.StartsWith("localhost");
-            var cert = Request.HttpContext.Connection.ClientCertificate;
-            if (cert == null || String.IsNullOrEmpty(cert.Subject))
-            {
-                if (!isLocal)
-                {
-                    ModelState.AddModelError("cac", "Must Use a CAC Card");
-                    return ValidationProblem();
-                }
-              
-            }
-
-           CACInfoDTO cac = _cacAccessor.GetCacInfo();
-
-            var user = await _userManager.FindByEmailAsync(cac.TempEmail);
-            if (user == null)
-            {
-                if (await _userManager.Users.AnyAsync(x => x.Email == cac.TempEmail))
-                {
-                    ModelState.AddModelError("email", "Email taken");
-                    return ValidationProblem();
-                }
-                if (await _userManager.Users.AnyAsync(x => x.UserName == cac.DodIdNumber))
-                {
-                    ModelState.AddModelError("userName", "User name taken");
-                    return ValidationProblem();
-                }
-
-                user = new AppUser
-                {
-                    DisplayName = cac.UserName,
-                    Email = cac.TempEmail,
-                    UserName = cac.DodIdNumber
-
-                };
-                user.EmailConfirmed = true;
-                var result = await _userManager.CreateAsync(user, cac.DodIdNumber + "AaBb");
-                if (result.Succeeded)
-                {
-                    await SetRefreshToken(user);
-                    return await   CreateUserObject(user);
-                }
-                return BadRequest("problem registering user");
-            }
-            else
-            {
-                var result = await _signInManager.CheckPasswordSignInAsync(user, cac.DodIdNumber + "AaBb", false);
-                if (result.Succeeded)
-                {
-                    await SetRefreshToken(user);
-                    return await    CreateUserObject(user);
-                }
-                else
-                {
-                    string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    await _userManager.ResetPasswordAsync(user, token, cac.DodIdNumber + "AaBb");
-                    await SetRefreshToken(user);
-                    return await    CreateUserObject(user);
-
-                }
-
-            }
-
-        } */
 
 
 
@@ -174,7 +107,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetRoles([FromBody] UserEmailDto userEmailDto)
         {
             var user = await _userManager.FindByEmailAsync(userEmailDto.UserEmail);
-            if (user == null) return BadRequest($"Surely even you realize that {userEmailDto.UserEmail} does not exist");
+            if (user == null) return BadRequest($" {userEmailDto.UserEmail} does not exist");
             var roles = await _userManager.GetRolesAsync(user);
             if (roles.Any())
             {
@@ -182,6 +115,11 @@ namespace API.Controllers
             }
             return Ok(Array.Empty<string>());
         }
+
+        [AllowAnonymous]
+        [HttpPost("getStudentType")]
+        public async Task<IActionResult> getStudentType([FromBody] UserEmailDto userEmailDto) =>  Ok(_userAccessor.GetStudentType(userEmailDto.UserEmail));
+
 
 
         [AllowAnonymous]

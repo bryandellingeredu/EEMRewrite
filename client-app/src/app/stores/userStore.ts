@@ -24,10 +24,11 @@ export default class UserStore {
         try{
             const user = await agent.Account.login(creds);
             store.commonStore.setToken(user.token);
-            user.roles = await agent.Account.getRoles(user.userName);
+            user.roles = await agent.Account.getRoles(user.userName);          
             this.startRefreshTokenTimer(user)
             const roles = await agent.Account.getRoles(user.userName);
             user.roles = roles;
+            await this.setStudentType(user.userName);
             runInAction(() =>  this.user = user)
             if(store.commonStore.redirectId && store.commonStore.redirectCategoryId){
                 history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
@@ -91,6 +92,7 @@ export default class UserStore {
             this.setLoadingInitial(true);
             const user = await agent.Account.signInCacUser();
             user.roles = await agent.Account.getRoles(user.userName);
+            await this.setStudentType(user.userName);
             store.commonStore.setToken(user.token);
             runInAction(() =>  this.user = user)
             this.setLoadingInitial(false);
@@ -128,6 +130,7 @@ export default class UserStore {
             const user = await agent.Account.signInGraphUser(creds);
             const roles = await agent.Account.getRoles(user.userName);
             user.roles = roles;
+            await this.setStudentType(user.userName);
             store.commonStore.setToken(user.token);
             this.startRefreshTokenTimer(user);
             runInAction(() =>  this.user = user)
@@ -162,6 +165,7 @@ export default class UserStore {
         const user = await agent.Account.signInGraphUser(creds);
         const roles = await agent.Account.getRoles(user.userName);
         user.roles = roles;
+        await this.setStudentType(user.userName);
         store.commonStore.setToken(user.token);
         this.startRefreshTokenTimer(user);
         runInAction(() =>  this.user = user)
@@ -184,6 +188,7 @@ export default class UserStore {
          const user = await agent.Account.refreshToken();
          const roles = await agent.Account.getRoles(user.userName);
          user.roles = roles;
+         await this.setStudentType(user.userName);
          runInAction(() => this.user = user);
          store.commonStore.setToken(user.token);
          this.startRefreshTokenTimer(user)
@@ -207,4 +212,16 @@ export default class UserStore {
     setLoadingInitial = (state: boolean) => this.loadingInitial = state;
 
     setErrors = (errors: string[]) => this.errors = errors;
+
+    setStudentType = async (userName: string) => {
+        debugger;
+        try{
+           const studentType =  await agent.Account.getStudentType(userName); 
+           if(this.user){
+            this.user.studentType = studentType || 'not a student';
+           } 
+        }catch(error){
+            console.log(error)
+        }
+    }
 }

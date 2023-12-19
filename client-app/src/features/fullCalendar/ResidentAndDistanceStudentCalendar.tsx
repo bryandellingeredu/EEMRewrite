@@ -1,4 +1,5 @@
 import FullCalendar, {EventClickArg } from "@fullcalendar/react";
+import { observer } from "mobx-react-lite";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -13,7 +14,7 @@ import { useStore } from "../../app/stores/store";
 import Pikaday from "pikaday";
 import ReactDOM from 'react-dom';
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
-import { Divider, Header, Loader } from "semantic-ui-react";
+import { Divider, Header, Input, Loader } from "semantic-ui-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import ResidentAndDistanceStudentCalendarComponent from "./ResidentAndDistanceStudentCalendarCategoryComponent";
@@ -27,34 +28,63 @@ interface ResidentAndDistanceStudentCalendarCategory{
     color: string
 }
 
-export default function ResidentAndDistanceStudentCalendar(){ const history = useHistory();
-const { backToCalendarStore, categoryStore, activityStore } = useStore();
+export default observer(function ResidentAndDistanceStudentCalendar(){
+const history = useHistory();
+const { backToCalendarStore, categoryStore, activityStore,  userStore } = useStore();
+const {user, setStudentType} = userStore
 const { categories, loadingInitial } = categoryStore;
 const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
 const {addCalendarEventParameters} = activityStore;
-
-const [studentCategories, setStudentCategories] = useState<ResidentAndDistanceStudentCalendarCategory[]>(
-    localStorage.getItem("studentCategories") 
-        ? JSON.parse(localStorage.getItem("studentCategories") || '{}') 
-        : [ 
-            {id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B'},
-            {id: 2, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400'},
-            {id: 3, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'Distance (FY 2024)', color: '#FF8C00'},
-            {id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'Distance (FY 2025)', color: '#EE4B2B'},
-            {id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'Distance (FY 2026)', color: '#800080'},
-        ]
-);
+const [searchQuery, setSearchQuery] = useState("");
+const [studentCategories, setStudentCategories] = useState<ResidentAndDistanceStudentCalendarCategory[]>([]);
 const [initialDate, setInitialDate] = useState<Date | null>(null);
 const { backToCalendarId } = useParams<{ backToCalendarId?: string }>();
+const [showLabels, setShowLabels] = useState(false);
 const [isInitialDateSet, setIsInitialDateSet] = useState(false);
 const calendarRef = useRef<FullCalendar>(null);
 const [height, setHeight] = useState(window.innerHeight - 200);
 const [view, setView] = useState(localStorage.getItem("residentAndDistanceStudentCalendarView") || "timeGridWeek");
 const [isLoading, setIsLoading] = useState(true);
 
+
+
 useEffect(() => {
-  if(!categories.length) categoryStore.loadCategories();
- }, [categories.length])
+  if (user) {
+    if (!user.studentType) {
+      setStudentType(user.userName);
+    } else {
+      if (user.studentType === 'not a student') {
+        setShowLabels(true);
+        if (localStorage.getItem("studentCategories")) {
+          setStudentCategories(JSON.parse(localStorage.getItem("studentCategories1") || '{}'));
+        } else {
+          setStudentCategories([
+            { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B' },
+            { id: 2, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400' },
+            { id: 3, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00' },
+            { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B' },
+            { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080' },
+          ]);
+        }
+      } else {
+        setShowLabels(false);
+        setStudentCategories([
+          { id: 1, isSelected: false, group: '', title: 'Show All', color: '#00008B' },
+          { id: 2, isSelected: user.studentType === "Resident", group: 'studentCalendarResident', title: 'Resident', color: '#006400' },
+          { id: 3, isSelected: user.studentType === "DL24", group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00' },
+          { id: 4, isSelected: user.studentType === "DL25", group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B' },
+          { id: 5, isSelected: user.studentType === "DL26", group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080' },
+        ]);
+      }
+    }
+  }
+}, [user]);
+
+
+
+ useEffect(() => {
+   if(!categories.length) categoryStore.loadCategories();
+  }, [categories.length])
 
 useEffect(() => {
     const handleResize = () => {
@@ -119,7 +149,7 @@ const handleLabelClick = (clickedCategory: ResidentAndDistanceStudentCalendarCat
     setStudentCategories(updatedCategories);
 
     // Update localStorage
-    localStorage.setItem("studentCategories", JSON.stringify(updatedCategories));
+    localStorage.setItem("studentCategories1", JSON.stringify(updatedCategories));
 };
 
 const handleDateClick = useCallback((info : any) => {
@@ -154,10 +184,171 @@ const handleDateClick = useCallback((info : any) => {
   history.push(`${process.env.PUBLIC_URL}/createActivityWithCalendar/${paramId}/${backToCalendarInfo.id}`);
 }, [ categories, history]);
 
+const handleEventClick = useCallback((clickInfo: EventClickArg) => {
+  const category = categories.find(x => x.routeName === "studentCalendar");
+  
+  const backToCalendarInfo : BackToCalendarInfo = {
+    id: uuid(),
+    goToDate: clickInfo.event.start || new Date(),
+    url: `${process.env.PUBLIC_URL}/residentAndDistanceStudentCalendar`
+  };
+  addBackToCalendarInfoRecord(backToCalendarInfo);
+     
+  history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${category?.id}/${backToCalendarInfo.id}`);
+}, [ categories, history]);
+
+const getTime = (clickInfo: EventClickArg) => {
+  let time : string = ''
+  if(!clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') !== format(clickInfo.event.end!, 'MMMM d, yyyy')){
+    time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy h:mm aa')} - ${format(clickInfo.event.end!, 'MMMM d, yyyy h:mm aa')}`
+  }
+  if(!clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') === format(clickInfo.event.end!, 'MMMM d, yyyy')){
+    time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy h:mm aa')} - ${format(clickInfo.event.end!, 'h:mm aa')}`
+  }
+  if(clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') === format(clickInfo.event.end!, 'MMMM d, yyyy')){
+    time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy')} `
+  }
+  if(clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') !== format(clickInfo.event.end!, 'MMMM d, yyyy')){
+    time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy')} - ${format(clickInfo.event.end!, 'MMMM d, yyyy')}`
+  }
+  return time;
+}
+
+const getStudentPrograms = (extendedProps : any) => {
+
+    let programs = [];
+    if(extendedProps.studentCalendarResident ) programs.push('Resident');
+    if(extendedProps.studentCalendarDistanceGroup1 ) programs.push('DEP 2024');
+    if(extendedProps.studentCalendarDistanceGroup2 ) programs.push('DEP 2025');
+    if(extendedProps.studentCalendarDistanceGroup3 ) programs.push('DEP 2026');
+    if(programs.length < 1) programs.push('Resident');
+    return programs.join(', ');
+}
+
+const getAttendance = (extendedProps: any) => {
+  if (showLabels) {
+    let programs = [];
+    if (extendedProps.studentCalendarResident) programs.push({ name: 'Resident', mandatory: extendedProps.studentCalendarMandatory });
+    if (extendedProps.studentCalendarDistanceGroup1) programs.push({ name: 'DEP 2024', mandatory: extendedProps.studentCalendarDistanceGroup1Mandatory });
+    if (extendedProps.studentCalendarDistanceGroup2) programs.push({ name: 'DEP 2025', mandatory: extendedProps.studentCalendarDistanceGroup2Mandatory });
+    if (extendedProps.studentCalendarDistanceGroup3) programs.push({ name: 'DEP 2026', mandatory: extendedProps.studentCalendarDistanceGroup3Mandatory });
+
+    // Case: No program types
+    if (programs.length === 0) {
+      return extendedProps.studentCalendarMandatory ? 'Mandatory' : 'Optional';
+    }
+
+    // Case: Single program type
+    if (programs.length === 1) {
+      return programs[0].mandatory ? 'Mandatory' : 'Optional';
+    }
+
+    // Case: Multiple program types
+    return programs.map(program => `${program.name}: ${program.mandatory ? 'Mandatory' : 'Optional'}`).join(', ');
+  }
+};
+
+const  handleMouseEnter = async (arg : any) =>{
+  var content = `<p> ${ getTime(arg)}</p>              
+  <p> <strong>Title: </strong> ${arg.event.title} </p>
+  ${arg.event.extendedProps.description ?'<p><strong>Description: <strong>' + arg.event.extendedProps.description + '</p>' : '' }
+  ${arg.event.extendedProps.primaryLocation ? '<p><strong>Location: <strong>' + arg.event.extendedProps.primaryLocation + '</p>' : '' }
+  ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: <strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
+  ${arg.event.extendedProps.actionOfficer ? '<p><strong>Action Officer: <strong>' + arg.event.extendedProps.actionOfficer + '</p>' : ''}
+  ${arg.event.extendedProps.actionOfficerPhone ?'<p><strong>Action Officer Phone: <strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
+  ${arg.event.extendedProps.copiedTosymposiumAndConferences && arg.event.extendedProps.symposiumLinkInd && arg.event.extendedProps.symposiumLink?'<p><strong>Click to view registration link<strong></p>' : ''}
+  ${showLabels ? '<p><strong>Student Program/s: ' + getStudentPrograms(arg.event.extendedProps) + '</strong></p>' : ''}
+  <p><strong>Attendance is : <strong>  ${getAttendance(arg.event.extendedProps)} </p>
+  ${arg.event.extendedProps.studentCalendarPresenter?'<p><strong>Presenter: <strong>' + arg.event.extendedProps.studentCalendarPresenter + '</p>' : ''}
+  ${arg.event.extendedProps.studentCalendarUniform
+  ? '<p><strong>Uniform: <strong>' 
+      + (arg.event.extendedProps.studentCalendarUniform.length > 100 
+          ? arg.event.extendedProps.studentCalendarUniform.slice(0, 100) + '...' 
+          : arg.event.extendedProps.studentCalendarUniform) 
+      + '</p>' 
+  : ''
+}
+${arg.event.extendedProps.studentCalendarNotes
+  ? '<p><strong>Notes: <strong>' 
+      + (arg.event.extendedProps.studentCalendarNotes.length > 100 
+          ? arg.event.extendedProps.studentCalendarNotes.slice(0, 100) + '...' 
+          : arg.event.extendedProps.studentCalendarNotes) 
+      + '</p>' 
+  : ''
+}
+   `;
+ var tooltip : any = tippy(arg.el, {     
+    content,
+    allowHTML: true,
+  });
+  if (arg.event.extendedProps.eventLookup && arg.event.extendedProps.coordinatorEmail) {  
+  try {
+    const response = await agent.Activities.getRoomNames(
+      arg.event.extendedProps.eventLookup, arg.event.extendedProps.coordinatorEmail);
+      if(response){
+        tooltip.setContent('');
+        content = content + '<p><strong>Room(s): <strong>' + response + '</p>';
+        tooltip.setContent(content);
+      }
+    
+  }
+  catch (error) {
+    console.log(error);
+  }
+}
+}
+
+  const highlightMatchingEvents = (query: string) => {
+    const calendarDOMNode = ReactDOM.findDOMNode(calendarRef.current);
+    
+    if (calendarDOMNode instanceof Element) {
+        const eventTitles = document.querySelectorAll('.fc-event-title');
+  
+        // If query is empty, reset styles and return
+        if (!query.trim()) {
+            eventTitles.forEach(titleEl => {
+                const parentDiv = (titleEl as HTMLElement).closest('div');
+                if (parentDiv) {
+                    parentDiv.style.border = 'none';
+                    parentDiv.style.animation = 'none';  // Remove animation
+                    parentDiv.style.minHeight = '';  // Reset min height
+                    parentDiv.style.zIndex = '';  // Reset z-index
+                    parentDiv.style.backgroundColor = '';  // Reset background color
+                }
+            });
+            return;
+        }
+        
+        eventTitles.forEach(titleEl => {
+            const title = titleEl.textContent;
+            const parentDiv = (titleEl as HTMLElement).closest('div');
+  
+            if (title && title.toLowerCase().includes(query.toLowerCase())) {
+                if (parentDiv) {
+                    parentDiv.style.border = '7px solid darkred';
+                    parentDiv.style.animation = 'pulse 1.5s infinite';  // Add animation
+                    parentDiv.style.minHeight = '50px';  // Set min height
+                    parentDiv.style.zIndex = '1000';  // Increase z-index by a lot
+                    parentDiv.style.backgroundColor = 'darkorange';  // Set background to dark orange
+                }
+            } else {
+                if (parentDiv) {
+                    parentDiv.style.border = 'none';
+                    parentDiv.style.animation = 'none';  // Remove animation
+                    parentDiv.style.minHeight = '';  // Reset min height
+                    parentDiv.style.zIndex = '';  // Reset z-index
+                    parentDiv.style.backgroundColor = '';  // Reset background color
+                }
+            }
+        });
+    }
+  }; 
+  
+
 
 return(
     <>
-     {loadingInitial
+     {(loadingInitial || !user)
         && <LoadingComponent content='Loading Calendar' />
       }
       {!loadingInitial && 
@@ -168,15 +359,17 @@ return(
           Student Calendar
           </Header>
     </Divider>
+    {showLabels && 
     <Header as='h3' textAlign="center">
             Check or Uncheck Which Categories Should Appear on The Student Calendar
         </Header>
-
+    }
        {isLoading && (
          <Loader active size='large' style={{marginTop: '100px'}}>
            Loading events...
          </Loader>
         )}
+      {showLabels && 
     <div>
     {studentCategories.map(studentCategory => (
       <ResidentAndDistanceStudentCalendarComponent key={studentCategory.id}
@@ -184,7 +377,19 @@ return(
       handleLabelClick = {handleLabelClick} />
     ))}
     </div>
+   }
 
+    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
+          <Input
+              icon='search' 
+              placeholder='Search event titles...' 
+              value={searchQuery} 
+              onChange={e => {
+                  setSearchQuery(e.target.value);
+                  highlightMatchingEvents(e.target.value);
+              }} 
+          />
+            </div> 
     <FullCalendar
       initialDate={initialDate || new Date()}
       ref={calendarRef}
@@ -224,6 +429,9 @@ return(
       }}
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
       events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/residentAndDistanceStudentCalendar`}
+      eventClick={handleEventClick}
+      dateClick={handleDateClick}
+      eventMouseEnter={handleMouseEnter} 
       slotMinTime={"07:00:00"}
       slotMaxTime={"21:00:00"}
       loading={(isLoading) => setIsLoading(isLoading)}
@@ -283,6 +491,9 @@ return(
                     eventContent.prepend(icon);
                 }
             }
+            if(searchQuery){
+              highlightMatchingEvents(searchQuery)
+            }
         }
     }}
     />
@@ -290,4 +501,4 @@ return(
   }
     </>
 )
-}
+})

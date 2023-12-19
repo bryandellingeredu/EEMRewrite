@@ -248,7 +248,8 @@ const Account = {
                 axiosRequest.post<void>(`/account/verifyEmail?token=${token}&email=${email}`, {}),
     resendEmailConfirm: (email: string) => 
                 axiosRequest.get(`/account/resendEmailConfirmationLink?email=${email}`),
-    getRoles: (userEmail: string) => axiosRequest.post<string[]>('/account/getRoles', { userEmail })
+    getRoles: (userEmail: string) => axiosRequest.post<string[]>('/account/getRoles', { userEmail }),
+    getStudentType: (userEmail: string) => axiosRequest.post<string>('/account/getStudentType', { userEmail })
 }
 
 const Uploads = {
