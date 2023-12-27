@@ -2219,34 +2219,26 @@ export default observer(function ActivityForm() {
                     style={{ marginRight: "10px" }}
                   />
                   <Header.Content>
-                    USAHEC Facilities Usage Information
+                    USAHEC Usage Information
                   </Header.Content>
                 </Header>
-
                 <MySelectInput
+
                   options={[
                     { text: "", value: "" },
                     {
-                      text: "Army Heritage Center Foundation",
-                      value: "Army Heritage Center Foundation",
+                      text: "AHEC",
+                      value: "AHEC",
                     },
-                    { text: "Education", value: "Education" },
-                    { text: "General", value: "General" },
+                    { text: "AHCF", value: "AHCF" },
+                    { text: "Holiday", value: "Holiday" },
                     { text: "Government", value: "Government" },
                     { text: "Holiday", value: "Holiday" },
-                    { text: "Maintenance", value: "Maintenance" },
-                    { text: "MHINAF", value: "MHINAF" },
-                    { text: "Non/Profit", value: "Non/Profit" },
                     { text: "Public Event", value: "Public Event" },
-                    { text: "Scouts", value: "Scouts" },
-                    { text: "Training", value: "Training" },
-                    { text: "U.S. Army", value: "U.S. Army" },
-                    {
-                      text: "U.S. Army War College",
-                      value: "U.S. Army College",
-                    },
-                    { text: "USAHEC Meeting", value: "USAHEC Meeting" },
-                    { text: "Veteran", value: "Veteran" },
+                    { text: "Billable Event", value: "Billable Event" },
+                    { text: "AWC/CBKS Tenant", value: "AWC/CBKS Tenant" },
+                    { text: "AHEC Highlight", value: "AHEC Highlight" },
+                    { text: "AWC Event", value: "AWC Event" },
                   ]}
                   placeholder="Reservation Type"
                   name="usahecFacilityReservationType"
@@ -2923,17 +2915,10 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
-                          <MySemanticCheckBox
-                            name="copiedTousahec"
-                            label="USAHEC Calendar"
-                            disabled={categories
-                              .filter((x) => x.routeName === "usahec")
-                              .map((x) => x.id)
-                              .includes(currentCategoryId)}
-                          />
+                  
                           <MySemanticCheckBox
                             name="copiedTousahecFacilitiesUsage"
-                            label="USAHEC Facilities Usage Calendar"
+                            label="USAHEC Calendar"
                             disabled={categories
                               .filter(
                                 (x) => x.routeName === "usahecFacilitiesUsage"

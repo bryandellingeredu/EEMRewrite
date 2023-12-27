@@ -21,7 +21,7 @@ constructor() {
     const options : any = [];
     options.push({ text: ' ', value: this.categories.find(x => x.name === 'Other')?.id });
     this.categories.forEach(category => {
-        if (category.name !== 'Other') {
+        if (category.name !== 'Other' && category.name != 'USAHEC Calendar') {
             options.push({
                text: category.name === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                      category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
