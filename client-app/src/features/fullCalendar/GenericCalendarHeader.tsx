@@ -130,7 +130,7 @@ if (id === 'cio' && !cioEventPlanningAdmin) {
     {id === 'usahecFacilitiesUsage' &&
      <>
      <FontAwesomeIcon icon={faBookOpenReader} size='2x' style={{marginRight: '10px'}} />
-     USAHEC Facilities Usage Calendar
+     USAHEC Calendar
    </>
       }
     {id === 'usahec' &&

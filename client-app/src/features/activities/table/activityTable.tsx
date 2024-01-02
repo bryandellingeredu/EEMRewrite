@@ -303,8 +303,9 @@ export default observer(function ActivityTable(){
                 name="organizationId"
               /></Table.HeaderCell>
         <Table.HeaderCell>        <MyMultiSelectInput
-                          options = {categoryOptions.map((option: any) => {
-                            return {label: option.text , value: option.value , disabled: false}
+                          options = {categoryOptions.filter((option: any) => option.text !== "USAHEC Calendar").map((option: any) => {
+                            let label = option.text.startsWith("USAHEC") ? "USAHEC Calendar" : option.text;
+                            return {label , value: option.value , disabled: false}
                           })}
                            placeholder=""
                            name="categoryIds"
@@ -353,6 +354,7 @@ export default observer(function ActivityTable(){
                 {
                   item.subCalendar === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                   item.subCalendar === 'Academic IMC Event' ? 'Faculty Calendar' :
+                  item.subCalendar === 'USAHEC Facilities Usage Calendar' ? 'USAHEC Calendar' :
                   item.subCalendar === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :
                   item.subCalendar === 'SSL Calendar' ? 'SSL Admin Calendar' :
                   item.subCalendar === 'Other' ? '' :
@@ -397,6 +399,7 @@ export default observer(function ActivityTable(){
                 {
                   item.subCalendar === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                   item.subCalendar === 'Academic IMC Event' ? 'Faculty Calendar' :
+                  item.subCalendar === 'USAHEC Facilities Usage Calendar' ? 'USAHEC Calendar' :
                   item.subCalendar === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :
                   item.subCalendar === 'SSL Calendar' ? 'SSL Admin Calendar' :
                   item.subCalendar === 'Other' ? '' :

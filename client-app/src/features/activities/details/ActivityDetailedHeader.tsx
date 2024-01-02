@@ -151,10 +151,11 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
                                 { (!activity.activityRooms || activity.activityRooms.length <= 0) && activity.primaryLocation &&
                                     <p>{activity.primaryLocation}</p>
                                 }
-                                {activity.category.name !== 'Other' &&                                
+                                {activity.category.name !== 'Other' &&  activity.category.name !== 'USAHEC Calendar' &&                               
                                 <p>
                                     <strong>{activity.category.name === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                                              activity.category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
+                                             activity.category.name === 'USAHEC Facilities Usage Calendar' ? 'USAHEC Calendar' :
                                              activity.category.name === 'Military Family and Spouse Program'? 'Military Spouse and Family Program' :
                                              activity.category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : activity.category.name}</strong>
                                 </p>

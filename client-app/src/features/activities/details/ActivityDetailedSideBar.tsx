@@ -645,18 +645,6 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
  </Segment>
  }
 
-{activity.copiedTousahec &&
-             <Segment attached>
-             <Grid verticalAlign='middle'>
-                 <Grid.Column width={1}>
-                 <Icon name='book' size='large' color='teal' />
-                 </Grid.Column>
-                 <Grid.Column width={14}>
-                   Added to USAHEC Calendar
-                 </Grid.Column>
-             </Grid>
- </Segment>
- }
 
 {activity.copiedTousahecFacilitiesUsage &&
              <Segment attached>
@@ -665,7 +653,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <FontAwesomeIcon icon={faBookOpenReader} size='2x'  color='#00b5ad' />
                  </Grid.Column>
                  <Grid.Column width={14} style={{paddingLeft: '20px'}}>
-                   Added to the USAHEC Facilities Usage Calendar
+                   Added to the USAHEC Calendar
                  </Grid.Column>
              </Grid>
  </Segment>

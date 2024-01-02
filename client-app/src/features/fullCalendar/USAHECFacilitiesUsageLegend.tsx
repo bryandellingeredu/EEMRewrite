@@ -7,6 +7,7 @@ import { useEffect} from "react";
 export default observer(function USAHECFacilitiesUsageLegend() {
   const { usahecFacilitiesUsageLegendStore } = useStore();
   const { legend, loadingInitial, loadLegend } = usahecFacilitiesUsageLegendStore;
+  const allowedNames = ["AHEC", "AHCF", "Holiday", "Public Event", "Billable Event", "AWC/CBKS Tenant", "AHEC Highlight", "AWC Event"];
 
   useEffect(() => {
     if(!legend.length) loadLegend();
@@ -19,7 +20,7 @@ export default observer(function USAHECFacilitiesUsageLegend() {
       }
       {!loadingInitial &&
         <div>
-        {legend.map(item => (
+      {legend.filter(item => allowedNames.includes(item.name)).map(item => (
         <Label key={item.id} style={{backgroundColor: item.color, color: 'white', marginBottom: '5px'}} content = {item.name} />
       ))}
       </div>

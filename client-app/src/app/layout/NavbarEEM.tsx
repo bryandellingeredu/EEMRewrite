@@ -146,12 +146,13 @@ export default observer(function NavbarEEM() {
                   />
             {
   categories
-    .filter(x => x.routeName && x.name !== "Other" && !(x.name === 'CIO Event Planning Calendar' && (!user || !user.roles || !user.roles.includes("CIOEventPlanningAdmin"))))
+    .filter(x => x.routeName && x.name !== "Other" &&  x.name !== "USAHEC Calendar" && !(x.name === 'CIO Event Planning Calendar' && (!user || !user.roles || !user.roles.includes("CIOEventPlanningAdmin"))))
     .map((category) => (
       <Dropdown.Item key={category.id}
         text={
           category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
           category.name === 'SSL Calendar' ? 'SSL Admin Calendar' :
+          category.name === 'USAHEC Facilities Usage Calendar' ? 'USAHEC Calendar' :
           category.name === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :
           category.name
         }
