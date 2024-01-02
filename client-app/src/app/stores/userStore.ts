@@ -100,7 +100,6 @@ export default class UserStore {
                 history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
             }
             else if(store.commonStore.redirectToPage){
-                debugger;
                 history.push(`${process.env.PUBLIC_URL}/${store.commonStore.redirectToPage}`);
             }
          else{
@@ -138,7 +137,6 @@ export default class UserStore {
                 history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
             }
             else if(store.commonStore.redirectToPage){
-                debugger;
                 history.push(`${process.env.PUBLIC_URL}/${store.commonStore.redirectToPage}`);
             }
             else{
@@ -173,7 +171,6 @@ export default class UserStore {
             history.push(`${process.env.PUBLIC_URL}/activities/${store.commonStore.redirectId}/${store.commonStore.redirectCategoryId}`)
         }
         if(store.commonStore.redirectToPage){
-            debugger;
             history.push(`${process.env.PUBLIC_URL}/${store.commonStore.redirectToPage}`);
         }
         //history.push(`${process.env.PUBLIC_URL}/activityTable`);
@@ -211,17 +208,24 @@ export default class UserStore {
 
     setLoadingInitial = (state: boolean) => this.loadingInitial = state;
 
+
+
     setErrors = (errors: string[]) => this.errors = errors;
 
+    populateStudentType = (studentType : string) => 
+    {
+        this.user!.studentType = studentType || 'not a student';
+    }
+
     setStudentType = async (userName: string) => {
-        debugger;
         try{
            const studentType =  await agent.Account.getStudentType(userName); 
            if(this.user){
-            this.user.studentType = studentType || 'not a student';
+            this.populateStudentType(studentType);
            } 
         }catch(error){
             console.log(error)
         }
     }
+
 }

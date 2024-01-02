@@ -24,9 +24,11 @@ namespace Infrastructucture.Security
             {
                string sql = "SELECT TOP 1 [Type] FROM [USAWCPersonnel].[EEM].[RepDep] WHERE TRIM(LOWER([Email])) = LOWER(TRIM(@Email))";
                 SqlCommand command = new SqlCommand(sql, connection);
-               // command.Parameters.AddWithValue("@Email", emailAddress);
-               command.Parameters.AddWithValue("@Email", "erik.a.keim.mil@armywarcollege.edu");
-               
+              command.Parameters.AddWithValue("@Email", emailAddress);
+             //  command.Parameters.AddWithValue("@Email", "erik.a.keim.mil@armywarcollege.edu");   //Resident
+               //command.Parameters.AddWithValue("@Email", "debbie.lipscomb.mil@armywarcollege.edu");   //DL24
+              // command.Parameters.AddWithValue("@Email", "jeanine.l.frazier.mil@armywarcollege.edu");   //DL25
+
 
                 try
                 {

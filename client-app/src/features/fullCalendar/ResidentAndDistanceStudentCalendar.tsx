@@ -78,7 +78,7 @@ useEffect(() => {
       }
     }
   }
-}, [user]);
+}, [user, user?.studentType]);
 
 
 
@@ -103,7 +103,6 @@ useEffect(() => {
     if (backToCalendarId && !isInitialDateSet) {
       backToCalendarRecord = getBackToCalendarInfoRecord(backToCalendarId);
       if (backToCalendarRecord) {
-        console.log("About to set initial date to:", new Date(backToCalendarRecord.goToDate));
         setInitialDate(backToCalendarRecord.goToDate);
         const calendarApi = calendarRef.current?.getApi();
         if(calendarApi){
@@ -245,6 +244,19 @@ const getAttendance = (extendedProps: any) => {
 
     // Case: Multiple program types
     return programs.map(program => `${program.name}: ${program.mandatory ? 'Mandatory' : 'Optional'}`).join(', ');
+  }else{
+    if(!user || !user.studentType || user.studentType === 'Resident'){
+      return extendedProps.studentCalendarMandatory ? 'Mandatory' : 'Optional';
+    }
+    if(user && user.studentType && user.studentType === 'DL24'){
+      return extendedProps.studentCalendarDistanceGroup1Mandatory ? 'Mandatory' : 'Optional';
+    }
+    if(user && user.studentType && user.studentType === 'DL25'){
+      return extendedProps.studentCalendarDistanceGroup2Mandatory ? 'Mandatory' : 'Optional';
+    }
+    if(user && user.studentType && user.studentType === 'DL26'){
+      return extendedProps.studentCalendarDistanceGroup2Mandatory ? 'Mandatory' : 'Optional';
+    }
   }
 };
 
