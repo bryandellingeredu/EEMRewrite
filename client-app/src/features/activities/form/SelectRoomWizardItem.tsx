@@ -32,6 +32,7 @@ export default function SelectRoomWizardItem({room, unavailable,setRoomEmails, r
         <Card.Content>
         {room.thumbURL &&
           <Image
+          className="clickable-image"
             floated='right'
             size='tiny'
             src={room.thumbURL}

@@ -46,7 +46,7 @@ export default observer (function RoomListItem(
               Capacity: {room.capacity}
             </Label>
               <Card.Header style={{marginTop: '5px'}}>
-              {room.thumbURL && <Image floated='left' size='small' src={room.thumbURL}
+              {room.thumbURL && <Image floated='left' size='small' src={room.thumbURL} className="clickable-image"
                onClick={() => openModal(<RoomPictureModal url={room.picURL}/>, 'large')}
               />}    
               {room.displayName}

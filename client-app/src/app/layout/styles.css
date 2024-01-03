@@ -163,5 +163,9 @@ mgt-login {
   margin-top: 5px;
 }
 
+.clickable-image {
+  cursor: pointer;
+}
+
 
 
