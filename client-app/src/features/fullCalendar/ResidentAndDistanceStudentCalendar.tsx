@@ -14,11 +14,13 @@ import { useStore } from "../../app/stores/store";
 import Pikaday from "pikaday";
 import ReactDOM from 'react-dom';
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
-import { Divider, Header, Input, Loader } from "semantic-ui-react";
+import { Button, Divider, Header, Icon, Input, Label, Loader } from "semantic-ui-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import ResidentAndDistanceStudentCalendarComponent from "./ResidentAndDistanceStudentCalendarCategoryComponent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
+import GenericCalendarTable from "./GenericCalendarTable";
+import SyncCalendarInformation from "./SyncCalendarInformation";
 
 interface ResidentAndDistanceStudentCalendarCategory{
     id: number
@@ -30,7 +32,8 @@ interface ResidentAndDistanceStudentCalendarCategory{
 
 export default observer(function ResidentAndDistanceStudentCalendar(){
 const history = useHistory();
-const { backToCalendarStore, categoryStore, activityStore,  userStore } = useStore();
+const { backToCalendarStore, categoryStore, activityStore,  userStore, modalStore } = useStore();
+const {openModal} = modalStore;
 const {user, setStudentType} = userStore
 const { categories, loadingInitial } = categoryStore;
 const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
@@ -224,45 +227,14 @@ const getStudentPrograms = (extendedProps : any) => {
     return programs.join(', ');
 }
 
-const getAttendance = (extendedProps: any) => {
-  if (showLabels) {
-    let programs = [];
-    if (extendedProps.studentCalendarResident) programs.push({ name: 'Resident', mandatory: extendedProps.studentCalendarMandatory });
-    if (extendedProps.studentCalendarDistanceGroup1) programs.push({ name: 'DEP 2024', mandatory: extendedProps.studentCalendarDistanceGroup1Mandatory });
-    if (extendedProps.studentCalendarDistanceGroup2) programs.push({ name: 'DEP 2025', mandatory: extendedProps.studentCalendarDistanceGroup2Mandatory });
-    if (extendedProps.studentCalendarDistanceGroup3) programs.push({ name: 'DEP 2026', mandatory: extendedProps.studentCalendarDistanceGroup3Mandatory });
 
-    // Case: No program types
-    if (programs.length === 0) {
-      return extendedProps.studentCalendarMandatory ? 'Mandatory' : 'Optional';
-    }
 
-    // Case: Single program type
-    if (programs.length === 1) {
-      return programs[0].mandatory ? 'Mandatory' : 'Optional';
-    }
 
-    // Case: Multiple program types
-    return programs.map(program => `${program.name}: ${program.mandatory ? 'Mandatory' : 'Optional'}`).join(', ');
-  }else{
-    if(!user || !user.studentType || user.studentType === 'Resident'){
-      return extendedProps.studentCalendarMandatory ? 'Mandatory' : 'Optional';
-    }
-    if(user && user.studentType && user.studentType === 'DL24'){
-      return extendedProps.studentCalendarDistanceGroup1Mandatory ? 'Mandatory' : 'Optional';
-    }
-    if(user && user.studentType && user.studentType === 'DL25'){
-      return extendedProps.studentCalendarDistanceGroup2Mandatory ? 'Mandatory' : 'Optional';
-    }
-    if(user && user.studentType && user.studentType === 'DL26'){
-      return extendedProps.studentCalendarDistanceGroup2Mandatory ? 'Mandatory' : 'Optional';
-    }
-  }
-};
 
 const  handleMouseEnter = async (arg : any) =>{
   var content = `<p> ${ getTime(arg)}</p>              
   <p> <strong>Title: </strong> ${arg.event.title} </p>
+  <p> <strong>Student Type: </strong> ${arg.event.extendedProps.studentType} </p>
   ${arg.event.extendedProps.description ?'<p><strong>Description: <strong>' + arg.event.extendedProps.description + '</p>' : '' }
   ${arg.event.extendedProps.primaryLocation ? '<p><strong>Location: <strong>' + arg.event.extendedProps.primaryLocation + '</p>' : '' }
   ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: <strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
@@ -270,7 +242,7 @@ const  handleMouseEnter = async (arg : any) =>{
   ${arg.event.extendedProps.actionOfficerPhone ?'<p><strong>Action Officer Phone: <strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
   ${arg.event.extendedProps.copiedTosymposiumAndConferences && arg.event.extendedProps.symposiumLinkInd && arg.event.extendedProps.symposiumLink?'<p><strong>Click to view registration link<strong></p>' : ''}
   ${showLabels ? '<p><strong>Student Program/s: ' + getStudentPrograms(arg.event.extendedProps) + '</strong></p>' : ''}
-  <p><strong>Attendance is : <strong>  ${getAttendance(arg.event.extendedProps)} </p>
+  <p><strong>Attendance is : <strong>  ${arg.event.extendedProps.studentCalendarMandatory ? 'Mandatory' : 'Optional'} </p>
   ${arg.event.extendedProps.studentCalendarPresenter?'<p><strong>Presenter: <strong>' + arg.event.extendedProps.studentCalendarPresenter + '</p>' : ''}
   ${arg.event.extendedProps.studentCalendarUniform
   ? '<p><strong>Uniform: <strong>' 
@@ -365,11 +337,37 @@ return(
       }
       {!loadingInitial && 
       <>
+         <Button icon  floated="right" color='black' size='tiny'
+          onClick={() =>
+            openModal(
+              <SyncCalendarInformation
+                routeName={'studentCalendar'}
+                showSyncInfo={true}
+              />, 'large'
+            )
+          }
+        >
+      <Icon name='sync'/>
+       &nbsp; Sync To My Calendar
+    </Button>
+    <Button icon  floated="right" color='black' size='tiny'
+          onClick={() =>
+            openModal(
+              <SyncCalendarInformation
+                routeName={'studentCalendar'}
+                showSyncInfo={false}
+              />, 'large'
+            )
+          }
+        >
+      <Icon name='bell'/>
+       &nbsp; Subscribe to Changes
+    </Button>
     <Divider horizontal>
-        <Header as='h2'>
-       <FontAwesomeIcon icon={faGraduationCap} size='2x' style={{marginRight: '10px'}} />
-          Student Calendar
-          </Header>
+    <Header as='h2'>
+        <FontAwesomeIcon icon={faGraduationCap} size='2x' style={{ marginRight: '10px' }} />
+        Student Calendar
+    </Header>
     </Divider>
     {showLabels && 
     <Header as='h3' textAlign="center">
@@ -388,6 +386,9 @@ return(
       studentCategory = {studentCategory}
       handleLabelClick = {handleLabelClick} />
     ))}
+       <Label size='large'  color='teal'>
+    <Icon name='exclamation triangle'/> Mandatory
+  </Label>
     </div>
    }
 
@@ -440,7 +441,7 @@ return(
         setView(arg.view.type);
       }}
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-      events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/residentAndDistanceStudentCalendar`}
+      events={`${process.env.REACT_APP_API_URL}/activities/getStudentCalendarEventsByDate`}
       eventClick={handleEventClick}
       dateClick={handleDateClick}
       eventMouseEnter={handleMouseEnter} 
@@ -483,6 +484,15 @@ return(
             if (eventDot) {
                 eventDot.style.borderColor = eventColor;
             }
+
+            if(info.event.extendedProps.studentCalendarMandatory){
+              const eventContent = info.el.querySelector('.fc-event-title');
+              if (eventContent) {
+                  const icon = document.createElement('i');
+                  icon.className = 'exclamation triangle icon'; // The Semantic UI class for the exclamation triangle icon
+                  eventContent.prepend(icon);
+              }
+          }
     
             // Style for recurring events
             if (info.event.extendedProps.recurring) {
@@ -509,6 +519,7 @@ return(
         }
     }}
     />
+    <GenericCalendarTable id={'studentCalendar'} />
      </>
   }
     </>

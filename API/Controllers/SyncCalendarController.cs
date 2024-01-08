@@ -23,7 +23,158 @@ namespace API.Controllers
             _context = context;
             _config = config;
 
-        } 
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{route}/{studentType}")]
+        public async Task<IActionResult> Get(string route, string studentType)
+        {
+            Settings s = new Settings();
+            var settings = s.LoadSettings(_config);
+            GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
+            var allrooms = await GraphHelper.GetRoomsAsync();
+
+            StringWriter writer = new StringWriter();
+            writer.WriteLine("BEGIN:VCALENDAR");
+            writer.WriteLine($"PRODID://{GetCalendarName(route)}//USAWC//EN");
+            writer.WriteLine("VERSION:2.0");
+            writer.WriteLine("METHOD:PUBLISH");
+            writer.WriteLine($"X-WR-CALNAME:{GetCalendarName(route)}");
+
+            // Add VTIMEZONE component
+            writer.WriteLine("BEGIN:VTIMEZONE");
+            writer.WriteLine("TZID:America/New_York");
+            writer.WriteLine("BEGIN:STANDARD");
+            writer.WriteLine("DTSTART:16010101T020000");
+            writer.WriteLine("RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=11");
+            writer.WriteLine("TZOFFSETFROM:-0400");
+            writer.WriteLine("TZOFFSETTO:-0500");
+            writer.WriteLine("END:STANDARD");
+            writer.WriteLine("BEGIN:DAYLIGHT");
+            writer.WriteLine("DTSTART:16010101T020000");
+            writer.WriteLine("RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3");
+            writer.WriteLine("TZOFFSETFROM:-0500");
+            writer.WriteLine("TZOFFSETTO:-0400");
+            writer.WriteLine("END:DAYLIGHT");
+            writer.WriteLine("END:VTIMEZONE");
+
+            DateTime startDateLimit = DateTime.UtcNow.AddMonths(-1);
+            DateTime endDateLimit = DateTime.UtcNow.AddMonths(1);
+
+            var query = _context.Activities.AsQueryable();
+            //     query = query.Where(a => a.Start > startDateLimit && a.End < endDateLimit);
+            query = query.Where(a => a.Start > startDateLimit);
+            query = query.Where(a => !a.LogicalDeleteInd);
+            query = query.Where(a => a.CopiedTostudentCalendar);
+
+            var activities = await query
+            .OrderBy(a => a.Start)
+            .Take(1000)
+            .ToListAsync();
+
+            List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>
+            {
+                new StudentCalendarInfo{StudentType = "Resident", Color = "#006400", StudentCalendarResident = true, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false},
+                new StudentCalendarInfo{StudentType = "DEP2024", Color = "#FF8C00", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = true, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false},
+                new StudentCalendarInfo{StudentType = "DEP2025", Color = "#EE4B2B", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = true, StudentCalendarDistanceGroup3 = false},
+                new StudentCalendarInfo{StudentType = "DEP2026", Color = "#800080", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = true},
+            };
+
+            foreach (Activity activity in activities)
+            {
+                foreach (var studentCalendarInfo in studentCalendarInfoList)
+                {
+                    if (
+                         (studentType == "notastudent" || studentType == "Resident") &&
+                          studentCalendarInfo.StudentCalendarResident && 
+                          (activity.StudentCalendarResident  ||
+                            (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3)
+                          )
+                        )
+                    {
+                        await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                    }
+                    if((studentType == "DL24" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup1) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                    if((studentType == "DL25" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup2) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                    if((studentType == "DL26" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup3) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                }
+            }
+            writer.WriteLine("END:VCALENDAR");
+
+            //  return Ok(writer.ToString());
+            Response.Headers.Append("Content-Type", "text/calendar");
+            return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
+
+
+        }
+
+        private async Task WriteActivityDetails(StringWriter writer, Activity activity, StudentCalendarInfo studentCalendarInfo,  string studentType, IGraphServicePlacesCollectionPage allrooms)
+        {
+            string description = activity.Description;
+            if(studentType == "notastudent")
+            {
+                description = description + $"---STUDENT TYPE---{studentCalendarInfo.StudentType}";
+            }       
+            description = description + $"---ACTION OFFICER---{activity.ActionOfficer} ({activity.ActionOfficerPhone})";
+            if (!string.IsNullOrEmpty(activity.Hyperlink) && !string.IsNullOrEmpty(activity.HyperlinkDescription))
+            {
+                description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
+            }
+            if (!string.IsNullOrEmpty(activity.TeamLink))
+            {
+                description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink}";
+            }
+            if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
+            {
+                description = description + $"---ARMY TEAM MEETING LINK--- {activity.ArmyTeamLink}";
+            }
+            if ( 
+                (activity.StudentCalendarMandatory && studentCalendarInfo.StudentCalendarResident) ||
+                (activity.StudentCalendarDistanceGroup1Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup1) ||
+                (activity.StudentCalendarDistanceGroup2Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup2) ||
+                (activity.StudentCalendarDistanceGroup3Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup3)
+               )             
+            {
+                description = description + $"---ATTENDANCE--- attendance is mandatory.";
+            }
+            if (!string.IsNullOrEmpty(activity.StudentCalendarUniform))
+            {
+                description = description + $"---UNIFORM--- {activity.StudentCalendarUniform}";
+            }
+            if (!string.IsNullOrEmpty(activity.StudentCalendarPresenter))
+            {
+                description = description + $"---PRESENTER--- {activity.StudentCalendarPresenter}";
+            }
+            if (!string.IsNullOrEmpty(activity.StudentCalendarNotes))
+            {
+                description = description + $"---NOTES--- {activity.StudentCalendarNotes}";
+            }
+            writer.WriteLine("BEGIN:VEVENT");
+            writer.WriteLine($"DTSTAMP:{DateTime.UtcNow.ToString("yyyyMMddTHHmmssZ")}");
+            if (activity.AllDayEvent)
+            {
+                writer.WriteLine($"DTSTART;VALUE=DATE:{activity.Start.ToString("yyyyMMdd")}");
+                writer.WriteLine($"DTEND;VALUE=DATE:{activity.End.AddDays(1).ToString("yyyyMMdd")}");
+            }
+            else
+            {
+                writer.WriteLine($"DTSTART;TZID=America/New_York:{activity.Start.ToString("yyyyMMddTHHmmss")}");
+                writer.WriteLine($"DTEND;TZID=America/New_York:{activity.End.ToString("yyyyMMddTHHmmss")}");
+            }
+            WriteLineWithEllipsis(writer, $"LOCATION:{await GetLocation(activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms)}");
+            writer.WriteLine("SEQUENCE:0");
+            WriteLineWithEllipsis(writer, $"SUMMARY:{activity.Title.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
+            WriteLineWithEllipsis(writer, $"DESCRIPTION:{description.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
+            writer.WriteLine("TRANSP:OPAQUE");
+            writer.WriteLine($"UID:{activity.Id}");
+            writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:BUSY");
+            if (activity.Category != null)
+            {
+                writer.WriteLine($"CATEGORIES:{activity.Category}");
+            }
+            writer.WriteLine("END:VEVENT");
+
+        }
 
         [AllowAnonymous]
         [HttpGet("{route}")]
@@ -156,6 +307,8 @@ namespace API.Controllers
         .Take(1000)
         .ToListAsync();
 
+                List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>();
+
                 foreach (Activity activity in activities)
                 {
                     string description = activity.Description;
@@ -183,7 +336,7 @@ namespace API.Controllers
                         {
                             description = description + $"---UNIFORM--- {activity.StudentCalendarUniform}";
                         }
-                        if (!string.IsNullOrEmpty(activity.PocketCalPresenter))
+                        if (!string.IsNullOrEmpty(activity.StudentCalendarPresenter))
                         {
                             description = description + $"---PRESENTER--- {activity.StudentCalendarPresenter}";
                         }

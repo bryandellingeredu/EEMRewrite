@@ -33,7 +33,7 @@ namespace Application.Activities
                 DateTime start = Helper.GetDateTimeFromRequest(request.Start);
                 DateTime end = Helper.GetDateTimeFromRequest(request.End);
 
-                string routeName = request.RouteName.ToLower() == "residentAndDistanceStudentCalendar".ToLower() ? "studentcalendar" : request.RouteName.ToLower();
+                string routeName = request.RouteName.ToLower();
                 var category = await _context.Categories.Where(x => x.RouteName.ToLower() == routeName).FirstOrDefaultAsync();
 
 
@@ -88,7 +88,7 @@ namespace Application.Activities
                         Title = activity.Title,
                         Start = Helper.GetStringFromDateTime(activity.Start, activity.AllDayEvent),
                         End = Helper.GetStringFromDateTime(endDateForCalendar, activity.AllDayEvent),
-                        Color = GetColor(category, activity, cslLegend, usahecFacilitiesUsageLegend, request.RouteName.ToLower() == "residentAndDistanceStudentCalendar".ToLower()),
+                        Color = GetColor(category, activity, cslLegend, usahecFacilitiesUsageLegend),
                         BorderColor = activity.IMC ? "#EE4B2B" : string.Empty,
                         AllDay = activity.AllDayEvent,
                         CategoryId = category.Id.ToString(),
@@ -115,13 +115,6 @@ namespace Application.Activities
                         CopiedTosymposiumAndConferences = activity.CopiedTosymposiumAndConferences,
                         SymposiumLinkInd = activity.SymposiumLinkInd,
                         SymposiumLink = activity.SymposiumLink,
-                       StudentCalendarResident = activity.StudentCalendarResident,
-                       StudentCalendarDistanceGroup1 = activity.StudentCalendarDistanceGroup1,
-                       StudentCalendarDistanceGroup2 = activity.StudentCalendarDistanceGroup2,
-                       StudentCalendarDistanceGroup3 = activity.StudentCalendarDistanceGroup3,
-                       StudentCalendarDistanceGroup1Mandatory = activity.StudentCalendarDistanceGroup1Mandatory,
-                       StudentCalendarDistanceGroup2Mandatory = activity.StudentCalendarDistanceGroup2Mandatory,
-                       StudentCalendarDistanceGroup3Mandatory = activity.StudentCalendarDistanceGroup3Mandatory,
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);
@@ -132,7 +125,7 @@ namespace Application.Activities
             }
 
 
-            private string GetColor(Category category, Activity activity, List<CSLCalendarLegend> cslLegendList, List<USAHECFacilitiesUsageLegend> usahecFacilitiesUsageLegend, bool isResidentDistanceStudentCalendar)
+            private string GetColor(Category category, Activity activity, List<CSLCalendarLegend> cslLegendList, List<USAHECFacilitiesUsageLegend> usahecFacilitiesUsageLegend)
             {
                 var color = "blue";
                 if (category.RouteName == "csl" && !string.IsNullOrEmpty(activity.Type))
@@ -149,32 +142,8 @@ namespace Application.Activities
                 if(category.RouteName =="csl" && (activity.ApprovedByOPS == "Pending" || string.IsNullOrEmpty(activity.ApprovedByOPS)))  color = "#F6BE00";
 
                 if (category.RouteName == "studentCalendar")
-                    if (isResidentDistanceStudentCalendar)
-                    {
-                      if(activity.StudentCalendarResident && !activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3)
-                        {
-                            color = "#006400";
-                        }
-                        else if (!activity.StudentCalendarResident && activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3)
-                        {
-                            color = "#FF8C00";
-                        }
-                        else if (!activity.StudentCalendarResident && !activity.StudentCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3)
-                        {
-                            color = "#EE4B2B";
-                        }
-                        else if (!activity.StudentCalendarResident && !activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup3)
-                        {
-                            color = "#800080";
-                        }
-                        else
-                        {
-                            color = "#00008B";
-                        }
-                        
-                    }
-                    else
-                    {
+                 
+                  
                         {
                             if (activity.StudentCalendarMandatory)
                             {
@@ -185,7 +154,7 @@ namespace Application.Activities
                                 color = "goldenrod";
                             }
                         }
-                    }
+                    
 
                 if(category.RouteName == "militaryFamilyAndSpouseProgram" && !string.IsNullOrEmpty(activity.EducationalCategory)) 
                 {

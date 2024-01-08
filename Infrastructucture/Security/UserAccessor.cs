@@ -26,7 +26,7 @@ namespace Infrastructucture.Security
                 SqlCommand command = new SqlCommand(sql, connection);
               command.Parameters.AddWithValue("@Email", emailAddress);
              //  command.Parameters.AddWithValue("@Email", "erik.a.keim.mil@armywarcollege.edu");   //Resident
-               //command.Parameters.AddWithValue("@Email", "debbie.lipscomb.mil@armywarcollege.edu");   //DL24
+             //  command.Parameters.AddWithValue("@Email", "debbie.lipscomb.mil@armywarcollege.edu");   //DL24
               // command.Parameters.AddWithValue("@Email", "jeanine.l.frazier.mil@armywarcollege.edu");   //DL25
 
 

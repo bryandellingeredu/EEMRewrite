@@ -15,6 +15,7 @@ interface Props{
 export default function ResidentAndDistanceStudentCalendarComponent({studentCategory, handleLabelClick } : Props){
 
     return(
+      <>
     <Label size="large"
     style={{backgroundColor: studentCategory.color, color: 'white', marginBottom: '5px'}}
     onClick={() => handleLabelClick(studentCategory)}
@@ -22,4 +23,5 @@ export default function ResidentAndDistanceStudentCalendarComponent({studentCate
     <Icon name={studentCategory.isSelected ? 'check square outline' : 'square outline'} size="large" />
     {studentCategory.title}
   </Label>
+  </>
 )}

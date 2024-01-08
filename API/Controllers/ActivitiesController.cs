@@ -162,7 +162,14 @@ HandleResult(await Mediator.Send(
             HandleResult(await Mediator.Send(
                 new GetRoomNames.Query { EventLookup = request.EventLookup, CoordinatorEmail = request.CoordinatorEmail }));
 
-
+        [AllowAnonymous]
+        [HttpGet("GetStudentCalendarEventsByDate")]
+        public async Task<ActionResult> GetStudentCalendarRoomEvents()
+        {
+            string start = Request.Query["start"];
+            string end = Request.Query["end"];
+            return HandleResult(await Mediator.Send(new GetStudentCalendarEventsByDate.Query {  Start = start, End = end }));
+        }
 
         [AllowAnonymous]
         [HttpGet("GetEventsByDate/{routeName}")]

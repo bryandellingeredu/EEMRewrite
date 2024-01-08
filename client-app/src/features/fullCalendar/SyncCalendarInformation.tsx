@@ -1,6 +1,6 @@
 import { Button, Divider, Form, Header, Icon, Input, Label, List, Message, Segment, Tab } from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import { FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faWindows } from "@fortawesome/free-brands-svg-icons";
@@ -10,6 +10,8 @@ import { faAndroid } from "@fortawesome/free-brands-svg-icons";
 import CopyToClipboard from "./copyToClipboard";
 import agent from "../../app/api/agent";
 import { toast } from "react-toastify";
+import { observer } from "mobx-react-lite";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 const faWindowsPropIcon = faWindows as IconProp;
 const faApplePropIcon = faApple as IconProp;
@@ -55,14 +57,21 @@ const cases = [
 
 
 
-export default function SyncCalendarInformation({routeName, showSyncInfo} : Props){
-
-    const { modalStore } = useStore();
+export default observer( function SyncCalendarInformation({routeName, showSyncInfo} : Props){
+   
+    const { modalStore, userStore } = useStore();
      const {closeModal} = modalStore;
+     const {user, setStudentType} = userStore
      const [lookup, setLookup] = useState<Dictionary[]>(cases);
      const [saving, setSaving] = useState(false);
      const [error, setError] = useState(false);
      const [email, setEmail] = useState('');
+
+     useEffect(() => {
+      if (user) {
+        if (!user.studentType)  setStudentType(user.userName);
+      }
+    }, [user, user?.studentType]);
 
      const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setError(false);
@@ -182,6 +191,9 @@ export default function SyncCalendarInformation({routeName, showSyncInfo} : Prop
     };
 
     return (
+      <>
+      {!user || !user.studentType && <LoadingComponent content='Loading...'/>}
+      {user && user?.studentType && 
         <>
           <Button
             floated="right"
@@ -206,7 +218,22 @@ export default function SyncCalendarInformation({routeName, showSyncInfo} : Prop
           <Divider />
 
              <Header as="h4" >
-              Copy the iCal feed Url:  {`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}`}   <CopyToClipboard text={`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}` } />
+              {routeName !== 'studentCalendar' && 
+              <>
+              <span  style={{paddingRight: '10px'}}>
+              Copy the iCal feed Url:  {`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}`} 
+              </span>
+                <CopyToClipboard text={`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}` } />
+                </>
+               }
+               {routeName === 'studentCalendar' && 
+              <>
+              <span style={{paddingRight: '10px'}}>
+              Copy the iCal feed Url:  {`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}/${user.studentType.replace(/\s+/g, '')}`} 
+              </span>
+                <CopyToClipboard text={`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}/${user.studentType.replace(/\s+/g, '')}` } />
+                </>
+               }
              </Header>
              </>
           }
@@ -252,5 +279,8 @@ export default function SyncCalendarInformation({routeName, showSyncInfo} : Prop
   </Message>
    </>
     }
+    
     </>
-    )};
+  }
+  </>
+    )});
