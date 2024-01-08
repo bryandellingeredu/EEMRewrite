@@ -27,11 +27,13 @@ namespace Application.SyncCalendarNotifications
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
+            private readonly IUserAccessor _userAccessor;
 
             public Handler(
-               DataContext context)
+               DataContext context, IUserAccessor userAccessor)
             {
                 _context = context;
+                _userAccessor = userAccessor;   
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -44,10 +46,17 @@ namespace Application.SyncCalendarNotifications
                     .FirstOrDefaultAsync(cancellationToken);  
 
                 if (syncCalendarNotification == null) {
+                    var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
+                    var studentType =  _userAccessor.GetStudentType(user.Email);
+                    if(studentType == null)
+                    {
+                        studentType = "notastudent";
+                    }
                   await  _context.SyncToCalendarNotifications.AddAsync(
                         new SyncToCalendarNotification
                         {
-                            Email = email.ToLower()
+                            Email = email.ToLower(),
+                            StudentType = studentType
                         });
                    await  _context.SaveChangesAsync();
                     syncCalendarNotification = await _context.SyncToCalendarNotifications

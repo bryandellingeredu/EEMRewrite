@@ -10,6 +10,7 @@ namespace Domain
     {
         public Guid Id { get; set; }
         public string Email { get; set; }
+        public string StudentType { get; set; }
         public bool CommunityEvent { get; set; }
         public bool MFP { get; set; }
         public bool IMC { get; set; }

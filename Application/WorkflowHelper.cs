@@ -299,20 +299,68 @@ namespace Application
                         {
                             if (_oldActivity != null && _activity.StudentCalendarMandatory != _oldActivity.StudentCalendarMandatory)
                             {
-                                body = body + $"<p style='color: darkred;'><strong>Attendance: </strong> Attendance was optional but was changed to  Mandatory </p>";
+                                body = body + $"<p style='color: darkred;'><strong>Attendance: </strong>Resident Attendance was optional but was changed to  Mandatory </p>";
                             }
                             else
                             {
-                                body = body + $"<p><strong>Attendance: </strong> Attendance is Mandatory </p>";
+                                body = body + $"<p><strong>Attendance: </strong>Resident Attendance is Mandatory </p>";
                             }
                            
                         }
+                        if (_activity.CopiedTostudentCalendar && _activity.StudentCalendarDistanceGroup1Mandatory)
+                        {
+                            if (_oldActivity != null && _activity.StudentCalendarDistanceGroup1Mandatory != _oldActivity.StudentCalendarDistanceGroup1Mandatory)
+                            {
+                                body = body + $"<p style='color: darkred;'><strong>Attendance: </strong>DEP 24 Attendance was optional but was changed to  Mandatory </p>";
+                            }
+                            else
+                            {
+                                body = body + $"<p><strong>Attendance: </strong>DEP 24 Attendance is Mandatory </p>";
+                            }
+
+                        }
+                        if (_activity.CopiedTostudentCalendar && _activity.StudentCalendarDistanceGroup2Mandatory)
+                        {
+                            if (_oldActivity != null && _activity.StudentCalendarDistanceGroup2Mandatory != _oldActivity.StudentCalendarDistanceGroup2Mandatory)
+                            {
+                                body = body + $"<p style='color: darkred;'><strong>Attendance: </strong>DEP 25 Attendance was optional but was changed to  Mandatory </p>";
+                            }
+                            else
+                            {
+                                body = body + $"<p><strong>Attendance: </strong>DEP 25 Attendance is Mandatory </p>";
+                            }
+
+                        }
+                        if (_activity.CopiedTostudentCalendar && _activity.StudentCalendarDistanceGroup3Mandatory)
+                        {
+                            if (_oldActivity != null && _activity.StudentCalendarDistanceGroup3Mandatory != _oldActivity.StudentCalendarDistanceGroup3Mandatory)
+                            {
+                                body = body + $"<p style='color: darkred;'><strong>Attendance: </strong>DEP 26 Attendance was optional but was changed to  Mandatory </p>";
+                            }
+                            else
+                            {
+                                body = body + $"<p><strong>Attendance: </strong>DEP 26 Attendance is Mandatory </p>";
+                            }
+
+                        }
                         if (_oldActivity != null && _activity.CopiedTostudentCalendar && !_activity.StudentCalendarMandatory && _oldActivity.StudentCalendarMandatory)
                         {
-                            body = body + $"<p><strong>Attendance: </strong> Attendance was Mandatory but is now Optional </p>";
+                            body = body + $"<p><strong>Attendance: </strong>Resident Attendance was Mandatory but is now Optional </p>";
                         }
-                       
-                            if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarPresenter))
+                        if (_oldActivity != null && _activity.CopiedTostudentCalendar && !_activity.StudentCalendarDistanceGroup1Mandatory && _oldActivity.StudentCalendarDistanceGroup1Mandatory)
+                        {
+                            body = body + $"<p><strong>Attendance: </strong>DEP 24 Attendance was Mandatory but is now Optional </p>";
+                        }
+                        if (_oldActivity != null && _activity.CopiedTostudentCalendar && !_activity.StudentCalendarDistanceGroup2Mandatory && _oldActivity.StudentCalendarDistanceGroup2Mandatory)
+                        {
+                            body = body + $"<p><strong>Attendance: </strong>DEP 25 Attendance was Mandatory but is now Optional </p>";
+                        }
+                        if (_oldActivity != null && _activity.CopiedTostudentCalendar && !_activity.StudentCalendarDistanceGroup3Mandatory && _oldActivity.StudentCalendarDistanceGroup3Mandatory)
+                        {
+                            body = body + $"<p><strong>Attendance: </strong>DEP 26 Attendance was Mandatory but is now Optional </p>";
+                        }
+
+                        if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarPresenter))
                         {
                             if (_oldActivity != null && _oldActivity.StudentCalendarPresenter != _activity.StudentCalendarPresenter)
                             {
@@ -352,7 +400,7 @@ namespace Application
                         body = body + $@"<p><p/><p><p/><p> To view in the Enterprise Event Manager (EEM), click the: <a href='{_settings.BaseUrl}?id={_activity.Id}&categoryid={_activity.CategoryId}'> EEM Link </a></p>
               <p></p><p></p><p>DO NOT REPLY TO THIS E-MAIL. THIS MESSAGE WAS AUTOMATICALLY GENERATED BY THE SYSTEM AND IS NOT MONITORED.</p>
               <p></p><p></p><p>YOU HAVE RECEIVED THIS EMAIL BECAUSE YOU SUBSCRIBED TO NOTIFICATIONS. TO STOP RECEIVING THESE NOTIFICATIONS <a href='{_settings.BaseUrl}?redirecttopage=unsubscribe/{item.Id}'> UNSUBSCRIBE </a> </p>";
-                        await GraphHelper.SendEmail(new[] { item.Email }, title, body);
+                        await GraphHelper.SendSyncCalendarEmail(new[] { item.Email }, title, body, item.StudentType, _activity);
                     }
                 }
             }

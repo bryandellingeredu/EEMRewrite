@@ -816,6 +816,66 @@
             }
         }
 
+        public static async Task SendSyncCalendarEmail(string[] emails, string subject, string body, string studentType, Activity activity)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            var recipients = new List<Recipient>();
+            foreach (var email in emails)
+            {
+                bool addNotification = false;
+
+                if(studentType == "Resident" && !activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3)
+                {
+                    addNotification = true;
+                }
+
+                if(studentType == "Resident" && activity.StudentCalendarResident) addNotification = true;
+                if(studentType == "DL24" && activity.StudentCalendarDistanceGroup1) addNotification = true;
+                if (studentType == "DL25" && activity.StudentCalendarDistanceGroup2) addNotification = true;
+                if (studentType == "DL26" && activity.StudentCalendarDistanceGroup3) addNotification = true;
+
+                if (string.IsNullOrEmpty(studentType) || studentType == "notastudent") addNotification = true;
+
+                if (!activity.CopiedTostudentCalendar) addNotification = true;
+
+                if (addNotification)
+                {
+                    recipients.Add(new Recipient
+                    {
+                        EmailAddress = new EmailAddress
+                        {
+                            Address = email
+                        }
+                    });
+                }
+            
+            }
+
+            var message = new Message
+            {
+                Subject = subject,
+                Body = new ItemBody
+                {
+                    ContentType = BodyType.Html,
+                    Content = body
+                },
+                ToRecipients = recipients
+            };
+
+
+            var saveToSentItems = false;
+
+            if (recipients.Any())
+            {
+                await _appClient.Users[_settings.ServiceAccount]
+                    .SendMail(message, saveToSentItems)
+                    .Request()
+                    .PostAsync();
+            }
+        }
+
         public static async Task SendEmail(string[] emails, string subject, string body)
         {
             EnsureGraphForAppOnlyAuth();
@@ -824,6 +884,7 @@
             var recipients = new List<Recipient>();
             foreach (var email in emails)
             {
+                
                 recipients.Add(new Recipient
                 {
                     EmailAddress = new EmailAddress
