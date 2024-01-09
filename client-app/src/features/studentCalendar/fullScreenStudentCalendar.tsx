@@ -8,10 +8,13 @@ import { format } from 'date-fns';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import Pikaday from "pikaday";
-import { Loader, Modal, Button, Header, Message, Form, Input, Label, Divider } from 'semantic-ui-react'; 
+import { Loader, Modal, Button, Header, Message, Form, Input, Label, Divider, Icon } from 'semantic-ui-react'; 
 import agent from '../../app/api/agent';
-import LoadingComponent from '../../app/layout/LoadingComponent';
 import { toast } from "react-toastify";
+import { useStore } from "../../app/stores/store";
+import ResidentAndDistanceStudentCalendarComponent from '../fullCalendar/ResidentAndDistanceStudentCalendarCategoryComponent';
+import { observer } from 'mobx-react-lite';
+
 
 interface EventInfo{
   title: string
@@ -28,9 +31,20 @@ interface EventInfo{
   hyperLink: string
   hyperLinkDescription: string
   teamLink: string
+  studentType: string
 }
 
-export default function FullScreenStudentCalendar (){
+interface ResidentAndDistanceStudentCalendarCategory{
+  id: number
+  isSelected: boolean
+  group: string
+  title: string
+  color: string
+}
+
+export default observer( function FullScreenStudentCalendar (){
+    const { userStore} = useStore();
+    const {user, setStudentType} = userStore
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState(false);
     const [email, setEmail] = useState('');
@@ -56,9 +70,47 @@ export default function FullScreenStudentCalendar (){
        hyperLink: '',
        hyperLinkDescription: '',
        teamLink: '',
+       studentType: '',
       }
       )
     const [loadingEvent, setLoadingEvent] = useState(false);
+    const [studentCategories, setStudentCategories] = useState<ResidentAndDistanceStudentCalendarCategory[]>([]);
+    const [showLabels, setShowLabels] = useState(false);
+    const [initialDate, setInitialDate] = useState<Date | null>(null);
+
+
+
+    useEffect(() => {
+      if (user) {
+        if (!user.studentType) {
+          setStudentType(user.userName);
+        } else {
+          if (user.studentType === 'not a student') {
+            setShowLabels(true);
+            if (localStorage.getItem("studentCategories")) {
+              setStudentCategories(JSON.parse(localStorage.getItem("studentCategories1") || '{}'));
+            } else {
+              setStudentCategories([
+                { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B' },
+                { id: 2, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400' },
+                { id: 3, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00' },
+                { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B' },
+                { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080' },
+              ]);
+            }
+          } else {
+            setShowLabels(false);
+            setStudentCategories([
+              { id: 1, isSelected: false, group: '', title: 'Show All', color: '#00008B' },
+              { id: 2, isSelected: user.studentType === "Resident", group: 'studentCalendarResident', title: 'Resident', color: '#006400' },
+              { id: 3, isSelected: user.studentType === "DL24", group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00' },
+              { id: 4, isSelected: user.studentType === "DL25", group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B' },
+              { id: 5, isSelected: user.studentType === "DL26", group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080' },
+            ]);
+          }
+        }
+      }
+    }, [user, user?.studentType]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -92,6 +144,42 @@ export default function FullScreenStudentCalendar (){
       };
     }
   },[calendarRef, showCalendar]);
+
+  const handleLabelClick = (clickedCategory: ResidentAndDistanceStudentCalendarCategory) => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      setInitialDate(calendarApi.getDate());
+    }
+   
+      let updatedCategories;
+  
+      if (clickedCategory.id === 1) {
+          // If the clicked category is the 'Show All' category (assuming id 1 is for 'Show All')
+          // then set isSelected to true for this and false for all others
+          updatedCategories = studentCategories.map(category => ({
+              ...category,
+              isSelected: category.id === 1
+          }));
+      } else {
+          // Update the isSelected property for the clicked category
+          // and ensure 'Show All' is unchecked
+          updatedCategories = studentCategories.map(category => {
+              if (category.id === clickedCategory.id) {
+                  return { ...category, isSelected: !category.isSelected };
+              } else if (category.id === 1) {
+                  // Ensure the 'Show All' category is unselected when any other category is selected
+                  return { ...category, isSelected: false };
+              }
+              return category;
+          });
+      }
+  
+      // Update the state
+      setStudentCategories(updatedCategories);
+  
+      // Update localStorage
+      localStorage.setItem("studentCategories1", JSON.stringify(updatedCategories));
+  };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setError(false);
@@ -129,6 +217,7 @@ export default function FullScreenStudentCalendar (){
 const  handleMouseEnter = async (arg : EventClickArg) =>{
   var content = `<p> ${ getTime(arg)}</p>              
   <p> <strong>Title: </strong> ${arg.event.title} </p>
+  <p> <strong>Student Category: </strong> ${arg.event.extendedProps.studentType} </p>
   ${arg.event.extendedProps.description ?'<p><strong>Description: <strong>' + arg.event.extendedProps.description + '</p>' : '' }
   ${arg.event.extendedProps.primaryLocation ? '<p><strong>Location: <strong>' + arg.event.extendedProps.primaryLocation + '</p>' : '' }
   ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: <strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
@@ -196,6 +285,7 @@ const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     hyperLink: clickInfo.event.extendedProps.hyperLink,
     hyperLinkDescription: clickInfo.event.extendedProps.hyperLinkDescription || 'Go To Link',
     teamLink: clickInfo.event.extendedProps.teamLink,
+    studentType: clickInfo.event.extendedProps.studentType
   };
 
   if (clickInfo.event.extendedProps.eventLookup && clickInfo.event.extendedProps.coordinatorEmail) { 
@@ -222,6 +312,35 @@ const handleEventClick = useCallback((clickInfo: EventClickArg) => {
 
 
 const eventDidMount = (info : any) => {
+   
+  const selectedstudentCategories = studentCategories.filter(category => category.isSelected);
+
+  let shouldDisplayEvent = (
+    (selectedstudentCategories.some(category => category.id === 2) && info.event.extendedProps.studentCalendarResident) ||
+    (selectedstudentCategories.some(category => category.id === 3) && info.event.extendedProps.studentCalendarDistanceGroup1) ||
+    (selectedstudentCategories.some(category => category.id === 4) && info.event.extendedProps.studentCalendarDistanceGroup2) ||
+    (selectedstudentCategories.some(category => category.id === 5) && info.event.extendedProps.studentCalendarDistanceGroup3) ||
+    (
+      selectedstudentCategories.some(category => category.id === 2) &&
+       (!info.event.extendedProps.studentCalendarResident &&
+        !info.event.extendedProps.studentCalendarDistanceGroup1 &&
+        !info.event.extendedProps.studentCalendarDistanceGroup2 &&
+        !info.event.extendedProps.studentCalendarDistanceGroup3)
+    )
+);
+
+if (selectedstudentCategories.some(category => category.id === 1)) {
+  shouldDisplayEvent = true;
+}
+
+if (selectedstudentCategories.length < 1) {
+  shouldDisplayEvent = true;
+}
+
+if (!shouldDisplayEvent) {
+  info.el.style.display = 'none';
+} else {
+
     const eventColor = info.event.backgroundColor;
     const eventDot = info.el.querySelector('.fc-daygrid-event-dot');
     const recurring = info.event.extendedProps.recurring;
@@ -246,6 +365,17 @@ const eventDidMount = (info : any) => {
         eventContent.prepend(icon);
       }
     }
+
+    if(info.event.extendedProps.studentCalendarMandatory){
+      const eventContent = info.el.querySelector('.fc-event-title');
+      if (eventContent) {
+          const icon = document.createElement('i');
+          icon.className = 'exclamation triangle icon'; // The Semantic UI class for the exclamation triangle icon
+          eventContent.prepend(icon);
+      }
+  }
+    
+   }
   };
 
 
@@ -282,6 +412,7 @@ const eventDidMount = (info : any) => {
   </p>
 }
       <p><strong>Description: </strong>{eventInfo.description}</p>
+      <p><strong>Student Category: </strong>{eventInfo.studentType}</p>
       {eventInfo.leadOrg && <p><strong>Lead Org: </strong>{eventInfo.leadOrg}</p>}
       {eventInfo.actionOfficer && <p><strong>Action Officer: </strong>{eventInfo.actionOfficer}</p>}
       {eventInfo.actionOfficerPhone && <p><strong>Action Officer Phone: </strong>{eventInfo.actionOfficerPhone}</p>}
@@ -329,10 +460,33 @@ const eventDidMount = (info : any) => {
        </Message>
 }
 
-       {showCalendar &&    <FullCalendar
+       {showCalendar &&    
+       
+       <>
+       {showLabels && 
+       <>
+        <Header as='h3' textAlign="center">
+                Check or Uncheck Which Categories Should Appear on The Student Calendar
+            </Header>
+              <div>
+              {studentCategories.map(studentCategory => (
+                <ResidentAndDistanceStudentCalendarComponent key={studentCategory.id}
+                studentCategory = {studentCategory}
+                handleLabelClick = {handleLabelClick} />
+              ))}
+                 <Label size='large'  color='teal'>
+              <Icon name='exclamation triangle'/> Mandatory
+            </Label>
+              </div>
+              </>
+        }
+
+          <FullCalendar
+           initialDate={initialDate || new Date()}
            ref={calendarRef}
             height= {height}
             initialView={view}
+            key={studentCategories.map(category => category.isSelected).join(',')}
             headerToolbar={{
               left: "prev,next",
               center: "title",
@@ -343,8 +497,9 @@ const eventDidMount = (info : any) => {
                 text: "go to date",
                 }
               }}
+            
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/studentCalendar`}
+            events={`${process.env.REACT_APP_API_URL}/activities/getStudentCalendarEventsByDate`}
             eventClick={handleEventClick}
             eventMouseEnter={handleMouseEnter }
             eventDidMount={eventDidMount}
@@ -357,7 +512,8 @@ const eventDidMount = (info : any) => {
               setView(arg.view.type);
             }}
           />
+          </>
         }    
         </>
     )
-}
+})

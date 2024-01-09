@@ -15,6 +15,7 @@ interface EventInfo{
     hyperLink: string
     hyperLinkDescription: string
     teamLink: string
+    studentType: string
   }
 
 interface Props {
@@ -34,6 +35,9 @@ export default function StudentCalendarEventDetails({eventInfo} : Props) {
             {eventInfo.time}
         </Header.Subheader>
         </Header>
+        </Segment>
+        <Segment>
+            <strong>Student Category:</strong> {eventInfo.studentType}
         </Segment>
         <Segment>
             <strong>Location:</strong> {eventInfo.location}

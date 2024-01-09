@@ -12,9 +12,15 @@ export default observer (function StudentCalendarWrapper(){
 
   const {
     navbarStore: {page},
+    userStore: {isLoggedIn},
   } = useStore()
 
+
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+     if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=studentcalendar`;
+    }, [isLoggedIn] )
 
     useEffect(() => {
         const handleResize = () => {

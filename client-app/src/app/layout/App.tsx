@@ -104,6 +104,7 @@ function App() {
              <Navbar /> 
             <Container style={{marginTop: '8em', paddingLeft: '10px', paddingRight: '10px'}} fluid>  
               <Switch>
+                <Route exact path={`${process.env.PUBLIC_URL}/home`} component={HomePage}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/loginBoth`} component={LoginBoth}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/activityTable`} component={activityTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/hostingReportTable`} component={HostingReportTable}/>

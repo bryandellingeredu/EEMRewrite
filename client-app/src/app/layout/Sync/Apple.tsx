@@ -5,6 +5,7 @@ import { Header, Segment, Button, SegmentGroup, Icon} from "semantic-ui-react";
 import CopyToClipboard from "./CopyToClipboard";
 import { useStore } from "../../stores/store";
 import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 
 const faApplePropIcon = faApple as IconProp;
 
@@ -12,8 +13,15 @@ const faApplePropIcon = faApple as IconProp;
 
 export default observer (function Apple(){
   const {
-        navbarStore: {setPage, icalUrl, calendarName },
-      } = useStore();
+    navbarStore: {setPage, icalUrl, calendarName },
+    userStore: {user, setStudentType}
+  } = useStore();
+
+  useEffect(() => {
+    if (user) {
+      if (!user.studentType)  setStudentType(user.userName);
+    }
+  }, [user, user?.studentType]);
     const handleGoBack = () => setPage("calendar");
     return(
        <>
@@ -26,9 +34,9 @@ export default observer (function Apple(){
         </Header.Content>
       </Header>
       <Header as="h4" textAlign="center" >
-              Copy the iCal feed Url: {icalUrl}
+              Copy the iCal feed Url: {`${icalUrl}/${user!.studentType.replace(/\s+/g, '')}`}
               <span style={{ marginLeft: '50px' }} />
-                 <CopyToClipboard text={icalUrl} />
+                 <CopyToClipboard text={`${icalUrl}/${user!.studentType.replace(/\s+/g, '')}`} />
              </Header>
       <SegmentGroup>
         <Segment content='On your iPhone, go to "Settings"'></Segment>

@@ -1,6 +1,6 @@
 import FullCalendar from "@fullcalendar/react";
 import listPlugin from '@fullcalendar/list';
-import { useState,  useRef } from "react";
+import { useState,  useRef, useEffect } from "react";
 import { EventClickArg } from "@fullcalendar/core";
 import { Button, Divider, Form, Header, Icon, Input, Label, Loader, Message } from "semantic-ui-react";
 import { DatesSetArg } from '@fullcalendar/common';
@@ -8,6 +8,9 @@ import { format } from 'date-fns';
 import agent from "../../app/api/agent";
 import StudentCalendarEventDetails from "./studentCalendarEventDetails";
 import { toast } from "react-toastify";
+import { useStore } from "../../app/stores/store";
+import { observer } from 'mobx-react-lite';
+import ResidentAndDistanceStudentCalendarComponent from "../fullCalendar/ResidentAndDistanceStudentCalendarCategoryComponent";
 
 interface EventInfo{
     title: string
@@ -24,9 +27,21 @@ interface EventInfo{
     hyperLink: string
     hyperLinkDescription: string
     teamLink: string
+    studentType: string
   }
 
-export default function MobileStudentCalendar (){
+  interface ResidentAndDistanceStudentCalendarCategory{
+    id: number
+    isSelected: boolean
+    group: string
+    title: string
+    color: string
+  }
+  
+
+export default observer(function MobileStudentCalendar (){
+  const { userStore} = useStore();
+  const {user, setStudentType} = userStore
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
   const [email, setEmail] = useState('');
@@ -51,17 +66,128 @@ export default function MobileStudentCalendar (){
          hyperLink: '',
          hyperLinkDescription: '',
          teamLink: '',
+         studentType: '',
         }
         )
       const [loadingEvent, setLoadingEvent] = useState(false);
+      const [studentCategories, setStudentCategories] = useState<ResidentAndDistanceStudentCalendarCategory[]>([]);
+      const [showLabels, setShowLabels] = useState(false);
+      const [initialDate, setInitialDate] = useState<Date | null>(null);
 
     const eventDidMount = (info : any) => {
+
+      const selectedstudentCategories = studentCategories.filter(category => category.isSelected);
+
+      let shouldDisplayEvent = (
+        (selectedstudentCategories.some(category => category.id === 2) && info.event.extendedProps.studentCalendarResident) ||
+        (selectedstudentCategories.some(category => category.id === 3) && info.event.extendedProps.studentCalendarDistanceGroup1) ||
+        (selectedstudentCategories.some(category => category.id === 4) && info.event.extendedProps.studentCalendarDistanceGroup2) ||
+        (selectedstudentCategories.some(category => category.id === 5) && info.event.extendedProps.studentCalendarDistanceGroup3) ||
+        (
+          selectedstudentCategories.some(category => category.id === 2) &&
+           (!info.event.extendedProps.studentCalendarResident &&
+            !info.event.extendedProps.studentCalendarDistanceGroup1 &&
+            !info.event.extendedProps.studentCalendarDistanceGroup2 &&
+            !info.event.extendedProps.studentCalendarDistanceGroup3)
+        )
+    );
+
+    if (selectedstudentCategories.some(category => category.id === 1)) {
+      shouldDisplayEvent = true;
+    }
+    
+    if (selectedstudentCategories.length < 1) {
+      shouldDisplayEvent = true;
+    }
+     
+    if (!shouldDisplayEvent) {
+      info.el.style.display = 'none';
+    } else {
+
         const eventColor = info.event.backgroundColor;
         const eventDot = info.el.querySelector('.fc-list-event-dot');
     
         if (eventDot) {
             eventDot.style.borderColor = eventColor;
         }
+        if(info.event.extendedProps.studentCalendarMandatory){
+          const eventContent = info.el.querySelector('.fc-list-event-title');
+          if (eventContent) {
+              const icon = document.createElement('i');
+              icon.className = 'exclamation triangle icon'; // The Semantic UI class for the exclamation triangle icon
+              eventContent.prepend(icon);
+          }
+        }
+      }
+    };
+
+    
+    useEffect(() => {
+      if (user) {
+        if (!user.studentType) {
+          setStudentType(user.userName);
+        } else {
+          if (user.studentType === 'not a student') {
+            setShowLabels(true);
+            if (localStorage.getItem("studentCategories")) {
+              setStudentCategories(JSON.parse(localStorage.getItem("studentCategories1") || '{}'));
+            } else {
+              setStudentCategories([
+                { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B' },
+                { id: 2, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400' },
+                { id: 3, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00' },
+                { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B' },
+                { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080' },
+              ]);
+            }
+          } else {
+            setShowLabels(false);
+            setStudentCategories([
+              { id: 1, isSelected: false, group: '', title: 'Show All', color: '#00008B' },
+              { id: 2, isSelected: user.studentType === "Resident", group: 'studentCalendarResident', title: 'Resident', color: '#006400' },
+              { id: 3, isSelected: user.studentType === "DL24", group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00' },
+              { id: 4, isSelected: user.studentType === "DL25", group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B' },
+              { id: 5, isSelected: user.studentType === "DL26", group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080' },
+            ]);
+          }
+        }
+      }
+    }, [user, user?.studentType]);
+
+    const handleLabelClick = (clickedCategory: ResidentAndDistanceStudentCalendarCategory) => {
+      const calendarApi = calendarRef.current?.getApi();
+      if (calendarApi) {
+        setInitialDate(calendarApi.getDate());
+      }
+     
+        let updatedCategories;
+    
+        if (clickedCategory.id === 1) {
+            // If the clicked category is the 'Show All' category (assuming id 1 is for 'Show All')
+            // then set isSelected to true for this and false for all others
+            updatedCategories = studentCategories.map(category => ({
+                ...category,
+                isSelected: category.id === 1
+            }));
+        } else {
+            // Update the isSelected property for the clicked category
+            // and ensure 'Show All' is unchecked
+            updatedCategories = studentCategories.map(category => {
+                if (category.id === clickedCategory.id) {
+                    return { ...category, isSelected: !category.isSelected };
+                } else if (category.id === 1) {
+                    // Ensure the 'Show All' category is unselected when any other category is selected
+                    return { ...category, isSelected: false };
+                }
+                return category;
+            });
+        }
+    
+        // Update the state
+        setStudentCategories(updatedCategories);
+    
+        // Update localStorage
+        localStorage.setItem("studentCategories1", JSON.stringify(updatedCategories));
     };
 
     const handleButtonClick = () => {
@@ -142,7 +268,8 @@ export default function MobileStudentCalendar (){
             notes: clickInfo.event.extendedProps.studentCalendarNotes,
             hyperLink: clickInfo.event.extendedProps.hyperLink,
             hyperLinkDescription: clickInfo.event.extendedProps.hyperLinkDescription || 'Go To Link',
-            teamLink: clickInfo.event.extendedProps.teamLink
+            teamLink: clickInfo.event.extendedProps.teamLink,
+            studentType: clickInfo.event.extendedProps.studentType
           };
 
           if (clickInfo.event.extendedProps.eventLookup && clickInfo.event.extendedProps.coordinatorEmail) { 
@@ -204,15 +331,37 @@ export default function MobileStudentCalendar (){
        </Message>
 }
 { showCalendar &&
+<>
+
+{showLabels && 
+       <>
+        <Header as='h3' textAlign="center">
+                Check or Uncheck Which Categories Should Appear on The Student Calendar
+            </Header>
+              <div>
+              {studentCategories.map(studentCategory => (
+                <ResidentAndDistanceStudentCalendarComponent key={studentCategory.id}
+                studentCategory = {studentCategory}
+                handleLabelClick = {handleLabelClick} />
+              ))}
+                 <Label size='large'  color='teal'>
+              <Icon name='exclamation triangle'/> Mandatory
+            </Label>
+              </div>
+              </>
+        }
+
 <FullCalendar
+  initialDate={initialDate || new Date()}
          height={"60.00vh"}
       loading={(isLoading) => setIsLoading(isLoading)}
       ref={calendarRef}
       plugins={[listPlugin]}
-      events={`${process.env.REACT_APP_API_URL}/activities/getEventsByDate/studentCalendar`}
+      events={`${process.env.REACT_APP_API_URL}/activities/getStudentCalendarEventsByDate`}
         datesSet={handleDatesSet}
       eventClick={handleEventClick}
       initialView={view}
+      key={studentCategories.map(category => category.isSelected).join(',')}
       headerToolbar={{
         left: "prev,next",
         center: "",
@@ -275,6 +424,7 @@ customButtons={{
       eventDisplay={'block'}
       eventDidMount={eventDidMount}
     />
+    </>
 }
 {loadingEvent &&  <Loader size='small' active inline>Loading ...</Loader> }
 
@@ -282,4 +432,4 @@ customButtons={{
          </>
     )
 
-}
+})

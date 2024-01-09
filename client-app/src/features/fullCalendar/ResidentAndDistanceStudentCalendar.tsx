@@ -234,7 +234,7 @@ const getStudentPrograms = (extendedProps : any) => {
 const  handleMouseEnter = async (arg : any) =>{
   var content = `<p> ${ getTime(arg)}</p>              
   <p> <strong>Title: </strong> ${arg.event.title} </p>
-  <p> <strong>Student Type: </strong> ${arg.event.extendedProps.studentType} </p>
+  <p> <strong>Student Category: </strong> ${arg.event.extendedProps.studentType} </p>
   ${arg.event.extendedProps.description ?'<p><strong>Description: <strong>' + arg.event.extendedProps.description + '</p>' : '' }
   ${arg.event.extendedProps.primaryLocation ? '<p><strong>Location: <strong>' + arg.event.extendedProps.primaryLocation + '</p>' : '' }
   ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: <strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
