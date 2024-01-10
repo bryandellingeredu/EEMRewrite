@@ -830,6 +830,17 @@ export default class ActivityStore {
   }
 
   createICSFile = (activity: Activity) => {
+    const now = new Date();
+    const dtStamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+    // Generating a UID, here using a simple combination of current timestamp and a random number
+    const uid = `uid-${now.getTime()}-${Math.random().toString(36).substring(2, 15)}`;
+
+    const escapeAndCleanText = (text : string) => {
+      return text.replace(/,/g, '\\,')
+                 .replace(/;/g, '\\;')
+                 .replace(/(\r\n|\n|\r)/gm, ' '); // Replace all line breaks with a space
+  };
     let location = activity.primaryLocation;
     if(activity.activityRooms && activity.activityRooms.length > 0){
       location = activity.activityRooms.map(x => x.name).join('-');
@@ -840,6 +851,20 @@ export default class ActivityStore {
     const dtEnd = activity.allDayEvent ? 
         `DTEND;VALUE=DATE:${store.commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true).replace(/[^\w\s]/gi, '').substring(0, 8)}` : 
         `DTEND;TZID=America/New_York:${store.commonStore.convertDateToGraph(activity.end, activity.allDayEvent, true).replace(/[^\w\s]/gi, '').substring(0, 15)}`;
+
+        const foldLine = (line : string) => {
+          const maxLineLength = 70;
+          const result = [];
+          while (line.length > maxLineLength) {
+              let slice = line.substring(0, maxLineLength);
+              line = line.substring(maxLineLength);
+              result.push(slice);
+              // Ensure the continuation line begins with a whitespace
+              line = ' ' + line;
+          }
+          result.push(line);
+          return result.join('\n');
+      };
 
     const url = [
         'BEGIN:VCALENDAR',
@@ -863,19 +888,50 @@ export default class ActivityStore {
         'END:STANDARD',
         'END:VTIMEZONE',
         'BEGIN:VEVENT',
+        `DTSTAMP:${dtStamp}`,
+        `UID:${uid}`,
         'CLASS:PUBLIC',
-        `DESCRIPTION:${activity.title}`,
+        `DESCRIPTION: ${this.getICSDescription(activity)}`,
         dtStart,
         dtEnd,
         `LOCATION:${location||'N/A'}`,
-        `SUMMARY;LANGUAGE=en-us:${activity.title}`,
+        `SUMMARY;LANGUAGE=en-us:${escapeAndCleanText(activity.title)}`,
         'TRANSP:TRANSPARENT',
         'END:VEVENT',
         'END:VCALENDAR'
-    ].join('\n');
+    ].map(foldLine)
+    .join('\n')
+    .split('\n')
+    .filter(line => line.trim() !== '')  // Filter out empty lines
+    .join('\n');
 
     return url;
 }
+
+getICSDescription = (activity : Activity) => {
+  // Helper function to escape commas and semicolons
+  const escapeAndCleanText = (text : string) => {
+    return text.replace(/,/g, '\\,')
+               .replace(/;/g, '\\;')
+               .replace(/(\r\n|\n|\r)/gm, ' '); // Replace all line breaks with a space
+};
+
+  let description = `---DESCRIPTION---${escapeAndCleanText(activity.description)}`;
+
+  description += `---ACTION OFFICER---${escapeAndCleanText(activity.actionOfficer)} (${escapeAndCleanText(activity.actionOfficerPhone)})`;
+
+  if (activity.hyperlink && activity.hyperlinkDescription) {
+      description += `---HYPERLINK--- go to ${escapeAndCleanText(activity.hyperlinkDescription)} at ${escapeAndCleanText(activity.hyperlink)}`;
+  }
+  if (activity.teamLink) {
+      description += `---EDU TEAM MEETING LINK--- ${escapeAndCleanText(activity.teamLink)}`;
+  }
+  if (activity.armyTeamLink) {
+      description += `---ARMY TEAM MEETING LINK--- ${escapeAndCleanText(activity.armyTeamLink)}`;
+  }
+
+  return description;
+};
 
   }
 
