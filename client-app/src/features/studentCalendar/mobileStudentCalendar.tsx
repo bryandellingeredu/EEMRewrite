@@ -74,6 +74,10 @@ export default observer(function MobileStudentCalendar (){
       const [showLabels, setShowLabels] = useState(false);
       const [initialDate, setInitialDate] = useState<Date | null>(null);
 
+      const setShowDetailFalse = () =>{
+        setShowDetails(false);
+      }
+
     const eventDidMount = (info : any) => {
 
       const selectedstudentCategories = studentCategories.filter(category => category.isSelected);
@@ -120,6 +124,8 @@ export default observer(function MobileStudentCalendar (){
         }
       }
     };
+
+
 
     
     useEffect(() => {
@@ -330,10 +336,10 @@ export default observer(function MobileStudentCalendar (){
          </Form>
        </Message>
 }
-{ showCalendar &&
+{ showCalendar && 
 <>
 
-{showLabels && 
+{showLabels && !showDetails &&
        <>
         <Header as='h3' textAlign="center">
                 Check or Uncheck Which Categories Should Appear on The Student Calendar
@@ -350,10 +356,9 @@ export default observer(function MobileStudentCalendar (){
               </div>
               </>
         }
-
+{!showDetails && 
 <FullCalendar
   initialDate={initialDate || new Date()}
-         height={"60.00vh"}
       loading={(isLoading) => setIsLoading(isLoading)}
       ref={calendarRef}
       plugins={[listPlugin]}
@@ -369,7 +374,7 @@ export default observer(function MobileStudentCalendar (){
       }}
 customButtons={{
   customMonth: {
-    text: "Month",
+    text: "M",
     click: () => {
       handleButtonClick();
       if (calendarRef.current) {
@@ -378,7 +383,7 @@ customButtons={{
     }
   },
   customWeek: {
-    text: "Week",
+    text: "W",
     click: () => {
       handleButtonClick();
       if (calendarRef.current) {
@@ -387,7 +392,7 @@ customButtons={{
     }
   },
   customDay: {
-    text: "Day",
+    text: "D",
     click: () => {
       handleButtonClick();
       if (calendarRef.current) {
@@ -396,7 +401,7 @@ customButtons={{
     }
   },
   customSubscribe: {
-    text: "Subscribe To Changes",
+    text: "Subscribe",
     click: () => {
       setShowCalendar(!showCalendar);
     }
@@ -424,11 +429,12 @@ customButtons={{
       eventDisplay={'block'}
       eventDidMount={eventDidMount}
     />
+   }
     </>
 }
 {loadingEvent &&  <Loader size='small' active inline>Loading ...</Loader> }
 
-{showDetails && !loadingEvent && <StudentCalendarEventDetails eventInfo={eventInfo} /> }
+{showDetails && !loadingEvent && <StudentCalendarEventDetails eventInfo={eventInfo} setShowDetailsFalse = {setShowDetailFalse} /> }
          </>
     )
 

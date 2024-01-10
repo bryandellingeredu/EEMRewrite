@@ -1,4 +1,4 @@
-import { Header, Segment, SegmentGroup } from "semantic-ui-react"
+import { Button, Header, Icon, Segment, SegmentGroup } from "semantic-ui-react"
 
 interface EventInfo{
     title: string
@@ -20,13 +20,17 @@ interface EventInfo{
 
 interface Props {
     eventInfo: EventInfo
+    setShowDetailsFalse: () => void;
 }
 
-export default function StudentCalendarEventDetails({eventInfo} : Props) {
+export default function StudentCalendarEventDetails({eventInfo, setShowDetailsFalse} : Props) {
     return(
         <>
         <SegmentGroup>
         <Segment>
+        <Button basic color="teal" onClick={setShowDetailsFalse} >
+                        <Icon name="arrow left" /> Back To Calendar
+                    </Button>
         <Header textAlign="center">
         <Header.Content>
             {eventInfo.title}
@@ -68,6 +72,11 @@ export default function StudentCalendarEventDetails({eventInfo} : Props) {
        {eventInfo.presenter && <Segment><strong>Presenter: </strong>{eventInfo.presenter}</Segment>}
        {eventInfo.uniform && <Segment><strong>Uniform: </strong>{eventInfo.uniform}</Segment>}
        {eventInfo.notes && <Segment><strong>Notes: </strong>{eventInfo.notes}</Segment>}
+       <Segment>
+       <Button basic color="teal" onClick={setShowDetailsFalse} >
+                        <Icon name="arrow left" /> Back To Calendar
+                    </Button>
+        </Segment>
         </SegmentGroup>
         </>
     )
