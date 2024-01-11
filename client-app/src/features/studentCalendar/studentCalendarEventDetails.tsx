@@ -28,7 +28,7 @@ export default function StudentCalendarEventDetails({eventInfo, setShowDetailsFa
         <>
         <SegmentGroup>
         <Segment>
-        <Button basic color="teal" onClick={setShowDetailsFalse} >
+        <Button basic color="teal" onClick={setShowDetailsFalse} type='button' >
                         <Icon name="arrow left" /> Back To Calendar
                     </Button>
         <Header textAlign="center">
@@ -73,7 +73,7 @@ export default function StudentCalendarEventDetails({eventInfo, setShowDetailsFa
        {eventInfo.uniform && <Segment><strong>Uniform: </strong>{eventInfo.uniform}</Segment>}
        {eventInfo.notes && <Segment><strong>Notes: </strong>{eventInfo.notes}</Segment>}
        <Segment>
-       <Button basic color="teal" onClick={setShowDetailsFalse} >
+       <Button basic color="teal" onClick={setShowDetailsFalse} type='button' >
                         <Icon name="arrow left" /> Back To Calendar
                     </Button>
         </Segment>

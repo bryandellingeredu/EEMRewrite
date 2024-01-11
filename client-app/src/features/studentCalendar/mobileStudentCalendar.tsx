@@ -356,9 +356,11 @@ export default observer(function MobileStudentCalendar (){
               </div>
               </>
         }
-{!showDetails && 
+
+<div style={{ display: showDetails ? 'none' : 'block'}}>
 <FullCalendar
   initialDate={initialDate || new Date()}
+      height="auto"
       loading={(isLoading) => setIsLoading(isLoading)}
       ref={calendarRef}
       plugins={[listPlugin]}
@@ -429,7 +431,7 @@ customButtons={{
       eventDisplay={'block'}
       eventDidMount={eventDidMount}
     />
-   }
+</div>
     </>
 }
 {loadingEvent &&  <Loader size='small' active inline>Loading ...</Loader> }

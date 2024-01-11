@@ -505,6 +505,9 @@
 
 
             // Update event details
+            existingEvent.IsOnlineMeeting = true;
+            existingEvent.OnlineMeetingProvider = OnlineMeetingProviderType.TeamsForBusiness;
+
             existingEvent.Location = new Microsoft.Graph.Location
             {
                 DisplayName = graphEventDTO.RoomEmails.Any() ? await GetRoomNames(graphEventDTO.RoomEmails) : "Teams Meeting Only"
@@ -526,6 +529,7 @@
                 DateTime = graphEventDTO.End,
                 TimeZone = "Eastern Standard Time"
             };
+
 
             // Update the attendees
             List<Attendee> attendees = new List<Attendee>
