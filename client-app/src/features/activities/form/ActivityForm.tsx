@@ -382,6 +382,7 @@ export default observer(function ActivityForm() {
     }
   }
 
+
   /*const handleDownloadAttachment = async () => {
     try {
       const token = commonStore.token;
@@ -476,6 +477,7 @@ export default observer(function ActivityForm() {
           "Review event details for pii and opsec and check the box "
         ),
       }),
+    eventClearanceLevel: Yup.string().required('The Event Clearance Level is required'),
     title: Yup.string().required("The title is required"),
     description: Yup.string().required("Event Details are required"),
     start: Yup.string()
