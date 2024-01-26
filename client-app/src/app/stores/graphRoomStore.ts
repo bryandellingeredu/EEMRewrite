@@ -159,8 +159,8 @@ constructor() {
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/CPACThumb.png`
     },
     'Bldg47SSIConferenceRoomRm119@armywarcollege.edu' : {
-      picURL: `${process.env.PUBLIC_URL}/assets/rooms/SSI.png`,
-      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/SSIThumb.png`
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/SSIThumb.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/SSI.png`
     },
     'ArmstrongHallG8ConfRm@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/G8ConferenceThumb.png`,
@@ -445,6 +445,46 @@ constructor() {
     'Bldg651TheStudioRm117@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1117.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1117Thumb.png`
+    },
+    'RidgwayRidgwayHallMeetingRoomRm127@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm127.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm127Thumb.png`
+    },
+    'Bldg950RidgwayHallRidgwayConferenceRoomRm210@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm210.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm210Thumb.png`
+    },
+    'Bldg950RidgwayHallPreFunctionHallway1Rm309@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm309.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm309Thumb.png`
+    },
+    'Bldg950RidgwayHallMultipurposeRoom1Rm311@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm311.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm311Thumb.png`
+    },
+    'Bldg950RidgwayHallMultipurposeRoom2Rm312@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm312.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm312Thumb.png`
+    },
+    'Bldg950RidgwayHallCommandConferenceRoomRm338@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm338.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm338Thumb.png`
+    },
+    'Bldg950RidgwayHallMultipurposeRoom3Rm367@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm367.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm367Thumb.png`
+    },
+    'Bldg950RidgwayHallMultipurposeRoom4Rm368@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm368.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm368Thumb.png`
+    },
+    'Bldg950RidgwayHallPreFunctionHallway2Rm374@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm374.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm374Thumb.png`
+    },
+    'Bldg950RidgwayHallQuansetHutPavilion@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Pavilion.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/PavilionThumb.png`
     },
   };
 

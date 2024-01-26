@@ -41,7 +41,7 @@ interface Props {
             <Message info
             header={`As of ${format(new Date(), 'M/d/yyyy h:mm a')}`}
             list={[
-              'No Flags in CCR (Opt.)/ Bradley Auditorium / Mary Walker Room (Opt.) / Seminar',
+              'No Flags in CCR / Bradley Auditorium / Mary Walker Room  / Seminar',
               'Rooms (due to tiles / low ceilings) / not during a VTC; No Flags for foreign nationals',
               'AHEC takes care of Flags on their end with the exception of International Flags',
               'Collins Hall takes care of Flags on their end with the exception of International Flags'
