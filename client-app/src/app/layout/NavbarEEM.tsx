@@ -127,13 +127,6 @@ export default observer(function NavbarEEM() {
               <Dropdown item text="Calendars" scrolling >
                 
                 <Dropdown.Menu>
-                {  user && user.roles &&  user.roles.includes("newStudentCalendarView") &&
-                <Dropdown.Item
-                    text="New Student Calendar"
-                    as={Link}
-                    to={`${process.env.PUBLIC_URL}/residentAndDistanceStudentCalendar`}
-                  />
-                 }
                 <Dropdown.Item
                     text="Customizable Calendar"
                     as={Link}
@@ -157,7 +150,7 @@ export default observer(function NavbarEEM() {
           category.name
         }
         as={Link} 
-        to={`${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}  
+        to={category.name === 'Student Calendar' ? `${process.env.PUBLIC_URL}/residentAndDistanceStudentCalendar` : `${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}
       />
     ))
 }

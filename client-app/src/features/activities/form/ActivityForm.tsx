@@ -127,13 +127,11 @@ export default observer(function ActivityForm() {
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
   const [memberOfExecServices, setMemberOfExecServices] = useState(false);
-  const [newStudentCalendarView, setNewStudentCalendarView] = useState(false);
   useEffect(() => {
     setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
     setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
     setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
     setMemberOfExecServices((user && user.roles && user.roles.includes("ExecServices")) || false);
-    setNewStudentCalendarView((user && user.roles && user.roles.includes("newStudentCalendarView")) || false);
 }, [user]);
   const [roomOptionRegistryId, setRoomOptionRegistryId] = useState<string>(uuid())
   const [attendees, setAttendees] = useState<UserEmail[]>([]);
@@ -2026,7 +2024,7 @@ export default observer(function ActivityForm() {
                   <Icon name="graduation cap" />
                   <Header.Content>Student Calendar</Header.Content>               
                 </Header>
-           {newStudentCalendarView && 
+  
             <Grid>
               <Grid.Row>
                 <Grid.Column width={16}>
@@ -2094,22 +2092,7 @@ export default observer(function ActivityForm() {
                   </Grid.Column>
                   </Grid.Row>
                 </Grid>
-            }
              
-             {!newStudentCalendarView && 
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column width={2}>
-                      <strong>Attendance is Mandatory:</strong>
-                    </Grid.Column>
-                    <Grid.Column width={14}>
-                      <SemanticForm.Group inline>
-                        <MySemanticCheckBox name="studentCalendarMandatory" />
-                      </SemanticForm.Group>
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-                }
                 <Divider />
 
       
