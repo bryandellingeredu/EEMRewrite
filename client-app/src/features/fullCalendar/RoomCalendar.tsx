@@ -19,10 +19,12 @@ import { v4 as uuid } from "uuid";
 import Pikaday from "pikaday";
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 import ReactDOM from 'react-dom';
+import html2canvas from 'html2canvas';
 
 
 
 export default observer(function RoomCalendar() {
+  const calendarDivRef = useRef<HTMLDivElement>(null);
   const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
     const [view, setView] = useState(localStorage.getItem("calendarViewRoom") || "dayGridMonth");
     const {graphRoomStore, activityStore, categoryStore, backToCalendarStore} = useStore();
@@ -261,6 +263,25 @@ picURL: '',
       }
     }
   }, [backToCalendarId, isInitialDateSet, calendarRef]);
+
+  const takeScreenshot = () => {
+    const calendarElement = calendarDivRef.current;
+  
+    if (calendarElement) {
+      // Wait for the next frame to ensure any pending updates are applied
+      requestAnimationFrame(() => {
+        // Take the screenshot of the calendar element
+        html2canvas(calendarElement).then(canvas => {
+          // Create and download the image
+          const image = canvas.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.href = image;
+          link.download = 'fullcalendar-screenshot.png';
+          link.click();
+        });
+      });
+    }
+  };
   
   const highlightMatchingEvents = (query: string) => {
     const calendarDOMNode = ReactDOM.findDOMNode(calendarRef.current);
@@ -335,20 +356,25 @@ picURL: '',
               highlightMatchingEvents(e.target.value);
           }} 
       />
-        </div> 
+        </div>
+        <div ref={calendarDivRef}>
       <FullCalendar
        initialDate={initialDate || new Date()}
             ref={calendarRef}
-            height={height}
+            height="auto"
             initialView={view}
             headerToolbar={{
               left: "prev,next",
               center: "title",
-              right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay"
+              right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay,screenShot"
             }}
             customButtons={{
               datepicker: {
               text: "go to date",
+            },
+            screenShot: {
+              text: "screenshot",
+              click: takeScreenshot,
             },
             }}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -367,6 +393,7 @@ picURL: '',
             }}
             //eventContent={renderEventContent}  
           />
+          </div> 
       </>
     )
 

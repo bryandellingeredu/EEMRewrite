@@ -17,9 +17,11 @@ import { useStore } from "../../app/stores/store";
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 import { saveAs } from 'file-saver';
 import ReactDOM from 'react-dom';
+import html2canvas from 'html2canvas';
 
 
 export default function Bldg651Calendar (){
+  const calendarDivRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState(localStorage.getItem("calendarView651") || "timeGridWeek");
     const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
     const [isLoading, setIsLoading] = useState(true);
@@ -81,6 +83,25 @@ export default function Bldg651Calendar (){
           }
         }
       }, [backToCalendarId, isInitialDateSet, calendarRef]);
+
+      const takeScreenshot = () => {
+        const calendarElement = calendarDivRef.current;
+      
+        if (calendarElement) {
+          // Wait for the next frame to ensure any pending updates are applied
+          requestAnimationFrame(() => {
+            // Take the screenshot of the calendar element
+            html2canvas(calendarElement).then(canvas => {
+              // Create and download the image
+              const image = canvas.toDataURL('image/png');
+              const link = document.createElement('a');
+              link.href = image;
+              link.download = 'fullcalendar-screenshot.png';
+              link.click();
+            });
+          });
+        }
+      };
 
       const getTime = (clickInfo: EventClickArg) => {
         let time : string = ''
@@ -320,25 +341,29 @@ export default function Bldg651Calendar (){
 
 
 
-
+        <div ref={calendarDivRef}>
 <FullCalendar
   initialDate={initialDate || new Date()}
 ref={calendarRef}
-height={height}
+height="auto"
 initialView={view}
 headerToolbar={{
   left: "prev,next",
   center: "title",
-  right: "exportToExcel,datepicker,dayGridMonth,timeGridWeek,timeGridDay"
+  right: "exportToExcel,datepicker,dayGridMonth,timeGridWeek,timeGridDay,screenShot"
 }}
 customButtons={{
   datepicker: {
   text: "go to date",
 },
 exportToExcel: {
-  text: "Export to Excel",
+  text: "export to excel",
   click: handleExportToExcel,
-}
+},
+screenShot: {
+  text: "screenshot",
+  click: takeScreenshot,
+},
 }}
 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 eventClick={handleEventClick}
@@ -355,6 +380,7 @@ datesSet={(arg) => {
   setView(arg.view.type);
 }} 
 />
+</div> 
 </>
     )
 }

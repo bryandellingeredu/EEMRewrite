@@ -12,8 +12,10 @@ import agent from "../../app/api/agent";
 import { v4 as uuid } from "uuid";
 import Pikaday from "pikaday";
 import SVTCCalendarTable from './SVTCCalendarTable';
+import html2canvas from 'html2canvas';
 
 export default function SVTCCalendar(){
+  const calendarDivRef = useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState(window.innerHeight - 100);
     const history = useHistory();
 
@@ -128,6 +130,25 @@ export default function SVTCCalendar(){
         history.push(`${process.env.PUBLIC_URL}/activities/${clickInfo.event.id}/${clickInfo.event.extendedProps.categoryId}`);
       }, [ history]);
 
+      const takeScreenshot = () => {
+        const calendarElement = calendarDivRef.current;
+      
+        if (calendarElement) {
+          // Wait for the next frame to ensure any pending updates are applied
+          requestAnimationFrame(() => {
+            // Take the screenshot of the calendar element
+            html2canvas(calendarElement).then(canvas => {
+              // Create and download the image
+              const image = canvas.toDataURL('image/png');
+              const link = document.createElement('a');
+              link.href = image;
+              link.download = 'fullcalendar-screenshot.png';
+              link.click();
+            });
+          });
+        }
+      };
+
     return (
         <>
       <Divider horizontal>
@@ -136,19 +157,23 @@ export default function SVTCCalendar(){
         SVTC Calendar
       </Header>
     </Divider>
-
+    <div ref={calendarDivRef}>
     <FullCalendar
            ref={calendarRef}
-            height= {height}
+           height="auto"
             initialView="dayGridMonth"
             headerToolbar={{
               left: "prev,next",
               center: "title",
-              right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay",
+              right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay,screenShot",
             }}
               customButtons={{
                 datepicker: {
                 text: "go to date",
+                },
+                screenShot: {
+                  text: "screenshot",
+                  click: takeScreenshot,
                 },
               }}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -160,6 +185,7 @@ export default function SVTCCalendar(){
             slotMinTime={'07:00:00'}
             slotMaxTime={'21:00:00'}     
           />
+          </div>
           <SVTCCalendarTable />
         </>
     )

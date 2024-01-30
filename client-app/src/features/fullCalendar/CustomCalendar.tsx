@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import ReactDOM from 'react-dom';
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
+import html2canvas from 'html2canvas';
 
 interface CategoryWithSelected extends Category {
   selected: boolean;
@@ -25,6 +26,7 @@ interface CategoryWithSelected extends Category {
 
 
 export default observer(function customCalendar() {
+  const calendarDivRef = useRef<HTMLDivElement>(null);
   const [categoriesWithSelected, setCategoriesWithSelected] = useState<CategoryWithSelected[]>([]);
   const { categoryStore, backToCalendarStore } = useStore();
   const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
@@ -123,7 +125,24 @@ export default observer(function customCalendar() {
  
   }, [categories.length, categoriesWithSelected]);
 
-
+  const takeScreenshot = () => {
+    const calendarElement = calendarDivRef.current;
+  
+    if (calendarElement) {
+      // Wait for the next frame to ensure any pending updates are applied
+      requestAnimationFrame(() => {
+        // Take the screenshot of the calendar element
+        html2canvas(calendarElement).then(canvas => {
+          // Create and download the image
+          const image = canvas.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.href = image;
+          link.download = 'fullcalendar-screenshot.png';
+          link.click();
+        });
+      });
+    }
+  };
   const handleDateClick = useCallback(
     (info: any) => {
 
@@ -323,16 +342,17 @@ const highlightMatchingEvents = (query: string) => {
           }} 
       />
         </div> 
+        <div ref={calendarDivRef}> 
    <FullCalendar
     initialDate={initialDate || new Date()}
       ref={calendarRef}
-      height={height}
+      height="auto"
       key={categoriesWithSelected.map(category => category.selected).join(',')}
       initialView={view}
       headerToolbar={{
         left: "prev,next",
         center: "title",
-        right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay",
+        right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay,screenShot",
       }}
       customButtons={{
         datepicker: {
@@ -353,6 +373,10 @@ const highlightMatchingEvents = (query: string) => {
             // Show the Pikaday date picker
             picker.show();
           },
+        },
+        screenShot: {
+          text: "screenshot",
+          click: takeScreenshot,
         },
       }}
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -404,6 +428,7 @@ const highlightMatchingEvents = (query: string) => {
       }}
     
     />
+    </div>  
     </>
   )
 })

@@ -19,9 +19,11 @@ import { Input, Loader } from "semantic-ui-react";
 import CIOEventPlanningTable from "./CIOEventPlanningTable";
 import ReactDOM from 'react-dom';
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
+import html2canvas from 'html2canvas';
 
 
 export default observer(function GenericCalendar() {
+  const calendarDivRef = useRef<HTMLDivElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [view, setView] = useState(localStorage.getItem("calendarViewGeneric") || "dayGridMonth");
   const [isLoading, setIsLoading] = useState(true);
@@ -91,6 +93,25 @@ export default observer(function GenericCalendar() {
         }
       }
     }, [backToCalendarId, isInitialDateSet, calendarRef]);
+
+    const takeScreenshot = () => {
+      const calendarElement = calendarDivRef.current;
+    
+      if (calendarElement) {
+        // Wait for the next frame to ensure any pending updates are applied
+        requestAnimationFrame(() => {
+          // Take the screenshot of the calendar element
+          html2canvas(calendarElement).then(canvas => {
+            // Create and download the image
+            const image = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = 'fullcalendar-screenshot.png';
+            link.click();
+          });
+        });
+      }
+    };
 
   const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     const category = categories.find(x => x.routeName === id);
@@ -315,19 +336,24 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
               }} 
           />
             </div> 
+            <div ref={calendarDivRef}>
           <FullCalendar
           initialDate={initialDate || new Date()}
            ref={calendarRef}
-            height= {height}
+           height="auto"
             initialView={view}
             headerToolbar={{
               left: "prev,next",
               center: "title",
-              right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay",
+              right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay,screenShot",
             }}
               customButtons={{
                 datepicker: {
                 text: "go to date",
+                },
+                screenShot: {
+                  text: "screenshot",
+                  click: takeScreenshot,
                 },
               }}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -345,6 +371,7 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
               setView(arg.view.type);
             }}
           />
+          </div>
           </>
       }
            {id !== 'cio' && <GenericCalendarTable id={id} />}

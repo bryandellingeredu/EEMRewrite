@@ -16,6 +16,7 @@ import { EventApi } from '@fullcalendar/react';
 import { Input, Loader } from "semantic-ui-react";
 import ReactDOM from 'react-dom';
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
+import html2canvas from 'html2canvas';
 
 interface Props{
   backToCalendarId: string | undefined
@@ -48,6 +49,7 @@ export default function IMCCalendarWithoutAcademicEvents({backToCalendarId} : Pr
   const [height, setHeight] = useState(window.innerHeight - 200);
 
   const calendarRef = useRef<FullCalendar>(null);
+  const calendarDivRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let backToCalendarRecord: BackToCalendarInfo | undefined = undefined;
@@ -257,7 +259,24 @@ const highlightMatchingEvents = (query: string) => {
   }
 }; 
 
+const takeScreenshot = () => {
+  const calendarElement = calendarDivRef.current;
 
+  if (calendarElement) {
+    // Wait for the next frame to ensure any pending updates are applied
+    requestAnimationFrame(() => {
+      // Take the screenshot of the calendar element
+      html2canvas(calendarElement).then(canvas => {
+        // Create and download the image
+        const image = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = 'fullcalendar-screenshot.png';
+        link.click();
+      });
+    });
+  }
+};
 
   return (
     <>
@@ -277,19 +296,24 @@ const highlightMatchingEvents = (query: string) => {
           }} 
       />
         </div> 
+        <div ref={calendarDivRef}>
    <FullCalendar
+     height="auto"
     initialDate={initialDate || new Date()}
       ref={calendarRef}
-      height={height}
       initialView={view}
       headerToolbar={{
         left: "prev,next",
         center: "title",
-        right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay",
+        right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay,screenShot",
       }}
       customButtons={{
         datepicker: {
           text: "go to date",
+        },
+        screenShot: {
+          text: "screenshot",
+          click: takeScreenshot,
         },
       }}
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -318,6 +342,7 @@ const highlightMatchingEvents = (query: string) => {
       }}
     
     />
+     </div> 
     </>
   )
 }
