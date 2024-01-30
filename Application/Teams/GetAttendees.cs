@@ -38,7 +38,8 @@ namespace Application.Teams
                 }
                 catch (Exception ex)
                 {
-                    return Result<List<TextValueUser>>.Failure(ex.Message);
+                    var attendees = new List<TextValueUser>();
+                    return Result<List<TextValueUser>>.Success(attendees);
                 }
             }
         }

@@ -107,7 +107,16 @@ namespace Application.Activities
                         //delete the team event if it exists.
                         if(!string.IsNullOrEmpty(item.TeamRequester) && !string.IsNullOrEmpty(item.TeamLookup))
                         {
-                            await GraphHelper.DeleteTeamsMeeting(item.TeamLookup, item.TeamRequester);
+                            try
+                            {
+                                await GraphHelper.DeleteTeamsMeeting(item.TeamLookup, item.TeamRequester);
+                            }
+                            catch (Exception)
+                            {
+
+                                //teams meeting does not exist keep going
+                            }
+                            
                         }
 
                         if (
