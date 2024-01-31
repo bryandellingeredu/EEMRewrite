@@ -176,6 +176,14 @@ picURL: '',
       }
   }
 
+  const {
+    userStore: {isLoggedIn},
+  } = useStore()
+
+  useEffect(() => {
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=roomcalendar/${id}`;
+   }, [isLoggedIn] )
+
   useEffect(() => {
     if (backToCalendarId) {
       setTriggerFetch(prevTrigger => prevTrigger + 1);

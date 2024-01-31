@@ -52,6 +52,13 @@ namespace API.Controllers
             return HandleResult(result);
         }
 
+        [HttpPost("getParkingReport")]
+        public async Task<IActionResult> ListParkingBySearchParams(FlagReportData data)
+        {
+            var result = await Mediator.Send(new GetParkingReport.Query { Month = data.Month, Direction = data.Direction });
+            return HandleResult(result);
+        }
+
         [HttpPost("listBySearchParams")]
         public async Task<IActionResult> ListBySearchParams(HostingReportTableSearchParams data)
         {

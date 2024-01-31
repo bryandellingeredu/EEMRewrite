@@ -61,6 +61,14 @@ export default observer(function RoomCalendarLinks() {
     );
   };
 
+  const {
+    userStore: {isLoggedIn},
+  } = useStore()
+
+  useEffect(() => {
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=roomCalendarLinks`;
+   }, [isLoggedIn] )
+
   useEffect(() => {
     if (!graphRooms.length) loadGraphRooms();
   }, [loadGraphRooms, graphRooms.length]);

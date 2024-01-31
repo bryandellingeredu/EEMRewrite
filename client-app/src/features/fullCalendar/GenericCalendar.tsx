@@ -36,10 +36,18 @@ export default observer(function GenericCalendar() {
   const [height, setHeight] = useState(window.innerHeight - 100);
   const [isInitialDateSet, setIsInitialDateSet] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
-  const {user} = userStore
+  const {user} = userStore;
+  const {isLoggedIn} = userStore;
+
   useEffect(() => {
     setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
 }, [user]);
+
+useEffect(() => {
+  if(!isLoggedIn) {
+      window.location.href = `${window.location.origin}/eem?redirecttopage=genericcalendar/${id}`;
+  }
+ }, [isLoggedIn] )
 
   useEffect(() => {
     const handleResize = () => {

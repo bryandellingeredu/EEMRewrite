@@ -61,6 +61,14 @@ export default observer(function customCalendar() {
 
   const calendarRef = useRef<FullCalendar>(null);
 
+  const {
+    userStore: {isLoggedIn},
+  } = useStore()
+
+  useEffect(() => {
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=customcalendar`;
+   }, [isLoggedIn] )
+
   useEffect(() => {
     const handleResize = () => {
       setHeight(window.innerHeight - 100);

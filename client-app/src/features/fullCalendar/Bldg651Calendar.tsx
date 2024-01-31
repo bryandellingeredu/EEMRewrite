@@ -21,6 +21,9 @@ import html2canvas from 'html2canvas';
 
 
 export default function Bldg651Calendar (){
+  const {
+    userStore: {isLoggedIn},
+  } = useStore()
   const calendarDivRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState(localStorage.getItem("calendarView651") || "timeGridWeek");
     const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
@@ -33,7 +36,10 @@ export default function Bldg651Calendar (){
     const [isInitialDateSet, setIsInitialDateSet] = useState(false);
     const [initialDate, setInitialDate] = useState<Date | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
-
+     
+    useEffect(() => {
+      if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=studentcalendar`;
+     }, [isLoggedIn] )
 
     useEffect(() => {
         const handleResize = () => {

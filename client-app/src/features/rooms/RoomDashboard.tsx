@@ -8,6 +8,14 @@ export default observer(function RoomDashboard(){
   const {graphRoomStore} = useStore();
   const{loadingInitial, graphRooms, loadGraphRooms} = graphRoomStore;
 
+  const {
+    userStore: {isLoggedIn},
+  } = useStore()
+
+  useEffect(() => {
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=rooms`;
+   }, [isLoggedIn] )
+
   useEffect(() => {
     if(!graphRooms.length) loadGraphRooms()
   }, [loadGraphRooms, graphRooms.length])

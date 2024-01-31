@@ -26,6 +26,7 @@ import { EmailGroupMemberDTO } from '../models/emailGroupMemberDTO';
 import { ActivityAttachment } from '../models/activityAttachment';
 import { USAHECFacilitiesUsageLegend } from '../models/usahecFacilitiesUsageLegend';
 import { FlagReportDTO } from '../models/flagReportDTO';
+import { ParkingReportDTO } from '../models/parkingReportDTO';
 import { UserRole } from '../models/userRole';
 import { ArmyWarCollegeUser } from '../models/armyWarCollegeUser';
 import { EnlistedAideChecklist } from '../models/enlistedAideChecklist';
@@ -307,6 +308,7 @@ const HostingReports = {
     listOutsiderBySearchParams: (data: any) => axiosRequest.post<any>('/hostingReports/listOutsiderBySearchParams', data),
     listForHostingReportPDF: () => axiosRequest.get<Activity[]>('/hostingReports/ListForHostingReportPDF'),
     getFlagReport: (month: number, direction: string) => axiosRequest.post<FlagReportDTO[]>('/hostingReports/getFlagReport', {month, direction}),
+    getParkingReport: (month: number, direction: string) => axiosRequest.post<ParkingReportDTO[]>('/hostingReports/getParkingReport', {month, direction}),
 }
 
 const Calendars = {

@@ -11,13 +11,18 @@ import ActivityDetailedSideBar from "./ActivityDetailedSideBar";
 
 export default observer (function ActivityDetails() {
 
-    const{activityStore, commonStore} = useStore();
+    const{activityStore, commonStore, userStore} = useStore();
     const {setRedirectId, setRedirectCategoryId} = commonStore
     const {selectedActivity: activity, loadActivity, loadingInitial} = activityStore
+    const {isLoggedIn} = userStore
     const { id, categoryId, backToCalendarId, fromForm } = useParams<{
        id: string, categoryId: string, backToCalendarId?: string, fromForm?: string }>();
     const [reloadTrigger, setReloadTrigger] = useState(false);
     const handleReloadTrigger = () => setReloadTrigger(true);
+
+    useEffect(() => {
+      if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=activities/${id}/${categoryId}`;
+     }, [isLoggedIn] )
 
     useEffect(() => {
       setRedirectId('');

@@ -118,7 +118,7 @@ export default observer(function ActivityForm() {
     getTempRoomEmails,
     removeTempRoomEmails
   } = activityStore;
-  const {user} = userStore
+  const {user, isLoggedIn} = userStore
   const {getBackToCalendarInfoRecord} = backToCalendarStore;
   const [armyTeamLink, setArmyTeamLink] = useState('');
   const [armyTeamLinkWarning, setArmyTeamLinkWarning ] = useState(false);
@@ -488,6 +488,10 @@ export default observer(function ActivityForm() {
     actionOfficer: Yup.string().required(),
     actionOfficerPhone: Yup.string().required(),
   });
+
+  useEffect(() => {
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=manage/${id}/${categoryId}`;
+   }, [isLoggedIn] )
 
   useEffect(() => {
     if (!graphRooms || graphRooms.length < 1) loadGraphRooms();
@@ -4128,7 +4132,8 @@ export default observer(function ActivityForm() {
                     {values.report === "Hosting Report" && (
                       <MyTextArea
                         rows={3}
-                        placeholder="Official Gift Exchange (Or speaker gift only for addressing the entire class)"
+                        placeholder="Official Gift Exchange or speaker gift only for those addressing the entire class
+                        (Speakers who are Active-Duty General Officers or receiving an honorarium or are not authorized to receive mementos)"
                         name="hostingReport.gift"
                         label="Gift Requirement:"
                       />

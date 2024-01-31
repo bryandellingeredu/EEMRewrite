@@ -1,6 +1,6 @@
 {
-  "short_name": "EEM",
-  "name": "EEM",
+  "short_name": "PocketCalendar",
+  "name": "PocketCalendar",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,7 +18,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "./studentcalendar",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

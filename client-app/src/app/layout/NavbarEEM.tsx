@@ -181,6 +181,8 @@ export default observer(function NavbarEEM() {
              label={{ color: 'red', empty: true, circular: true }}/>
               <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/flagReport`} text ="Flag Report"
              label={{ color: 'red', empty: true, circular: true }}/>
+              <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/parkingReport`} text ="Parking Report"
+             label={{ color: 'red', empty: true, circular: true }}/>
             <DropdownDivider/>
             <Dropdown.Header icon='tags' content='USAHEC Reports' />
             <DropdownDivider/>

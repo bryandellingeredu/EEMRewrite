@@ -41,6 +41,7 @@ import hostingReportPDFWrapper from '../../features/reports/hostingReportPDFWrap
 import usahecMeetingSummaryByLocationWrapper from '../../features/reports/usahecMeetingSummaryByLocationWrapper';
 import outsiderReportTable from '../../features/reports/outsiderReportTable';
 import FlagReport from '../../features/reports/flagReport';
+import ParkingReport from '../../features/reports/parkingReport';
 import SVTCCalendar from '../../features/fullCalendar/SVTCCalendar';
 import Bldg651Calendar from '../../features/fullCalendar/Bldg651Calendar';
 import ManageRolesTable from '../../features/admin/manageRoles/manageRolesTable';
@@ -110,6 +111,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/hostingReportTable`} component={HostingReportTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/outsiderReportTable`} component={outsiderReportTable}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/flagReport`} component={FlagReport}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/parkingReport`} component={ParkingReport}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/svtcCalendar`} component={SVTCCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/hostingReportPDFWrapper`} component={hostingReportPDFWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/manageRolesTable`} component={ManageRolesTable}/>

@@ -34,7 +34,7 @@ export default observer(function ResidentAndDistanceStudentCalendar(){
 const history = useHistory();
 const { backToCalendarStore, categoryStore, activityStore,  userStore, modalStore } = useStore();
 const {openModal} = modalStore;
-const {user, setStudentType} = userStore
+const {user, setStudentType, isLoggedIn} = userStore
 const { categories, loadingInitial } = categoryStore;
 const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
 const {addCalendarEventParameters} = activityStore;
@@ -49,7 +49,9 @@ const [height, setHeight] = useState(window.innerHeight - 200);
 const [view, setView] = useState(localStorage.getItem("residentAndDistanceStudentCalendarView") || "timeGridWeek");
 const [isLoading, setIsLoading] = useState(true);
 
-
+useEffect(() => {
+  if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=residentAndDistanceStudentCalendar`;
+ }, [isLoggedIn] )
 
 useEffect(() => {
   if (user) {

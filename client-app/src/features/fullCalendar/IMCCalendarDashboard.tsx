@@ -12,11 +12,18 @@ import SubCalendarInformation from "../activities/form/SubCalendarInformation";
 import { useParams } from "react-router-dom";
 
 
+
+
   
 export default observer(function IMCCalendarDashboard(){
   const { backToCalendarId } = useParams<{backToCalendarId?: string }>();
-  const { modalStore } = useStore();
+  const { modalStore, userStore } = useStore();
+  const {isLoggedIn} = userStore;
   const {openModal} = modalStore;
+
+  useEffect(() => {
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=imccalendar`;
+   }, [isLoggedIn] )
     return(
           <>   
       <Button icon  floated="left" color='black' size='tiny'
