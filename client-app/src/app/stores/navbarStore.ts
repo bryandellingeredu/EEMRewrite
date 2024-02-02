@@ -10,10 +10,8 @@ export default class NavbarStore{
         makeAutoObservable(this)
     }
 
-    setNavbarTypeFromUrl = (url: string, redirecttopage: string) => {
-        debugger;
-        if(url.toLowerCase().endsWith('eem/studentcalendar') ||
-        (redirecttopage &&  redirecttopage.toLowerCase().endsWith('studentcalendar')) ){
+    setNavbarTypeFromUrl = (url: string) => {
+        if(url.toLowerCase().endsWith('eem/studentcalendar') ){
             this.setNavbarType('studentCalendar');
             this.setICALUrl('https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar');
             this.setCalendarName('Student Calendar');

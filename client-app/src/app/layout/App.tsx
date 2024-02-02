@@ -72,7 +72,7 @@ function App() {
     const id = query.get('id');
     const categoryId = query.get('categoryid');
     const redirecttopage = query.get('redirecttopage');
-    navbarStore.setNavbarTypeFromUrl(location.pathname, redirecttopage || '');
+    navbarStore.setNavbarTypeFromUrl(location.pathname);
     if(redirecttopage){
       commonStore.setRedirectToPage(redirecttopage)
     }

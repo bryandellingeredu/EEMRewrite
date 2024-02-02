@@ -11,12 +11,16 @@ import Android from '../../app/layout/Sync/Android';
 export default observer (function StudentCalendarWrapper(){
 
   const {
-    navbarStore: {page},
+    navbarStore: {page, setNavbarTypeFromUrl},
     userStore: {isLoggedIn},
   } = useStore()
 
 
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+   
+    useEffect(() => {
+     setNavbarTypeFromUrl('eem/studentcalendar');
+    }, [])
 
     useEffect(() => {
      if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=studentcalendar`;
