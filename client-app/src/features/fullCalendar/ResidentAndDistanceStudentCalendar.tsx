@@ -21,6 +21,7 @@ import ResidentAndDistanceStudentCalendarComponent from "./ResidentAndDistanceSt
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import GenericCalendarTable from "./GenericCalendarTable";
 import SyncCalendarInformation from "./SyncCalendarInformation";
+import html2canvas from 'html2canvas';
 
 interface ResidentAndDistanceStudentCalendarCategory{
     id: number
@@ -45,6 +46,7 @@ const { backToCalendarId } = useParams<{ backToCalendarId?: string }>();
 const [showLabels, setShowLabels] = useState(false);
 const [isInitialDateSet, setIsInitialDateSet] = useState(false);
 const calendarRef = useRef<FullCalendar>(null);
+const calendarDivRef = useRef<HTMLDivElement>(null);
 const [height, setHeight] = useState(window.innerHeight - 200);
 const [view, setView] = useState(localStorage.getItem("residentAndDistanceStudentCalendarView") || "timeGridWeek");
 const [isLoading, setIsLoading] = useState(true);
@@ -330,7 +332,24 @@ ${arg.event.extendedProps.studentCalendarNotes
     }
   }; 
   
-
+  const takeScreenshot = () => {
+    const calendarElement = calendarDivRef.current;
+  
+    if (calendarElement) {
+      // Wait for the next frame to ensure any pending updates are applied
+      requestAnimationFrame(() => {
+        // Take the screenshot of the calendar element
+        html2canvas(calendarElement).then(canvas => {
+          // Create and download the image
+          const image = canvas.toDataURL('image/png');
+          const link = document.createElement('a');
+          link.href = image;
+          link.download = 'fullcalendar-screenshot.png';
+          link.click();
+        });
+      });
+    }
+  };
 
 return(
     <>
@@ -405,16 +424,17 @@ return(
               }} 
           />
             </div> 
+            <div ref={calendarDivRef}>
     <FullCalendar
       initialDate={initialDate || new Date()}
       ref={calendarRef}
-      height={height}
+      height="auto"
       key={studentCategories.map(category => category.isSelected).join(',')}
       initialView={view}
       headerToolbar={{
         left: "prev,next",
         center: "title",
-        right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay",
+        right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay,screenShot",
       }}
       customButtons={{
         datepicker: {
@@ -435,6 +455,10 @@ return(
             // Show the Pikaday date picker
             picker.show();
           },
+        },
+        screenShot: {
+          text: "screenshot",
+          click: takeScreenshot,
         },
       }}
       datesSet={(arg) => {
@@ -521,6 +545,7 @@ return(
         }
     }}
     />
+    </div>
     <GenericCalendarTable id={'studentCalendar'} />
      </>
   }

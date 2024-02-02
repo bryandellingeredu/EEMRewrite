@@ -69,10 +69,10 @@ function App() {
   const query = new URLSearchParams(location.search);
 
   useEffect(() => {
-    navbarStore.setNavbarTypeFromUrl(location.pathname);
     const id = query.get('id');
     const categoryId = query.get('categoryid');
     const redirecttopage = query.get('redirecttopage');
+    navbarStore.setNavbarTypeFromUrl(location.pathname, redirecttopage || '');
     if(redirecttopage){
       commonStore.setRedirectToPage(redirecttopage)
     }

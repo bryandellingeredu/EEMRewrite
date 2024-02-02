@@ -486,6 +486,14 @@ constructor() {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Pavilion.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/PavilionThumb.png`
     },
+    'ReynoldsAuditorium@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/ReynoldsAuditorium.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/ReynoldsAuditoriumThumb.png`
+    },
+    'Bldg651CentralColLabHallRm2065@armywarcollege.edu' : {
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2065.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2065.png`
+    },
   };
 
   loadGraphRooms = async () => {
