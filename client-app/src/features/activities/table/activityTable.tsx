@@ -51,8 +51,23 @@ export default observer(function ActivityTable(){
   const { categoryOptions, loadCategories } = categoryStore;
   const [primaryLocations, setPrimaryLocations] = useState<string[]>([]);
   const [actionOfficers, setActionOfficers] = useState<string[]>([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+  
+    window.addEventListener('resize', handleResize);
+  
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
+  useEffect(() =>{
+    if(isMobile) history.push(`${process.env.PUBLIC_URL}/studentcalendar`)
+  }, [isMobile])
 
   const handleDownload = () => {
     const url = `${process.env.REACT_APP_API_URL}/ExportToExcel/Csv`;

@@ -71,6 +71,17 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
            setDeleting(true);
            await agent.Activities.delete(activity.id);
            toast.success('This event has been deleted');
+           
+           if (backToCalendarId) {
+            const backToCalendarRecord: BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
+            if (backToCalendarRecord) {
+                const url: string = `${backToCalendarRecord.url}/${backToCalendarRecord.id}`;
+                history.push(url);
+                setDeleting(false);
+                return;
+            }
+          }
+
            history.push(`${process.env.PUBLIC_URL}/deletedactivityTable`)
            setDeleting(false);
         } catch(error){
@@ -79,6 +90,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
 
         }
     }
+    
     const handleRestoreEvent = async() =>{
         try{
            setShowConfirm(false);

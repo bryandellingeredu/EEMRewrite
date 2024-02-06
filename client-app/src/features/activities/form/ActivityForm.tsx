@@ -631,6 +631,22 @@ export default observer(function ActivityForm() {
     }
   }, [isSignedIn, graphRooms]);
 
+  const handleCancelClick = () => {
+
+    if(backToCalendarId){
+      const backToCalendarRecord : BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
+      if(backToCalendarRecord){
+       const url : string = `${backToCalendarRecord.url}/${backToCalendarRecord.id}`
+       history.push(url);
+       return;
+      }
+    }
+    const url = id && id.length > 0
+      ? `${process.env.PUBLIC_URL}/activitydetail/${id}/${categoryId}/true`
+      : `${process.env.PUBLIC_URL}/activityTable`;
+    history.push(url);
+  };
+
   function handleFormSubmit(activity: ActivityFormValues) {
     setShowRoomWizard(false);
     if(id && getTempRoomEmails(id)){
@@ -4420,12 +4436,7 @@ export default observer(function ActivityForm() {
               content="Submit"
             />
             <Button
-              as={Link}
-              to={
-                id && id.length > 0
-                  ? `${process.env.PUBLIC_URL}/activitydetail/${id}/${categoryId}/true`
-                  : `${process.env.PUBLIC_URL}/activityTable`
-              }
+              onClick={handleCancelClick}
               floated="right"
               type="button"
               content="Cancel"
