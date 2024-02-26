@@ -18,7 +18,8 @@ constructor() {
   get locationOptions () {
     const options : any = [];
     this.locations.forEach(location => {
-        options.push(location.name)
+      const updatedName = location.name.replace('Bliss Hall', 'Bliss Auditorium');
+        options.push(updatedName)
     });
     return options;
   }

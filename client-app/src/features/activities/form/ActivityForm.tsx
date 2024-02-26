@@ -1133,11 +1133,11 @@ export default observer(function ActivityForm() {
         onClose={handleCloseBlissHallModal}
         size='small'
       >
-        <Modal.Header>Bliss Hall Support</Modal.Header>
+        <Modal.Header>Bliss Auditorium Support</Modal.Header>
         <Modal.Content>
-          <p>You have select Bliss Hall Auditorium, Please indicate if you need additional support by clicking the Bliss Hall Support Checkbox.  If selected then enter your comments in the Bliss Hall AV 
+          <p>You have selected Bliss Auditorium, Please indicate if you need additional support by clicking the Bliss Auditorium Support Checkbox.  If selected then enter your comments in the Bliss Auditorium AV 
             Support Required Textbox. This gives teh NEC contractor a heads up that audio visual support is being requested (e.g. projection support, record presentation, broadcast presentation etc). If you do need projection support,
-            please attach your PowerPoint Briefing to the attachment section at the bottom of the form. Please contact Matt Divittore at 245-4333 if you have additional questions about utilizing Bliss Hall Auditorium.
+            please attach your PowerPoint Briefing to the attachment section at the bottom of the form. Please contact Matt Divittore at 245-4333 if you have additional questions about utilizing Bliss Auditorium.
           </p>
           <p>
             NOTE: If you need audio visual support, you must also enter your audio visual request into the  <a href="https://vios.army.mil" target="_blank">
@@ -1772,7 +1772,7 @@ export default observer(function ActivityForm() {
                       <Grid>
                         <Grid.Row>
                           <Grid.Column width={3}>
-                            <strong>Bliss Hall Support:</strong>
+                            <strong>Bliss Auditorium Support:</strong>
                           </Grid.Column>
                           <Grid.Column width={13}>
                             <SemanticForm.Group inline>
@@ -1785,9 +1785,9 @@ export default observer(function ActivityForm() {
 
                       <MyTextArea
                         rows={3}
-                        placeholder="You have selected the Bliss Hall Auditorium and you "
+                        placeholder="You have selected the Bliss Auditorium and you "
                         name="blissHallAVSptRequired"
-                        label="Bliss Hall A/V Spt Required:"
+                        label="Bliss Auditorium A/V Spt Required:"
                       />
                     </>
                   )}
@@ -2131,9 +2131,9 @@ export default observer(function ActivityForm() {
                     'Smart Business: gentlemen: sports jacket with dress slacks, dress shirt and tie, and leather dress shoes; ladies: jacket with skirt or slacks or a dress, and dress shoes. Or Class B/ASU or comparable attire for other services is an authorized equivalent standard of dress. Tuesday is "tieless Tuesday" no tie is required with suit.',
                     'Business Casual: gentlemen: slacks, dress shirt or collared polo shirt/buttoned shirt and/or sweater, leather shoes, boat shoes, or loafers (no sneakers); ladies: skirt or slacks with top or casual dress and casual shoes. Class B/ASU or comparable attire for other services is an authorized equivalent standard of dress.',
                     'Combat and Functional: Military--Army Combat Uniform or comparable attire for other services (flight suits authorized); Civilians: Business Casual--gentlemen: slacks, dress shirt or collared polo shirt/buttoned shirt, and/or sweater, leather shoes, boat shoes, or loafers (no sneakers); ladies: skirt or slacks with top or casual dress, and casual shoes.',
-                    'Bliss Hall, random seating.',
+                    'Bliss Auditorium, random seating.',
                     'Seminar Rooms, Root Hall. ',
-                    'Bliss Hall, assigned seating by seminar.',
+                    'Bliss Auditorium, assigned seating by seminar.',
                     'Wil Washcoe Auditorium (WWA).',
                     'Attendance voluntary.',
                     'Spouses invited to attend, the name tag must be displayed.',
@@ -4139,7 +4139,7 @@ export default observer(function ActivityForm() {
 
                         <MyTextArea
                           rows={3}
-                          placeholder="Flag Details:  (Describe type of flags and where to set up  e.g. US Army flag, USAWC flag, 2 star flag in Bliss Hall, etc.)"
+                          placeholder="Flag Details:  (Describe type of flags and where to set up  e.g. US Army flag, USAWC flag, 2 star flag in Bliss Auditorium, etc.)"
                           name="hostingReport.flagDetails"
                           label="Flag Details::  (Describe type of flags and where to set up.)"
                         />

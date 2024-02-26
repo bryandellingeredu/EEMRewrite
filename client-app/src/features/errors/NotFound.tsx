@@ -6,7 +6,7 @@ export default function NotFound(){
         <Segment placeholder>
            <Header icon>
               <Icon name='search' />
-              Oops - we've looked every and could not find this.
+              Oops - we've looked every where and could not find this.
            </Header>
            <Segment.Inline>
             <Button as={Link} to={`${process.env.PUBLIC_URL}/activities`} primary>
