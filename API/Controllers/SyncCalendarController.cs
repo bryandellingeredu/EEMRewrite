@@ -129,6 +129,7 @@ namespace API.Controllers
                 description = description + $"---ARMY TEAM MEETING LINK--- {activity.ArmyTeamLink}";
             }
             if ( 
+                (activity.StudentCalendarMandatory && activity.CopiedTointernationalfellows) ||
                 (activity.StudentCalendarMandatory && studentCalendarInfo.StudentCalendarResident) ||
                 (activity.StudentCalendarDistanceGroup1Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup1) ||
                 (activity.StudentCalendarDistanceGroup2Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup2) ||
