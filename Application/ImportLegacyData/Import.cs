@@ -98,6 +98,7 @@ namespace Application.ImportLegacyData
                             CopiedTocommunity = item.SubCalendar == "Community Relations" || item.CommunityEvent,
                             CopiedTocsl = item.SubCalendar == "CSL Calendar",
                             CopiedTogarrison = item.SubCalendar == "Garrison Calendar" || item.SubCalendar == "Chapel",
+                            CopiedTointernationalfellows = item.SubCalendar == "International Fellows",
                             CopiedTogeneralInterest= item.SubCalendar == "General Interest",
                             CopiedToholiday= item.SubCalendar == "Holiday Calendar",
                             CopiedTopksoi= item.SubCalendar == "PKSOI Calendar",
@@ -285,7 +286,7 @@ namespace Application.ImportLegacyData
 
             private bool GetIMC(bool iMC, string subCalendar) => iMC || new List<string> {
                 "Academic Calendar", "ASEP Calendar", "Command Group Calendar", "Garrison Calendar", "Chapel", "General Interest",
-                "Holiday Calendar", "Training & Misc Events" }.Contains(subCalendar);
+                "Holiday Calendar", "Training & Misc Events", "International Fellows" }.Contains(subCalendar);
 
             public static string RemoveSpecialCharactersAndHtmlTags(string input)
             {
@@ -313,6 +314,9 @@ namespace Application.ImportLegacyData
                 {
                     case "Garrison Calendar":
                         categoryName = "Garrison Calendar";
+                        break;
+                    case "International Fellows":
+                        categoryName = "International Fellows";
                         break;
                     case "USAHEC Facilities Usage Calendar":
                         categoryName = "USAHEC Facilities Usage Calendar";

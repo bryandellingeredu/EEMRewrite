@@ -676,6 +676,7 @@ export default class ActivityStore {
     copiedTocsl: false,
     copiedTocio: false,
     copiedTogarrison: false,
+    copiedTointernationalfellows: false,
     copiedTogeneralInterest: false,
     copiedToholiday: false,
     copiedTopksoi: false,

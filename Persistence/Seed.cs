@@ -149,6 +149,7 @@ namespace Persistence
     new Category { Name = "Military Family and Spouse Program", RouteName = "militaryFamilyAndSpouseProgram", IMCColor = "#584a66" },
     new Category { Name = "Battle Rhythm", RouteName = "battlerhythm", IMCColor = "#FF5E00" },
     new Category { Name = "Staff Calendar", RouteName = "staff", IMCColor = "#483C32", IncludeInIMC = true  },
+    new Category { Name = "International Fellows", RouteName = "internationalfellows", IMCColor = "#038C85", IncludeInIMC = true  },
             };
                 await context.Categories.AddRangeAsync(categories);
                 await context.SaveChangesAsync();

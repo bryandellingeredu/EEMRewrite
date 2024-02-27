@@ -314,7 +314,7 @@ constructor() {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1121.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1121Thumb.png`
     },
-    'Bldg651LectureHallEastIHOF1@armywarcollege.edu' : {
+    'Bldg651LectureHallEastRm1147@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1147.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1147Thumb.png`
     },
@@ -322,7 +322,7 @@ constructor() {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1145.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1145Thumb.png`
     },
-    'Bldg651LectureHallWestIHOF2Rm148@armywarcollege.edu' : {
+    'Bldg651LectureHallWestRm1148@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1148.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1148Thumb.png`
     },

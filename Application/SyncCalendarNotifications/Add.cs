@@ -84,6 +84,9 @@ namespace Application.SyncCalendarNotifications
                     case "garrison":
                         syncCalendarNotification.CopiedTogarrison = true;
                         break;
+                    case "internationalfellows":
+                        syncCalendarNotification.CopiedTointernationalfellows = true;
+                        break;
                     case "generalInterest":
                         syncCalendarNotification.CopiedTogeneralInterest = true;
                         break;

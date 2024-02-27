@@ -32,6 +32,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookOpenReader,
   faFileLines,
+  faGlobeAmericas,
   faPeopleRoof,
   faPersonRifle,
 } from "@fortawesome/free-solid-svg-icons";
@@ -1001,6 +1002,7 @@ export default observer(function ActivityForm() {
           { routeName: "csl", copiedTo: "copiedTocsl" },
           { routeName: "cio", copiedTo: "copiedTocio" },
           { routeName: "garrison", copiedTo: "copiedTogarrison" },
+          { routeName: "internationalfellows", copiedTo: "copiedTointernationalfellows" },
           { routeName: "generalInterest", copiedTo: "copiedTogeneralInterest" },
           { routeName: "holiday", copiedTo: "copiedToholiday" },
           { routeName: "pksoi", copiedTo: "copiedTopksoi" },
@@ -2038,8 +2040,69 @@ export default observer(function ActivityForm() {
    </Segment>
 }
 
+{(categories.find((x) => x.id === values.categoryId)?.name ==="International Fellows" || values.copiedTointernationalfellows ) &&
+     <Segment style={{ backgroundColor: "#d7f5f3" }} >
+     <Header as="h5" icon textAlign="center" color="green">
+       <FontAwesomeIcon
+         icon={faGlobeAmericas}
+         size="2x"
+         style={{ marginRight: "10px" }}
+       />
+       <Header.Content>International Fellows Information</Header.Content>
+     </Header>
+     <Divider />
 
-            {(categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" || values.copiedTostudentCalendar) &&
+     <Grid>
+                        <Grid.Row>
+                          <Grid.Column width={3}>
+                            <strong>Attendance is Mandatory:</strong>
+                          </Grid.Column>
+                          <Grid.Column width={13}>
+                            <SemanticForm.Group inline>
+                              <MySemanticCheckBox name="studentCalendarMandatory" />
+                            </SemanticForm.Group>
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+                      <Divider />
+      
+                  <MyTextInput name="studentCalendarPresenter" placeholder="Presenter" label="Presenter:" />
+                 
+                 <MyTextAreaWithTypeahead
+                   rows={3}
+                   placeholder="Uniform: "
+                   name="studentCalendarUniform"
+                   label="Uniform:"
+                   options={['',
+                    'Uniform Required: Special Event--Class A/Army Service Uniform (ASU) or comparable uniform for other services; Civilians: Traditional Business--gentlemen: matching suit, dress shirt, tie and leather dress shoes; ladies: suit or jacket with coordinating skirt/slacks or a dress, and dress shoes.',
+                    'Service Dress (Class B)--Military: Class B/Army Service Uniform (ASU) (rank and name plate required, no jacket, tie required if wearing long sleeve shirt/no tie with short sleeve shirt) or comparable uniform for other services; Civilians: Business--gentlemen: sports jacket with dress slacks, dress shirt, and no tie, and leather dress shoes;ladies: jacket or business top with skirt or slacks or a dress, and dress shoes.',
+                    'Smart Business: gentlemen: sports jacket with dress slacks, dress shirt and tie, and leather dress shoes; ladies: jacket with skirt or slacks or a dress, and dress shoes. Or Class B/ASU or comparable attire for other services is an authorized equivalent standard of dress. Tuesday is "tieless Tuesday" no tie is required with suit.',
+                    'Business Casual: gentlemen: slacks, dress shirt or collared polo shirt/buttoned shirt and/or sweater, leather shoes, boat shoes, or loafers (no sneakers); ladies: skirt or slacks with top or casual dress and casual shoes. Class B/ASU or comparable attire for other services is an authorized equivalent standard of dress.',
+                    'Combat and Functional: Military--Army Combat Uniform or comparable attire for other services (flight suits authorized); Civilians: Business Casual--gentlemen: slacks, dress shirt or collared polo shirt/buttoned shirt, and/or sweater, leather shoes, boat shoes, or loafers (no sneakers); ladies: skirt or slacks with top or casual dress, and casual shoes.',
+                    'Bliss Auditorium, random seating.',
+                    'Seminar Rooms, Root Hall. ',
+                    'Bliss Auditorium, assigned seating by seminar.',
+                    'Wil Washcoe Auditorium (WWA).',
+                    'Attendance voluntary.',
+                    'Spouses invited to attend, the name tag must be displayed.',
+                    'Meet in accordance with instructions in Electives syllabi and previously issued course and classroom assignment instructions.',
+                  ]}
+                 />
+
+
+         
+
+                   <MyTextArea
+                      rows={3}
+                      placeholder="Notes: "
+                      name="studentCalendarNotes"
+                      label="Notes:"
+                    />
+     </Segment>
+}
+
+
+            {(categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" || values.copiedTostudentCalendar ) &&
                studentCalendarAdmin  &&
                <Segment style={{ backgroundColor: "#f4e9f7" }} >
                    <Header as="h5" icon textAlign="center" color="purple">
@@ -2797,6 +2860,7 @@ export default observer(function ActivityForm() {
             {[
               "ASEP Calendar",
               "Garrison Calendar",
+              "International Fellows",
               "PKSOI Calendar",
               "SSI And USAWC Press Calendar",
               "SSL Calendar",
@@ -3018,6 +3082,15 @@ export default observer(function ActivityForm() {
                             label="Student Calendar"
                             disabled={!studentCalendarAdmin || categories
                               .filter((x) => x.routeName === "studentCalendar")
+                              .map((x) => x.id)
+                              .includes(currentCategoryId)}
+                          />
+
+                         <MySemanticCheckBox
+                            name="copiedTointernationalfellows"
+                            label="International Fellows"
+                            disabled={categories
+                              .filter((x) => x.routeName === "internationalfellows")
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />

@@ -139,6 +139,7 @@ namespace Application
               (x.CopiedTocommunity && _activity.CopiedTocommunity) ||
               (x.CopiedTocsl && _activity.CopiedTocsl) ||
               (x.CopiedTogarrison && _activity.CopiedTogarrison) ||
+              (x.CopiedTointernationalfellows && _activity.CopiedTointernationalfellows) ||
               (x.CopiedTogeneralInterest && _activity.CopiedTogeneralInterest) ||
               (x.CopiedToholiday && _activity.CopiedToholiday) ||
               (x.CopiedTosocialEventsAndCeremonies && _activity.CopiedTosocialEventsAndCeremonies) ||

@@ -1,4 +1,4 @@
-import { faBahai, faBookmark, faBookOpenReader, faBus, faCalendarCheck, faChalkboardTeacher, faDove, faNewspaper, faPeopleGroup, faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBookmark, faBookOpenReader, faBus, faCalendarCheck, faChalkboardTeacher, faDove, faGlobeAmericas, faNewspaper, faPeopleGroup, faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Divider, Grid, Header, Icon, Segment, SegmentGroup } from "semantic-ui-react";
 import DocumentUploadWidget from "../../../app/common/documentUpload/documentUploadWidget";
@@ -119,6 +119,19 @@ export default function SubCalendarInformation(){
                  </Grid.Column>
                  <Grid.Column width={12}>
                  This is an internal calendar used by USAG. Events which warrant a numbered OPORD and events that inform or impact the enterprise would be added to the IMC. Example: (internal) RSO Training, EFMP Coffee, Wing night; (IMC Worthy) FSE, Protection Working Group, USAG Command and staff
+                 </Grid.Column>
+             </Grid>
+             </Segment>
+             <Segment>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faGlobeAmericas} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={3}>
+                     <strong>International Fellows</strong>
+                 </Grid.Column>
+                 <Grid.Column width={12}>
+                 International Fellows Calendar
                  </Grid.Column>
              </Grid>
              </Segment>

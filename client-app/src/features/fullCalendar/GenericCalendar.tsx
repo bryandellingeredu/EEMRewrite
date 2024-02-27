@@ -196,8 +196,11 @@ useEffect(() => {
     ${id === "cio" && arg.event.extendedProps.eventPlanningStatus?'<p><strong>Status: <strong>' + arg.event.extendedProps.eventPlanningStatus + '</p>' : ''}
     ${id === "cio" && arg.event.extendedProps.eventClearanceLevel?'<p><strong>Event Clearance Level: <strong>' + arg.event.extendedProps.eventClearanceLevel + '</p>' : '<p><strong>Event Clearance Level: <strong> Undetermined </p>'}
     ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarMandatory ? '<p><strong>Attendance is : <strong> Mandatory </p>' : '' }
+    ${id === "internationalfellows" && arg.event.extendedProps.studentCalendarMandatory ? '<p><strong>Attendance is : <strong> Mandatory </p>' : '' }
     ${id === "studentCalendar" && !arg.event.extendedProps.studentCalendarMandatory ? '<p><strong>Attendance is : <strong> Optional </p>' : '' }
+    ${id === "internationalfellows" && !arg.event.extendedProps.studentCalendarMandatory ? '<p><strong>Attendance is : <strong> Optional </p>' : '' }
     ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarPresenter?'<p><strong>Presenter: <strong>' + arg.event.extendedProps.studentCalendarPresenter + '</p>' : ''}
+    ${id === "internationalfellows" && arg.event.extendedProps.studentCalendarPresenter?'<p><strong>Presenter: <strong>' + arg.event.extendedProps.studentCalendarPresenter + '</p>' : ''}
     ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarUniform
     ? '<p><strong>Uniform: <strong>' 
         + (arg.event.extendedProps.studentCalendarUniform.length > 100 
@@ -205,6 +208,14 @@ useEffect(() => {
             : arg.event.extendedProps.studentCalendarUniform) 
         + '</p>' 
     : ''
+}
+${id === "internationalfellows" && arg.event.extendedProps.studentCalendarUniform
+? '<p><strong>Uniform: <strong>' 
+    + (arg.event.extendedProps.studentCalendarUniform.length > 100 
+        ? arg.event.extendedProps.studentCalendarUniform.slice(0, 100) + '...' 
+        : arg.event.extendedProps.studentCalendarUniform) 
+    + '</p>' 
+: ''
 }
 ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
     ? '<p><strong>Notes: <strong>' 
@@ -214,7 +225,16 @@ ${id === "studentCalendar" && arg.event.extendedProps.studentCalendarNotes
         + '</p>' 
     : ''
 }
+${id === "internationalfellows" && arg.event.extendedProps.studentCalendarNotes
+    ? '<p><strong>Notes: <strong>' 
+        + (arg.event.extendedProps.studentCalendarNotes.length > 100 
+            ? arg.event.extendedProps.studentCalendarNotes.slice(0, 100) + '...' 
+            : arg.event.extendedProps.studentCalendarNotes) 
+        + '</p>' 
+    : ''
+}
      `;
+    
    var tooltip : any = tippy(arg.el, {     
       content,
       allowHTML: true,

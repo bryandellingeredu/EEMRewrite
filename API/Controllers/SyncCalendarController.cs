@@ -241,6 +241,9 @@ namespace API.Controllers
                     case "garrison":
                         query = query.Where(a => a.CopiedTogarrison);
                         break;
+                     case "internationalfellows":
+                        query = query.Where(a => a.CopiedTointernationalfellows);
+                        break;
                     case "generalInterest":
                         query = query.Where(a => a.CopiedTogeneralInterest);
                         break;
@@ -699,6 +702,9 @@ namespace API.Controllers
                     break;
                 case "garrison":
                     retval = "Garrison Calendar";
+                    break;
+                   case "internationalfellows":
+                    retval = "International Fellows";
                     break;
                 case "generalInterest":
                     retval = "General Interest";

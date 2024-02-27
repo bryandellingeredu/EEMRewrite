@@ -4,7 +4,7 @@ import { useStore } from "../../../app/stores/store";
 import { useState, SyntheticEvent } from "react";
 import { Activity } from "../../../app/models/activity";
 import { format } from "date-fns";
-import { faBahai, faBook, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faChalkboardTeacher, faChurch, faClipboardUser, faDove, faHouseChimneyWindow, faO, faPeopleGroup, faPersonRifle, faStar, faUsersRays } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBook, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faChalkboardTeacher, faChurch, faClipboardUser, faDove, faEarthAmericas, faHouseChimneyWindow, faO, faPeopleGroup, faPersonRifle, faStar, faUsersRays } from "@fortawesome/free-solid-svg-icons";
 import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { faTree } from "@fortawesome/free-solid-svg-icons";
@@ -100,6 +100,11 @@ export default function ActivityListItem({activity}:Props){
             {activity.category.name === 'Garrison Calendar' &&
               <Label color='blue'>
                      <FontAwesomeIcon icon={faBuilding} size='3x' />
+              </Label>
+             }
+            {activity.category.name === 'International Fellows' &&
+              <Label color='blue'>
+                     <FontAwesomeIcon icon={faEarthAmericas} size='3x' />
               </Label>
              }
             {activity.category.name === 'Community Event (External)' &&

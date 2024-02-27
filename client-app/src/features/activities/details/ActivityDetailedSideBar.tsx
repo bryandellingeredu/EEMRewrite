@@ -4,7 +4,7 @@ import { Segment, Icon, Grid, List } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faCamera, faChalkboardTeacher, faCheck, faChurch, faClipboardUser, faClock, faComputer, faDove, faEnvelope, faFax, faGraduationCap, faHashtag, faIdCard, faLaptop, faMobile, faNetworkWired, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faPhone, faPhoneFlip, faPrint, faServer, faShieldHalved, faSignal, faSitemap, faSquareParking, faTablet, faTv, faUser, faUserSecret, faUsersRays } from '@fortawesome/free-solid-svg-icons';
+import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faCamera, faChalkboardTeacher, faCheck, faChurch, faClipboardUser, faClock, faComputer, faDove, faEarthAmericas, faEnvelope, faFax, faGraduationCap, faHashtag, faIdCard, faLaptop, faMobile, faNetworkWired, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faPhone, faPhoneFlip, faPrint, faServer, faShieldHalved, faSignal, faSitemap, faSquareParking, faTablet, faTv, faUser, faUserSecret, faUsersRays } from '@fortawesome/free-solid-svg-icons';
 import agent from '../../../app/api/agent';
 import ActivityAttachmentSideBarComponent from './ActivityAttachmentSideBarComponent';
 import format from 'date-fns/format';
@@ -523,6 +523,19 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  </Grid.Column>
                  <Grid.Column width={14}>
                    Added to the Garrison Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedTointernationalfellows &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faEarthAmericas} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the International Fellows
                  </Grid.Column>
              </Grid>
  </Segment>
@@ -1457,6 +1470,18 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
              </Grid>
  </Segment>
  }
+ {(activity.category.name  === 'International Fellows' || activity.copiedTointernationalfellows) && activity.studentCalendarMandatory &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='street view' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                  International Fellows Attendance is Mandatory
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
  {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarDistanceGroup1 && activity.studentCalendarDistanceGroup1Mandatory &&
              <Segment attached>
              <Grid verticalAlign='middle'>
@@ -1493,7 +1518,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
              </Grid>
  </Segment>
  }
-{ (activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar)  && activity.studentCalendarUniform &&
+{ (activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar || activity.copiedTointernationalfellows)  && activity.studentCalendarUniform &&
             <Segment attached>
                 <Grid>
                     <Grid.Column width={1}>
@@ -1509,7 +1534,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
             </Segment>
       }
 
-{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarPresenter &&
+{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar || activity.copiedTointernationalfellows) && activity.studentCalendarPresenter &&
     <Segment attached>
     <Grid verticalAlign='middle'>
         <Grid.Column width={1}>
@@ -1525,7 +1550,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
  }
 
 
-{ (activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar)  && activity.studentCalendarNotes &&
+{ (activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar || activity.copiedTointernationalfellows)  && activity.studentCalendarNotes &&
             <Segment attached>
                 <Grid>
                     <Grid.Column width={1}>

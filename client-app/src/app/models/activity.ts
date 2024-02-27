@@ -161,6 +161,7 @@ export interface Activity{
     copiedTocsl: boolean;
     copiedTocio: boolean;
     copiedTogarrison: boolean;
+    copiedTointernationalfellows: boolean;
     copiedTogeneralInterest: boolean;
     copiedToholiday: boolean;
     copiedTopksoi: boolean;
@@ -415,6 +416,7 @@ export class ActivityFormValues{
     copiedTocsl: boolean = false;
     copiedTocio: boolean = false;
     copiedTogarrison: boolean = false;
+    copiedTointernationalfellows: boolean = false;
     copiedTogeneralInterest: boolean = false;
     copiedToholiday: boolean = false;
     copiedTopksoi: boolean = false;
@@ -662,6 +664,7 @@ export class ActivityFormValues{
         this.copiedTocsl = activity.copiedTocsl;
         this.copiedTocio = activity.copiedTocio;
         this.copiedTogarrison = activity.copiedTogarrison;
+        this.copiedTointernationalfellows = activity.copiedTointernationalfellows;
         this.copiedTogeneralInterest = activity.copiedTogeneralInterest;
         this.copiedToholiday = activity.copiedToholiday;
         this.copiedTopksoi = activity.copiedTopksoi;

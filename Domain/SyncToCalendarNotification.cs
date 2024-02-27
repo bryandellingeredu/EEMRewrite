@@ -21,6 +21,7 @@ namespace Domain
         public bool CopiedTocsl { get; set; }
         public bool CopiedTocio { get; set; }
         public bool CopiedTogarrison { get; set; }
+        public bool CopiedTointernationalfellows {get; set;}
         public bool CopiedTogeneralInterest { get; set; }
         public bool CopiedToholiday { get; set; }
         public bool CopiedTopksoi { get; set; }

@@ -52,6 +52,7 @@ namespace Application.Activities
                                       (category.RouteName == "community" && x.CopiedTocommunity) ||
                                       (category.RouteName == "csl" && x.CopiedTocsl) ||
                                       (category.RouteName == "garrison" && x.CopiedTogarrison) ||
+                                      (category.RouteName == "internationalfellows" && x.CopiedTointernationalfellows) ||
                                       (category.RouteName == "generalInterest" && x.CopiedTogeneralInterest) ||
                                       (category.RouteName == "holiday" && x.CopiedToholiday) ||
                                       (category.RouteName == "pksoi" && x.CopiedTopksoi) ||

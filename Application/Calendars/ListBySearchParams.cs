@@ -102,6 +102,10 @@ namespace Application.Calendars
                 {
                     query = query.Where(e => e.CopiedTogarrison);
                 }
+                if (request.Id == "internationalfellows")
+                {
+                    query = query.Where(e => e.CopiedTointernationalfellows);
+                }
                 if (request.Id == "generalInterest")
                 {
                     query = query.Where(e => e.CopiedTogeneralInterest);
