@@ -55,7 +55,7 @@ namespace Application.Activities
                     if (activity.CopiedTocommunity) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "community"), activity));
                     if (activity.CopiedTocsl) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "csl"), activity));
                     if (activity.CopiedTogarrison) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "garrison"), activity));
-                    if (activity.CopiedTointernationalfellows) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "internationalfellow"), activity));
+                    if (activity.CopiedTointernationalfellows) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "internationalfellows"), activity));
                     if (activity.CopiedTogeneralInterest) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "generalInterest"), activity));
                     if (activity.CopiedToholiday) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "holiday"), activity));
                     if (activity.CopiedTopksoi) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "pksoi"), activity));
