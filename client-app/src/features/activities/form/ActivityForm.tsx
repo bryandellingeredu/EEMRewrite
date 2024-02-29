@@ -494,7 +494,7 @@ export default observer(function ActivityForm() {
     if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=manage/${id}/${categoryId}`;
    }, [isLoggedIn] )
 
-  useEffect(() => {
+   useEffect(() => {
     if (!graphRooms || graphRooms.length < 1) loadGraphRooms();
     if (roomid) {
       const parameters = graphReservationParameters.find(
@@ -505,16 +505,35 @@ export default observer(function ActivityForm() {
         const endDatePart = parameters.end.split("-")[0];
         const startTimePart = parameters.start.split("-")[1];
         const endTimePart = parameters.end.split("-")[1];
-        const startoffset = startTimePart.split(":")[2].includes("PM") ? 12 : 0;
-        const endoffset = endTimePart.split(":")[2].includes("PM") ? 12 : 0;
+        let startoffset = startTimePart.split(":")[2].includes("PM") ? 12 : 0;
+        let endoffset = endTimePart.split(":")[2].includes("PM") ? 12 : 0;
+        const startHourRaw = parseInt(startTimePart.split(":")[0]);
+        const endHourRaw = parseInt(endTimePart.split(":")[0]);
+  
+        // Adjust for 12 AM
+        if (startHourRaw === 12 && startTimePart.includes("AM")) {
+          startoffset = -12;
+        }
+        if (endHourRaw === 12 && endTimePart.includes("AM")) {
+          endoffset = -12;
+        }
+  
+        // Adjust for 12 PM
+        if (startHourRaw === 12 && startTimePart.includes("PM")) {
+          startoffset = 0;
+        }
+        if (endHourRaw === 12 && endTimePart.includes("PM")) {
+          endoffset = 0;
+        }
+  
         const startMonth = parseInt(startDatePart.split("/")[0]) - 1;
         const endMonth = parseInt(endDatePart.split("/")[0]) - 1;
         const startDay = parseInt(startDatePart.split("/")[1]);
         const endDay = parseInt(endDatePart.split("/")[1]);
         const startYear = parseInt(startDatePart.split("/")[2]);
         const endYear = parseInt(endDatePart.split("/")[2]);
-        const startHour = parseInt(startTimePart.split(":")[0]) + startoffset;
-        const endHour = parseInt(endTimePart.split(":")[0]) + endoffset;
+        const startHour = startHourRaw + startoffset;
+        const endHour = endHourRaw + endoffset;
         const startMinute = parseInt(startTimePart.split(":")[1]);
         const endMinute = parseInt(endTimePart.split(":")[1]);
         const start = new Date(

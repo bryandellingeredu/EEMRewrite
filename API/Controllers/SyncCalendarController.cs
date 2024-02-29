@@ -62,14 +62,13 @@ namespace API.Controllers
             DateTime endDateLimit = DateTime.UtcNow.AddMonths(1);
 
             var query = _context.Activities.AsQueryable();
-            //     query = query.Where(a => a.Start > startDateLimit && a.End < endDateLimit);
             query = query.Where(a => a.Start > startDateLimit);
             query = query.Where(a => !a.LogicalDeleteInd);
             query = query.Where(a => a.CopiedTostudentCalendar);
 
             var activities = await query
             .OrderBy(a => a.Start)
-            .Take(1000)
+            .Take(500)
             .ToListAsync();
 
             List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>
@@ -308,7 +307,7 @@ namespace API.Controllers
 
                 var activities = await query
         .OrderBy(a => a.Start)
-        .Take(1000)
+        .Take(500)
         .ToListAsync();
 
                 List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>();
