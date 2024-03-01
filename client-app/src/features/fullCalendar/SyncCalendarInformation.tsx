@@ -218,21 +218,21 @@ export default observer( function SyncCalendarInformation({routeName, showSyncIn
           </Header>
           <Divider />
 
-             <Header as="h4" >
+          <Header as="h4" >
               {routeName !== 'studentCalendar' && 
               <>
               <span  style={{paddingRight: '10px'}}>
-              Copy the iCal feed Url:  {`webcal://apps.armywarcollege.edu/eem/api/SyncCalendar/${routeName}.ics`} 
+              Copy the iCal feed Url:  {`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}`} 
               </span>
-                <CopyToClipboard text={`webcal://apps.armywarcollege.edu/eem/api/SyncCalendar/${routeName}.ics` } />
+                <CopyToClipboard text={`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}` } />
                 </>
                }
                {routeName === 'studentCalendar' && 
               <>
               <span style={{paddingRight: '10px'}}>
-              Copy the iCal feed Url:  {`webcal://apps.armywarcollege.edu/eem/api/SyncCalendar/${routeName}/${user.studentType.replace(/\s+/g, '')}.ics`} 
+              Copy the iCal feed Url:  {`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}/${user.studentType.replace(/\s+/g, '')}`} 
               </span>
-                <CopyToClipboard text={`webcal://apps.armywarcollege.edu/eem/api/SyncCalendar/${routeName}/${user.studentType.replace(/\s+/g, '')}.ics` } />
+                <CopyToClipboard text={`${process.env.REACT_APP_API_FULL_URL}/SyncCalendar/${routeName}/${user.studentType.replace(/\s+/g, '')}` } />
                 </>
                }
              </Header>

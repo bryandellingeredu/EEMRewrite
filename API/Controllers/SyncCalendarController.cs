@@ -58,7 +58,7 @@ namespace API.Controllers
             writer.WriteLine("END:DAYLIGHT");
             writer.WriteLine("END:VTIMEZONE");
 
-            DateTime startDateLimit = DateTime.UtcNow.AddMonths(-1);
+            DateTime startDateLimit = DateTime.UtcNow.AddDays(-5);
             DateTime endDateLimit = DateTime.UtcNow.AddMonths(1);
 
             var query = _context.Activities.AsQueryable();
@@ -68,7 +68,7 @@ namespace API.Controllers
 
             var activities = await query
             .OrderBy(a => a.Start)
-            .Take(500)
+            .Take(100)
             .ToListAsync();
 
             List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>
@@ -211,7 +211,7 @@ namespace API.Controllers
                 writer.WriteLine("END:DAYLIGHT");
                 writer.WriteLine("END:VTIMEZONE");
 
-                DateTime startDateLimit = DateTime.UtcNow.AddMonths(-1);
+                DateTime startDateLimit = DateTime.UtcNow.AddDays(-5);
                 DateTime endDateLimit = DateTime.UtcNow.AddMonths(1);
 
 
@@ -307,7 +307,7 @@ namespace API.Controllers
 
                 var activities = await query
         .OrderBy(a => a.Start)
-        .Take(500)
+        .Take(100)
         .ToListAsync();
 
                 List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>();
@@ -377,7 +377,7 @@ namespace API.Controllers
                 writer.WriteLine("END:VCALENDAR");
 
                 //  return Ok(writer.ToString());
-                Response.Headers.Add("Content-Type", "text/calendar");
+                Response.Headers.Append("Content-Type", "text/calendar");
                 return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
             }
             else
@@ -644,7 +644,7 @@ namespace API.Controllers
                 writer.WriteLine("END:VCALENDAR");
 
                 //  return Ok(writer.ToString());
-                Response.Headers.Add("Content-Type", "text/calendar");
+                Response.Headers.Append("Content-Type", "text/calendar");
                 return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
             }
         }
