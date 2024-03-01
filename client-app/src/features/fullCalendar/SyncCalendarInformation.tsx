@@ -79,6 +79,8 @@ export default observer( function SyncCalendarInformation({routeName, showSyncIn
       setEmail(e.target.value);
     };
 
+    const videoUrl = `${process.env.PUBLIC_URL}/assets/videos/SyncToOutlook.mp4`;
+
      const panes = [
       {
         menuItem: {
@@ -88,20 +90,27 @@ export default observer( function SyncCalendarInformation({routeName, showSyncIn
         },
         render: () => <Tab.Pane>
            <List bulleted size='big'>
-    <List.Item>Open Microsoft Outlook.</List.Item>
-    <List.Item>Click on "File" in the top left corner.</List.Item>
+    <List.Item>Open Microsoft Outlook In a browser. DO NOT use a client.</List.Item>
+    <List.Item>To Open Edu Outlook go to <a href="https://office.com" target="_blank">https://office.com</a> and sign in with your Edu Account. </List.Item> 
+    <List.Item>To Open Army .Mil Outlook go to <a href="https://webmail.apps.mil/calendar/view/month" target="_blank">https://webmail.apps.mil/calendar/view/month</a>  and sign in with your CAC. </List.Item>
+    <List.Item>Navigate to your outlook calendar if you are not already there</List.Item>
     <List.Item>
-      Select "Account Settings" and then "Account Settings" again from the drop-down menu.
+      Click add Calendar on the left hand side of screen.
     </List.Item>
     <List.Item>
-      In the "Internet Calendars" section, click on "New".
+      click Subscribe from web.
     </List.Item>
     <List.Item>
-      Enter the iCal feed URL into the text field and click on "Add".
+      Paste the url you copied from the EEM.
     </List.Item>
     <List.Item>
-      The calendar will now appear in the "Internet Calendars" section of the "Account
-      Settings" window. To subscribe to the calendar, select it and click on "OK".
+      Give Your Calendar a Name, Pick a Color and Charm if you Like and pick where to Add it to My Calendars, or Other Calendars.
+    </List.Item>
+    <List.Item>
+      Click the Import Button.  after several seconds your calendar will be imported.
+    </List.Item>
+    <List.Item>
+          Watch the tutorial video: <a href={videoUrl} target="_blank" rel="noopener noreferrer">How to Sync to Outlook</a>.
     </List.Item>
   </List>
         </Tab.Pane>
