@@ -98,7 +98,7 @@ export default observer( function SyncCalendarInformation({routeName, showSyncIn
       Click add Calendar on the left hand side of screen.
     </List.Item>
     <List.Item>
-      click Subscribe from web.
+      Click Subscribe from web.
     </List.Item>
     <List.Item>
       Paste the url you copied from the EEM.
