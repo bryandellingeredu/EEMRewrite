@@ -7,6 +7,7 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Graph;
 using Persistence;
 using System.Text;
@@ -17,11 +18,13 @@ namespace API.Controllers
     {
         private readonly DataContext _context;
         private readonly IConfiguration _config;
+        private readonly IMemoryCache _cache;
 
-        public SyncCalendarController(DataContext context, IConfiguration config)
+        public SyncCalendarController(DataContext context, IConfiguration config, IMemoryCache cache)
         {
             _context = context;
             _config = config;
+            _cache = cache;
 
         }
 
@@ -29,7 +32,14 @@ namespace API.Controllers
         [HttpGet("{route}/{studentType}")]
         public async Task<IActionResult> Get(string route, string studentType)
         {
-            Settings s = new Settings();
+            string cacheKey = $"{route}-{studentType}";
+            if (_cache.TryGetValue(cacheKey, out string cachedData))
+            {
+                Response.Headers.Append("Content-Type", "text/calendar");
+                return File(Encoding.UTF8.GetBytes(cachedData), "text/calendar", "calendar.ics");
+            }
+
+                Settings s = new Settings();
             var settings = s.LoadSettings(_config);
             GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
             var allrooms = await GraphHelper.GetRoomsAsync();
@@ -99,6 +109,10 @@ namespace API.Controllers
                 }
             }
             writer.WriteLine("END:VCALENDAR");
+
+            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1));
+            _cache.Set(cacheKey, writer.ToString(), cacheEntryOptions);
+            cachedData = writer.ToString();
 
             //  return Ok(writer.ToString());
             Response.Headers.Append("Content-Type", "text/calendar");
@@ -180,6 +194,12 @@ namespace API.Controllers
         [HttpGet("{route}")]
         public async Task<IActionResult> Get(string route)
         {
+            string cacheKey2 = $"{route}";
+            if (_cache.TryGetValue(cacheKey2, out string cachedData2))
+            {
+                Response.Headers.Append("Content-Type", "text/calendar");
+                return File(Encoding.UTF8.GetBytes(cachedData2), "text/calendar", "calendar.ics");
+            }
             if (route != "enlistedAide")
             {
                 Settings s = new Settings();
@@ -377,6 +397,10 @@ namespace API.Controllers
                 writer.WriteLine("END:VCALENDAR");
 
                 //  return Ok(writer.ToString());
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1));
+                _cache.Set(cacheKey2, writer.ToString(), cacheEntryOptions);
+                cachedData2 = writer.ToString();
+
                 Response.Headers.Append("Content-Type", "text/calendar");
                 return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
             }
@@ -644,6 +668,10 @@ namespace API.Controllers
                 writer.WriteLine("END:VCALENDAR");
 
                 //  return Ok(writer.ToString());
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(1));
+                _cache.Set(cacheKey2, writer.ToString(), cacheEntryOptions);
+                cachedData2 = writer.ToString();
+
                 Response.Headers.Append("Content-Type", "text/calendar");
                 return File(Encoding.UTF8.GetBytes(writer.ToString()), "text/calendar", "calendar.ics");
             }
