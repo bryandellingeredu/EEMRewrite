@@ -3697,14 +3697,14 @@ export default observer(function ActivityForm() {
                         label="Escort Officer Phone:"
                       />
                     )}
-                    {values.report === "Hosting Report" && (
+                    
                       <MyTextInput
                         name="hostingReport.guestName"
                         placeholder="Visitor Full Name"
                         label="Visitor Name:"
                       />
-                    )}
-                    {values.report === "Hosting Report" && (
+                    
+                  
                       <MySelectInput
                         options={[
                           { text: "", value: "" },
@@ -3746,14 +3746,14 @@ export default observer(function ActivityForm() {
                         name="hostingReport.guestRank"
                         label="Visitor Rank / Honorific:"
                       />
-                    )}
-                    {values.report === "Hosting Report" && (
+                    
+                 
                       <MyTextInput
                         name="hostingReport.guestTitle"
                         placeholder="Visitor Title / Org"
                         label="Visitor Title / Org:"
                       />
-                    )}
+                    
                     {values.report === "Hosting Report" && (
                       <MyTextInput
                         name="hostingReport.guestOfficePhone"

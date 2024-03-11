@@ -41,7 +41,6 @@ namespace Application.HostingReports
                 hr => hr.ActivityId,
                 a => a.Id,
                 (hr, a) => new { HostingReport = hr, Activity = a })
-            .Where(joined => joined.Activity.Report == "Hosting Report")
             .Where(joined => joined.HostingReport.ParkingRequirements == true)
             .Where(joined => joined.Activity.LogicalDeleteInd == false)
             .Where(joined => request.Direction == "forward" ?
