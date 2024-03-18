@@ -113,7 +113,7 @@ namespace API
 
             recurringJobManager.AddOrUpdate(
                 "EnlistedAideSyncCalendarJob",
-                () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateSyncCalendarFilesJob(),
+                () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateEnlistedAideSyncCalendarFileJob(),
                 "0 2-23/3 * * *"); // At minute 0 past hour 2, 5, 8, ..., which is 2 hours after the first job
         }
 
