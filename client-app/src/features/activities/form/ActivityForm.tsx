@@ -172,6 +172,7 @@ export default observer(function ActivityForm() {
   const [submitting, setSubmitting] = useState(false);
   const [attachBioError, setAttachBioError] = useState(false);
   const [distantTechError, setDistantTechError] = useState(false);
+  const [eventClearanceLevelError, setEventClearanceLevelError] = useState(false);
   const [attachNoAttachmentError, setAttachNoAttachmentError] = useState(false);
   const [subCalendarError, setSubCalendarError] = useState(false);
   const [noRoomError, setNoRoomError] = useState(false);
@@ -476,7 +477,7 @@ export default observer(function ActivityForm() {
           "Review event details for pii and opsec and check the box "
         ),
       }),
-    eventClearanceLevel: Yup.string().required('The Event Clearance Level is required'),
+    //eventClearanceLevel: Yup.string().required('The Event Clearance Level is required'),
     title: Yup.string().required("The title is required"),
     description: Yup.string().required("Event Details are required"),
     start: Yup.string()
@@ -672,6 +673,8 @@ export default observer(function ActivityForm() {
     if(id && getTempRoomEmails(id)){
       removeTempRoomEmails(id);
     }
+    let eventClearanceLevelError = false;
+    let eventClearanceLevelErrorIndicator = false;
     let hostingReportError = false;
     let distantTechErrorIndicator = false;
     let subCalendarErrorIndicator = false;
@@ -685,7 +688,24 @@ export default observer(function ActivityForm() {
     setNoRoomError(false);
     setNoRegistrationSiteError(false);
     setNoLeaderDateError(false);
+    setEventClearanceLevelError(false);
 
+    if(roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu')){
+      setEventClearanceLevelError(false);
+    }else{
+      if(!activity.eventClearanceLevel){
+        setEventClearanceLevelError(true);
+        eventClearanceLevelError = true;
+        eventClearanceLevelErrorIndicator = true;
+        const eventClearanceLevelAnchor = document.getElementById("eventClearanceLevelAnchor");
+        if (eventClearanceLevelAnchor) {
+          eventClearanceLevelAnchor.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }
+    }
     
     if(!roomRequired && (activity.categoryId == '' || categories.find((x) => x.id === activity.categoryId)?.name ==="Other")){
       setSubCalendarError(true);
@@ -786,7 +806,7 @@ export default observer(function ActivityForm() {
         }
       }
     }
-    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator && !noLeaderDateErrorIndicator) {
+    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator && !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator) {
       setSubmitting(true);
       if(roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu')){
         activity.eventClearanceLevel = 'Secret';
@@ -3389,6 +3409,7 @@ export default observer(function ActivityForm() {
                 label="Public Hyperlink Description:"
               />
               {!roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu') &&
+           <div>
               <MySelectInput
                 options={[
                   { text: "", value: "" },
@@ -3402,7 +3423,20 @@ export default observer(function ActivityForm() {
                 name="eventClearanceLevel"
                 label="Event Clearance Level:"
               />
+
+              <p><i id="eventClearanceLevelAnchor">An Event Clearance Level is Required</i></p>
+              {eventClearanceLevelError && (
+                <p>
+                  <Label basic color="red">
+                    You must enter a clearance level
+                  </Label>
+                </p>
+                )}
+               </div>
                 }
+
+
+
                 {roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu') &&
                  <FormInput value='Secret' label='Event Clearance Level:' readonly/>   
                 }
