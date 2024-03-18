@@ -29,7 +29,8 @@ namespace Persistence
         public DbSet<RoomVTCCoordinator> RoomVTCCoordinators {get; set;}
         public DbSet<EnlistedAideCheckList> EnlistedAideCheckLists { get; set; }
         public DbSet<ActivityNotification> ActivityNotifications { get; set; }  
-        public DbSet<SyncToCalendarNotification> SyncToCalendarNotifications { get; set; }  
+        public DbSet<SyncToCalendarNotification> SyncToCalendarNotifications { get; set; }
+        public DbSet<SyncCalendar> SyncCalendars { get; set; }
 
 
 

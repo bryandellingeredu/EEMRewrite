@@ -35,7 +35,7 @@ namespace API.Extensions
                     .AllowAnyHeader()
                     .AllowCredentials()
                     .WithExposedHeaders("WWW-Authenticate", "Pagination")
-                    .WithOrigins("http://localhost:3000");
+                    .WithOrigins("http://localhost:3000", "https://localhost:7285", "https://apps.armywarcollege.edu/eem", "https://apps-dev.armywarcollege.edu/eem");
                 });
             });
 
@@ -45,6 +45,7 @@ namespace API.Extensions
             services.AddScoped<ICACAccessor, CACAccessor>();
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<Create>();
+            services.AddScoped<BackgroundJobs.BackgroundJobs>();
 
             return services;
         }
