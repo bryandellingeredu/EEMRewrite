@@ -59,7 +59,7 @@ namespace Application.Activities
                     {
                         if (studentCalendarInfo.StudentCalendarResident &&
                             (activity.StudentCalendarResident ||
-                                (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup2)
+                                (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3)
                             )
                           )
                         {

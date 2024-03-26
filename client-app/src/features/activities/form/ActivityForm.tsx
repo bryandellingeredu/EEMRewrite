@@ -3413,7 +3413,6 @@ export default observer(function ActivityForm() {
               <MySelectInput
                 options={[
                   { text: "", value: "" },
-                  { text: "Undetermined", value: "Undetermined" },
                   { text: "Unclassified", value: "Unclassified" },
                   { text: "Secret", value: "Secret" },
                   { text: "Top Secret", value: "Top Secret" },

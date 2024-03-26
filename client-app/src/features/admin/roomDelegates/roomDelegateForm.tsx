@@ -217,7 +217,7 @@ export default observer(function RoomDelegateForm() {
             </Segment>
 
             <Segment textAlign="center" color="teal">
-              <Header icon color="teal">
+              <Header icon color="teal" >
                 <Icon name="user" />
                 Room Delegate/s For{" "}
                 {graphRooms.find((x) => x.id === id)?.displayName}
