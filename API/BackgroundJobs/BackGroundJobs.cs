@@ -593,9 +593,9 @@ namespace API.BackgroundJobs
                         {
                             await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
                         }
-                        if ((studentType == "DL24" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup1) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
-                        if ((studentType == "DL25" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup2) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
-                        if ((studentType == "DL26" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup3) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                        if ((studentType == "DL24" || studentType == "DEP2024" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup1) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                        if ((studentType == "DL25" || studentType == "DEP2025" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup2) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                        if ((studentType == "DL26" || studentType == "DEP2026"  ||studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup3) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
                     }
                 }
                 writer.WriteLine("END:VCALENDAR");
