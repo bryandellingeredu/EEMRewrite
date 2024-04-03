@@ -7,6 +7,7 @@ import Outlook from '../../app/layout/Sync/Outlook';
 import Apple from '../../app/layout/Sync/Apple';
 import Google from '../../app/layout/Sync/Google';
 import Android from '../../app/layout/Sync/Android';
+import BookRoom from './bookRoom';
 
 export default observer (function StudentCalendarWrapper(){
 
@@ -46,6 +47,7 @@ export default observer (function StudentCalendarWrapper(){
         {page === 'apple' && <Apple />}
         {page === 'google' && <Google />}
         {page === 'android' && <Android />}
+        {page === 'bookRoom' && <BookRoom />}
         </>
       )
       

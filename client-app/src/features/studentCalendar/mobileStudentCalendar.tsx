@@ -40,7 +40,8 @@ interface EventInfo{
   
 
 export default observer(function MobileStudentCalendar (){
-  const { userStore} = useStore();
+  const { userStore, navbarStore} = useStore();
+  const {setPage} = navbarStore
   const {user, setStudentType} = userStore
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
@@ -372,7 +373,7 @@ export default observer(function MobileStudentCalendar (){
       headerToolbar={{
         left: "prev,next",
         center: "",
-        right: "customMonth,customWeek,customDay,customSubscribe"
+        right: "customMonth,customWeek,customDay,customBookARoom,customSubscribe"
       }}
 customButtons={{
   customMonth: {
@@ -407,7 +408,13 @@ customButtons={{
     click: () => {
       setShowCalendar(!showCalendar);
     }
-  }
+  },
+  customBookARoom: {
+    text: "Book Room",
+    click: () => {
+      setPage("bookRoom");
+    }
+  },
 }}
       views={{
         customMonth: {

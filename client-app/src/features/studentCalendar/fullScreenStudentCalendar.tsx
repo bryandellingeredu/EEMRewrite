@@ -43,7 +43,8 @@ interface ResidentAndDistanceStudentCalendarCategory{
 }
 
 export default observer( function FullScreenStudentCalendar (){
-    const { userStore} = useStore();
+    const { userStore, navbarStore} = useStore();
+    const {setPage} = navbarStore
     const {user, setStudentType} = userStore
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState(false);
@@ -433,6 +434,8 @@ if (!shouldDisplayEvent) {
 
          <Button size='large' primary content="Subscribe to Changes"
           onClick= {() => setShowCalendar(!showCalendar)}/>
+        <Button size='large' color='green' content="Reserve a Room" floated='right'
+          onClick= {() => setPage("bookRoom")}/>
          <Divider/>
 
          {!showCalendar && 
