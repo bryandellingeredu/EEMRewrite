@@ -163,7 +163,6 @@ export default function CIOEventPlanningTable(){
            end:  values.end ?   format(new Date(values.end), 'MM-dd-yyyy') : ''};
          
          (async () => {
-          debugger;
            await loadData(data);
          })();
       }

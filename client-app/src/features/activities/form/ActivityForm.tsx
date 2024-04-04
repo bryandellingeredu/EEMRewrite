@@ -669,7 +669,6 @@ export default observer(function ActivityForm() {
   };
 
   function handleFormSubmit(activity: ActivityFormValues) {
-    debugger;
     setShowRoomWizard(false);
     if(id && getTempRoomEmails(id)){
       removeTempRoomEmails(id);
@@ -937,7 +936,6 @@ export default observer(function ActivityForm() {
           });
         
       } else {
-        debugger;
         category.name === "Academic Calendar"
           ? updateGraphEvent({ ...activity, id: activity!.id }).then(() =>
           {
@@ -960,8 +958,7 @@ export default observer(function ActivityForm() {
                 history.push(
                   `${process.env.PUBLIC_URL}/enlistedAideCheckListForm/${activity.id}/${category.id}`
                 )
-              }else{  
-                debugger;     
+              }else{      
                 if(backToCalendarId){
                   const backToCalendarRecord : BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
                   if(backToCalendarRecord){
@@ -1202,13 +1199,11 @@ export default observer(function ActivityForm() {
   onSubmit={(values) => handleFormSubmit(values)}
   validate={(values) => {
     try {
-      debugger;
       validationSchema.validateSync(values, {
         context: { roomRequired },
         abortEarly: false,
       });
     } catch (error) {
-      debugger;
       if (error instanceof ValidationError) {
         return yupToFormErrors(error);
       }

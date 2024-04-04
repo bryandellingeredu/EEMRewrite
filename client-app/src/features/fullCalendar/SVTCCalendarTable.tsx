@@ -98,7 +98,6 @@ export default function SVTCCalendarTable(){
            end:  values.end ?   format(new Date(values.end), 'MM-dd-yyyy') : ''};
          
          (async () => {
-          debugger;
            await loadData(data);
          })();
       }
@@ -133,7 +132,6 @@ export default function SVTCCalendarTable(){
               setLoading(false);
         }
         catch (error) {
-            debugger;
             console.log(error);
             toast.error('an error occured loading svtc data');
             setLoading(false);

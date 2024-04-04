@@ -33,7 +33,6 @@ export default function ActivityAttachmentSideBarComponent({attachmentActivityId
            method: 'GET',
           headers: headers,
           };
-          debugger;
           const url = `${process.env.REACT_APP_API_URL}/upload/ActivityAttachment/${metaData.id}`;
           const attachmentData = await fetch(url, requestOptions);
 

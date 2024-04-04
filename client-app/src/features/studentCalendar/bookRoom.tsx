@@ -310,7 +310,6 @@ export default observer( function BookRoom (){
      search
      clearable
      onChange={(e, data: DropdownProps) => {
-      debugger;
       if (typeof data.value === 'string') setSelectedRoom(data.value)}
       }
    />

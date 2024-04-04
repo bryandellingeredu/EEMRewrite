@@ -31,7 +31,6 @@ export default function CancelEventForm({activityId, title, setReloadTrigger} : 
         try {
           setSaving(true);
           await agent.Activities.cancel(activityId, values.reason);
-          debugger;
             toast.success("Event Cancelled");
             setSaving(false);
             setReloadTrigger();

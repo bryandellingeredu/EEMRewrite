@@ -46,7 +46,6 @@ armyProfile : GraphUser | null = null;
 
       getArmy365Token = async() =>{
         try{
-        debugger;
         const account = this.myMSALObj.getAccountByUsername(this.armyUserName);
         let request : any = this.armyMsalConfig;
         request.account = account;
@@ -80,7 +79,6 @@ armyProfile : GraphUser | null = null;
       } 
 
       callArmyMSGraph = async () => {
-        debugger;
         const headers = new Headers();
         const bearer = `Bearer ${this.armyToken}`;
     
@@ -94,7 +92,6 @@ armyProfile : GraphUser | null = null;
         console.log('request made to Graph API at: ' + new Date().toString());
     
         try {
-          debugger;
             const response = await fetch(this.graphConfig.graphMeEndpoint, options);
             const jsonResponse = await response.json();
             this.setArmyProfile(jsonResponse);
@@ -110,7 +107,6 @@ armyProfile : GraphUser | null = null;
 
      getAndSetArmyProfile : any = async() =>{
       try{
-        debugger;
         await this.getArmy365Token();
        const response = await this.callArmyMSGraph();
        return response;
@@ -124,7 +120,6 @@ armyProfile : GraphUser | null = null;
      }
 
      signIntoArmy365 = async () => {
-      debugger;
       this.setLoadingSignIntoArmy365(true);
       try{
         await this.signInArmy();
@@ -152,7 +147,6 @@ armyProfile : GraphUser | null = null;
       signInArmy = async() =>{
         this.setLoadingArmy(true);
         try {
-          debugger;
           const loginResponse = await this.myMSALObj.loginPopup(this.loginRequest);
           if (loginResponse !== null) {
             this.setArmyUserName(loginResponse!.account!.username);

@@ -74,7 +74,6 @@ export default observer( function RequestRoomDelegateChanges () {
 
     useEffect(() => {
        agent.UserRoles.listArmyWarCollegeUsers().then((response : ArmyWarCollegeUser[]) => {
-        debugger;
         setArmyWarCollegeUsers(response);
        })
     }, [])
