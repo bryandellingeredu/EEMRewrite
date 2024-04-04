@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Azure.Core;
 using Microsoft.Graph;
 using System.Text.RegularExpressions;
+using System.Globalization;
+using System;
 
 namespace Application.Activities
 {
@@ -78,7 +80,7 @@ namespace Application.Activities
 
                 if (activities.Any())
                 {
-                    List<Activity>  filteredActivities = new List<Activity>();
+                    List<ActivityEvent> filteredActivityEvents = new List<ActivityEvent>();
 
                     foreach (var item in activities)
                     {
@@ -101,12 +103,74 @@ namespace Application.Activities
                         }
                         if (evt != null && evt.Attendees != null && evt.Attendees.Any(x => x.EmailAddress.Address == roomEmail))
                         {
-                            filteredActivities.Add(item);
+                            filteredActivityEvents.Add(new ActivityEvent(item, evt));
+                        }
+                    }
+
+                    TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                    string requestStartAsString = request.Start;
+                    string requestEndAsString = request.End;
+                    DateTimeOffset startDateTimeOffset = DateTimeOffset.Parse(requestStartAsString, CultureInfo.InvariantCulture);
+                    DateTimeOffset endDateTimeOffset = DateTimeOffset.Parse(requestEndAsString, CultureInfo.InvariantCulture);
+                    DateTime requestStartEasternTime = TimeZoneInfo.ConvertTime(startDateTimeOffset, easternZone).DateTime;
+                    DateTime requestEndEasternTime = TimeZoneInfo.ConvertTime(endDateTimeOffset, easternZone).DateTime;
+
+                    foreach (ActivityEvent activityEvent in filteredActivityEvents)
+                    {
+                     
+                        var eventStartUTCString = activityEvent.GraphEvent.Start.DateTime;
+                        var eventEndUTCString = activityEvent.GraphEvent.End.DateTime;
+                        DateTime eventStartUtcDateTime = DateTime.ParseExact(
+                            eventStartUTCString, "yyyy-MM-ddTHH:mm:ss.fffffff",
+                            CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+                        DateTime eventEndUtcDateTime = DateTime.ParseExact(eventEndUTCString,
+                            "yyyy-MM-ddTHH:mm:ss.fffffff",
+                            CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+                      
+                       
+                        DateTime eventStartEasternTime = TimeZoneInfo.ConvertTimeFromUtc(eventStartUtcDateTime, easternZone);
+                        DateTime eventEndEasternTime = TimeZoneInfo.ConvertTimeFromUtc(eventEndUtcDateTime, easternZone);
+
+                        DateTime activityStartEasternTime = activityEvent.Activity.Start;
+                        DateTime activityEndEasternTime = activityEvent.Activity.End;
+
+                        bool isStartMatch, isEndMatch;
+
+                        if (activityEvent.Activity.AllDayEvent)
+                        {
+                            isStartMatch = requestStartEasternTime.Date.AddDays(-1) == eventStartEasternTime.Date;
+                            isEndMatch = requestEndEasternTime.Date.AddDays(-1) == eventEndEasternTime.Date;
+
+                        }
+                        else
+                        {
+
+                            isStartMatch = requestStartEasternTime.Year == eventStartEasternTime.Year &&
+                                requestStartEasternTime.Month == eventStartEasternTime.Month &&
+                                requestStartEasternTime.Day == eventStartEasternTime.Day &&
+                                requestStartEasternTime.Hour == eventStartEasternTime.Hour &&
+                                requestStartEasternTime.Minute == eventStartEasternTime.Minute;
+
+                            // Compare end times (year, month, day, hour, minute)
+                             isEndMatch = requestEndEasternTime.Year == eventEndEasternTime.Year &&
+                                              requestEndEasternTime.Month == eventEndEasternTime.Month &&
+                                              requestEndEasternTime.Day == eventEndEasternTime.Day &&
+                                              requestEndEasternTime.Hour == eventEndEasternTime.Hour &&
+                                              requestEndEasternTime.Minute == eventEndEasternTime.Minute;
+                        }
+
+                        if (isStartMatch && isEndMatch)
+                        {
+                            activity = activityEvent.Activity;
+                            break;
+                            
                         }
                     }
 
 
-                    if (filteredActivities.Count == 1)
+
+
+                 /*   if (filteredActivities.Count == 1)
                     {
                             activity = filteredActivities.First();
                     }
@@ -130,15 +194,15 @@ namespace Application.Activities
                                 activity = dateRangeActivities.First();
                             }
                         }
-                    }
+                    } */
                     // if activity is still null just try to use the first one in the filtered Activities
-                    if (activity == null || activity.Id == Guid.Empty)
-                    {
-                        if (filteredActivities.Any())
-                        {
-                            activity= filteredActivities.First();   
-                        }
-                    }
+                    /*  if (activity == null || activity.Id == Guid.Empty)
+                      {
+                          if (filteredActivities.Any())
+                          {
+                              activity= filteredActivities.First();   
+                          }
+                      } */
                 }
 
           
@@ -157,6 +221,18 @@ namespace Application.Activities
                     activity.Recurrence.Activities = null;
                 }
                 return Result<Activity>.Success(activity);
+            }
+
+            public class ActivityEvent
+            {
+                public Activity Activity { get; set; }
+                public Event GraphEvent { get; set; }
+
+                public ActivityEvent(Activity activity, Event graphEvent)
+                {
+                    Activity = activity;
+                    GraphEvent = graphEvent;
+                }
             }
         }
     }

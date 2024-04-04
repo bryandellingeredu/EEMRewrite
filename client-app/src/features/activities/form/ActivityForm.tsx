@@ -669,6 +669,7 @@ export default observer(function ActivityForm() {
   };
 
   function handleFormSubmit(activity: ActivityFormValues) {
+    debugger;
     setShowRoomWizard(false);
     if(id && getTempRoomEmails(id)){
       removeTempRoomEmails(id);

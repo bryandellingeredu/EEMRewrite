@@ -128,6 +128,7 @@ picURL: '',
     }, [categories, history]);
 
     const getTime = (clickInfo: EventClickArg) => {
+      debugger;
   let time : string = ''
   if(!clickInfo.event.allDay && format(clickInfo.event.start!, 'MMMM d, yyyy') !== format(clickInfo.event.end!, 'MMMM d, yyyy')){
     time =   `${format(clickInfo.event.start!, 'MMMM d, yyyy h:mm aa')} - ${format(clickInfo.event.end!, 'MMMM d, yyyy h:mm aa')}`

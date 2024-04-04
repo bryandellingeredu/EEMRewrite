@@ -349,6 +349,11 @@ const Teams = {
     attendees: (id: string, teamRequester: string) => axiosRequest.post<UserEmail[]>('/teams/attendees', {id,  teamRequester}),
 }
 
+const PocketCalendar = {
+    reserveRoom: (start: Date, end: Date, title: string, description: string, roomEmail: string) =>
+     axiosRequest.post<void>('pocketcalendar',{start, end, title, description, roomEmail })
+}
+
 const agent = {
     Activities,
     Account,
@@ -378,6 +383,7 @@ const agent = {
     ApproveEvents,
     EduEmails,
     Teams,
+    PocketCalendar
 }
 
 export default agent;

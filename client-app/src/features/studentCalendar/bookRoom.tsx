@@ -1,9 +1,11 @@
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
 import DatePicker, {ReactDatePickerProps} from "react-datepicker";
-import { Dimmer, DropdownProps, Form, FormField, Header, Input, Loader, Select, } from "semantic-ui-react";
+import { Button, ButtonGroup, Dimmer, DropdownProps, Form, FormField, Header, HeaderSubheader, Icon, Input, Loader, Select, } from "semantic-ui-react";
 import { useStore } from "../../app/stores/store";
 import { GraphScheduleItem } from "../../app/models/graphScheduleItem";
+import agent from "../../app/api/agent";
+import { toast } from "react-toastify";
 
 interface Option {
     text: string;      // Display text for the option
@@ -70,11 +72,22 @@ interface Option {
     return new Date(Math.ceil(date.getTime() / ms) * ms);
   }
 
+  const isToday = (date : Date) => {
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+           date.getMonth() === today.getMonth() &&
+           date.getFullYear() === today.getFullYear();
+};
+
 
 export default observer( function BookRoom (){
+  const { navbarStore} = useStore();
+    const {setPage} = navbarStore
+    const [showConfirmation, setShowConfirmation] = useState(false);
     const [startDate, setStartDate] = useState(roundToNext15Min(new Date(new Date().getTime() + 60 * 60 * 1000)));
     const [endDate, setEndDate] = useState(roundToNext15Min(new Date(new Date().getTime() + 2 * 60 * 60 * 1000)));
     const [isDirty, setIsDirty] = useState(false);
+    const [saving, setSaving] = useState(false);
     const [title, setTitle] = useState('Student Reservation');
     const [description, setDescription] = useState('Student Reservation');
     const [selectedRoom, setSelectedRoom] = useState('');
@@ -139,13 +152,16 @@ export default observer( function BookRoom (){
       const handleSubmit= async () => {
         setIsDirty(true);
         if(startDate && endDate && title && description && selectedRoom){
+          setSaving(true);
             try{
-             
-
+             await agent.PocketCalendar.reserveRoom(startDate, endDate, title, description, selectedRoom)
+             setShowConfirmation(true);
+             setIsDirty(false);
             }catch(error){
-                console.log(error);
+              toast.error('An error occurred while reserving the room');
             }finally{
                 setLoadingRooms(false);
+                setSaving(false);
             }
          }
       }
@@ -195,8 +211,32 @@ export default observer( function BookRoom (){
         }
     };
 
+    const calculateMinTimeForStart = () => {
+      const today = new Date();
+      if (isToday(startDate)) {
+          return new Date(today.setMinutes(0));
+      }
+      return new Date(today.setHours(0, 0, 0, 0)); // Reset to midnight for future dates
+  };
+
 
   return (
+    <>
+    {showConfirmation &&
+    <>
+      <Header as='h2' icon>
+      <Icon name='check' color='teal' />
+      Room Reservation Successful
+      <HeaderSubheader>
+        You will receive a confirmation email in your outlook mailbox. Your room reservation will
+        appear on your Outlook Calendar, the EEM, and the room kiosk
+      </HeaderSubheader>
+    </Header>
+    <Button floated="right" primary content='OK' size='huge' onClick={() => setPage('calendar')} />
+    </>
+    
+    }
+    {!showConfirmation && 
    <Form onSubmit={handleSubmit}>
         <Header textAlign="center" content='Room Reservation' />
     <FormField required error={!startDate && isDirty}>
@@ -215,7 +255,7 @@ export default observer( function BookRoom (){
           timeCaption="time"
           dateFormat="MMMM d, yyyy h:mm aa"
           minDate={new Date()}
-          minTime={new Date(new Date().setMinutes(0))}
+          minTime={calculateMinTimeForStart()}
           maxTime={new Date(new Date().setHours(23, 45, 0, 0))}
           filterTime={filterPassedTime}
         />
@@ -261,10 +301,7 @@ export default observer( function BookRoom (){
     />
     </FormField>
     <FormField required error={!selectedRoom && isDirty}>
-      <label>Choose a room</label>
-
-     
-   
+      <label>Choose a room</label>  
       {(loadingRooms || roomOptions.length < 0) &&  <Loader active inline content={loadingMessage} />}
       {!loadingRooms && roomOptions.length > 0 &&
      <Select
@@ -272,10 +309,21 @@ export default observer( function BookRoom (){
      placeholder="Select a room"
      search
      clearable
-     onChange={(data: DropdownProps) => {if (typeof data.value === 'string') setSelectedRoom(data.value)}}
+     onChange={(e, data: DropdownProps) => {
+      debugger;
+      if (typeof data.value === 'string') setSelectedRoom(data.value)}
+      }
    />
        }
     </FormField>
+    <FormField>
+      <ButtonGroup floated="right">
+        <Button type='button' secondary content='Cancel' onClick={() => setPage('calendar')}/>
+        <Button type='submit' primary content='Reserve Room' loading={saving} disabled={(loadingRooms || roomOptions.length < 0)}/>
+      </ButtonGroup>
+    </FormField>
    </Form>
+      }
+      </>
   )
 })
