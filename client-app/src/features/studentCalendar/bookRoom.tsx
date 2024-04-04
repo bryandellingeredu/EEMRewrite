@@ -258,6 +258,7 @@ export default observer( function BookRoom (){
           minTime={calculateMinTimeForStart()}
           maxTime={new Date(new Date().setHours(23, 45, 0, 0))}
           filterTime={filterPassedTime}
+          onFocus={e => e.target.blur()} 
         />
     </FormField>
     <FormField required error={!endDate && isDirty}>
@@ -278,6 +279,7 @@ export default observer( function BookRoom (){
           minTime={calculateMinTime()}
           maxTime={new Date(new Date().setHours(23, 45, 0, 0))}
           filterTime={filterPassedTime}
+          onFocus={e => e.target.blur()} 
         />
     </FormField>
     <FormField required error={!title && isDirty}>
