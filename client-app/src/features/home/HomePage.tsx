@@ -98,19 +98,9 @@ export default observer(function HomePage(){
      }
 
      {userStore.isLoggedIn && !armyProfile && isEduSignedIn &&
-     <>
-      <Header as ='h3' inverted content = 'You are signed into your edu account. '/>
-      <Header as ='h3' inverted content =  'Would you also like to sign into your army 365 account?' />
-        <Button as={Link} to={`${process.env.PUBLIC_URL}/activityTable`} size='huge' inverted>
-        No Thanks, Just Go to Events
+      <Button as={Link} to={`${process.env.PUBLIC_URL}/activityTable`} size='huge' inverted>
+        Go to Events
     </Button>
-    <Button 
-         as={Link} to={`${process.env.PUBLIC_URL}/authenticatetoarmy`}
-                 size='huge' inverted
-                  type='button'>
-                  Sure, Sign Me Into Army 365
-                </Button>
-    </>
      }
 
 {/*
