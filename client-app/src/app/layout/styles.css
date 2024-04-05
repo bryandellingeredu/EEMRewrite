@@ -167,5 +167,16 @@ mgt-login {
   cursor: pointer;
 }
 
+/* Updated CSS with increased specificity */
+.fc-button.fc-customBookARoom-button {
+  background-color: #007bff !important; /* Blue background */
+  color: white !important; /* White text */
+  border: 1px solid #007bff !important; /* Blue border */
+}
+
+.fc-button.fc-customBookARoom-button:hover {
+  background-color: #0056b3 !important;
+  border-color: #0056b3 !important;
+}
 
 

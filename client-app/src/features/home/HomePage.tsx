@@ -49,6 +49,12 @@ export default observer(function HomePage(){
       };
 
       useEffect(() => {
+        if (userStore.isLoggedIn && (armyProfile || isEduSignedIn)) {
+          history.push(`${process.env.PUBLIC_URL}/activityTable`);
+        }
+      }, [userStore.isLoggedIn, armyProfile, isEduSignedIn, history]);
+
+      useEffect(() => {
         if(navbarType === 'studentCalendar'){
           history.push(`${process.env.PUBLIC_URL}/studentcalendar`)
         }

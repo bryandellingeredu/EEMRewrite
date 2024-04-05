@@ -89,7 +89,7 @@ export default observer( function BookRoom (){
     const [isDirty, setIsDirty] = useState(false);
     const [saving, setSaving] = useState(false);
     const [title, setTitle] = useState('Student Reservation');
-    const [description, setDescription] = useState('Student Reservation');
+    const [description, setDescription] = useState('Collaborative Session');
     const [selectedRoom, setSelectedRoom] = useState('');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const { availabilityStore, graphRoomStore} = useStore();
