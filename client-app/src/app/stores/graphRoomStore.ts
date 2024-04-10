@@ -191,8 +191,8 @@ constructor() {
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/G3SIPRThumb.png`
     },
     'Bldg6512ndFloorCentralCommonsRm2067@armywarcollege.edu' : {
-      picURL: `${process.env.PUBLIC_URL}/assets/rooms/CentralCommons.png`,
-      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/CentralCommonsThumb.png`
+      picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2067.png`,
+      thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2067Thumb.png`
     },
     'Bldg6512ndFloorEastCommonsRm2029@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/EastCommons.png`,
