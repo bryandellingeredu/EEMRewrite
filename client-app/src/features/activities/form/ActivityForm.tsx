@@ -3947,7 +3947,8 @@ export default observer(function ActivityForm() {
                     />
                     {values.report === "Hosting Report" && (
                       <>
-                        <Divider color="black" />
+                       <Divider color="black" />
+                       {/*
                         <Grid>
                           <Grid.Row>
                             <Grid.Column width={4}>
@@ -3968,9 +3969,10 @@ export default observer(function ActivityForm() {
                             </Grid.Column>
                           </Grid.Row>
                         </Grid>
+                    */}
 
                         <div className="ui yellow message">
-                          <div className="header">VIOS</div>
+                          <div className="header">VIOS, please use the link below to submit a VIOS request</div>
                           To request a photo or record video, click the{" "}
                           <a href="https://vios.army.mil" target="_blank">
                             VIOS
@@ -4046,6 +4048,7 @@ export default observer(function ActivityForm() {
                     {values.report === "Hosting Report" && (
                       <>
                         <Divider color="black" />
+                        {/* 
                         <Grid>
                           <Grid.Row>
                             <Grid.Column width={4}>
@@ -4065,16 +4068,27 @@ export default observer(function ActivityForm() {
                             </Grid.Column>
                           </Grid.Row>
                         </Grid>
+                    */}
+
+                       <div className="ui yellow message">
+                          <div className="header">Meal Support</div>
+                          If the visit/event qualifies for a hosted meal, please contact Executive Services at{" "}
+                          <a href="mailto:usarmy.carlisle.awc.mbx.atw-ces@army.mil" target="_blank">
+                          usarmy.carlisle.awc.mbx.atw-ces@army.mil
+                          </a>{" "}
+                        </div>
                         <Divider color="black" />
                       </>
                     )}
-                    {values.report === "Hosting Report" && (
+                    {values.report === "Hosting Report" && false && (
+                      
                       <MyTextArea
                         rows={3}
                         placeholder="List any Dietary Restrictions"
                         name="hostingReport.dietaryRestrictions"
                         label="List any Dietary Restrictions:"
                       />
+                    
                     )}
                     {values.report === "Hosting Report" && (
                       <>
@@ -4120,7 +4134,7 @@ export default observer(function ActivityForm() {
                               </SemanticForm.Group>
                               <i>
                                 If local transportation support is needed, check
-                                the box and see instructions below
+                                the box and follow the instructions below.
                               </i>
                             </Grid.Column>
                           </Grid.Row>
@@ -4132,10 +4146,10 @@ export default observer(function ActivityForm() {
                             Bus Transportation Request
                           </div>
                           If local transportation support is needed, check the
-                          Local Transportation Checkbox above, and then submit
+                          Local Transportation box above, and then submit
                           your request by clicking the
                           <a
-                            href="https://armyeitaas.sharepoint-mil.us/teams/EnterprisePortal/Lists/BusTransportationRequest/AllItems.aspx"
+                            href="https://armyeitaas.sharepoint-mil.us/sites/USAWC-Enterprise/Lists/BusTransportationRequest/AllItems.aspx"
                             target="_blank"
                           >
                             {" "}
