@@ -4073,8 +4073,8 @@ export default observer(function ActivityForm() {
                        <div className="ui yellow message">
                           <div className="header">Meal Support</div>
                           If the visit/event qualifies for a hosted meal, please contact Executive Services at{" "}
-                          <a href="mailto:usarmy.carlisle.awc.mbx.atw-ces@army.mil" target="_blank">
-                          usarmy.carlisle.awc.mbx.atw-ces@army.mil
+                          <a href="mailto:usarmy.carlisle.awc.mbx.atwc-ces@army.mil" target="_blank">
+                          usarmy.carlisle.awc.mbx.atwc-ces@army.mil
                           </a>{" "}
                         </div>
                         <Divider color="black" />
