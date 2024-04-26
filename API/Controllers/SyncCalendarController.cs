@@ -22,8 +22,11 @@ namespace API.Controllers
         public async Task<IActionResult> Get(string route, string studentType)
         {   
             if (studentType == "DL24") studentType = "DEP2024";
+            if (studentType == "dl24") studentType = "DEP2024";
             if (studentType == "DL25") studentType = "DEP2025";
+            if (studentType == "dl25") studentType = "DEP2025";
             if (studentType == "DL26") studentType = "DEP2026";
+            if (studentType == "dl26") studentType = "DEP2026";
             SyncCalendar syncCalendar = await _context.SyncCalendars.FirstAsync(x => x.Route == studentType);
             Response.Headers.Append("Content-Type", "text/calendar");
             return File(Encoding.UTF8.GetBytes(syncCalendar.Text), "text/calendar", "calendar.ics");
