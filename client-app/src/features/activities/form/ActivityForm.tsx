@@ -68,6 +68,7 @@ import { UserEmail } from "../../../app/models/userEmail";
 import { BackToCalendarInfo } from "../../../app/models/backToCalendarInfo";
 import TeamsButtonArmy from "./TeamsButtonArmy";
 import SelectRoomWizard from "./SelectRoomWizard";
+import { GraphScheduleResponse } from "../../../app/models/graphScheduleResponse";
 
 
 
@@ -128,6 +129,8 @@ export default observer(function ActivityForm() {
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
   const [memberOfExecServices, setMemberOfExecServices] = useState(false);
+  const [svtcSchedule, setSvtcSchedule] = useState<GraphScheduleResponse[]>([]);
+  const handleSetSvtcSchedule = (newSchedule : GraphScheduleResponse[] ) => setSvtcSchedule(newSchedule);
   useEffect(() => {
     setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
     setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
@@ -177,6 +180,7 @@ export default observer(function ActivityForm() {
   const [subCalendarError, setSubCalendarError] = useState(false);
   const [noRoomError, setNoRoomError] = useState(false);
   const [noRegistrationSiteError, setNoRegistrationSiteError] = useState(false);
+  const [vtcSchedulingError, setVtcSchedulingError] = useState(false);
   const [noLeaderDateError, setNoLeaderDateError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [recurrenceDisabled, setRecurrenceDisabled] = useState<boolean>(false);
@@ -681,6 +685,7 @@ export default observer(function ActivityForm() {
     let noRoomErrorIndicator = false;
     let noRegistrationSiteErrorIndicator = false;
     let noLeaderDateErrorIndicator = false;
+    let vtcSchedulingErrorIndicator = false;
     setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
@@ -689,6 +694,33 @@ export default observer(function ActivityForm() {
     setNoRegistrationSiteError(false);
     setNoLeaderDateError(false);
     setEventClearanceLevelError(false);
+    setVtcSchedulingError(false);
+
+    if (activity.vtc && !recurrenceInd && !id) {
+      if (roomEmails && roomEmails.length > 0) {
+        const vtcRoomEmails = roomEmails.filter(x => x.toLowerCase().includes('vtc'));
+        if (vtcRoomEmails && vtcRoomEmails.length > 0) {
+          vtcRoomEmails.forEach(vtcRoomEmail => {
+            debugger;
+            const schedule = svtcSchedule?.find(x => x.scheduleId === vtcRoomEmail);
+              if (schedule && /[^0]/.test(schedule.availabilityView)) {
+                setVtcSchedulingError(true);
+                vtcSchedulingErrorIndicator = true;
+              }
+          });
+        }
+      }
+    }
+
+    if(vtcSchedulingErrorIndicator){
+    const vtcAnchor = document.getElementById("vtcAnchor");
+    if (vtcAnchor) {
+      vtcAnchor.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }
 
     if(roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu')){
       setEventClearanceLevelError(false);
@@ -806,7 +838,7 @@ export default observer(function ActivityForm() {
         }
       }
     }
-    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator && !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator) {
+    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator && !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator && !vtcSchedulingErrorIndicator) {
       setSubmitting(true);
       if(roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu')){
         activity.eventClearanceLevel = 'Secret';
@@ -1751,6 +1783,7 @@ export default observer(function ActivityForm() {
                     lockDateInput={setLockDateInputLocked}
                     roomRequired={roomRequired}
                     roomOptionRegistryId={roomOptionRegistryId}
+                    setSvtcSchedule={handleSetSvtcSchedule}
                   />
                   <MyTextInput
                     name="numberAttending"
@@ -1836,8 +1869,16 @@ export default observer(function ActivityForm() {
                       <Segment style={{backgroundColor: '#F5EAF2'}}>
                     <MyCheckBox
                       name="vtc"
-                      label="SVTC: (allow 30 minute set up time)"
+                      label="SVTC: "
                     />
+                    <p><i id="vtcAnchor"> Choosing SVTC will automatically reserve a 30-minute SVTC room set up time before the start of the event</i></p>
+                                {vtcSchedulingError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      Unable to schedule a 30-minute SVTC set up time because of scheduling conflicts. choose a different time.
+                                    </Label>
+                                  </p>
+                     )}
                     </ Segment>
                   )}
 

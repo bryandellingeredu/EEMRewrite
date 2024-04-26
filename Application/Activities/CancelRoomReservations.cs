@@ -48,11 +48,25 @@ namespace Application.Activities
 
                 var activity = await _context.Activities.FindAsync(request.Id, cancellationToken);
 
+              if (!string.IsNullOrEmpty(activity.VTCLookup)) {
+                    try
+                    {
+                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount());
+                        activity.VTCLookup = null;
+                        await _context.SaveChangesAsync();
+                    }catch (Exception )
+                    { 
+                        activity.VTCLookup = null;
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
                 if ( string.IsNullOrEmpty(activity.CoordinatorEmail) ||
                      !activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
                      ) {
                         activity.CoordinatorEmail = GraphHelper.GetEEMServiceAccount();
-                    }
+                      }
+            
                 if (!string.IsNullOrEmpty(activity.CoordinatorEmail) && !string.IsNullOrEmpty(activity.EventLookup)) {
                     try
                     {

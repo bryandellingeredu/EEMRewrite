@@ -551,6 +551,7 @@ export default class ActivityStore {
       makeTeamMeeting: false,
       eventLookup: graphEvent.id,
       teamLookup: '',
+      vtcLookup: '',
       teamLink: '',
       armyTeamLink: '',
       teamRequester: '',

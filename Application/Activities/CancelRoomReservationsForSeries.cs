@@ -72,6 +72,28 @@ namespace Application.Activities
                                 activity.EventLookup = string.Empty;
                             }
                         }
+                        if(!string.IsNullOrEmpty(activity.VTCLookup)) {
+                            try
+                            {
+                                await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount());
+                                activity.VTCLookup = string.Empty;
+                            }
+                            catch (Exception)
+                            {
+
+                                try
+                                {
+                                    await GraphHelper.DeleteEvent(activity.VTCLookup, activity.CoordinatorEmail);
+                                    activity.VTCLookup = string.Empty;
+                                }
+                                catch (Exception)
+                                {
+
+                                    activity.VTCLookup = string.Empty;
+                                }
+                            }
+
+                        }
                     }
                     await _context.SaveChangesAsync(cancellationToken); 
                 }

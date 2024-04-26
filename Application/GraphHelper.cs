@@ -619,88 +619,97 @@
 
         public static async Task<Event> CreateEvent(GraphEventDTO graphEventDTO)
         {
-            EnsureGraphForAppOnlyAuth();
-            _ = _appClient ??
-              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
-
-            // get the id of the calendar
-            var calendar = await _appClient.Users[graphEventDTO.RequesterEmail].Calendar
-              .Request()
-              .GetAsync();
-
-            // get the rooms
-            var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room") + "?$top=200";
-            var placesRequest = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
-
-            List<Attendee> attendees = new List<Attendee>();
-
-            bool scheduleUsingServiceAccount = graphEventDTO.RequesterEmail == GetEEMServiceAccount();
-
-            attendees.Add(
-              new Attendee
-              {
-                  EmailAddress = new EmailAddress
-                  {
-                      Address = graphEventDTO.RequesterEmail,
-                      Name = graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName,
-                  },
-                  Type = AttendeeType.Required
-              });
-
-            foreach (var roomEmail in graphEventDTO.RoomEmails)
+            try
             {
+                EnsureGraphForAppOnlyAuth();
+                _ = _appClient ??
+                  throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+                // get the id of the calendar
+                var calendar = await _appClient.Users[graphEventDTO.RequesterEmail].Calendar
+                  .Request()
+                  .GetAsync();
+
+                // get the rooms
+                var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room") + "?$top=200";
+                var placesRequest = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
+
+                List<Attendee> attendees = new List<Attendee>();
+
+                bool scheduleUsingServiceAccount = graphEventDTO.RequesterEmail == GetEEMServiceAccount();
+
                 attendees.Add(
                   new Attendee
                   {
                       EmailAddress = new EmailAddress
                       {
-                          Address = roomEmail,
-                          Name = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == roomEmail).FirstOrDefault().DisplayName
+                          Address = graphEventDTO.RequesterEmail,
+                          Name = graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName,
                       },
-                      Type = AttendeeType.Optional
-                  }
-                );
-            }
+                      Type = AttendeeType.Required
+                  });
 
-            var @event = new Event
-            {
-                Subject = scheduleUsingServiceAccount ? $"{graphEventDTO.EventTitle} - Requested by: {graphEventDTO.UserEmail}" : graphEventDTO.EventTitle,
-                IsAllDay = graphEventDTO.IsAllDay,
-                Body = new ItemBody
+                foreach (var roomEmail in graphEventDTO.RoomEmails)
                 {
-                    ContentType = BodyType.Html,
-                    Content = graphEventDTO.EventDescription
-                },
-                Start = new DateTimeTimeZone
-                {
-                    DateTime = graphEventDTO.Start,
-                    TimeZone = "Eastern Standard Time"
-                },
-                End = new DateTimeTimeZone
-                {
-                    DateTime = graphEventDTO.End,
-                    TimeZone = "Eastern Standard Time"
-                },
-                Attendees = attendees
+                    attendees.Add(
+                      new Attendee
+                      {
+                          EmailAddress = new EmailAddress
+                          {
+                              Address = roomEmail,
+                              Name = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == roomEmail).FirstOrDefault().DisplayName
+                          },
+                          Type = AttendeeType.Optional
+                      }
+                    );
+                }
 
-            };
-
-            if (graphEventDTO.RoomEmails.Any())
-            {
-
-                Microsoft.Graph.Location location = new Microsoft.Graph.Location
+                var @event = new Event
                 {
-                    DisplayName = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == graphEventDTO.RoomEmails[0]).FirstOrDefault().DisplayName
+                    Subject = scheduleUsingServiceAccount ? $"{graphEventDTO.EventTitle} - Requested by: {graphEventDTO.UserEmail}" : graphEventDTO.EventTitle,
+                    IsAllDay = graphEventDTO.IsAllDay,
+                    Body = new ItemBody
+                    {
+                        ContentType = BodyType.Html,
+                        Content = graphEventDTO.EventDescription
+                    },
+                    Start = new DateTimeTimeZone
+                    {
+                        DateTime = graphEventDTO.Start,
+                        TimeZone = "Eastern Standard Time"
+                    },
+                    End = new DateTimeTimeZone
+                    {
+                        DateTime = graphEventDTO.End,
+                        TimeZone = "Eastern Standard Time"
+                    },
+                    Attendees = attendees
+
                 };
 
-                @event.Location = location;
+                if (graphEventDTO.RoomEmails.Any())
+                {
+
+                    Microsoft.Graph.Location location = new Microsoft.Graph.Location
+                    {
+                        DisplayName = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == graphEventDTO.RoomEmails[0]).FirstOrDefault().DisplayName
+                    };
+
+                    @event.Location = location;
+                }
+
+                var result = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events
+                  .Request()
+                  .AddAsync(@event);
+
+                return result;
             }
+            catch (Exception ex)
+            {
 
-            var result = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events
-              .Request()
-              .AddAsync(@event);
-
-            return result;
+                throw;
+            }
+          
 
         }
 

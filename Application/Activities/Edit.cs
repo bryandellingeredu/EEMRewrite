@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Hosting;
+using System.Linq.Expressions;
+using Application.GraphSchedules;
+using System.Globalization;
 
 namespace Application.Activities
 {
@@ -82,6 +85,7 @@ namespace Application.Activities
                 var originalEnd = activity.End;
                 var originalAllDayEvent = activity.AllDayEvent;
                 var originalEventLookup = activity.EventLookup;
+                var originalVTCLookup = activity.VTCLookup;
                 var originalCoordinatorEmail = activity.CoordinatorEmail;
                 var originalTitle = activity.Title; 
 
@@ -189,6 +193,21 @@ namespace Application.Activities
                   shouldGraphEventsBeRegenerated
                 )
                 {
+                    if (activity.VTCLookup != null)
+                    {
+                        try
+                        {
+                            await GraphHelper.DeleteEvent(request.Activity.VTCLookup, GraphHelper.GetEEMServiceAccount());
+                            request.Activity.VTCLookup = string.Empty;
+                            activity.VTCLookup = string.Empty;
+                        }
+                        catch (Exception)
+                        {
+                            request.Activity.VTCLookup = string.Empty;
+                            activity.VTCLookup = string.Empty;
+                        }
+                    }
+
                     try
                     {
                         await GraphHelper.DeleteEvent(request.Activity.EventLookup, request.Activity.CoordinatorEmail);
@@ -238,10 +257,50 @@ namespace Application.Activities
                     };
                     Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                     activity.EventLookup = evt.Id;
+
+                    if (request.Activity.VTC && !request.Activity.AllDayEvent)
+                    {
+                        var vtcRooms = request.Activity.RoomEmails
+                                     .Where(email => email.IndexOf("VTC", StringComparison.OrdinalIgnoreCase) >= 0)
+                                     .ToArray();
+
+                        string[] availableVTCRooms = await GetAvailableVTCRooms(vtcRooms, request.Activity.Start);
+
+                        if (availableVTCRooms.Any())
+                        {
+                            try
+                            {
+                                GraphEventDTO vtcGraphEventDTO = new GraphEventDTO
+                                {
+                                    EventTitle = $"SVTC Setup for {request.Activity.Title}",
+                                    EventDescription = $"SVTC Setup for {request.Activity.Title}",
+                                    Start = SubtractHalfAnHour(request.Activity.StartDateAsString),
+                                    End = request.Activity.StartDateAsString,
+                                    RoomEmails = availableVTCRooms,
+                                    RequesterEmail = GraphHelper.GetEEMServiceAccount(),
+                                    RequesterFirstName = GraphHelper.GetEEMServiceAccount(),
+                                    RequesterLastName = GraphHelper.GetEEMServiceAccount(),
+                                    IsAllDay = request.Activity.AllDayEvent,
+                                    UserEmail = user.Email
+                                };
+                                Event vtcevt = await GraphHelper.CreateEvent(vtcGraphEventDTO);
+                                request.Activity.VTCLookup = vtcevt.Id;
+                                activity.VTCLookup = vtcevt.Id;
+                            }
+                            catch (Exception ex)
+                            {
+
+                                throw;
+                            }
+                        }
+
+                    }
+
                 }
                 else
                 {
                     activity.EventLookup = originalEventLookup;
+                    activity.VTCLookup = originalVTCLookup;
 
                     // check if the title has changed and there is a room reservation. if that happened we need to update the room reservation with the new title.
                     if(
@@ -344,6 +403,61 @@ namespace Application.Activities
                 }
 
                 return Result<Unit>.Success(Unit.Value);
+            }
+
+            private string SubtractHalfAnHour(string dateTimeString)
+            {
+
+                DateTime dateTime = DateTime.Parse(dateTimeString);
+
+                DateTime newDateTime = dateTime.AddMinutes(-30);
+
+                string newDateTimeString = newDateTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
+
+                return newDateTimeString;
+            }
+
+            private async Task<string[]> GetAvailableVTCRooms(string[] vtcRooms, DateTime start)
+            {
+                ScheduleRequestDTO scheduleRequestDTO = new ScheduleRequestDTO
+                {
+                    Schedules = vtcRooms.ToList(),
+                    StartTime = getDateTimeZone(start.AddMinutes(-30)),
+                    EndTime = getDateTimeZone(start),
+                    AvailabilityViewInterval = 15
+                };
+
+                var scheduleResults = await GraphHelper.GetScheduleAsync(scheduleRequestDTO);
+                List<string> availableRooms = new List<string>();
+
+                foreach (var schedule in scheduleResults)
+                {
+                    bool isAvailable = true; // Assume the room is available unless proven otherwise.
+                    foreach (var scheduleItem in schedule.AvailabilityView)
+                    {
+                        if (scheduleItem != '0') // '0' indicates free, any other value indicates busy, tentative, or out of office.
+                        {
+                            isAvailable = false;
+                            break;
+                        }
+                    }
+
+                    if (isAvailable)
+                    {
+                        availableRooms.Add(schedule.ScheduleId); // Assuming ScheduleId holds the email or identifier of the room.
+                    }
+                }
+
+                return availableRooms.ToArray();
+            }
+
+            private DateTimeTimeZone getDateTimeZone(DateTime dt)
+            {
+                string dateAsString = dt.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
+                DateTimeTimeZone dateTimeZone = new DateTimeTimeZone();
+                dateTimeZone.DateTime = dateAsString;
+                dateTimeZone.TimeZone = "UTC";
+                return dateTimeZone;
             }
 
             private async Task<bool> GetShouldGraphEventsBeRegenerated(Activity activity, DateTime originalStart, DateTime originalEnd, string originalEventLookup, string originalCoordinatorEmail, bool originalAllDayEvent, string[] roomEmails)

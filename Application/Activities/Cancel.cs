@@ -80,6 +80,19 @@ namespace Application.Activities
                         }
                     }
                 }
+                if (!string.IsNullOrEmpty(activity.VTCLookup))
+                {
+                    try
+                    {
+                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount());
+                    }
+                    catch (Exception)
+                    {
+                      
+
+                            // event does not exist
+                    }
+                }
                 // delete team events
                 if(!string.IsNullOrEmpty(activity.TeamLookup) && !string.IsNullOrEmpty(activity.TeamRequester)){
                     try
@@ -93,6 +106,7 @@ namespace Application.Activities
                     }
 
                 }
+                activity.VTCLookup = null;  
                 activity.EventLookup = null;
                 activity.TeamLookup = null;
                 activity.TeamRequester = null;

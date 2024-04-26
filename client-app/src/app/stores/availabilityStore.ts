@@ -28,6 +28,22 @@ export default class AvailabilityStore {
         }
     }
 
+    loadSVTCSchedule = async(start: Date) => {
+        const graphRoomStore = store.graphRoomStore;
+        const {loadGraphRooms} = graphRoomStore;
+        const emails: string[] = [];
+        try{
+            const rooms = await loadGraphRooms();
+            const vtcRooms = rooms.filter(x => x.emailAddress.toLowerCase().includes('vtc'));
+            const adjustedStart = new Date(start.getTime() - 30 * 60000);
+            const graphScheduleRequest : GraphScheduleRequest = this.getGraphScheduleRequest(adjustedStart, start, vtcRooms.map(x => x.emailAddress) );
+            const axiosResponse : GraphScheduleResponse[] = await agent.GraphSchedules.list(graphScheduleRequest);  
+            return axiosResponse;
+        }catch(error){
+            console.log(error); 
+        }
+    }
+
     getEmails = async(email: string | undefined)  => { 
         const graphRoomStore = store.graphRoomStore;
         const {loadGraphRooms} = graphRoomStore;

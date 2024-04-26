@@ -35,6 +35,7 @@ interface Props {
   lockDateInput: () => void;
   roomRequired: boolean,
   roomOptionRegistryId: string
+  setSvtcSchedule: (schedule : GraphScheduleResponse[]) => void;
 }
 
 export default observer(function RoomPicker({
@@ -48,11 +49,12 @@ export default observer(function RoomPicker({
   unlockDateInput,
   lockDateInput,
   roomRequired,
-  roomOptionRegistryId
+  roomOptionRegistryId,
+  setSvtcSchedule
 }: Props) {
   const animatedComponents = makeAnimated();
   const { availabilityStore, graphRoomStore, commonStore, activityStore} = useStore();
-  const { loadingInitial, loadSchedule } = availabilityStore;
+  const { loadingInitial, loadSchedule, loadSVTCSchedule } = availabilityStore;
   const { loadGraphRooms, addUpdateRoomOptions } = graphRoomStore;
   const { getTempRoomEmails} = activityStore
   const [roomOptions, setRoomOptions] = useState<Option[]>([
@@ -73,10 +75,13 @@ export default observer(function RoomPicker({
   };
 
 
+  useEffect(() => {
+    loadSVTCSchedule(start).then((response) => {
+      if(response)  setSvtcSchedule(response);
+    });
+  },[start]);
 
   useEffect(() => {
-
-    console.log('starting use effect');
     const diff = Math.abs(+end - +start);
     var minutes = Math.floor(diff / 1000 / 60);
     if (minutes >= 15 && start < end) {

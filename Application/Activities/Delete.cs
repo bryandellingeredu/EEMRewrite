@@ -75,6 +75,18 @@ namespace Application.Activities
                     }
                   
                 }
+                // delete svtc setup event
+                if (!string.IsNullOrEmpty(activity.VTCLookup))
+                {
+                    try
+                    {
+                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount());
+                    }
+                    catch (Exception ex)
+                    {
+                        var x = "y";
+                    }
+                }
                 // delete team events
                 if(!string.IsNullOrEmpty(activity.TeamLookup) && !string.IsNullOrEmpty(activity.TeamRequester)) {
                     try
@@ -87,6 +99,7 @@ namespace Application.Activities
                         //event does not exist
                     }
                 }
+                activity.VTCLookup = null;
                 activity.EventLookup = null;
                 activity.TeamLookup= null;  
                 activity.TeamRequester = null;

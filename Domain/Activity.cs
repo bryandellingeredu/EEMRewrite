@@ -35,6 +35,7 @@ namespace Domain
 
         public string EventLookup { get; set; }
         public string TeamLookup { get; set; }
+        public string VTCLookup { get; set; }
         public string TeamLink { get; set; }
         public string TeamRequester { get; set; }
         public string ArmyTeamLink {get; set;}

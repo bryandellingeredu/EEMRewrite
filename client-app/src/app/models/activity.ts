@@ -34,6 +34,7 @@ export interface Activity{
     coordinatorName: string,
     eventLookup: string,
     teamLookup: string,
+    vtcLookup: string,
     teamLink: string,
     armyTeamLink: string,
     teamRequester: string,
@@ -292,6 +293,7 @@ export class ActivityFormValues{
     teamInvites: UserEmail[] | [] = [];
     eventLookup: string = '';
     teamLookup: string = '';
+    vtcLookup: string = '';
     teamLink: string = '';
     armyTeamLink: string = '';
     teamRequester: string = '';
@@ -541,6 +543,7 @@ export class ActivityFormValues{
         this.teamInvites = activity.teamInvites;
         this.eventLookup = activity.eventLookup;
         this.teamLookup = activity.teamLookup;
+        this.vtcLookup = activity.vtcLookup;
         this.teamLink = activity.teamLink;
         this.armyTeamLink = activity.armyTeamLink;
         this.teamRequester = activity.teamRequester;
