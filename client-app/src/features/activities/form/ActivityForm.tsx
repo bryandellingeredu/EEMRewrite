@@ -70,7 +70,21 @@ import TeamsButtonArmy from "./TeamsButtonArmy";
 import SelectRoomWizard from "./SelectRoomWizard";
 import { GraphScheduleResponse } from "../../../app/models/graphScheduleResponse";
 
+const devicesRequiredRooms : string[] = [
+  'Bldg650CollinsHallNormandyConferenceRoomSVTC@armywarcollege.edu',
+  'Bldg650CollinsHallGuadalcanalRoomRm3013@armywarcollege.edu',
+  'Bldg650CollinsHallStLoRoomRm3006@armywarcollege.edu',
+  'Bldg650CollinsHall22ndInfConferenceRoomSVTC@armywarcollege.edu',
+  'Bldg650CollinsHall18thInfConferenceRoom@armywarcollege.edu',
+  'Bldg650CollinsHallCherbourgRoomRm1015@armywarcollege.edu',
+  'Bldg650CollinsHallToyRoomRm1018@armywarcollege.edu',
+  'Bldg650CollinsHallB030@armywarcollege.edu',
+  'Bldg650CollinsHallB033ASVTC@armywarcollege.edu',
+  'Bldg650CollinsHallB037SVTC@armywarcollege.edu',
+  'Bldg650CollinsHallTriangleRoomSVTCRmB034@armywarcollege.edu'
+];
 
+const includesAny = (arr : string[], values : string []) => values.some(v => arr.includes(v));
 
 function useIsSignedIn(): [boolean] {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -173,6 +187,8 @@ export default observer(function ActivityForm() {
   const [cuiWarningHasBeenDisplayed, setCUIWarningHasBeenDisplayed] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
+  const [roomResourceError, setRoomResourceError] = useState(false);
+  const [roomResourceOtherError, setRoomResourceOtherError] = useState(false);
   const [attachBioError, setAttachBioError] = useState(false);
   const [distantTechError, setDistantTechError] = useState(false);
   const [eventClearanceLevelError, setEventClearanceLevelError] = useState(false);
@@ -386,37 +402,6 @@ export default observer(function ActivityForm() {
     }
   }
 
-
-  /*const handleDownloadAttachment = async () => {
-    try {
-      const token = commonStore.token;
-
-      const headers = new Headers();
-      headers.append("Authorization", `Bearer ${token}`);
-
-      const requestOptions = {
-        method: "GET",
-        headers: headers,
-      };
-
-      const metaData: Attachment = await agent.Attachments.details(
-        attachment.id
-      );
-      const url = `${process.env.REACT_APP_API_URL}/upload/${id}`;
-      const response = await fetch(url, requestOptions);
-      const data = await response.arrayBuffer();
-      var file = new Blob([data], { type: metaData.fileType });
-      var fileUrl = window.URL.createObjectURL(file);
-      var a = document.createElement("a");
-      a.href = fileUrl;
-      a.download = metaData.fileName;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(fileUrl);
-    } catch (err) {
-      console.error(err);
-    }
-  }; */
 
   const handleDownloadAttachment = async () => {
     try {
@@ -686,6 +671,8 @@ export default observer(function ActivityForm() {
     let noRegistrationSiteErrorIndicator = false;
     let noLeaderDateErrorIndicator = false;
     let vtcSchedulingErrorIndicator = false;
+    let roomResourceErrorIndicator = false;
+    let roomResourceOtherErrorIndicator = false;
     setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
@@ -695,13 +682,47 @@ export default observer(function ActivityForm() {
     setNoLeaderDateError(false);
     setEventClearanceLevelError(false);
     setVtcSchedulingError(false);
+    setRoomResourceError(false);
+    setRoomResourceOtherError(false);
+
+    if(roomEmails && roomEmails.length > 0 && includesAny(roomEmails, devicesRequiredRooms)){
+      if(!activity.roomResourceNotApplicable && !activity.roomResourceNtg && !activity.roomResourceNts && !activity.roomResourceOther && !activity.roomResourceRen 
+        && !activity.roomResourceSipr && !activity.roomResourceNipr){
+         setRoomResourceError(true);
+         roomResourceErrorIndicator = true;
+      }
+      if(activity.roomResourceOther && !activity.roomResourceOtherText){
+        setRoomResourceOtherError(true);
+        roomResourceOtherErrorIndicator = true;
+      }
+    }
+
+    if(roomResourceErrorIndicator){
+      const roomResourceAnchor = document.getElementById("roomResourceAnchor");
+      if(roomResourceAnchor){
+        roomResourceAnchor.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+
+    if(roomResourceOtherErrorIndicator){
+      const roomResourceOtherAnchor = document.getElementById("roomResourceOtherAnchor");
+      if(roomResourceOtherAnchor){
+        roomResourceOtherAnchor.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+
 
     if (activity.vtc && !recurrenceInd && !id) {
       if (roomEmails && roomEmails.length > 0) {
         const vtcRoomEmails = roomEmails.filter(x => x.toLowerCase().includes('vtc'));
         if (vtcRoomEmails && vtcRoomEmails.length > 0) {
           vtcRoomEmails.forEach(vtcRoomEmail => {
-            debugger;
             const schedule = svtcSchedule?.find(x => x.scheduleId === vtcRoomEmail);
               if (schedule && /[^0]/.test(schedule.availabilityView)) {
                 setVtcSchedulingError(true);
@@ -838,7 +859,8 @@ export default observer(function ActivityForm() {
         }
       }
     }
-    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator && !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator && !vtcSchedulingErrorIndicator) {
+    if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator &&
+       !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator && !vtcSchedulingErrorIndicator && !roomResourceErrorIndicator && !roomResourceOtherErrorIndicator) {
       setSubmitting(true);
       if(roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu')){
         activity.eventClearanceLevel = 'Secret';
@@ -1790,11 +1812,58 @@ export default observer(function ActivityForm() {
                     placeholder="Number Attending"
                     label="Number Attending:"
                   />
+             
+
+         
+
                   <MyTextInput
                     name="phoneNumberForRoom"
                     placeholder="Phone # of person requesting room"
                     label="Phone Number of Person Requesting Room:"
                   />
+ 
+               { includesAny(roomEmails, devicesRequiredRooms) && 
+                <Grid>
+                  <Grid.Column width={16}>
+                    <Segment.Group horizontal inline>
+                      <Segment >
+                          <span id="roomResourceAnchor">* Required Devices: </span> 
+                          {roomResourceError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      Please select a room resource or choose Not Applicable
+                                    </Label>
+                                  </p>
+                           )}
+                      </Segment>
+                      <Segment><MySemanticCheckBox  name="roomResourceNotApplicable" label="Not Applicable"/></Segment>
+                      <Segment><MySemanticCheckBox  name="roomResourceNipr" label="NIPR" /> </Segment>
+                      <Segment><MySemanticCheckBox  name="roomResourceSipr" label="SIPR" disabled={roomEmails.length === 1 && roomEmails[0] === 'Bldg650CollinsHallB030@armywarcollege.edu' }/></Segment>
+                      <Segment><MySemanticCheckBox  name="roomResourceRen" label="REN"/></Segment>
+                      <Segment><MySemanticCheckBox  name="roomResourceNts" label="NTS" disabled={roomEmails.length === 1 && roomEmails[0] === 'Bldg650CollinsHallB030@armywarcollege.edu' }/></Segment>
+                      <Segment><MySemanticCheckBox  name="roomResourceNtg" label="NTG" disabled={roomEmails.length === 1 && roomEmails[0] === 'Bldg650CollinsHallB030@armywarcollege.edu' }/></Segment>
+                      <Segment>
+                        <MySemanticCheckBox  name="roomResourceOther" label="Other"/>
+                        {values.roomResourceOther &&  <MyTextInput name="roomResourceOtherText" placeholder="Other"/> }
+                        <p><i id="roomResourceOtherAnchor">* Required</i></p>
+                        {roomResourceOtherError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      Other is Required
+                                    </Label>
+                                  </p>
+                           )}
+                      </Segment>
+                    </Segment.Group>
+                  </Grid.Column>
+              </Grid>
+             }
+            
+                
+              
+                 
+
+
                   {graphRooms
                     .filter((obj) => roomEmails.includes(obj.emailAddress))
                     .map((x) => x.displayName)
@@ -3457,7 +3526,7 @@ export default observer(function ActivityForm() {
                 ]}
                 placeholder="Event Clearance Level"
                 name="eventClearanceLevel"
-                label="Event Clearance Level:"
+                label="* Event Clearance Level:"
               />
 
               <p><i id="eventClearanceLevelAnchor">An Event Clearance Level is Required</i></p>

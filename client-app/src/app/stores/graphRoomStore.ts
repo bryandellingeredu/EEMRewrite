@@ -3,12 +3,17 @@ import { makeAutoObservable, runInAction} from "mobx";
 import agent from "../api/agent";
 import { GraphRoomReservationParameters } from "../models/graphRoomReservationParameters";
 import { RoomDelegate } from "../models/roomDelegate";
+import { bool } from "yup";
 
 interface Option {
   label: string;
   value: string;
   isDisabled: boolean;
 }
+
+
+
+
 
 export default class GraphRoomStore {
     graphRoomRegistry = new Map<string, GraphRoom>();
@@ -47,6 +52,8 @@ constructor() {
     return options
   }
 
+
+
   addUpdateRoomOptions = (id: string, options: Option[]) =>{
     this.roomOptionRegistry.set(id, options)
   }
@@ -80,6 +87,8 @@ constructor() {
       return this.roomDelegates;
     }
   }
+
+
 
   roomAssets: { [emailAddress: string]: { picURL: string; thumbURL: string } } = {
     'Bldg650CollinsHall18thInfConferenceRoom@armywarcollege.edu':{

@@ -14,6 +14,21 @@ interface Props {
     activity: Activity
 }
 
+const devicesRequiredRooms : string[] = [
+    'Bldg650CollinsHallNormandyConferenceRoomSVTC@armywarcollege.edu',
+    'Bldg650CollinsHallGuadalcanalRoomRm3013@armywarcollege.edu',
+    'Bldg650CollinsHallStLoRoomRm3006@armywarcollege.edu',
+    'Bldg650CollinsHall22ndInfConferenceRoomSVTC@armywarcollege.edu',
+    'Bldg650CollinsHall18thInfConferenceRoom@armywarcollege.edu',
+    'Bldg650CollinsHallCherbourgRoomRm1015@armywarcollege.edu',
+    'Bldg650CollinsHallToyRoomRm1018@armywarcollege.edu',
+    'Bldg650CollinsHallB030@armywarcollege.edu',
+    'Bldg650CollinsHallB033ASVTC@armywarcollege.edu',
+    'Bldg650CollinsHallB037SVTC@armywarcollege.edu',
+    'Bldg650CollinsHallTriangleRoomSVTCRmB034@armywarcollege.edu'
+  ];
+  
+  const includesAny = (arr : string[], values : string []) => values.some(v => arr.includes(v));
 
 
 export default observer(function ActivityDetailedSidebar ({activity}: Props) {
@@ -1901,9 +1916,98 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  </Grid.Column>
              </Grid>
          </Segment>
-    
- }
+}
 
+    {activity.activityRooms && activity.activityRooms.length > 0 
+     && includesAny(activity.activityRooms.map(x => x.email), devicesRequiredRooms)
+     && activity.roomResourceNipr &&
+     <Segment attached>
+     <Grid verticalAlign='middle'>
+         <Grid.Column width={1}>
+         <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+         </Grid.Column>
+         <Grid.Column width={14}>
+          NIPR Required   
+         </Grid.Column>
+     </Grid>
+    </Segment>
+     }
+
+{activity.activityRooms && activity.activityRooms.length > 0 
+     && includesAny(activity.activityRooms.map(x => x.email), devicesRequiredRooms)
+     && activity.roomResourceSipr &&
+     <Segment attached>
+     <Grid verticalAlign='middle'>
+         <Grid.Column width={1}>
+         <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+         </Grid.Column>
+         <Grid.Column width={14}>
+          SIPR Required   
+         </Grid.Column>
+     </Grid>
+    </Segment>
+     }
+
+{activity.activityRooms && activity.activityRooms.length > 0 
+     && includesAny(activity.activityRooms.map(x => x.email), devicesRequiredRooms)
+     && activity.roomResourceRen &&
+     <Segment attached>
+     <Grid verticalAlign='middle'>
+         <Grid.Column width={1}>
+         <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+         </Grid.Column>
+         <Grid.Column width={14}>
+          REN Required   
+         </Grid.Column>
+     </Grid>
+    </Segment>
+     }
+    
+    {activity.activityRooms && activity.activityRooms.length > 0 
+     && includesAny(activity.activityRooms.map(x => x.email), devicesRequiredRooms)
+     && activity.roomResourceNtg &&
+     <Segment attached>
+     <Grid verticalAlign='middle'>
+         <Grid.Column width={1}>
+         <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+         </Grid.Column>
+         <Grid.Column width={14}>
+          NTG Required   
+         </Grid.Column>
+     </Grid>
+    </Segment>
+     }
+
+{activity.activityRooms && activity.activityRooms.length > 0 
+     && includesAny(activity.activityRooms.map(x => x.email), devicesRequiredRooms)
+     && activity.roomResourceNts &&
+     <Segment attached>
+     <Grid verticalAlign='middle'>
+         <Grid.Column width={1}>
+         <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+         </Grid.Column>
+         <Grid.Column width={14}>
+          NTS Required   
+         </Grid.Column>
+     </Grid>
+    </Segment>
+     }
+
+     
+{activity.activityRooms && activity.activityRooms.length > 0 
+     && includesAny(activity.activityRooms.map(x => x.email), devicesRequiredRooms)
+     && activity.roomResourceOther &&
+     <Segment attached>
+     <Grid verticalAlign='middle'>
+         <Grid.Column width={1}>
+         <FontAwesomeIcon icon={faNetworkWired} size='2x' color='#00b5ad'  />
+         </Grid.Column>
+         <Grid.Column width={14}>
+          {activity.roomResourceOtherText }  Resource Required
+         </Grid.Column>
+     </Grid>
+    </Segment>
+     }
 
 
       

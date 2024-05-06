@@ -258,6 +258,15 @@ export interface Activity{
     studentCalendarDistanceGroup1Mandatory : boolean
     studentCalendarDistanceGroup2Mandatory : boolean
     studentCalendarDistanceGroup3Mandatory : boolean
+    roomResourceNipr : boolean
+    roomResourceSipr : boolean
+    roomResourceRen : boolean
+    roomResourceNts : boolean
+    roomResourceNtg : boolean
+    roomResourceNotApplicable : boolean
+    roomResourceOther : boolean
+    roomResourceOtherText : string
+    roomResourceNotificationSent : boolean
 }
 
 export class Activity implements Activity{
@@ -514,6 +523,15 @@ export class ActivityFormValues{
     studentCalendarDistanceGroup1Mandatory : boolean = false
     studentCalendarDistanceGroup2Mandatory : boolean = false
     studentCalendarDistanceGroup3Mandatory : boolean = false
+    roomResourceNipr : boolean = false
+    roomResourceSipr : boolean = false
+    roomResourceRen : boolean = false
+    roomResourceNts : boolean = false
+    roomResourceNtg : boolean = false
+    roomResourceNotApplicable : boolean = false
+    roomResourceOther : boolean = false
+    roomResourceOtherText : string = ''
+    roomResourceNotificationSent : boolean = false
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -763,6 +781,16 @@ export class ActivityFormValues{
     this.studentCalendarDistanceGroup1Mandatory  =  activity.studentCalendarDistanceGroup1Mandatory
     this.studentCalendarDistanceGroup2Mandatory  =  activity.studentCalendarDistanceGroup2Mandatory
     this.studentCalendarDistanceGroup3Mandatory  =  activity.studentCalendarDistanceGroup3Mandatory
+    this.roomResourceNipr =  activity.roomResourceNipr
+    this.roomResourceSipr =  activity.roomResourceSipr
+    this.roomResourceRen =  activity.roomResourceRen
+    this.roomResourceNts =  activity.roomResourceNts
+    this.roomResourceNtg =  activity.roomResourceNtg
+    this.roomResourceNotApplicable  =  activity.roomResourceNotApplicable
+    this.roomResourceOther =  activity.roomResourceOther
+    this.roomResourceOtherText =  activity.roomResourceOtherText
+    this.roomResourceNotificationSent = activity.roomResourceNotificationSent
+    
        } 
     }
 }

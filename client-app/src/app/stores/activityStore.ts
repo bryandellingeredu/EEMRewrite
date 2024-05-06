@@ -771,7 +771,16 @@ export default class ActivityStore {
     studentCalendarDistanceGroup3 : false,
     studentCalendarDistanceGroup1Mandatory : false,
     studentCalendarDistanceGroup2Mandatory : false,
-    studentCalendarDistanceGroup3Mandatory : false
+    studentCalendarDistanceGroup3Mandatory : false,
+    roomResourceNipr : false,
+    roomResourceSipr : false,
+    roomResourceRen : false,
+    roomResourceNts : false,
+    roomResourceNtg : false,
+    roomResourceNotApplicable : false,
+    roomResourceOther : false,
+    roomResourceOtherText: '',
+    roomResourceNotificationSent: false
     }
     return activity;
   }

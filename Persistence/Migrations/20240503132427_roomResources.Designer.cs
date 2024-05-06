@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240503132427_roomResources")]
+    partial class roomResources
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -614,9 +617,6 @@ namespace Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("RoomResourceNotApplicable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("RoomResourceNotificationSent")
                         .HasColumnType("bit");
 
                     b.Property<bool>("RoomResourceNtg")

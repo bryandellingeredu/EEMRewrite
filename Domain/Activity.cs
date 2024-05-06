@@ -84,6 +84,8 @@ namespace Domain
         public bool CommunityEvent { get; set; }
         public bool MFP { get; set; }
         public string EducationalCategory { get; set; }
+
+        public bool RoomResourceNotificationSent {get; set;}
         public bool CommandantRequested { get; set; }
          public bool CommandantRequestedNotificationSent { get; set; }
         public DateTime? CommandantStart {get; set;}
@@ -283,5 +285,13 @@ namespace Domain
         public bool StudentCalendarDistanceGroup1Mandatory {get; set;}
         public bool StudentCalendarDistanceGroup2Mandatory {get; set;}
         public bool StudentCalendarDistanceGroup3Mandatory {get; set;}
+        public bool RoomResourceNipr {get; set;}
+        public bool RoomResourceSipr {get; set;}
+        public bool RoomResourceRen {get; set;}
+        public bool RoomResourceNts {get; set;}
+        public bool RoomResourceNtg {get; set;}
+        public bool RoomResourceNotApplicable {get; set;}
+        public bool RoomResourceOther {get; set;}
+        public string RoomResourceOtherText {get; set;}
     }
 }
