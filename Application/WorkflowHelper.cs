@@ -606,7 +606,7 @@ namespace Application
                       + (string.IsNullOrEmpty(_activity.NumberAttending) ? "" : $" <p><strong>#Attending: </strong> {_activity.NumberAttending} </p>")
                       + (string.IsNullOrEmpty(_activity.CreatedBy) ? "" : $" <p><strong>Person Who Booked The Room: </strong> {_activity.CreatedBy} </p>")
                       + (string.IsNullOrEmpty(_activity.PhoneNumberForRoom) ? "" : $" <p><strong>Phone Number of Person Who Booked The Room: </strong> {_activity.PhoneNumberForRoom} </p>");
-
+                body = body + $"<p><strong> Event Title: </strong> {_activity.Title} </p>";
                 body = body + $"<p><strong> Room: </strong> {await GetLocation()} </p>";
                 body = body + $"<p><strong> Start Time: </strong> {GetStartTime()} </p>";
                 body = body + $"<p><strong> End Time: </strong> {GetEndTime()} </p>";
