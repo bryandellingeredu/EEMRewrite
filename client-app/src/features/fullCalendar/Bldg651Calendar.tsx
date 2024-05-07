@@ -1,10 +1,8 @@
 import { faBuilding } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Divider, Header, Input, Loader } from "semantic-ui-react";
+import { Divider, Header, Input, Loader, Segment } from "semantic-ui-react";
 import { useCallback, useEffect, useState, useRef } from "react";
 import FullCalendar, { EventClickArg } from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction";
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { useHistory, useParams } from "react-router-dom";
@@ -19,11 +17,15 @@ import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 import { saveAs } from 'file-saver';
 import ReactDOM from 'react-dom';
 import html2canvas from 'html2canvas';
+import Select, { MultiValue, ActionMeta } from 'react-select';
+
 
 interface Resource {
   id: string
   title: string
 }
+
+interface Option {value: string, label: string}
 
 
 
@@ -32,6 +34,7 @@ export default function Bldg651Calendar (){
     userStore: {isLoggedIn},
     graphRoomStore: {graphRooms, loadGraphRooms}
   } = useStore()
+  const [options, setOptions] = useState<Option[]>([]);
   const calendarDivRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState(localStorage.getItem("calendarView651Timeline") || "resourceTimelineDay");
     const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
@@ -45,31 +48,36 @@ export default function Bldg651Calendar (){
     const [initialDate, setInitialDate] = useState<Date | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [resources, setResources] = useState<Resource[]>([]);
+    const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
+    const [isSelectOpen, setIsSelectOpen] = useState(false);
+    const [selected, setSelected] = useState<Option[]>([]);
 
 
 
     useEffect(() => {
-        if (!graphRooms || graphRooms.length < 1) {
-            loadGraphRooms();
-        }
-        if (graphRooms && graphRooms.length > 1 && id) {
-            let filteredGraphRooms = graphRooms;
-            if(id !== 'all'){
-            const bldg = id === '651' ? 'Bldg 651' : 'Collins Hall, Bldg 650'
-            filteredGraphRooms = graphRooms.filter(x => x.building === bldg);
-            }
-            // Sort the filtered rooms alphabetically by displayName
-            filteredGraphRooms.sort((a, b) => a.displayName.localeCompare(b.displayName));
-    
-            // Map the sorted rooms to resources and set them
-            const sortedResources = filteredGraphRooms.map(x => ({
-                id: x.emailAddress,
-                building: x.building,
-                title: x.displayName
-            }));
-            setResources(sortedResources);
-        }
-    }, [graphRooms, id]); // Dependency array includes graphRooms to trigger effect when it changes
+      if (graphRooms && graphRooms.length > 1 && id) {
+          const buildingFilter = id === '651' ? 'Bldg 651' : id === '650' ? 'Collins Hall, Bldg 650' : '';
+          const filteredGraphRooms = graphRooms.filter(x => id === 'all' || x.building === buildingFilter);
+  
+          const sortedResources = filteredGraphRooms.sort((a, b) => a.displayName.localeCompare(b.displayName)).map(x => ({
+              id: x.emailAddress,
+              title: x.displayName,
+              building: x.building
+          }));
+  
+          setResources(sortedResources);
+          
+          const savedResourceIds = JSON.parse(localStorage.getItem(`selectedResourceIds-${id}`) || '[]');
+          console.log('Saved Resource IDs from localStorage:', savedResourceIds);
+  
+          const initialSelectedOptions = sortedResources.filter(resource => savedResourceIds.includes(resource.id));
+          console.log('Initial Selected Options:', initialSelectedOptions);
+  
+          setFilteredResources(initialSelectedOptions.length > 0 ? initialSelectedOptions : sortedResources);
+          setOptions(sortedResources.map(resource => ({ value: resource.id, label: resource.title })));
+          setSelected(initialSelectedOptions.map(resource => ({ value: resource.id, label: resource.title })));
+      }
+  }, [graphRooms, id]);// Dependency array includes graphRooms to trigger effect when it changes
     
      
     useEffect(() => {
@@ -361,8 +369,31 @@ export default function Bldg651Calendar (){
           });
       }
     }; 
-    
 
+
+
+  const [key, setKey] = useState(0);
+
+  const refreshCalendar = () => {
+    setKey(prevKey => prevKey + 1); // Increment key to force rerender
+};
+
+  const handleSelectChange = (
+    selectedOptions: MultiValue<Option>, 
+) => {
+  const selectedResourceIds = selectedOptions ? selectedOptions.map(option => option.value) : [];
+
+  localStorage.setItem(`selectedResourceIds-${id}`, JSON.stringify(selectedResourceIds));
+    
+  // If there are selected IDs, filter the resources to only those selected
+  const filteredResources = selectedResourceIds.length > 0
+      ? resources.filter(resource => selectedResourceIds.includes(resource.id))
+      : resources; // If no selection, display all resources based on current building/room filter
+  
+  setFilteredResources(filteredResources);
+  setSelected([...selectedOptions]);
+  refreshCalendar();
+};
     return(
       <>
       <Divider horizontal>
@@ -378,6 +409,22 @@ export default function Bldg651Calendar (){
          </Loader>
         )}
 
+       <Select
+        options={options}
+        onMenuOpen={() => setIsSelectOpen(true)}
+        onMenuClose={() => setIsSelectOpen(false)}
+        onChange={handleSelectChange}
+        isClearable={true}
+        isSearchable={true}
+        isMulti
+        value={selected}
+        closeMenuOnSelect={false}
+        placeholder={'filter by rooms (you may choose more than one),  click away to close, the rooms will be remembered'}
+         />
+       
+
+
+
 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
       <Input 
           icon='search' 
@@ -392,15 +439,20 @@ export default function Bldg651Calendar (){
 
 
 
-        <div ref={calendarDivRef}>
+        <div ref={calendarDivRef} 
+        style={{ 
+          display: isSelectOpen ? 'none' : 'block' // Toggle display based on isSelectOpen state
+      }}
+        >
 
 <FullCalendar
+key={key}
     schedulerLicenseKey="0778622346-fcs-1703792826"
   initialDate={initialDate || new Date()}
 ref={calendarRef}
 height="auto"
 initialView={view}
-resources={resources}
+resources={filteredResources}
 
 //initialView="resourceTimeline"
 headerToolbar={{
