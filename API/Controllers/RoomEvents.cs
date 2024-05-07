@@ -25,5 +25,14 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new EventsByBldg651.Query {  Start = start, End = end, Id = id }));
         }
 
+        [AllowAnonymous]
+        [HttpGet("bldg651timeline/{id}")]
+        public async Task<ActionResult> GetBldg651TimelineEvents(string id)
+        {
+            string start = Request.Query["start"];
+            string end = Request.Query["end"];
+            return HandleResult(await Mediator.Send(new EventsByBldg651Timeline.Query { Start = start, End = end, Id = id }));
+        }
+
     }
 }

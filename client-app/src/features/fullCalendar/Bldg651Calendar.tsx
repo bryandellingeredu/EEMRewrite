@@ -6,6 +6,7 @@ import FullCalendar, { EventClickArg } from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction";
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { useHistory, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
@@ -19,13 +20,20 @@ import { saveAs } from 'file-saver';
 import ReactDOM from 'react-dom';
 import html2canvas from 'html2canvas';
 
+interface Resource {
+  id: string
+  title: string
+}
+
+
 
 export default function Bldg651Calendar (){
   const {
     userStore: {isLoggedIn},
+    graphRoomStore: {graphRooms, loadGraphRooms}
   } = useStore()
   const calendarDivRef = useRef<HTMLDivElement>(null);
-  const [view, setView] = useState(localStorage.getItem("calendarView651") || "timeGridWeek");
+  const [view, setView] = useState(localStorage.getItem("calendarView651Timeline") || "resourceTimelineDay");
     const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
     const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
@@ -36,6 +44,33 @@ export default function Bldg651Calendar (){
     const [isInitialDateSet, setIsInitialDateSet] = useState(false);
     const [initialDate, setInitialDate] = useState<Date | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [resources, setResources] = useState<Resource[]>([]);
+
+
+
+    useEffect(() => {
+        if (!graphRooms || graphRooms.length < 1) {
+            loadGraphRooms();
+        }
+        if (graphRooms && graphRooms.length > 1 && id) {
+            let filteredGraphRooms = graphRooms;
+            if(id !== 'all'){
+            const bldg = id === '651' ? 'Bldg 651' : 'Collins Hall, Bldg 650'
+            filteredGraphRooms = graphRooms.filter(x => x.building === bldg);
+            }
+            // Sort the filtered rooms alphabetically by displayName
+            filteredGraphRooms.sort((a, b) => a.displayName.localeCompare(b.displayName));
+    
+            // Map the sorted rooms to resources and set them
+            const sortedResources = filteredGraphRooms.map(x => ({
+                id: x.emailAddress,
+                building: x.building,
+                title: x.displayName
+            }));
+            setResources(sortedResources);
+        }
+    }, [graphRooms, id]); // Dependency array includes graphRooms to trigger effect when it changes
+    
      
     useEffect(() => {
       if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=studentcalendar`;
@@ -239,35 +274,45 @@ export default function Bldg651Calendar (){
         const events = calendarApi.getEvents();
         let csv = 'Title,Room,Start,End\n';
     
-        function escapeCsvValue(value: string) {
+        function escapeCsvValue(value: string): string {
             if (value.includes(',') || value.includes('"')) {
                 return `"${value.replace(/"/g, '""')}"`;
             }
             return value;
         }
     
-        function extractRoom(title: string) {
-            const startIndex = title.indexOf('(Bldg');
-            if (startIndex !== -1) {
-                const roomString = title.slice(startIndex);
-                return roomString.slice(1, -1).split(';').map(r => r.trim());  // Splits by semicolon
+        function formatDate(dateString?: string | Date): string {
+            let date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+            // Check if date is valid
+            if (date instanceof Date && !isNaN(date.getTime())) {
+                // Format date to MM/DD/YYYY HH:mm:ss format
+                return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
             }
-            return [];
+            return '';
         }
     
         events.forEach(event => {
             const eventData = event.toPlainObject();
-            const rooms = extractRoom(eventData.title);
-            const titleWithoutRooms = eventData.title.replace(/\(Bldg.*\)/, '').trim();
+            const resources = event.getResources();
     
-            rooms.forEach(room => {
-                csv += `${escapeCsvValue(titleWithoutRooms)},${escapeCsvValue(room)},${escapeCsvValue(eventData.start.toString())},${escapeCsvValue(eventData.end.toString())}\n`;
-            });
+            const startDate = formatDate(eventData.start);
+            const endDate = formatDate(eventData.end);
+    
+            if (resources.length > 0) {
+                resources.forEach(resource => {
+                    const room = resource.title;
+                    csv += `${escapeCsvValue(eventData.title)},${escapeCsvValue(room)},${escapeCsvValue(startDate)},${escapeCsvValue(endDate)}\n`;
+                });
+            } else {
+                csv += `${escapeCsvValue(eventData.title)},,${escapeCsvValue(startDate)},${escapeCsvValue(endDate)}\n`;
+            }
         });
     
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         saveAs(blob, 'calendarData.csv');
     };
+    
+    
     
     
 
@@ -324,7 +369,7 @@ export default function Bldg651Calendar (){
         <Header as='h2'>
 
               <FontAwesomeIcon icon={faBuilding} size='2x' style={{marginRight: '10px'}} />
-             {id === '651' ? 'Building 651' : 'Root Hall Bldg 122'} 
+             {id === 'all' ? 'All Rooms' : id === '651' ? 'Building 651' : 'Collins Hall, Bldg 650'} 
         </Header>
         </Divider>
         {isLoading && (
@@ -348,15 +393,20 @@ export default function Bldg651Calendar (){
 
 
         <div ref={calendarDivRef}>
+
 <FullCalendar
+    schedulerLicenseKey="0778622346-fcs-1703792826"
   initialDate={initialDate || new Date()}
 ref={calendarRef}
 height="auto"
 initialView={view}
+resources={resources}
+
+//initialView="resourceTimeline"
 headerToolbar={{
   left: "prev,next",
   center: "title",
-  right: "exportToExcel,datepicker,dayGridMonth,timeGridWeek,timeGridDay,screenShot"
+  right: "exportToExcel,datepicker,resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth,screenShot"
 }}
 customButtons={{
   datepicker: {
@@ -371,19 +421,20 @@ screenShot: {
   click: takeScreenshot,
 },
 }}
-plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+plugins={[resourceTimelinePlugin,  interactionPlugin]}
 eventClick={handleEventClick}
 dateClick={handleDateClick}
-events={`${process.env.REACT_APP_API_URL}/roomEvents/bldg651/${id}`}
+events={`${process.env.REACT_APP_API_URL}/roomEvents/bldg651timeline/${id}`}
 eventMouseEnter={handleMouseEnter}
 slotMinTime={'07:00:00'}
 slotMaxTime={'21:00:00'}
+resourceGroupField={id === 'all' ? 'building': ''}
 loading={(isLoading) => setIsLoading(isLoading)}
 eventDidMount={eventDidMount}
 datesSet={(arg) => {
   // Save the user's view selection
-  localStorage.setItem("calendarView651", arg.view.type);
-  setView(arg.view.type);
+  localStorage.setItem("calendarView651Timeline", arg.view.type);
+ setView(arg.view.type);
 }} 
 />
 </div> 

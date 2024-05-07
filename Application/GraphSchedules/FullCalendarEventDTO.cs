@@ -71,6 +71,7 @@ namespace Application.GraphSchedules
         public bool StudentCalendarDistanceGroup2 { get; set; }
         public bool StudentCalendarDistanceGroup3 { get; set; }
         public string StudentType { get; set; } 
+         public string ResourceId { get; set; }
 
     }
 }

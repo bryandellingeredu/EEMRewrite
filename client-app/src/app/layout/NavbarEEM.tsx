@@ -137,6 +137,12 @@ export default observer(function NavbarEEM() {
                     as={Link}
                     to={`${process.env.PUBLIC_URL}/bldg651Calendar/651`}
                   />
+
+                   <Dropdown.Item
+                    text="Collins Hall Calendar"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/bldg651Calendar/650`}
+                  />
             {
   categories
     .filter(x => x.routeName && x.name !== "Other" &&  x.name !== "USAHEC Calendar" && !(x.name === 'CIO Event Planning Calendar' && (!user || !user.roles || !user.roles.includes("CIOEventPlanningAdmin"))))
@@ -156,9 +162,25 @@ export default observer(function NavbarEEM() {
 }
                 </Dropdown.Menu>
               </Dropdown>
-               <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/roomCalendarLinks`}>
-              Room Calendars
-            </Menu.Item>        
+
+             
+
+            <Dropdown item text="Room Calendars">
+            <Dropdown.Menu>
+            <Dropdown.Item
+                    text="Room Calendars"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/roomCalendarLinks`}
+                  />
+               <Dropdown.Item
+                    text="All Rooms"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/bldg651Calendar/all`}
+                  />
+             </Dropdown.Menu>
+            </Dropdown>
+
+
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
               Rooms
             </Menu.Item>
