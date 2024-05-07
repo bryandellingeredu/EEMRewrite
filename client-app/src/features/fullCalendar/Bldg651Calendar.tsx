@@ -278,8 +278,8 @@ export default function Bldg651Calendar (){
       const handleExportToExcel = () => {
         const calendarApi = calendarRef.current?.getApi();
         if (!calendarApi) return;
-    
-        const events = calendarApi.getEvents();
+        debugger;
+        const events = calendarApi.getEvents().filter(x => x.title);
         let csv = 'Title,Room,Start,End\n';
     
         function escapeCsvValue(value: string): string {
@@ -302,18 +302,22 @@ export default function Bldg651Calendar (){
         events.forEach(event => {
             const eventData = event.toPlainObject();
             const resources = event.getResources();
+            if(resources && resources.length > 0){
     
             const startDate = formatDate(eventData.start);
             const endDate = formatDate(eventData.end);
     
             if (resources.length > 0) {
-                resources.forEach(resource => {
-                    const room = resource.title;
-                    csv += `${escapeCsvValue(eventData.title)},${escapeCsvValue(room)},${escapeCsvValue(startDate)},${escapeCsvValue(endDate)}\n`;
+              resources.forEach(resource => {
+                    if(resource && resource.title){
+                      const room = resource.title;
+                      csv += `${escapeCsvValue(eventData.title)},${escapeCsvValue(room)},${escapeCsvValue(startDate)},${escapeCsvValue(endDate)}\n`;
+                    }
                 });
             } else {
                 csv += `${escapeCsvValue(eventData.title)},,${escapeCsvValue(startDate)},${escapeCsvValue(endDate)}\n`;
             }
+          }
         });
     
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -446,7 +450,6 @@ export default function Bldg651Calendar (){
         >
 
 <FullCalendar
-key={key}
     schedulerLicenseKey="0778622346-fcs-1703792826"
   initialDate={initialDate || new Date()}
 ref={calendarRef}
