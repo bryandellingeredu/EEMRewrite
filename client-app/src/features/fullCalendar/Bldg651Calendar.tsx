@@ -36,8 +36,8 @@ export default function Bldg651Calendar (){
   } = useStore()
   const [options, setOptions] = useState<Option[]>([]);
   const calendarDivRef = useRef<HTMLDivElement>(null);
-  const [view, setView] = useState(localStorage.getItem("calendarView651Timeline") || "resourceTimelineDay");
     const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
+    const [view, setView] = useState(localStorage.getItem(`calendarView651Timeline-${id}`) || "resourceTimelineDay");
     const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
     const [height, setHeight] = useState(window.innerHeight - 100);
@@ -376,12 +376,6 @@ export default function Bldg651Calendar (){
 
 
 
-  const [key, setKey] = useState(0);
-
-  const refreshCalendar = () => {
-    setKey(prevKey => prevKey + 1); // Increment key to force rerender
-};
-
   const handleSelectChange = (
     selectedOptions: MultiValue<Option>, 
 ) => {
@@ -396,7 +390,6 @@ export default function Bldg651Calendar (){
   
   setFilteredResources(filteredResources);
   setSelected([...selectedOptions]);
-  refreshCalendar();
 };
     return(
       <>
@@ -409,10 +402,11 @@ export default function Bldg651Calendar (){
         </Divider>
         {isLoading && (
          <Loader active size='large' style={{marginTop: '100px'}}>
-           Loading events...
+           Loading events, this sometimes takes a while...
          </Loader>
         )}
-
+       
+       {!isLoading && 
        <Select
         options={options}
         onMenuOpen={() => setIsSelectOpen(true)}
@@ -425,6 +419,7 @@ export default function Bldg651Calendar (){
         closeMenuOnSelect={false}
         placeholder={'filter by rooms (you may choose more than one),  click away to close, the rooms will be remembered'}
          />
+       }
        
 
 
@@ -488,7 +483,7 @@ loading={(isLoading) => setIsLoading(isLoading)}
 eventDidMount={eventDidMount}
 datesSet={(arg) => {
   // Save the user's view selection
-  localStorage.setItem("calendarView651Timeline", arg.view.type);
+  localStorage.setItem(`calendarView651Timeline-${id}`, arg.view.type);
  setView(arg.view.type);
 }} 
 />
