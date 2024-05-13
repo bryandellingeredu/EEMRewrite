@@ -64,14 +64,14 @@ namespace Application.Activities
                 {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail);
+                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy);
                     }
                     catch (Exception)
                     {
 
                         try
                         {
-                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount());
+                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy);
                         }
                         catch (Exception)
                         {
@@ -84,7 +84,7 @@ namespace Application.Activities
                 {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount());
+                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy );
                     }
                     catch (Exception)
                     {

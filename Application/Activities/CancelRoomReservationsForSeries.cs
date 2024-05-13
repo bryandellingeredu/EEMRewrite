@@ -55,7 +55,7 @@ namespace Application.Activities
                     {
                         try
                         {
-                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount());
+                            await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy);
                             activity.EventLookup = string.Empty;
                         }
                         catch (Exception)
@@ -63,7 +63,7 @@ namespace Application.Activities
 
                             try
                             {
-                                await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail);
+                                await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy);
                                 activity.EventLookup = string.Empty;
                             }
                             catch (Exception)
@@ -75,7 +75,7 @@ namespace Application.Activities
                         if(!string.IsNullOrEmpty(activity.VTCLookup)) {
                             try
                             {
-                                await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount());
+                                await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy);
                                 activity.VTCLookup = string.Empty;
                             }
                             catch (Exception)
@@ -83,7 +83,7 @@ namespace Application.Activities
 
                                 try
                                 {
-                                    await GraphHelper.DeleteEvent(activity.VTCLookup, activity.CoordinatorEmail);
+                                    await GraphHelper.DeleteEvent(activity.VTCLookup, activity.CoordinatorEmail, activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy);
                                     activity.VTCLookup = string.Empty;
                                 }
                                 catch (Exception)

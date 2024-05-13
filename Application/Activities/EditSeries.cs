@@ -136,14 +136,14 @@ namespace Application.Activities
                                 var coordinatorEmail = item.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? item.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
                                 try
                                 {
-                                    await GraphHelper.DeleteEvent(item.EventLookup, coordinatorEmail);
+                                    await GraphHelper.DeleteEvent(item.EventLookup, item.CoordinatorEmail, request.Activity.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy);
                                     item.EventLookup = string.Empty;
                                 }
                                 catch (Exception)
                                 {
                                     try
                                     {
-                                        await GraphHelper.DeleteEvent(item.EventLookup, GraphHelper.GetEEMServiceAccount());
+                                        await GraphHelper.DeleteEvent(item.EventLookup, GraphHelper.GetEEMServiceAccount(), request.Activity.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy);
                                         item.EventLookup = string.Empty;
                                     }
                                     catch (Exception)
@@ -158,7 +158,7 @@ namespace Application.Activities
                                 {
                                     try
                                     {
-                                        await GraphHelper.DeleteEvent(item.VTCLookup, GraphHelper.GetEEMServiceAccount());
+                                        await GraphHelper.DeleteEvent(item.VTCLookup, GraphHelper.GetEEMServiceAccount(), request.Activity.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy);
                                         item.VTCLookup = string.Empty;
                                     }
                                     catch (Exception)

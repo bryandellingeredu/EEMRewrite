@@ -7,6 +7,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Graph;
+    using Persistence.Migrations;
     using System;
     using System.IO;
     using static System.Net.WebRequestMethods;
@@ -733,29 +734,51 @@
                 .UpdateAsync(@event);
         }
 
-        public static async Task<bool> DeleteEvent(string eventLookup, string coordinatorEmail)
+        public static async Task<bool> DeleteEvent(string eventLookup, string coordinatorEmail, string oldCoordinatorEmail = null, string lastUpdatedBy = null, string createdBy = null)
         {
             try
             {
                 EnsureGraphForAppOnlyAuth();
-                _ = _appClient ??
-                    throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+                _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
-                string derivedCoordinatorEmail = coordinatorEmail;
+                string[] possibleEmails = new[] { GetEEMServiceAccount(), coordinatorEmail, oldCoordinatorEmail, lastUpdatedBy, createdBy };
+                Microsoft.Graph.Event eventToDelete = null;
+                string calendarUsed = null;
 
-                if (!coordinatorEmail.EndsWith(GetEEMServiceAccount().Split('@')[1]))
+                foreach (var email in possibleEmails)
                 {
-                    derivedCoordinatorEmail = GetEEMServiceAccount();
+                    if (email != null)
+                    {
+                        try
+                        {
+                            eventToDelete = await _appClient.Users[email].Events[eventLookup].Request().GetAsync();
+                            if (eventToDelete != null)
+                            {
+                                calendarUsed = email;
+                                break;
+                            }
+                        }
+                        catch (Microsoft.Graph.ServiceException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                        {
+                            // Event not found, continue checking next possible email
+                            continue;
+                        }
+                    }
                 }
 
-                await _appClient.Users[derivedCoordinatorEmail].Events[eventLookup]
-                    .Request()
-                    .DeleteAsync();
+                if (eventToDelete != null)
+                {
+                    await _appClient.Users[calendarUsed].Events[eventLookup]
+                        .Request()
+                        .DeleteAsync();
+                    return true; // Event found and deleted
+                }
 
-                return true; // Return true if delete is successful
+                return false; // No event found across all checks
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // Consider logging the exception details here to understand what went wrong
                 return false; // Return false if an exception occurs
             }
         }

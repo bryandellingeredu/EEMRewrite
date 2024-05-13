@@ -154,7 +154,7 @@ namespace Application.ImportLegacyData
                                 try
                                 {
                                     if(!string.IsNullOrEmpty(activityToDelete.CoordinatorEmail))
-                                    await GraphHelper.DeleteEvent(activityToDelete.EventLookup, activityToDelete.CoordinatorEmail);
+                                    await GraphHelper.DeleteEvent(activityToDelete.EventLookup, activityToDelete.CoordinatorEmail, item.CoordinatorEmail, item.LastUpdatedBy, item.CreatedBy);
                                 }
                                 catch (Exception)
                                 {

@@ -197,7 +197,7 @@ namespace Application.Activities
                     {
                         try
                         {
-                            await GraphHelper.DeleteEvent(request.Activity.VTCLookup, GraphHelper.GetEEMServiceAccount());
+                            await GraphHelper.DeleteEvent(request.Activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy );
                             request.Activity.VTCLookup = string.Empty;
                             activity.VTCLookup = string.Empty;
                         }
@@ -210,7 +210,7 @@ namespace Application.Activities
 
                     try
                     {
-                        await GraphHelper.DeleteEvent(request.Activity.EventLookup, request.Activity.CoordinatorEmail);
+                        await GraphHelper.DeleteEvent(request.Activity.EventLookup, request.Activity.CoordinatorEmail, oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy);
                         request.Activity.EventLookup = string.Empty;
                         activity.EventLookup = string.Empty;
                     }
@@ -218,7 +218,7 @@ namespace Application.Activities
                     {
                         try
                         {
-                            await GraphHelper.DeleteEvent(request.Activity.EventLookup, GraphHelper.GetEEMServiceAccount());
+                            await GraphHelper.DeleteEvent(request.Activity.EventLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy);
                             request.Activity.EventLookup = string.Empty;
                             activity.EventLookup = string.Empty;
                         }
