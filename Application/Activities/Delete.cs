@@ -58,14 +58,14 @@ namespace Application.Activities
                 {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy);
+                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar);
                     }
                     catch (Exception)
                     {
 
                         try
                         {
-                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy);
+                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar);
                         }
                         catch (Exception)
                         {
@@ -80,7 +80,7 @@ namespace Application.Activities
                 {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy);
+                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar);
                     }
                     catch (Exception ex)
                     {
@@ -101,6 +101,7 @@ namespace Application.Activities
                 }
                 activity.VTCLookup = null;
                 activity.EventLookup = null;
+                activity.EventLookupCalendar = null;
                 activity.TeamLookup= null;  
                 activity.TeamRequester = null;
                 activity.TeamLink= null;    

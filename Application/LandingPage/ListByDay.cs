@@ -70,13 +70,13 @@ namespace Application.LandingPage
                 Event evt;
                 try
                 {
-                    evt = await GraphHelper.GetEventAsync(coordinatorEmail, eventLookup);
+                    evt = await GraphHelper.GetEventAsync(coordinatorEmail, eventLookup, null, null, null);
                 }
                 catch (Exception)
                 {
                     try
                     {
-                        evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), eventLookup);
+                        evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), eventLookup, null, null, null );
                     }
                     catch (Exception)
                     {

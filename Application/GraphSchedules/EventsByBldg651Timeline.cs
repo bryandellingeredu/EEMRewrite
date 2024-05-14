@@ -112,7 +112,8 @@ namespace Application.GraphSchedules
                              p.Start,
                              p.End,
                              p.Title,
-                             p.AllDay
+                             p.AllDay,
+                             p.RoomId,
                              })
                             .Select(g => g.First())
                             .ToList();

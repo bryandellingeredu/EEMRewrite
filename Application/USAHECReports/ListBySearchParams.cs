@@ -102,18 +102,19 @@ using Microsoft.Graph;
                         Event evt;
                         try
                         {
-                            evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup);
+                            evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
                         }
                         catch (Exception)
                         {
                         try
                         {
-                            evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), activity.EventLookup);
+                            evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
                         }
                         catch (Exception)
                         {
 
                             activity.EventLookup = string.Empty;
+                            activity.EventLookupCalendar = string.Empty;    
                             evt = new Event();
                         }
                            

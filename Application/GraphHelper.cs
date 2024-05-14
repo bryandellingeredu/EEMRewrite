@@ -9,6 +9,7 @@
     using Microsoft.Graph;
     using Persistence.Migrations;
     using System;
+    using System.Globalization;
     using System.IO;
     using static System.Net.WebRequestMethods;
     using File = File;
@@ -183,17 +184,56 @@
               .Request()
               .GetAsync();
         }
-        public static Task<Event> GetEventAsync(string email, string id)
+
+
+        public static async Task<Event> GetEventAsync(string email, string id, string lastUpdatedBy, string createdBy, string eventCalendarId)
         {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
-                EnsureGraphForAppOnlyAuth();
-                _ = _appClient ??
-                  throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+            var eventLookup = id;
 
-                return _appClient.Users[email].Events[id]
-                  .Request()
-                  .GetAsync();
-           
+            if (!string.IsNullOrEmpty(eventCalendarId))
+            {
+                try
+                {
+                    Event @event = await _appClient.Me.Calendars[eventCalendarId].Events[eventLookup].Request().GetAsync();
+                    if (@event != null)
+                    {
+                        return @event;
+                    }
+                }
+                catch
+                {
+                    //continue
+                }
+            }
+
+            string[] possibleEmails = new[] { GetEEMServiceAccount(), email, lastUpdatedBy, createdBy };
+
+            foreach (var mail in possibleEmails)
+            {
+                if (mail != null)
+                {
+                    try
+                    {
+                        // Assuming id is used as the event lookup key
+                        Event @event = await _appClient.Users[mail].Events[eventLookup].Request().GetAsync();
+                        if (@event != null)
+                        {
+                            return @event;
+                        }
+                    }
+                    catch (Microsoft.Graph.ServiceException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        // Event not found, continue checking next possible email
+                        continue;
+                    }
+                }
+            }
+
+            // Return null if event is not found for any of the provided emails
+            throw new InvalidOperationException("Event not found for any of the provided emails.");
         }
 
         public static async Task<IGraphServicePlacesCollectionPage> GetRoomsAsync()
@@ -235,18 +275,7 @@
               .GetAsync();
         }
 
-        /*     public static Task<ICalendarGetScheduleCollectionPage> GetScheduleAsync(ScheduleRequestDTO scheduleRequestDTO)
-             {
-                 EnsureGraphForAppOnlyAuth();
-                 _ = _appClient ??
-                   throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
-
-                 return _appClient.Users[scheduleRequestDTO.Schedules[0]].Calendar
-                   .GetSchedule(scheduleRequestDTO.Schedules, scheduleRequestDTO.EndTime, scheduleRequestDTO.StartTime, scheduleRequestDTO.AvailabilityViewInterval)
-                   .Request()
-                   .Header("Prefer", "outlook.timezone=\"Eastern Standard Time\"")
-                   .PostAsync();
-             }  */
+  
 
         public static async Task<ICalendarGetScheduleCollectionPage> GetScheduleAsync(ScheduleRequestDTO scheduleRequestDTO)
         {
@@ -703,7 +732,12 @@
                   .Request()
                   .AddAsync(@event);
 
-                return result;
+                var expandedEvent = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events[result.Id]
+                .Request()
+                .Expand("calendar")
+                .GetAsync();
+
+                return expandedEvent;
             }
             catch (Exception ex)
             {
@@ -714,32 +748,86 @@
 
         }
 
-        public static async Task UpdateEventTitle(string eventId, string title, string requesterEmail)
+ 
+
+        public static async Task UpdateEventTitle(string eventId, string title, string requesterEmail, string lastUpdatedBy, string createdBy, string eventCalendarId)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
                 throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
-            // Get the event
-            var @event = await _appClient.Users[requesterEmail].Events[eventId]
-                .Request()
-                .GetAsync();
+            if (!string.IsNullOrEmpty(eventCalendarId))
+            {
+                try
+                {
+                    Event @evt = await _appClient.Me.Calendars[eventCalendarId].Events[eventId].Request().GetAsync();
+                    if (@evt != null)
+                    {
+                        @evt.Subject = title;
 
-            // Update the title
-            @event.Subject = title;
+                        await _appClient.Me.Calendars[eventCalendarId].Events[eventId].Request().UpdateAsync(@evt);
 
-            // Update the event
-            await _appClient.Users[requesterEmail].Events[eventId]
-                .Request()
-                .UpdateAsync(@event);
+                        return; 
+                    }
+                }
+                catch
+                {
+                    //continue
+                }
+            }
+
+            string[] possibleEmails = new[] { GetEEMServiceAccount(), requesterEmail,  lastUpdatedBy, createdBy };
+
+            foreach (var email in possibleEmails)
+            {
+                if(email != null)
+                {
+                    try
+                    {
+                        var @event = await _appClient.Users[email].Events[eventId].Request().GetAsync();
+                        if(@event != null)
+                        {
+                            @event.Subject = title;
+                            await _appClient.Users[email].Events[eventId].Request().UpdateAsync(@event);
+                            return;
+                        }  
+                    }
+                    catch (Microsoft.Graph.ServiceException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        continue;
+                    }
+
+                }
+               
+            }
+            throw new InvalidOperationException("Event not found for any of the provided emails or calendar ID.");
         }
 
-        public static async Task<bool> DeleteEvent(string eventLookup, string coordinatorEmail, string oldCoordinatorEmail = null, string lastUpdatedBy = null, string createdBy = null)
+        public static async Task<bool> DeleteEvent(string eventLookup, string coordinatorEmail, string oldCoordinatorEmail, string lastUpdatedBy, string createdBy, string eventCalendarId)
         {
             try
             {
                 EnsureGraphForAppOnlyAuth();
                 _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+                if (!string.IsNullOrEmpty(eventCalendarId))
+                {
+                    try
+                    {
+                        Event @event = await _appClient.Me.Calendars[eventCalendarId].Events[eventLookup].Request().GetAsync();
+                        if (@event != null)
+                        {
+                            await _appClient.Me.Calendars[eventCalendarId].Events[eventLookup]
+                        .Request()
+                        .DeleteAsync();
+                            return true; // Event found and deleted
+                        }
+                    }
+                    catch
+                    {
+                        //continue
+                    }
+                }
 
                 string[] possibleEmails = new[] { GetEEMServiceAccount(), coordinatorEmail, oldCoordinatorEmail, lastUpdatedBy, createdBy };
                 Microsoft.Graph.Event eventToDelete = null;

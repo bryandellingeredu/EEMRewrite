@@ -90,6 +90,7 @@ namespace Application.PocketCalendar
                 };
                 Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                 activity.EventLookup = evt.Id;
+                activity.EventLookupCalendar = evt.Calendar.Id;
                 _context.Activities.Add(activity);
                 var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return Result<Unit>.Failure("Failed to Create Activity");

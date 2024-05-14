@@ -189,6 +189,7 @@ namespace Application.Activities
                             };
                             Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                             a.EventLookup = evt.Id;
+                            a.EventLookupCalendar = evt.Calendar.Id;
 
                      
 

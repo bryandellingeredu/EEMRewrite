@@ -68,13 +68,14 @@ namespace Application.HostingReports
                         Event evt;
                         try
                         {
-                            evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup);
+                            evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
                         }
                         catch (Exception)
                         {
 
                             evt = new Event();
                             activity.EventLookup = string.Empty;
+                            activity.EventLookupCalendar = string.Empty;
                         }
 
                         List<ActivityRoom> newActivityRooms = new List<ActivityRoom>();

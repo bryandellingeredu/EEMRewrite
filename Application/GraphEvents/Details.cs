@@ -31,7 +31,7 @@ namespace Application.GraphEvents
                 Settings s = new Settings();
                 var settings = s.LoadSettings(_config);
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
-                var result = await GraphHelper.GetEventAsync(request.Email, request.Id);
+                var result = await GraphHelper.GetEventAsync(request.Email, request.Id, null, null, null);
                 return Result<Event>.Success(result);
             }
         }

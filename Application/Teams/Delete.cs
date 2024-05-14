@@ -40,7 +40,7 @@ namespace Application.Teams
                     var settings = s.LoadSettings(_config);
                     GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
 
-                    var graphResult = await GraphHelper.DeleteEvent(request.TeamDeleteRequestDTO.Id, request.TeamDeleteRequestDTO.TeamRequester, null, null, null);
+                    var graphResult = await GraphHelper.DeleteEvent(request.TeamDeleteRequestDTO.Id, request.TeamDeleteRequestDTO.TeamRequester, null, null, null, null);
                     if (!graphResult) // Assuming DeleteEvent returns a bool indicating success
                     {
                         return Result<Unit>.Failure("Failed to delete the Teams event.");
