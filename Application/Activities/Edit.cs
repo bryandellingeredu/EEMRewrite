@@ -493,12 +493,11 @@ namespace Application.Activities
                 {
                   
 
-                    string coordinatorEmail = oldActivity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
-                        ? activity.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
+                    
                     Event evt;
                     try
                     {
-                        evt = await GraphHelper.GetEventAsync(coordinatorEmail, originalEventLookup, activity.LastUpdatedBy, activity.CreatedBy, originalEventCalendarLookup);
+                        evt = await GraphHelper.GetEventAsync(activity.CoordinatorEmail, originalEventLookup, activity.LastUpdatedBy, activity.CreatedBy, originalEventCalendarLookup);
                     }
                     catch (Exception)
                     {

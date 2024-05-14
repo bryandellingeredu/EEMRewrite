@@ -718,7 +718,7 @@ namespace API.BackgroundJobs
 
         private async Task<string> GetLocation(string eventLookup, string primaryLocation, string activityCoordinatorEmail, IGraphServicePlacesCollectionPage allrooms)
         {
-            string coordinatorEmail = activityCoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? activityCoordinatorEmail : GraphHelper.GetEEMServiceAccount();
+          
             string location = primaryLocation;
 
             if (string.IsNullOrEmpty(eventLookup))
@@ -729,7 +729,7 @@ namespace API.BackgroundJobs
             Event evt;
             try
             {
-                evt = await GraphHelper.GetEventAsync(coordinatorEmail, eventLookup, null, null, null );
+                evt = await GraphHelper.GetEventAsync(activityCoordinatorEmail, eventLookup, null, null, null );
             }
             catch (Exception)
             {

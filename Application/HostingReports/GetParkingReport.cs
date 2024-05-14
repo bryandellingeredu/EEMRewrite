@@ -84,19 +84,11 @@ namespace Application.HostingReports
                     Event evt;
                     try
                     {
-                        evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
+                        evt = await GraphHelper.GetEventAsync(activity.CoordinatorEmail, activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
                     }
                     catch (Exception)
                     {
-                        try
-                        {
-                            evt = await GraphHelper.GetEventAsync(activity.CoordinatorEmail, activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar );
-                        }
-                        catch (Exception)
-                        {
-
-                            return location;
-                        }
+                        return location;
                     }
                     if (evt != null && evt.Attendees != null)
                     {

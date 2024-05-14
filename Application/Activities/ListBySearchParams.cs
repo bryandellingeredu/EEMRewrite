@@ -117,26 +117,18 @@ namespace Application.Activities
 
                     if (!string.IsNullOrEmpty(activity.EventLookup) && !string.IsNullOrEmpty(activity.CoordinatorEmail))
                     {
-                        string coordinatorEmail = activity.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
-                            ? activity.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
+                        
                         Event evt;
                         try
                         {
-                            evt = await GraphHelper.GetEventAsync(coordinatorEmail, activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
+                            evt = await GraphHelper.GetEventAsync(activity.CoordinatorEmail, activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
                         }
                         catch (Exception)
                         {
-                            try
-                            {
-                                evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
-                            }
-                            catch (Exception)
-                            {
-
-                                activity.EventLookup = string.Empty;
-                                activity.EventLookupCalendar = string.Empty;    
-                                evt = new Event();
-                            }
+                            activity.EventLookup = string.Empty;
+                            activity.EventLookupCalendar = string.Empty;
+                            evt = new Event();
+                           
                            
                         }
 

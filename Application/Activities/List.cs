@@ -60,17 +60,9 @@ namespace Application.Activities
                         }
                         catch (Exception)
                         {
-                            try
-                            {
-                                evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), activity.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
-                            }
-                            catch (Exception)
-                            {
-                                evt = new Event();
-                                activity.EventLookup = string.Empty;
-                                activity.EventLookupCalendar = string.Empty;    
-                            }
-                           
+                            evt = new Event();
+                            activity.EventLookup = string.Empty;
+                            activity.EventLookupCalendar = string.Empty;
                         }
 
                         var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();

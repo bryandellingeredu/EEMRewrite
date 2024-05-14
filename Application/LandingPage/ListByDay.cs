@@ -66,23 +66,14 @@ namespace Application.LandingPage
 
             private async Task<string> GetLocation(string eventLookup, string primaryLocation, string coordinator, IGraphServicePlacesCollectionPage allrooms)
             {
-                string coordinatorEmail = coordinator.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? coordinator : GraphHelper.GetEEMServiceAccount();
                 Event evt;
                 try
                 {
-                    evt = await GraphHelper.GetEventAsync(coordinatorEmail, eventLookup, null, null, null);
+                    evt = await GraphHelper.GetEventAsync(coordinator, eventLookup, null, null, null);
                 }
                 catch (Exception)
                 {
-                    try
-                    {
-                        evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), eventLookup, null, null, null );
-                    }
-                    catch (Exception)
-                    {
-
-                        return primaryLocation;
-                    }
+                    return primaryLocation;
                    
                 }
                 var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();

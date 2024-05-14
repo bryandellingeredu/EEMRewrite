@@ -479,15 +479,7 @@ namespace Application.Activities
                 }
                 catch (Exception)
                 {
-                    try
-                    {
-                        evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), originalActivity.EventLookup, originalActivity.LastUpdatedBy, originalActivity.CreatedBy, originalActivity.EventLookupCalendar );
-                    }
-                    catch (Exception)
-                    {
-                        return true;
-                        
-                    }              
+                    return true;             
                 }
 
                 var allroomEmails = allrooms.Select(x => x.AdditionalData["emailAddress"].ToString()).ToList();

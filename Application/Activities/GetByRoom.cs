@@ -87,19 +87,11 @@ namespace Application.Activities
                         Event evt;
                         try
                         {
-                            evt = await GraphHelper.GetEventAsync(GraphHelper.GetEEMServiceAccount(), item.EventLookup, item.LastUpdatedBy, item.CreatedBy, item.EventLookupCalendar);
+                            evt = await GraphHelper.GetEventAsync(item.CoordinatorEmail, item.EventLookup, item.LastUpdatedBy, item.CreatedBy, item.EventLookupCalendar);
                         }
                         catch (Exception)
                         {
-                            try
-                            {
-                                evt = await GraphHelper.GetEventAsync(item.CoordinatorEmail, item.EventLookup, item.LastUpdatedBy, item.CreatedBy, item.EventLookupCalendar );
-                            }
-                            catch (Exception)
-                            {
-
-                                evt = new Event();
-                            }
+                            evt = new Event();
                         }
                         if (evt != null && evt.Attendees != null && evt.Attendees.Any(x => x.EmailAddress.Address == roomEmail))
                         {
