@@ -442,16 +442,16 @@ export default class ActivityStore {
   createActivity = async (activity: Activity) => {
     try {
       await agent.Activities.create(activity);
-      await this.loadActivites();
-      const newActivity  = await this.loadActivity(activity.id, activity.category.id )
-      runInAction(() => {
-      if(newActivity){
-        this.setActivity(newActivity );
-      }
-      })
-      runInAction(() => {
-        this.selectedActivity = activity;
-      })
+      //await this.loadActivites();
+      //const newActivity  = await this.loadActivity(activity.id, activity.category.id )
+     // runInAction(() => {
+     // if(newActivity){
+       // this.setActivity(newActivity );
+    //  }
+     // })
+     // runInAction(() => {
+       // this.selectedActivity = activity;
+    //  })
     } catch (error) {
       console.log(error);
     }
@@ -462,30 +462,30 @@ export default class ActivityStore {
     {
     try {
       await agent.Activities.update(activity, activity.id);
-      this.activityRegistry.delete(activity.id);
-      const newActivity  = await this.loadActivity(activity.id, activity.category.id )
-      runInAction(() => {
-        if (newActivity && newActivity.id) {
-          this.activityRegistry.set(newActivity.id, newActivity as Activity);
-          this.selectedActivity = newActivity as Activity;
-        }
-      })
+     // this.activityRegistry.delete(activity.id);
+     // const newActivity  = await this.loadActivity(activity.id, activity.category.id )
+     // runInAction(() => {
+      //  if (newActivity && newActivity.id) {
+       //   this.activityRegistry.set(newActivity.id, newActivity as Activity);
+        //  this.selectedActivity = newActivity as Activity;
+      //  }
+    //  })
     } catch (error) {
       console.log(error);
     }
   } else {
     try{
       await agent.Activities.updateSeries(activity, activity.id);
-      await this.loadActivites();
-      const updatedActivity  = await this.loadActivity(activity.id, activity.category.id )
-      runInAction(() => {
-        if(updatedActivity){
-          this.setActivity(updatedActivity );
-        }
-        })
-        runInAction(() => {
-          this.selectedActivity = updatedActivity;
-        })
+     // await this.loadActivites();
+    //  const updatedActivity  = await this.loadActivity(activity.id, activity.category.id )
+    //  runInAction(() => {
+      //  if(updatedActivity){
+       //   this.setActivity(updatedActivity );
+      //  }
+      //  })
+      //  runInAction(() => {
+       //   this.selectedActivity = updatedActivity;
+      //  })
     } catch (error) {
       console.log(error);
     }
