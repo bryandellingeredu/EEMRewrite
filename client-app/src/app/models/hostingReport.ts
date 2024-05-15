@@ -43,6 +43,12 @@ flagSupportNotificationSent: boolean
 flagIsFor:	string
 flagType:	string
 flagDetails: string
+flagBliss: boolean
+flagLectureEast: boolean
+flagLectureWest: boolean
+flagRoomOther: boolean
+flagRoomOtherText: boolean
+flagSetUp: Date | null
 gift: string
 foreignVisitor:	boolean
 foreignVisitorNotificationSent: boolean

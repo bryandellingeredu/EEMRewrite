@@ -213,6 +213,10 @@ namespace Application.Activities
                          if(a.HostingReport != null && a.HostingReport.Departure != null){
                                activity.HostingReport.Departure = TimeZoneInfo.ConvertTime(a.HostingReport.Departure.Value, TimeZoneInfo.Local);
                         }
+                    if (a.HostingReport != null && a.HostingReport.FlagSetUp != null)
+                    {
+                        activity.HostingReport.FlagSetUp = TimeZoneInfo.ConvertTime(a.HostingReport.FlagSetUp.Value, TimeZoneInfo.Local);
+                    }
 
                 }
                 else

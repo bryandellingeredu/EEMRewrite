@@ -149,6 +149,9 @@ namespace Application.Activities
                         {
                             activity.HostingReport.Departure = TimeZoneInfo.ConvertTime(activity.HostingReport.Departure.Value, TimeZoneInfo.Local);
                         }
+                        if(activity.HostingReport != null && activity.HostingReport.FlagSetUp != null) {
+                            activity.HostingReport.FlagSetUp = TimeZoneInfo.ConvertTime(activity.HostingReport.FlagSetUp.Value, TimeZoneInfo.Local);
+                        }
                         activities.Add(activity);
                     }
 
@@ -319,6 +322,10 @@ namespace Application.Activities
                             if (hostingReport.Departure != null)
                             {
                                 hostingReport.Departure = TimeZoneInfo.ConvertTime(hostingReport.Departure.Value, TimeZoneInfo.Local);
+                            }
+                            if (hostingReport.FlagSetUp != null)
+                            {
+                                hostingReport.FlagSetUp = TimeZoneInfo.ConvertTime(hostingReport.FlagSetUp.Value, TimeZoneInfo.Local);
                             }
                             _context.HostingReports.Add(hostingReport);
                             var result2 = await _context.SaveChangesAsync() > 0;

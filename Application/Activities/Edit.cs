@@ -162,6 +162,10 @@ namespace Application.Activities
                 if (activity.HostingReport != null && activity.HostingReport.Departure != null) {
                     activity.HostingReport.Departure = TimeZoneInfo.ConvertTime(activity.HostingReport.Departure.Value, TimeZoneInfo.Local);
                 }
+                if (activity.HostingReport != null && activity.HostingReport.FlagSetUp != null)
+                {
+                    activity.HostingReport.FlagSetUp = TimeZoneInfo.ConvertTime(activity.HostingReport.FlagSetUp.Value, TimeZoneInfo.Local);
+                }
                 activity.Category = null;
                 activity.EventLookup = null;
                 activity.EventLookupCalendar = null;

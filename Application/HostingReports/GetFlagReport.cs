@@ -70,19 +70,32 @@ namespace Application.HostingReports
                         Rank = item.HostingReport.GuestRank,
                         Title = item.HostingReport.GuestTitle,
                         PurposeOfVisit = item.HostingReport.PurposeOfVisit,
-                        StartTime = item.Activity.Start.ToString("HHmm"),
-                        SetupTime = item.Activity.Start.AddHours(-1).ToString("HHmm"),
-                        ActionOfficer = item.Activity.ActionOfficer,
+                        StartTime = item.Activity.Start.ToString("ddd, d MMM HH:mm"),
+                        SetupTime = item.HostingReport.FlagSetUp.HasValue
+                        ? item.HostingReport.FlagSetUp.Value.ToString("ddd, d MMM HH:mm")
+                        : item.Activity.Start.AddHours(-1).ToString("ddd, d MMM HH:mm"),
+                    ActionOfficer = item.Activity.ActionOfficer,
                         ActionOfficerPhone = item.Activity.ActionOfficerPhone,
                         FlagDetails = item.HostingReport.FlagDetails,
                         ActivityId = item.Activity.Id,
                         CategoryId = item.Activity.CategoryId,
                         Year = item.Activity.Start.Year.ToString(),
-                        Location = await GetLocation(item.Activity, allrooms)
+                        Location = GetLocation(await GetLocation(item.Activity, allrooms), item.HostingReport),
                     });
                 }
 
                 return Result<List<FlagReportDTO>>.Success(flagReports);
+            }
+
+            private string GetLocation(string roomLocation, HostingReport hostingReport)
+            {
+                if(!hostingReport.FlagBliss && !hostingReport.FlagLectureEast && !hostingReport.FlagLectureWest && !hostingReport.FlagRoomOther) return roomLocation;
+                List<string> locations = new List<string>();    
+                if(hostingReport.FlagBliss) locations.Add("Bliss Auditorium");
+                if (hostingReport.FlagLectureEast) locations.Add("Lecture Hall East");
+                if (hostingReport.FlagLectureWest) locations.Add("Lecture Hall West");
+                if (hostingReport.FlagRoomOther) locations.Add(hostingReport.FlagRoomOtherText);
+                return string.Join(", ", locations);
             }
 
             private async Task<string> GetLocation(Activity activity, Microsoft.Graph.IGraphServicePlacesCollectionPage allrooms)

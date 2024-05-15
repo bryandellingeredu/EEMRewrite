@@ -189,6 +189,7 @@ export default observer(function ActivityForm() {
   const [submitting, setSubmitting] = useState(false);
   const [roomResourceError, setRoomResourceError] = useState(false);
   const [roomResourceOtherError, setRoomResourceOtherError] = useState(false);
+  const [flagRoomOtherError, setFlagRoomOtherError] = useState(false);
   const [attachBioError, setAttachBioError] = useState(false);
   const [distantTechError, setDistantTechError] = useState(false);
   const [eventClearanceLevelError, setEventClearanceLevelError] = useState(false);
@@ -673,6 +674,7 @@ export default observer(function ActivityForm() {
     let vtcSchedulingErrorIndicator = false;
     let roomResourceErrorIndicator = false;
     let roomResourceOtherErrorIndicator = false;
+    let flagRoomOtherErrorIndicator = false;
     setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
@@ -684,6 +686,7 @@ export default observer(function ActivityForm() {
     setVtcSchedulingError(false);
     setRoomResourceError(false);
     setRoomResourceOtherError(false);
+    setFlagRoomOtherError(false);
 
     if(roomEmails && roomEmails.length > 0 && includesAny(roomEmails, devicesRequiredRooms)){
       if(!activity.roomResourceNotApplicable && !activity.roomResourceNtg && !activity.roomResourceNts && !activity.roomResourceOther && !activity.roomResourceRen 
@@ -711,6 +714,18 @@ export default observer(function ActivityForm() {
       const roomResourceOtherAnchor = document.getElementById("roomResourceOtherAnchor");
       if(roomResourceOtherAnchor){
         roomResourceOtherAnchor.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+
+    if(activity.hostingReport && activity.hostingReport.flagSupport && activity.hostingReport.flagRoomOther && !activity.hostingReport.flagRoomOtherText){
+      setFlagRoomOtherError(true);
+      flagRoomOtherErrorIndicator = true;
+      const flagRoomOtherAnchor = document.getElementById("flagRoomOtherAnchor");
+      if(flagRoomOtherAnchor){
+        flagRoomOtherAnchor.scrollIntoView({
           behavior: "smooth",
           block: "center",
         });
@@ -860,7 +875,8 @@ export default observer(function ActivityForm() {
       }
     }
     if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator &&
-       !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator && !vtcSchedulingErrorIndicator && !roomResourceErrorIndicator && !roomResourceOtherErrorIndicator) {
+       !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator && !vtcSchedulingErrorIndicator && !roomResourceErrorIndicator &&
+        !roomResourceOtherErrorIndicator && !flagRoomOtherErrorIndicator) {
       setSubmitting(true);
       if(roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu')){
         activity.eventClearanceLevel = 'Secret';
@@ -4373,7 +4389,7 @@ export default observer(function ActivityForm() {
                                 <MySemanticCheckBox name="hostingReport.flagSupport" />
                               </SemanticForm.Group>
                               <i>
-                                If General Flag Support is needed, check the box
+                                If Flag Support is needed, check the box
                                 and a notification will be sent to Executive
                                 Services
                               </i>
@@ -4381,13 +4397,54 @@ export default observer(function ActivityForm() {
                           </Grid.Row>
                         </Grid>
                         <Divider color="black" />
-
+                        {values.report === "Hosting Report" && values.hostingReport && values.hostingReport.flagSupport && (
+                        <>
                         <MyTextArea
                           rows={3}
-                          placeholder="Flag Details:  (Describe type of flags and where to set up  e.g. US Army flag, USAWC flag, 2 star flag in Bliss Auditorium, etc.)"
+                          placeholder="Flag Details:  (List the Flags needed for this event)"
                           name="hostingReport.flagDetails"
                           label="Flag Details::  (Describe type of flags and where to set up.)"
                         />
+                                <Grid>
+                  <Grid.Column width={16}>
+                    <Segment.Group horizontal inline>
+                      <Segment >
+                          <span>Flag Location: </span> 
+                       
+                      </Segment>
+                      <Segment><MySemanticCheckBox  name="hostingReport.flagBliss" label="Bliss Auditorium"/></Segment>
+                      <Segment><MySemanticCheckBox  name="hostingReport.flagLectureEast" label="Lecture Hall East" /> </Segment>
+                      <Segment><MySemanticCheckBox  name="hostingReport.flagLectureWest" label="Lecture Hall West" /> </Segment>
+                      <Segment>
+                        <MySemanticCheckBox  name="hostingReport.flagRoomOther" label="Other"/>
+                        {values.hostingReport.flagRoomOther &&  <MyTextInput name="hostingReport.flagRoomOtherText" placeholder="Other"/> }
+                        <p><i id="flagRoomOtherAnchor">* Required</i></p>
+                        {flagRoomOtherError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      Other is Required
+                                    </Label>
+                                  </p>
+                           )}
+                      </Segment>
+                    </Segment.Group>
+                  </Grid.Column>
+              </Grid>
+
+              <MyDateInput
+                          timeIntervals={15}
+                          placeholderText="Date / Time of Flag Setup"
+                          name="hostingReport.flagSetUp"
+                          showTimeSelect
+                          timeCaption="time"
+                          dateFormat="MMMM d, yyyy h:mm aa"
+                          title="Date / Time of Flag Setup:"
+                          minDate={new Date()}
+                        />
+
+                         </>
+                        )
+                      }
                       </>
                     )}
                     {values.report === "Hosting Report" && (

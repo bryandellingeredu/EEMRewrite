@@ -55,6 +55,13 @@ namespace Domain
         public string FlagIsFor {get; set;}
         public string FlagType {get; set;}
         public string FlagDetails {get; set;}
+        public bool FlagBliss { get; set;}    
+        public bool FlagLectureEast { get; set;}
+        public bool FlagLectureWest { get; set;}
+        public bool FlagRoomOther { get; set;}  
+        public string FlagRoomOtherText { get; set;}
+        public DateTime? FlagSetUp { get; set;}
+
         public string Gift {get; set;}
         public bool ForeignVisitor {get; set;}
         public bool ForeignVisitorNotificationSent {get; set;}

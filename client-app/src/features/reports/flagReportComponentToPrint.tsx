@@ -44,7 +44,9 @@ interface Props {
               'No Flags in CCR / Bradley Auditorium / Mary Walker Room  / Seminar',
               'Rooms (due to tiles / low ceilings) / not during a VTC; No Flags for foreign nationals',
               'AHEC takes care of Flags on their end with the exception of International Flags',
-              'Collins Hall takes care of Flags on their end with the exception of International Flags'
+              'Collins Hall takes care of Flags on their end with the exception of International Flags',
+              'No Flags (even for foreign nationals) in CCR / Bradley Auditorium / Seminar Rooms  / during a VTC',
+              'AHEC and Collins Hall manage Flags on their end with the exception of International Flags'
             ]}
 
             >

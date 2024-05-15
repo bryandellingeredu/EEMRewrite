@@ -515,6 +515,10 @@ namespace Application.Activities
                 {
                     hostingReport.Departure = TimeZoneInfo.ConvertTime(hostingReport.Departure.Value, TimeZoneInfo.Local);
                 }
+                if (hostingReport.FlagSetUp != null)
+                {
+                    hostingReport.FlagSetUp = TimeZoneInfo.ConvertTime(hostingReport.FlagSetUp.Value, TimeZoneInfo.Local);
+                }
                 hostingReport.Id = Guid.Empty;
                 hostingReport.Activity = null;
 

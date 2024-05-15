@@ -347,6 +347,9 @@ export default class ActivityStore {
           if(activity.hostingReport && activity.hostingReport.departure){
             activity.hostingReport.departure = new Date(activity.hostingReport.departure);
           } 
+          if(activity.hostingReport && activity.hostingReport.flagSetUp){
+            activity.hostingReport.flagSetUp = new Date(activity.hostingReport.flagSetUp);
+          } 
           if(activity.eventPlanningSetUpDate){
             activity.eventPlanningSetUpDate = new Date(activity.eventPlanningSetUpDate);
           }
