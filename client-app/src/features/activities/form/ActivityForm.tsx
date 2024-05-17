@@ -1153,6 +1153,10 @@ export default observer(function ActivityForm() {
         });
       }
 
+      if (roomEmails.some(email => email.includes('Ridgway'))) {
+        setFieldValue('copiedTousahecFacilitiesUsage', true);
+      }
+
       if (currentCategoryId !== v.categoryId)
         setCurrentCategoryId(v.categoryId);
     }, [values, setFieldValue]);
@@ -2120,7 +2124,7 @@ export default observer(function ActivityForm() {
           return a.text.localeCompare(b.text);
         }
       })}
-    placeholder="Sub Calendar"
+      placeholder={ roomEmails.some(email => email.includes('Ridgway')) ? "USAHEC Calendar" : "Sub Calendar" }
     name="categoryId"
   />
 )}
@@ -2511,8 +2515,13 @@ export default observer(function ActivityForm() {
               </Segment>
             )}
 
-            {categories.find((x) => x.id === values.categoryId)?.name ===
-              "USAHEC Facilities Usage Calendar" && (
+            {
+            (
+              categories.find((x) => x.id === values.categoryId)?.name ==="USAHEC Facilities Usage Calendar"
+              ||
+              values.copiedTousahecFacilitiesUsage
+            )
+              && (
               <Segment style={{backgroundColor: '#FFF2D7'}}>
                 <Header as="h5" icon textAlign="center" color="pink">
                   <FontAwesomeIcon
@@ -3032,10 +3041,12 @@ export default observer(function ActivityForm() {
               categories.find((x) => x.id === values.categoryId)?.name || ""
             ) && <></>}
 
-            {values.categoryId &&
-              !["Other"].includes(
-                categories.find((x) => x.id === values.categoryId)?.name || ""
-              ) && (
+            {
+            (
+              roomEmails.some(email => email.includes('Ridgway')) ||
+              values.categoryId &&!["Other"].includes(categories.find((x) => x.id === values.categoryId)?.name || "")
+            )
+             && (
                 <>
                   <Divider />
                   <Grid>
@@ -3227,7 +3238,7 @@ export default observer(function ActivityForm() {
                                 (x) => x.routeName === "usahecFacilitiesUsage"
                               )
                               .map((x) => x.id)
-                              .includes(currentCategoryId)}
+                              .includes(currentCategoryId) || roomEmails.some(email => email.includes('Ridgway'))}
                           />
                           <MySemanticCheckBox
                             name="copiedTovisitsAndTours"
