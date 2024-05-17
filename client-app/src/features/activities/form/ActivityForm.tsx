@@ -4414,7 +4414,7 @@ export default observer(function ActivityForm() {
                           rows={3}
                           placeholder="Flag Details:  (List the Flags needed for this event)"
                           name="hostingReport.flagDetails"
-                          label="Flag Details::  (Describe type of flags and where to set up.)"
+                          label="Flag Details: (List the Flags needed for this event)"
                         />
                                 <Grid>
                   <Grid.Column width={16}>
