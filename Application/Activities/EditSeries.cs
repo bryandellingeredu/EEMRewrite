@@ -347,6 +347,7 @@ namespace Application.Activities
                                 EventDescription = a.Description,
                                 Start = a.StartDateAsString,
                                 End = a.EndDateAsString,
+                                PrimaryLocation = a.PrimaryLocation,
                                 RequesterEmail = string.IsNullOrEmpty(originalTeamRequestor) ?
                                     a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? a.CoordinatorEmail : GraphHelper.GetEEMServiceAccount() :
                                     originalTeamRequestor,

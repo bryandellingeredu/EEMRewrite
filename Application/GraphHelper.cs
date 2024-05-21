@@ -402,7 +402,8 @@
 
                 Location = new Microsoft.Graph.Location
                 {
-                      DisplayName = graphEventDTO.RoomEmails.Any() ? await GetRoomNames(graphEventDTO.RoomEmails) : "Teams Meeting Only"
+                      DisplayName = graphEventDTO.RoomEmails.Any() ? await GetRoomNames(graphEventDTO.RoomEmails) : 
+                      string.IsNullOrEmpty(graphEventDTO.PrimaryLocation) ? "Teams Meeting Only" : graphEventDTO.PrimaryLocation
                 },
 
 
@@ -540,7 +541,10 @@
 
             existingEvent.Location = new Microsoft.Graph.Location
             {
-                DisplayName = graphEventDTO.RoomEmails.Any() ? await GetRoomNames(graphEventDTO.RoomEmails) : "Teams Meeting Only"
+               
+                      DisplayName = graphEventDTO.RoomEmails.Any() ? await GetRoomNames(graphEventDTO.RoomEmails) : 
+                      string.IsNullOrEmpty(graphEventDTO.PrimaryLocation) ? "Teams Meeting Only" : graphEventDTO.PrimaryLocation
+                
             };
             existingEvent.Subject = $"{graphEventDTO.EventTitle} (Teams Meeting)";
             existingEvent.IsAllDay = graphEventDTO.IsAllDay;

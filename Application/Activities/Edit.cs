@@ -375,6 +375,7 @@ namespace Application.Activities
                         EventDescription = request.Activity.Description,
                         Start = request.Activity.StartDateAsString,
                         End = request.Activity.EndDateAsString,
+                        PrimaryLocation = request.Activity.PrimaryLocation,
                         IsAllDay = request.Activity.AllDayEvent,
                         RequesterEmail = request.Activity.TeamRequester,
                         TeamInvites = (List<TextValueUser>)(request.Activity.TeamInvites.Any() ? request.Activity.TeamInvites : new List<TextValueUser>())
@@ -393,6 +394,7 @@ namespace Application.Activities
                             Start = request.Activity.StartDateAsString,
                             End = request.Activity.EndDateAsString,
                             IsAllDay = request.Activity.AllDayEvent,
+                            PrimaryLocation = request.Activity.PrimaryLocation,
                             RequesterEmail = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
                             TeamInvites = (List<TextValueUser>)(request.Activity.TeamInvites.Any() ? request.Activity.TeamInvites : new List<TextValueUser>())
                         };

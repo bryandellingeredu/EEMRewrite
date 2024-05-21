@@ -232,6 +232,7 @@ namespace Application.Activities
                                 UserEmail = user.Email,
                                 TeamInvites = (List<TextValueUser>)(a.TeamInvites.Any()? a.TeamInvites : new List<TextValueUser>()),
                                 RoomEmails = a.RoomEmails,
+                                PrimaryLocation = a.PrimaryLocation
                             };
                             Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO);
                             a.TeamLookup = teamsMeeting.Id;

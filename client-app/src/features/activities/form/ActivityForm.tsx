@@ -446,7 +446,12 @@ export default observer(function ActivityForm() {
     primaryLocation: Yup.string()
     .when('$roomRequired', {
       is: false,
-      then: Yup.string().required("Primary Location is required"),
+      then: Yup.string().when('$makeTeamMeeting', {
+        is: false,
+        then: Yup.string().required("Primary Location is required"),
+        otherwise: Yup.string(), 
+      }),
+      otherwise: Yup.string(), // Not required if roomRequired is true
     }),    
     checkedForOpsec: Yup.boolean()
       .when("communityEvent", {
@@ -1274,7 +1279,7 @@ export default observer(function ActivityForm() {
   validate={(values) => {
     try {
       validationSchema.validateSync(values, {
-        context: { roomRequired },
+        context: { roomRequired, makeTeamMeeting },
         abortEarly: false,
       });
     } catch (error) {

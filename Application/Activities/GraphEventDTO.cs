@@ -15,6 +15,7 @@ namespace Application.Activities
         public string RequesterEmail { get; set; }
         public bool IsAllDay { get; set; }
         public string UserEmail { get; set; }
+        public string PrimaryLocation { get; set; }
         public List<TextValueUser> TeamInvites { get; set; }
     }
 }
