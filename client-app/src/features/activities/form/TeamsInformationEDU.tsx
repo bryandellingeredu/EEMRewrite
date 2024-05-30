@@ -80,7 +80,7 @@ const source = uniqueEmails.map(email => ({
         }
     
         const isDuplicate = attendeesCopy.some(
-          attendee => attendee.email === email || attendee.displayName === displayName
+          attendee => attendee.email === email
         );
 
         if (!isDuplicate) {
