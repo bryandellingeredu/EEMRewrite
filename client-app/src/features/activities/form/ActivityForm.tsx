@@ -3543,7 +3543,7 @@ export default observer(function ActivityForm() {
               />
               <MyTextInput
                 name="hyperlinkDescription"
-                placeholder="desciption for the link"
+                placeholder="description for the link"
                 label="Public Hyperlink Description:"
               />
               {!roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu') &&
