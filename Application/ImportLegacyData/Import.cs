@@ -96,6 +96,7 @@ namespace Application.ImportLegacyData
                             CopiedToasep = item.SubCalendar == "ASEP Calendar",
                             CopiedTocommandGroup = item.SubCalendar == "Command Group Calendar",
                             CopiedTocommunity = item.SubCalendar == "Community Relations" || item.CommunityEvent,
+                            CopiedTospouse = item.SubCalendar == "Spouse" || item.SubCalendar == "Spouse Calendar",
                             CopiedTocsl = item.SubCalendar == "CSL Calendar",
                             CopiedTogarrison = item.SubCalendar == "Garrison Calendar" || item.SubCalendar == "Chapel",
                             CopiedTointernationalfellows = item.SubCalendar == "International Fellows",

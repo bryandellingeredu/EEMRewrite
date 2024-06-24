@@ -1142,6 +1142,7 @@ export default observer(function ActivityForm() {
             copiedTo: "copiedTosymposiumAndConferences",
           },
           { routeName: "militaryFamilyAndSpouseProgram", copiedTo: "mfp" },
+          { routeName: "spouse", copiedTo: "copiedTospouse" },
           { routeName: "studentCalendar", copiedTo: "copiedTostudentCalendar" },
         ];
         routeNames.forEach((route) => {
@@ -3171,7 +3172,14 @@ export default observer(function ActivityForm() {
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
-               
+                          <MySemanticCheckBox
+                            name="copiedTospouse"
+                            label="Spouse Calendar"
+                            disabled={categories
+                              .filter((x) => x.routeName === "spouse")
+                              .map((x) => x.id)
+                              .includes(currentCategoryId)}
+                          />
            
                           <MySemanticCheckBox
                             name="copiedTopksoi"

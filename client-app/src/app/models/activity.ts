@@ -177,6 +177,7 @@ export interface Activity{
     copiedTosymposiumAndConferences: boolean;
     copiedTobattlerhythm : boolean,
     copiedTostaff: boolean,
+    copiedTospouse: boolean,
     cancelled: boolean;
     cancelledReason : string
     cancelledBy: string
@@ -443,6 +444,7 @@ export class ActivityFormValues{
     copiedTosymposiumAndConferences: boolean = false;
     copiedTobattlerhythm : boolean = false;
     copiedTostaff: boolean = false;
+    copiedTospouse: boolean = false;
     cancelled: boolean = false;
     cancelledReason : string = '';
     cancelledBy: string = '';
@@ -702,6 +704,7 @@ export class ActivityFormValues{
         this.copiedTosymposiumAndConferences = activity.copiedTosymposiumAndConferences;
         this.copiedTobattlerhythm = activity.copiedTobattlerhythm
         this.copiedTostaff = activity.copiedTostaff
+        this.copiedTospouse = activity. copiedTospouse
         this.cancelled = activity.cancelled;
         this.cancelledReason = activity.cancelledReason;
         this.cancelledBy  = activity.cancelledBy

@@ -139,6 +139,7 @@ namespace Application
               (x.CopiedTocio && _activity.CopiedTocio) ||
               (x.CopiedTocommandGroup && _activity.CopiedTocommandGroup) ||
               (x.CopiedTocommunity && _activity.CopiedTocommunity) ||
+              (x.CopiedTospouse && _activity.CopiedTospouse) ||
               (x.CopiedTocsl && _activity.CopiedTocsl) ||
               (x.CopiedTogarrison && _activity.CopiedTogarrison) ||
               (x.CopiedTointernationalfellows && _activity.CopiedTointernationalfellows) ||

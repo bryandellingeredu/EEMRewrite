@@ -19,6 +19,7 @@ namespace Application.AddToEEMCalendars
         public bool CopiedToasep { get; set; }
         public bool CopiedTocommandGroup { get; set; }
         public bool CopiedTocommunity { get; set; }
+        public bool CopiedTospouse { get; set; }
         public bool CopiedTocsl { get; set; }
         public bool CopiedTogarrison { get; set; }
         public bool CopiedTointernationalfellows { get; set; }

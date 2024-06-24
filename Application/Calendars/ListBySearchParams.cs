@@ -154,6 +154,10 @@ namespace Application.Calendars
                 {
                     query = query.Where(e => e.MFP);
                 }
+                if (request.Id == "spouse")
+                {
+                    query = query.Where(e => e.CopiedTospouse);
+                }
                 if (request.Id == "battlerhythm")
                 {
                     query = query.Where(e => e.CopiedTobattlerhythm);

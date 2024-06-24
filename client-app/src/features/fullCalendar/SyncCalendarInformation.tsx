@@ -50,6 +50,7 @@ const cases = [
       { routeName: "visitsAndTours", title: "Visits and Tours" }, 
       { routeName: "symposiumAndConferences", title: "Symposium and Conferences Calendar" },
       { routeName: "militaryFamilyAndSpouseProgram", title: "Military Family and Spouse Program" },
+      { routeName: "spouse", title: "Spouse Calendar" },
       { routeName: "battlerhythm", title: "Battle Rhythm Calendar" },
       { routeName: "staff", title: "Staff Calendar" },
       { routeName: "studentCalendar", title: "Student Calendar" },

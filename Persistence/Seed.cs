@@ -147,6 +147,7 @@ namespace Persistence
     new Category { Name = "Visits And Tours", RouteName = "visitsAndTours", IMCColor = "#a9a9a9", IncludeInIMC = true },
     new Category { Name = "Symposium and Conferences Calendar", RouteName = "symposiumAndConferences", IMCColor = "#8B008B" },
     new Category { Name = "Military Family and Spouse Program", RouteName = "militaryFamilyAndSpouseProgram", IMCColor = "#584a66" },
+    new Category { Name = "Spouse", RouteName = "spouse", IMCColor = "#808000" },
     new Category { Name = "Battle Rhythm", RouteName = "battlerhythm", IMCColor = "#FF5E00" },
     new Category { Name = "Staff Calendar", RouteName = "staff", IMCColor = "#483C32", IncludeInIMC = true  },
     new Category { Name = "International Fellows", RouteName = "internationalfellows", IMCColor = "#038C85", IncludeInIMC = true  },

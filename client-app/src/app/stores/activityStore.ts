@@ -695,6 +695,7 @@ export default class ActivityStore {
     copiedTosymposiumAndConferences: false,
     copiedTobattlerhythm: false,
     copiedTostaff: false,
+    copiedTospouse: false,
     cancelled: false,
     cancelledReason : '',
     cancelledBy: '',

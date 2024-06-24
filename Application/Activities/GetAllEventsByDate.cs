@@ -72,6 +72,7 @@ namespace Application.Activities
                     if (activity.CopiedTostudentCalendar) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "studentCalendar"), activity));
                     if (activity.CopiedToacademic) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "academic"), activity));
                     if (activity.MFP) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "militaryFamilyAndSpouseProgram"), activity));
+                    if (activity.CopiedTospouse) fullCalendarEventDTOs.Add(CreateFullCalendarEventDTO(categories.First(x => x.RouteName == "spouse"), activity));
                 }
 
 

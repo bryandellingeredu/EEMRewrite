@@ -123,6 +123,9 @@ namespace Application.SyncCalendarNotifications
                     case "militaryFamilyAndSpouseProgram":
                         syncCalendarNotification.MFP = true;
                         break;
+                    case "spouse":
+                        syncCalendarNotification.CopiedTospouse = true;
+                        break;
                     case "battlerhythm":
                         syncCalendarNotification.CopiedTobattlerhythm = true;
                         break;

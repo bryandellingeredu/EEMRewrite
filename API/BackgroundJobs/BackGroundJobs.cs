@@ -327,7 +327,7 @@ namespace API.BackgroundJobs
             string[] routes = { "academic", "asep", "commandGroup", "community", "csl", "garrison",
             "internationalfellows", "generalInterest","holiday","pksoi", "socialEventsAndCeremonies",
             "usahec", "ssiAndUsawcPress", "ssl", "trainingAndMiscEvents", "usahecFacilitiesUsage",
-            "visitsAndTours", "symposiumAndConferences", "militaryFamilyAndSpouseProgram", "battlerhythm",
+            "visitsAndTours", "symposiumAndConferences", "militaryFamilyAndSpouseProgram", "spouse","battlerhythm",
             "staff", "imc", "cio"};
 
             Settings s = new Settings();
@@ -421,6 +421,9 @@ namespace API.BackgroundJobs
                         break;
                     case "militaryFamilyAndSpouseProgram":
                         query = query.Where(a => a.MFP);
+                        break;
+                      case "spouse":
+                        query = query.Where(a => a.CopiedTospouse);
                         break;
                     case "battlerhythm":
                         query = query.Where(a => a.CopiedTobattlerhythm);
@@ -820,6 +823,9 @@ namespace API.BackgroundJobs
                     break;
                 case "militaryFamilyAndSpouseProgram":
                     retval = "Military Spouse and Family Program";
+                    break;
+                case "spouse":
+                    retval = "Spouse";
                     break;
                 case "battlerhythm":
                     retval = "Battle Rhythm Calendar";

@@ -23,6 +23,7 @@ interface ActivityCalendarInformationDTO{
     copiedToasep: boolean;
     copiedTocommandGroup: boolean;
     copiedTocommunity: boolean;
+    copiedTospouse: boolean;
     copiedTocsl: boolean;
     copiedTogarrison: boolean;
     copiedTointernationalfellows: boolean;
@@ -55,6 +56,7 @@ export default observer(function AddToCalendars() {
          copiedToasep: false,
          copiedTocommandGroup: false,
          copiedTocommunity: false,
+         copiedTospouse: false,
          copiedTocsl: false,
          copiedTogarrison: false,
          copiedTointernationalfellows: false,
@@ -106,6 +108,7 @@ export default observer(function AddToCalendars() {
                 copiedToasep: response.copiedToasep,
                 copiedTocommandGroup: response.copiedTocommandGroup,
                 copiedTocommunity: response.copiedTocommunity,
+                copiedTospouse: response.copiedTospouse,
                 copiedTocsl: response.copiedTocsl,
                 copiedTogarrison: response.copiedTogarrison,
                 copiedTointernationalfellows: response.copiedTointernationalfellows,
@@ -411,6 +414,12 @@ export default observer(function AddToCalendars() {
                                                  label="Military Family and Spouse Program"
                                              disabled={categories.find(x => x.id === categoryId)?.routeName === "militaryFamilyAndSpouseProgram"}
                                         />
+
+                                 <MySemanticCheckBox
+                                     name="copiedTospouse"
+                                     label="Spouse"
+                            disabled={categories.find(x => x.id === categoryId)?.routeName === "spouse"}
+                          />
 
                            <MySemanticCheckBox
                                      name="copiedTocommunity"

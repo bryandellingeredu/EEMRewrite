@@ -223,6 +223,7 @@ namespace Domain
         public bool CopiedTosymposiumAndConferences {get; set;}
         public bool CopiedTobattlerhythm {get; set;}
         public bool CopiedTostaff {get; set;}
+        public bool CopiedTospouse {get; set;}
         public bool Cancelled { get; set; }
         public string CancelledReason { get; set; }
         public string CancelledBy { get; set; }

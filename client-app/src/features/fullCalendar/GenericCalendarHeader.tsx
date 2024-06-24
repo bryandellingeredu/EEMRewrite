@@ -1,5 +1,5 @@
 import { Button, Divider, Header, Icon } from "semantic-ui-react";
-import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap, faPeopleGroup, faHouseChimneyWindow, faCalendarWeek, faClipboardUser, faUsersRays, faEarthAmericas } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap, faPeopleGroup, faHouseChimneyWindow, faCalendarWeek, faClipboardUser, faUsersRays, faEarthAmericas, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
 import CSLLegend from "./CSLLegend";
@@ -198,6 +198,12 @@ if (id === 'cio' && !cioEventPlanningAdmin) {
         <>
           <FontAwesomeIcon icon={faHouseChimneyWindow} size='2x' style={{marginRight: '10px'}} />
           Military Spouse and Family Program
+        </>
+      }
+      {id === 'spouse' &&
+        <>
+          <FontAwesomeIcon icon={faUserFriends} size='2x' style={{marginRight: '10px'}} />
+          Spouse Calendar
         </>
       }
       {id === 'academic' &&
