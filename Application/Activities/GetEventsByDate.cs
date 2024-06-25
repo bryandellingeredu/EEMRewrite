@@ -109,6 +109,7 @@ namespace Application.Activities
                         HyperLink = activity.Hyperlink,
                         HyperLinkDescription = activity.HyperlinkDescription,
                         EducationalCategory = activity.EducationalCategory,
+                        SpouseCategory = activity.SpouseCategory,
                         EventPlanningPAX = activity.EventPlanningPAX,
                         EventPlanningStatus = activity.EventPlanningStatus,
                         EventClearanceLevel = activity.EventClearanceLevel,
@@ -159,13 +160,19 @@ namespace Application.Activities
                     
                 if(category.RouteName == "spouse" && !string.IsNullOrEmpty(activity.SpouseCategory)){
                    switch (activity.SpouseCategory){
-                    case "Chapel":
-                      return "#C2B280";
-                     case "Dunham":
+                    case "ACS":
+                      return "#8A3324";
+                     case "Chapel":
+                     return "#C2B280";
+                    case "Dunham":
                      return "#FF8C00";
+                    case "Fitness":
+                     return "#301934";
+                    case "MSFP":
+                     return "#E75480";
                     case "MWR":
                      return "#8B0000";
-                    case "USAWC Event":
+                    case "USAWC":
                      return "#006400";
                      default:
                       return "#00008B";

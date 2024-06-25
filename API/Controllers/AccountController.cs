@@ -164,7 +164,11 @@ namespace API.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, registerDTO.Password);
-            if (!result.Succeeded) return BadRequest("Problem registering user");
+           if (!result.Succeeded)
+            {
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            return BadRequest($"Problem registering user: {errors}");
+            }
 
             var origin = Request.Headers["origin"];
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);

@@ -58,6 +58,7 @@ namespace Application.GraphSchedules
         public string HyperLink { get; set; }
         public string HyperLinkDescription { get; set; }
         public string EducationalCategory { get; set; }
+        public string SpouseCategory { get; set; }
         public string EventPlanningPAX { get; set; }
         public string EventPlanningStatus { get; set; }
         public string EventClearanceLevel { get; set; }

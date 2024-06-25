@@ -17,6 +17,7 @@ namespace API.Extensions
     opt.Password.RequireNonAlphanumeric = false;
     opt.SignIn.RequireConfirmedEmail = true;
     opt.Stores.MaxLengthForKeys = 128;
+    opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+'";
 }).AddRoles<IdentityRole>()
   .AddEntityFrameworkStores<DataContext>()
   .AddSignInManager<SignInManager<AppUser>>()

@@ -2542,9 +2542,13 @@ options={[
     text: "Chapel",
     value: "Chapel",
   },
+  { text: "ACS", value: "ACS" },
+  { text: "Chapel", value: "Chapel" },
   { text: "Dunham", value: "Dunham" },
+  { text: "Fitness", value: "Fitness" },
+  { text: "MSFP", value: "MSFP" },
   { text: "MWR", value: "MWR" },
-  { text: "USAWC Event", value: "USAWC Event" },
+  { text: "USAWC", value: "USAWC" },
 ]}
 placeholder="Spouse Category"
 name="spouseCategory"

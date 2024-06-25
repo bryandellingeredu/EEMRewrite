@@ -1300,7 +1300,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  </span>                 
                  </Grid.Column>
              </Grid>
-         </Segment>
+    </Segment>
  }
 
 
