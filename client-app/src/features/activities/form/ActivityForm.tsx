@@ -35,6 +35,7 @@ import {
   faGlobeAmericas,
   faPeopleRoof,
   faPersonRifle,
+  faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
 import RoomPicker from "./RoomPicker";
 import MyTextInput from "../../../app/common/form/MyTextInput";
@@ -2520,6 +2521,39 @@ export default observer(function ActivityForm() {
                 <hr color="#21ba45" />
               </Segment>
             )}
+
+            {
+              values.copiedTospouse &&  <Segment style={{backgroundColor: '#FFF2D7'}}>
+                   <Header as="h5" icon textAlign="center" color="pink">
+                   <FontAwesomeIcon
+                    icon={faUserFriends}
+                    size="2x"
+                    style={{ marginRight: "10px" }}
+                  />
+                   <Header.Content>
+                    Spouse Information
+                  </Header.Content>
+                  </Header>
+                  <MySelectInput
+
+options={[
+  { text: "", value: "" },
+  {
+    text: "Chapel",
+    value: "Chapel",
+  },
+  { text: "Dunham", value: "Dunham" },
+  { text: "MWR", value: "MWR" },
+  { text: "USAWC Event", value: "USAWC Event" },
+]}
+placeholder="Spouse Category"
+name="spouseCategory"
+label="Spouse Category:"
+/>
+
+<hr color="#e03997" />
+</Segment>
+            }
 
             {
             (

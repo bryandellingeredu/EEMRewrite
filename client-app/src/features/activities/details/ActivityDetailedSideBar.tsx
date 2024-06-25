@@ -1288,6 +1288,20 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
          </Segment>
  }
 
+{ activity.copiedTospouse && activity.spouseCategory && 
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faBookmark} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '10px'}}>
+                    Spouse Category: {activity.spouseCategory}
+                 </span>                 
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
 
 
 { activity.category.name  === 'USAHEC Calendar' && activity.usahecCalendarCategory && 

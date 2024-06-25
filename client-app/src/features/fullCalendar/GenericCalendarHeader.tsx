@@ -10,6 +10,7 @@ import SyncCalendarInformation from "./SyncCalendarInformation";
 import MSFPLegend from "./MSFPLegend";
 import CIOEventPlanningLegend from "./CIOEventPlanningLegend";
 import { useState, useEffect } from "react";
+import SpouseLegend from "./SpouseLegend";
 
 interface Props {
     id: string
@@ -227,6 +228,7 @@ if (id === 'cio' && !cioEventPlanningAdmin) {
     {id === 'usahecFacilitiesUsage' && <USAHECFacilitiesUsageLegend />}
     {id === 'militaryFamilyAndSpouseProgram' && <MSFPLegend />}
     {id === 'cio' && cioEventPlanningAdmin && <CIOEventPlanningLegend />}
+    {id === 'spouse' && <SpouseLegend />}
     </>
     )
 }

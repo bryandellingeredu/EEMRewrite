@@ -172,6 +172,7 @@ namespace Domain
         public string SSLCategories {get; set;}
         public string USAHECDirectorate {get; set;}
         public string USAHECCalendarCategory {get; set;}
+        public string SpouseCategory {get; set;}
         public string USAHECFacilityReservationType {get; set;}
         public bool CopyToUSAHECCalendar {get; set;}
         public bool PocketCalNonAcademicEvent {get; set;}

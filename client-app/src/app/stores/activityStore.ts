@@ -785,7 +785,8 @@ export default class ActivityStore {
     roomResourceNotApplicable : false,
     roomResourceOther : false,
     roomResourceOtherText: '',
-    roomResourceNotificationSent: false
+    roomResourceNotificationSent: false,
+    spouseCategory: ''
     }
     return activity;
   }

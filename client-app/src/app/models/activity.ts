@@ -269,6 +269,7 @@ export interface Activity{
     roomResourceOther : boolean
     roomResourceOtherText : string
     roomResourceNotificationSent : boolean
+    spouseCategory : string
 }
 
 export class Activity implements Activity{
@@ -536,6 +537,7 @@ export class ActivityFormValues{
     roomResourceOther : boolean = false
     roomResourceOtherText : string = ''
     roomResourceNotificationSent : boolean = false
+    spouseCategory : string = ''
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -796,6 +798,7 @@ export class ActivityFormValues{
     this.roomResourceOther =  activity.roomResourceOther
     this.roomResourceOtherText =  activity.roomResourceOtherText
     this.roomResourceNotificationSent = activity.roomResourceNotificationSent
+    this.spouseCategory = activity.spouseCategory
     
        } 
     }

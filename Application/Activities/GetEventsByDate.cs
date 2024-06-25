@@ -157,6 +157,20 @@ namespace Application.Activities
                             }
                         }
                     
+                if(category.RouteName == "spouse" && !string.IsNullOrEmpty(activity.SpouseCategory)){
+                   switch (activity.SpouseCategory){
+                    case "Chapel":
+                      return "#C2B280";
+                     case "Dunham":
+                     return "#FF8C00";
+                    case "MWR":
+                     return "#8B0000";
+                    case "USAWC Event":
+                     return "#006400";
+                     default:
+                      return "#00008B";
+                   }
+                }
 
                 if(category.RouteName == "militaryFamilyAndSpouseProgram" && !string.IsNullOrEmpty(activity.EducationalCategory)) 
                 {
