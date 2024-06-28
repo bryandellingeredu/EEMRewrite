@@ -1,6 +1,6 @@
 import { Login } from "@microsoft/mgt-react";
 import { observer } from "mobx-react-lite";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useHistory } from "react-router-dom";
 import {
   Button,
   Container,
@@ -33,6 +33,7 @@ function useIsSignedIn(): [boolean] {
 }
 
 export default observer(function NavbarEEM() {
+  const history = useHistory();
   const {
     userStore: { user, logout, isLoggedIn },
     graphRoomStore: { graphRooms, loadGraphRooms },
@@ -51,6 +52,18 @@ export default observer(function NavbarEEM() {
   const handleToggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  useEffect(() =>{
+   if(user && user.userName && user.userName.endsWith(".sfm@armywarcollege.edu")){
+    // this a spouse
+    if(user.roles && user.roles.includes("spouseAmbassador")){
+      // do not redirect the spouse ambassadors, a spouse ambassador is allowed to be in the EEM
+    }else{
+      // this is a spouse without the ambassador role, they are not allowed in the EEM redirect them to the spouse calendar
+      history.push(`${process.env.PUBLIC_URL}/spousecalendar`);
+    }
+   }
+  }, [user, history])
 
   useEffect(() => {
     if (!roomDelegates || roomDelegates.length < 1) loadRoomDelegates();

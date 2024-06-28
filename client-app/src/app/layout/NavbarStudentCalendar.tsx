@@ -8,7 +8,8 @@ import { faAndroid } from "@fortawesome/free-brands-svg-icons";
 import {useState, useEffect, useCallback, useRef} from 'react';
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { useStore } from "../stores/store";
-
+import { observer } from "mobx-react-lite";
+import { useHistory } from "react-router-dom";
 
 const faWindowsPropIcon = faWindows as IconProp;
 const faApplePropIcon = faApple as IconProp;
@@ -17,11 +18,13 @@ const faAndroidPropIcon = faAndroid as IconProp;
 
 
 
-export default function NavbarStudentCalendar(){
+export default observer(function NavbarStudentCalendar(){
   const {
     navbarStore: {setPage },
+    userStore: {user}
   } = useStore();
   
+  const history = useHistory();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
 
@@ -31,6 +34,11 @@ export default function NavbarStudentCalendar(){
   const handleGoogleClick = () => setPage("google");
   const handleHomeClick = () => setPage("calendar");
 
+  useEffect(() =>{
+    if(user && user.userName && user.userName.endsWith(".sfm@armywarcollege.edu")){
+     history.push(`${process.env.PUBLIC_URL}/spousecalendar`);
+    }
+   }, [user, history])
 
 
 useEffect(() => {
@@ -86,4 +94,4 @@ useEffect(() => {
           </Container>
     </Menu>
     )
-}
+})
