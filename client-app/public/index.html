@@ -14,31 +14,8 @@
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <script>
-      // Function to get query parameters
-      function getQueryParams() {
-        const params = new URLSearchParams(window.location.search);
-        return params;
-      }
-
-      // Function to dynamically set the manifest
-      function setManifest() {
-        const params = getQueryParams();
-        const manifestLink = document.createElement('link');
-        manifestLink.rel = 'manifest';
-
-        if (params.has('useSpouseManifest')) {
-          manifestLink.href = '%PUBLIC_URL%/spouse-manifest.json';
-        } else {
-          manifestLink.href = '%PUBLIC_URL%/manifest.json';
-        }
-
-        document.head.appendChild(manifestLink);
-      }
-
-      // Call the function to set the manifest
-      setManifest();
-    </script>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
