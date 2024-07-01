@@ -63,6 +63,7 @@ import ApproveRoomReservations from '../../features/rooms/ApproveRoomReservation
 import ApproveAnyRoomReservation from '../../features/rooms/ApproveAnyRoomReservation';
 import ResidentAndDistanceStudentCalendar from '../../features/fullCalendar/ResidentAndDistanceStudentCalendar';
 import spouseCalendarWrapper from '../../features/spouse/spouseCalendarWrapper';
+import roomUsageReport from '../../features/roomReports/roomUsageReport';
 
 function App() {
   const location = useLocation();
@@ -145,6 +146,7 @@ function App() {
                 <Route key={location.key} exact path={`${process.env.PUBLIC_URL}/roomcalendar/:id`} component={RoomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/roomCalendarLinks`} component={RoomCalendarLinks}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/rooms`} component={RoomDashboard}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/roomusagereport`} component={roomUsageReport}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/authenticatetoarmy`} component={AuthenticateToArmy}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/approveanyroomreservation`} component={ApproveAnyRoomReservation}/>
                 <Route exact path={[

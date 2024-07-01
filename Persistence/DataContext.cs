@@ -31,6 +31,7 @@ namespace Persistence
         public DbSet<ActivityNotification> ActivityNotifications { get; set; }  
         public DbSet<SyncToCalendarNotification> SyncToCalendarNotifications { get; set; }
         public DbSet<SyncCalendar> SyncCalendars { get; set; }
+        public DbSet<RoomReport> RoomReports { get; set; }
 
 
 
