@@ -1,6 +1,6 @@
 {
-  "short_name": "PocketCalendar",
-  "name": "PocketCalendar",
+  "short_name": "SpouseCalendar",
+  "name": "SpouseCalendar",
   "icons": [
     {
       "src": "favicon-16x16.png",
@@ -33,7 +33,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "./studentcalendar",
+  "start_url": "./spousecalendar",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

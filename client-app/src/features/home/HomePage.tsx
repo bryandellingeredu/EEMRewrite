@@ -91,10 +91,9 @@ export default observer(function HomePage(){
         <Segment inverted textAlign='center' vertical className='masthead'>
     <Container text>
     <Header as='h1' inverted>
-                    <Image size='massive' src={`${process.env.PUBLIC_URL}/assets/logo.png`} alt='logo' style={{ marginBottom: 12 }} />
-                   The EEM
+                    <Image size='massive' src={`${process.env.PUBLIC_URL}/assets/logo2.png`} alt='logo' style={{ marginBottom: 12 }} />
+                  The Spouse Calendar
                 </Header>
-    <Header as ='h2' inverted content = 'Welcome to the Enterprise Event Manager '/>
 
     {userStore.isLoggedIn && armyProfile && 
         
@@ -117,32 +116,8 @@ export default observer(function HomePage(){
         <>
           <Divider inverted />
 
-          <Grid columns={2} divided >
+          <Grid >
           <Grid.Row>
-            {/*
-            <Grid.Column>
-            <Header as='h2' icon>
-              <Grid columns={2}>
-                 <Grid.Column>
-                 <Icon name='id badge' style={{color: 'white'}} />
-                 </Grid.Column>
-                 <Grid.Column>
-                 <Icon name='graduation cap' style={{color: 'white'}} />
-                 </Grid.Column>
-              </Grid>                       
-                <span style={{color: 'white'}}>Login With Both</span>
-                <Header.Subheader>
-                 <span style={{color: 'orange'}}>I have a CAC and an EDU.</span>
-                </Header.Subheader>          
-                </Header>
-                <Button style={{backgroundColor: '#004080', color:'white'}}
-                 size='big' as={Link} to={`${process.env.PUBLIC_URL}/loginBoth`}
-                  type='button'>
-                  <Icon name='user outline' style={{color: 'white'}}/>
-                  Sign In 
-                </Button>
-            </Grid.Column>
-      */}
             <Grid.Column>
             <Header as='h2' icon>
             <Icon name='graduation cap' style={{color: 'white'}} />
@@ -157,22 +132,7 @@ export default observer(function HomePage(){
                 loginCompleted={loginCompleted}
                 loginInitiated={handleLoginInitiated}
               />}
-            </Grid.Column>
-            <Grid.Column>
-            <Header as='h2' icon  style={{paddingTop: '3px'}}>
-            <Icon name='id badge' style={{color: 'white'}} />
-            <span style={{color: 'white'}}>Login Army 365</span>
-            <Header.Subheader>
-            <span style={{color: 'orange'}}>login with your CAC.</span>
-            </Header.Subheader>
-            </Header>
-            <div>
-            <Button style={{backgroundColor: '#004080', color:'white'}} size='big' onClick={signInArmyUser} type='button'>
-                  <Icon name='user outline' style={{color: 'white'}}/>
-                  Sign In 
-                </Button>
-                </div>
-            </Grid.Column>        
+            </Grid.Column>     
           </Grid.Row>
           </Grid>
    </>
