@@ -34,6 +34,7 @@ import { ActivityNotification } from '../models/activityNotification';
 import { SyncCalendarNotificationDTO } from '../models/syncCalendarNotificationDTO';
 import { UserEmail } from '../models/userEmail';
 import { RoomReport } from '../models/roomReport';
+import { RoomReportEventsResponseDTO } from '../models/roomReportEventsResponseDTO';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -356,7 +357,9 @@ const PocketCalendar = {
 }
 
 const RoomReports = {
-    list:(start: Date, end: Date) => axiosRequest.post<RoomReport[]>('roomReport',{start, end})
+    list:(start: Date, end: Date) => axiosRequest.post<RoomReport[]>('roomReport',{start, end}),
+    details: (start: Date, end: Date, email: string) =>
+         axiosRequest.post<RoomReportEventsResponseDTO[]>('roomReport/getEvents', {start, end, email})
 }
 
 const agent = {

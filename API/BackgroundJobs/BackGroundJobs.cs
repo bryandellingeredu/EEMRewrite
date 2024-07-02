@@ -628,7 +628,6 @@ namespace API.BackgroundJobs
 
         public async Task CreateRoomReportAsync()
         {
-            List<Domain.RoomReport> roomReports = new List<Domain.RoomReport>();
             Settings s = new Settings();
             var settings = s.LoadSettings(_config);
             GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
@@ -639,70 +638,87 @@ namespace API.BackgroundJobs
             TimeZoneInfo easternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
             DateTime currentEasternTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.Local, easternTimeZone);
 
-            List<DateTimeTimeZone> startTimes = new List<DateTimeTimeZone>();
-            List<DateTimeTimeZone> endTimes = new List<DateTimeTimeZone>();
-
-            for (int i = 0; i <= 10; i++)
-            {
-                DateTime date = currentEasternTime.AddDays(i);
-                DateTime startDateTime = new DateTime(date.Year, date.Month, date.Day, 7, 0, 0);
-                DateTime endDateTime = new DateTime(date.Year, date.Month, date.Day, 20, 30, 0);
-                string startDateAsString = startDateTime.ToString("o", CultureInfo.InvariantCulture);
-                string endDateAsString = endDateTime.ToString("o", CultureInfo.InvariantCulture);
-
-                startTimes.Add(new DateTimeTimeZone { DateTime = startDateAsString, TimeZone = "Eastern Standard Time" });
-                endTimes.Add(new DateTimeTimeZone { DateTime = endDateAsString, TimeZone = "Eastern Standard Time" });
-            }
-
-            List<ScheduleRequestDTO> scheduleRequests = new List<ScheduleRequestDTO>();
-
-            for (int i = 0; i < startTimes.Count; i++)
-            {
-                scheduleRequests.Add(new ScheduleRequestDTO
-                {
-                    Schedules = emails,
-                    StartTime = startTimes[i],
-                    EndTime = endTimes[i],
-                    AvailabilityViewInterval = 15
-                });
-            }
-
-            foreach (var scheduleRequestDTO in scheduleRequests)
-            {
-                ICalendarGetScheduleCollectionPage result = await GraphHelper.GetScheduleAsync(scheduleRequestDTO);
-
-                foreach (ScheduleInformation scheduleInformation in result.CurrentPage)
-                {
-                    Domain.RoomReport roomReport = new Domain.RoomReport
-                    {
-                        Day = new DateTime(currentEasternTime.Year, currentEasternTime.Month, currentEasternTime.Day, 0, 0, 0).AddDays(scheduleRequests.IndexOf(scheduleRequestDTO)),
-                        AvailabilityView = scheduleInformation.AvailabilityView,
-                        ScheduleId = scheduleInformation.ScheduleId
-                    };
-                    roomReports.Add(roomReport);
-                }
-            }
-
-
             var existingRoomReports = await _context.RoomReports.ToListAsync();
 
-            foreach (var report in roomReports)
+            for (int batch = 0; batch < 4; batch++)
             {
-                var foundReport = existingRoomReports.Where(x => x.Day == report.Day && x.ScheduleId == report.ScheduleId).FirstOrDefault();
-                if (foundReport != null)
+                List<Domain.RoomReport> roomReports = new List<Domain.RoomReport>();
+                List<DateTimeTimeZone> startTimes = new List<DateTimeTimeZone>();
+                List<DateTimeTimeZone> endTimes = new List<DateTimeTimeZone>();
+
+                for (int i = 0; i < 100; i++)
                 {
-                    if(foundReport.AvailabilityView != report.AvailabilityView) {
-                        foundReport.AvailabilityView = report.AvailabilityView;
-                        _context.RoomReports.Update(foundReport);
+                    DateTime date = currentEasternTime.AddDays(batch * 100 + i);
+                    DateTime startDateTime = new DateTime(date.Year, date.Month, date.Day, 8, 0, 0);
+                    DateTime endDateTime = new DateTime(date.Year, date.Month, date.Day, 17, 00, 0);
+                    string startDateAsString = startDateTime.ToString("o", CultureInfo.InvariantCulture);
+                    string endDateAsString = endDateTime.ToString("o", CultureInfo.InvariantCulture);
+
+                    startTimes.Add(new DateTimeTimeZone { DateTime = startDateAsString, TimeZone = "Eastern Standard Time" });
+                    endTimes.Add(new DateTimeTimeZone { DateTime = endDateAsString, TimeZone = "Eastern Standard Time" });
+                }
+
+                List<ScheduleRequestDTO> scheduleRequests = new List<ScheduleRequestDTO>();
+
+                for (int i = 0; i < startTimes.Count; i++)
+                {
+                    scheduleRequests.Add(new ScheduleRequestDTO
+                    {
+                        Schedules = emails,
+                        StartTime = startTimes[i],
+                        EndTime = endTimes[i],
+                        AvailabilityViewInterval = 15
+                    });
+                }
+
+                foreach (var scheduleRequestDTO in scheduleRequests)
+                {
+                    ICalendarGetScheduleCollectionPage result = await GraphHelper.GetScheduleAsync(scheduleRequestDTO);
+
+                    foreach (ScheduleInformation scheduleInformation in result.CurrentPage)
+                    {
+                        Domain.RoomReport roomReport = new Domain.RoomReport
+                        {
+                            Day = new DateTime(currentEasternTime.Year, currentEasternTime.Month, currentEasternTime.Day, 0, 0, 0).AddDays(batch * 100 + scheduleRequests.IndexOf(scheduleRequestDTO)),
+                            AvailabilityView = scheduleInformation.AvailabilityView,
+                            ScheduleId = scheduleInformation.ScheduleId
+                        };
+                        roomReports.Add(roomReport);
                     }
                 }
-                else
-                {
-                    await _context.RoomReports.AddAsync(report);
-                }
-            }
-           await  _context.SaveChangesAsync();
 
+                var newRoomReports = new List<Domain.RoomReport>();
+                var updatedRoomReports = new List<Domain.RoomReport>();
+
+                foreach (var report in roomReports)
+                {
+                    var foundReport = existingRoomReports.FirstOrDefault(x => x.Day == report.Day && x.ScheduleId == report.ScheduleId);
+                    if (foundReport != null)
+                    {
+                        if (foundReport.AvailabilityView != report.AvailabilityView)
+                        {
+                            foundReport.AvailabilityView = report.AvailabilityView;
+                            updatedRoomReports.Add(foundReport);
+                        }
+                    }
+                    else
+                    {
+                        newRoomReports.Add(report);
+                    }
+                }
+
+                if (newRoomReports.Any())
+                {
+                    await _context.RoomReports.AddRangeAsync(newRoomReports);
+                }
+
+                if (updatedRoomReports.Any())
+                {
+                    _context.RoomReports.UpdateRange(updatedRoomReports);
+                }
+
+                await _context.SaveChangesAsync();
+            }
         }
 
         private async Task WriteActivityDetails(StringWriter writer, Activity activity, StudentCalendarInfo studentCalendarInfo, string studentType, IGraphServicePlacesCollectionPage allrooms)

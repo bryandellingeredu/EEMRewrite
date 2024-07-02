@@ -8,11 +8,17 @@ namespace API.Controllers
     {
       
 
-        [AllowAnonymous]
+
         [HttpPost]
         public async Task<IActionResult> GetReport([FromBody] RoomReportRequestDTO request)
         {
             return HandleResult(await Mediator.Send(new Details.Query { roomReportRequestDto = request }));
+        }
+
+        [HttpPost("getEvents")]
+        public async Task<IActionResult> GetEvents([FromBody] RoomReportEventsRequestDTO request)
+        {
+            return HandleResult(await Mediator.Send(new Events.Query { roomReportEventsRequestDto = request }));
         }
     }
 }

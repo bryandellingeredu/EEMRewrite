@@ -102,25 +102,25 @@ namespace API
             });
 
             recurringJobManager.AddOrUpdate(
-        "StudentSyncCalendarJob",
-        () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateStudentCalendarFileJob(),
-        "0 */3 * * *"); // At minute 0 past every 3rd hour
+          "StudentSyncCalendarJob",
+          () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateStudentCalendarFileJob(),
+          "0 8-20/3 * * *"); // At minute 0 past every 3rd hour from 8 AM to 8 PM
 
             recurringJobManager.AddOrUpdate(
                 "GenericSyncCalendarJob",
                 () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateSyncCalendarFilesJob(),
-                "0 1-23/3 * * *"); // At minute 0 past hour 1, 4, 7, ..., which is 1 hour after the first job
+                "0 9-21/3 * * *"); // At minute 0 past every 3rd hour from 9 AM to 9 PM, which is 1 hour after the first job
 
             recurringJobManager.AddOrUpdate(
                 "EnlistedAideSyncCalendarJob",
                 () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateEnlistedAideSyncCalendarFileJob(),
-                "0 2-23/3 * * *"); // At minute 0 past hour 2, 5, 8, ..., which is 2 hours after the first job
+                "0 10-22/3 * * *"); // At minute 0 past every 3rd hour from 10 AM to 10 PM, which is 2 hours after the first job
 
             recurringJobManager.AddOrUpdate(
-             "RoomReportJob",
-             () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateRoomReportJob(),
-             "0 1-23/3 * * *");
-        }
+            "RoomReportJob",
+            () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateRoomReportJob(),
+            "0 23 * * *"); // At 11:00 PM every day
+            }
 
 
 

@@ -7,6 +7,7 @@ import {
   Dropdown,
   DropdownDivider,
   DropdownHeader,
+  DropdownItem,
   Image,
   Menu,
 } from "semantic-ui-react";
@@ -205,7 +206,12 @@ export default observer(function NavbarEEM() {
             </Menu.Item>
          }
             <Dropdown item text="Reports">
-            <Dropdown.Menu>            
+            <Dropdown.Menu>  
+            <Dropdown.Header icon='tags'  content = 'Room Usage Reports' />
+            <DropdownDivider />
+            <DropdownItem as={NavLink}  to={`${process.env.PUBLIC_URL}/roomusagereport`}  text ="Room Usage Bar Chart"  
+              label={{ color: 'purple', empty: true, circular: true }}/>  
+            <DropdownDivider/>   
             <Dropdown.Header icon='tags' content='Hosting Reports' />
             <DropdownDivider/>
             <Dropdown.Item as={NavLink} to={`${process.env.PUBLIC_URL}/hostingReportTable`} text ="Hosting Report List"
