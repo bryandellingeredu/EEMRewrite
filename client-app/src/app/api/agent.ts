@@ -33,6 +33,7 @@ import { EnlistedAideChecklist } from '../models/enlistedAideChecklist';
 import { ActivityNotification } from '../models/activityNotification';
 import { SyncCalendarNotificationDTO } from '../models/syncCalendarNotificationDTO';
 import { UserEmail } from '../models/userEmail';
+import { RoomReport } from '../models/roomReport';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -354,6 +355,10 @@ const PocketCalendar = {
      axiosRequest.post<void>('pocketcalendar',{start, end, title, description, roomEmail })
 }
 
+const RoomReports = {
+    list:(start: Date, end: Date) => axiosRequest.post<RoomReport[]>('roomReport',{start, end})
+}
+
 const agent = {
     Activities,
     Account,
@@ -383,7 +388,8 @@ const agent = {
     ApproveEvents,
     EduEmails,
     Teams,
-    PocketCalendar
+    PocketCalendar,
+    RoomReports
 }
 
 export default agent;
