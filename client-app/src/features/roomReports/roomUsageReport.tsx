@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar, Cell, TooltipProps } from 'recharts';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Divider, Form, FormField, FormGroup, Header, Icon, Input, Label, Message, Segment, SegmentGroup } from "semantic-ui-react";
+import { Dimmer, Divider, Form, FormField, FormGroup, Header, Icon, Input, Label, Loader, Message, Segment, SegmentGroup } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { RoomReport } from "../../app/models/roomReport";
 import agent from "../../app/api/agent";
@@ -10,10 +10,10 @@ import { useStore } from "../../app/stores/store";
 import RoomUsageReportDetailModal from "./roomUsageReportDetailModal";
 
 interface BarChartDataRow {
-  name: string;
-  unused: number;
-  used: number;
-  usedPercentage: number;
+  name: string
+  unused: number
+  used: number
+  usedPercentage: number
 }
 
 interface BuildingCategory{
@@ -21,37 +21,46 @@ interface BuildingCategory{
   isSelected: boolean
   title: string
   color: string
+  displayName: string
 }
 
 
 
 const getColor = (percentage: number) => {
-  if (percentage > 75) return '#008000'; // Green for high usage
-  if (percentage > 25) return '#ffa500'; // Yellow for medium usage
+  if (percentage >= 75) return '#008000'; // Green for high usage
+  if (percentage >= 25) return '#ffa500'; // Yellow for medium usage
   return '#ff0000';// Red for  low usage
 };
 
+const getDate30DaysAgo = () => {
+  const today = new Date();
+  const thirtyDaysAgo = new Date(today.setDate(today.getDate() - 30));
+  return thirtyDaysAgo;
+};
+
 export default observer(function RoomUsageReport() {
+  const [loading, setLoading] = useState(true)
   const { graphRoomStore } = useStore();
   const { modalStore } = useStore();
   const { loadingInitial, graphRooms, loadGraphRooms } = graphRoomStore;
   const {openModal, closeModal} = modalStore;
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(getDate30DaysAgo());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [roomReports, setRoomReports] = useState<RoomReport[]>([]);
   const [barChartData, setBarChartData] = useState<BarChartDataRow[]>([]);
   const [buildingCategories, setBuildingCategories] = useState<BuildingCategory[]>(
     [
-      { id: 1, isSelected: true, title: 'Show All', color: '#00008B' },
-      { id: 2, isSelected: false, title: 'Bldg 22', color: '#8A3324' },
-      { id: 3, isSelected: false, title: 'Bldg 46', color: '#C2B280' },
-      { id: 4, isSelected: false, title: 'Bldg 47', color: '#FF8C00' },
-      { id: 5, isSelected: false, title: 'Bldg 314', color: '#301934' },
-      { id: 6, isSelected: false, title: 'Bldg 315', color: '#E75480' },
-      { id: 7, isSelected: false, title: 'Bldg 632', color: '#8B0000' },
-      { id: 8, isSelected: false, title: 'Bldg 650', color: '#006400' },
-      { id: 9, isSelected: false, title: 'Bldg 651', color: '#1a1a1a' },
-      { id: 10, isSelected: false, title: 'Bldg 950', color: '#014d4e' },
+      { id: 1, isSelected: true, title: 'Show All', color: '#00008B', displayName: 'Show All' },
+      { id: 2, isSelected: false, title: 'Bldg 22', color: '#8A3324' , displayName: 'Bldg 22, Upton Hall'  },
+      { id: 3, isSelected: false, title: 'Bldg 46', color: '#C2B280' , displayName: 'Bldg 46, Anne Ely Hall'  },
+      { id: 4, isSelected: false, title: 'Bldg 47', color: '#FF8C00' , displayName: 'Bldg 47, SSI'  },
+      { id: 5, isSelected: false, title: 'Bldg 314', color: '#301934' , displayName: 'Bldg 314, G8 / MICC' },
+      { id: 6, isSelected: false, title: 'Bldg 315', color: '#E75480' , displayName: 'Bldg 315, Old G3'  },
+      { id: 7, isSelected: false, title: 'Bldg 632', color: '#8B0000' , displayName: 'Bldg 632, ASEP / G3' },
+      { id: 8, isSelected: false, title: 'Bldg 650', color: '#006400' , displayName: 'Bldg 650, Collins Hall' },
+      { id: 9, isSelected: false, title: 'Bldg 651', color: '#1a1a1a' , displayName: 'Bldg 651, Root Hall' },
+      { id: 10, isSelected: false, title: 'Bldg 950', color: '#014d4e', displayName: 'Bldg 950, Ridgway Hall' },
+      { id: 11, isSelected: false, title: 'Bldg 330', color: '#8B4513', displayName: 'Bldg 330, DPW' },
     ]
   )
   
@@ -65,6 +74,7 @@ export default observer(function RoomUsageReport() {
   useEffect(() => {
     if (!graphRooms.length) loadGraphRooms();
     if (graphRooms.length && startDate && endDate && startDate <= endDate) {
+      setLoading(true);
       agent.RoomReports.list(startDate, endDate).then((response) => {
         setRoomReports(response);
         const bcData: BarChartDataRow[] = response.map((report) => {
@@ -91,6 +101,7 @@ export default observer(function RoomUsageReport() {
         } else {
           setBarChartData(bcData);
         }
+        setLoading(false);
       });
     }
   }, [startDate, endDate, graphRooms.length, loadGraphRooms, buildingCategories]);
@@ -126,6 +137,27 @@ export default observer(function RoomUsageReport() {
     });
   };
 
+  interface CustomTooltipProps extends TooltipProps<number, string> {}
+
+  const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const used = payload[0].value || 0;
+      const unused = payload[1].value || 0;
+      const total = used + unused;
+      const usedPercentage = total !== 0 ? ((used / total) * 100).toFixed(2) : "0.00";
+  
+      return (
+        <div className="custom-tooltip" style={{ backgroundColor: '#fff', padding: '10px', border: '1px solid #ccc' }}>
+          <p className="label">{`${payload[0].payload.name}`}</p>
+          <p className="desc">{`Used: ${used}`}</p>
+          <p className="desc">{`Unused: ${unused}`}</p>
+          <p className="desc">{`Percentage Used: ${usedPercentage}%`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div>
          <Divider horizontal>
@@ -134,7 +166,7 @@ export default observer(function RoomUsageReport() {
         Room Usage Bar Chart in Hours
       </Header>
     </Divider>
-    <Message info content='Room usage is calculated from 8:00 AM to 5:00 PM (a total of 8 hours per day), Monday through Friday. Weekends are excluded from the hour calculations'/>
+    <Message info content='Room usage is calculated based on room reservations/bookings from 8:00 AM to 5:00 PM (a total of 9 hours per day), Monday through Friday. Weekends are excluded from the hour calculations'/>
       
 
       <Form>
@@ -162,7 +194,7 @@ export default observer(function RoomUsageReport() {
       style={{backgroundColor: buildingCategory.color, color: 'white', marginBottom: '5px'}}
       >
       <Icon name={buildingCategory.isSelected ? 'check square outline' : 'square outline'}  size='large' />
-      {buildingCategory.title}
+      {buildingCategory.displayName}
     </Label>
     ))}
           </FormField>
@@ -170,12 +202,19 @@ export default observer(function RoomUsageReport() {
       </Form>
 
      <span style={{fontSize: '1.5em', marginRight: '10px'}}>Legend:</span>
-      <Label content='high usage > 75%' size='large' style={{backgroundColor: '#008000', color: 'white'}}/>
-      <Label content='medium usage > 25%' size='large' style={{backgroundColor:'#ffa500', color: 'white'}}/>
-      <Label content='low usage > 0%' size='large' style={{backgroundColor: '#ff0000', color: 'white'}}/>
+      <Label content='high usage 75-100%' size='large' style={{backgroundColor: '#008000', color: 'white'}}/>
+      <Label content='medium usage 25-74%' size='large' style={{backgroundColor:'#ffa500', color: 'white'}}/>
+      <Label content='low usage > 0.01-24%' size='large' style={{backgroundColor: '#ff0000', color: 'white'}}/>
 
+      {loading && 
+             <Segment style={{height: '500px'}}>
+             <Dimmer active>
+               <Loader inverted>Loading Data...</Loader>
+             </Dimmer>
+           </Segment>
+      }
  
-      {barChartData.length > 0 &&
+      {!loading && barChartData.length > 0 &&
         <BarChart
           width={1600}
           height={barChartData.length * 35 + 50} 
@@ -188,14 +227,13 @@ export default observer(function RoomUsageReport() {
            label={{ value: 'Hours', position: 'insideTopLeft', offset: 10 }}
            />
           <YAxis type="category" dataKey="name" width={500} />
-          <Tooltip />
-          <Legend />
+          <Tooltip content={<CustomTooltip />} />
           <Bar dataKey="used" stackId="a" onClick={(data, index) => handleBarClick(data)}> 
             {barChartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={getColor(entry.usedPercentage)} />
             ))}
           </Bar>
-          <Bar dataKey="unused" stackId="a" fill="#82ca9d" />
+          <Bar dataKey="unused" stackId="a" fill="#D3D3D3" />
         </BarChart>
       }
     </div>

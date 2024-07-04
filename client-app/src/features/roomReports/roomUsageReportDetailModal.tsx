@@ -59,8 +59,8 @@ export default observer(function RoomUsageDetailModal({name, used, unused, start
 
             </Header>
             {loading && 
-             <Segment>
-             <Dimmer active inverted>
+             <Segment style={{height: '200px'}}>
+             <Dimmer active >
                <Loader inverted>Loading Data...</Loader>
              </Dimmer>
            </Segment>
