@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import agent from "../../app/api/agent";
 import { RoomReportEventsResponseDTO } from "../../app/models/roomReportEventsResponseDTO";
+import Speedomter from "./speedometer";
 interface Props{
     name: string
     used: number
@@ -30,6 +31,11 @@ export default observer(function RoomUsageDetailModal({name, used, unused, start
         }
     }, [start, end, name, graphRooms.length, loadGraphRooms]); 
 
+    const getPercentage = () => {
+      const total = used + unused;
+      const usedPercentage = total !== 0 ? ((used / total) * 100).toFixed(2) : "0.00";
+      return parseFloat(usedPercentage);
+    }
     return(
         <>
              <Button
@@ -55,6 +61,7 @@ export default observer(function RoomUsageDetailModal({name, used, unused, start
                <strong>Total: </strong> {used + unused} hours
                <strong> Used: </strong> {used} hours
                <strong> Unused: </strong> {unused} hours
+               <strong> Percent Used: </strong> {getPercentage()} %
               </Header.Subheader>
 
             </Header>
@@ -65,6 +72,7 @@ export default observer(function RoomUsageDetailModal({name, used, unused, start
              </Dimmer>
            </Segment>
             }
+            <Speedomter percentage={getPercentage()}/>
             {!loading && roomReportEventsResponseDTO.length > 0 &&
               <SegmentGroup>
                  {roomReportEventsResponseDTO.map((item, index) => (
