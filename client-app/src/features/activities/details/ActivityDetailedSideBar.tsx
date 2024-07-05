@@ -4,7 +4,7 @@ import { Segment, Icon, Grid, List } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faCamera, faChalkboardTeacher, faCheck, faChurch, faClipboardUser, faClock, faComputer, faDove, faEarthAmericas, faEnvelope, faFax, faGraduationCap, faHashtag, faIdCard, faLaptop, faMobile, faNetworkWired, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faPhone, faPhoneFlip, faPrint, faServer, faShieldHalved, faSignal, faSitemap, faSquareParking, faTablet, faTv, faUser, faUserFriends, faUserSecret, faUsersRays } from '@fortawesome/free-solid-svg-icons';
+import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faCamera, faChalkboardTeacher, faCheck, faChurch, faClipboardUser, faClock, faComputer, faDove, faEarthAmericas, faEnvelope, faFax, faFileContract, faGraduationCap, faHashtag, faIdCard, faLaptop, faMobile, faNetworkWired, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faPhone, faPhoneFlip, faPrint, faServer, faShieldHalved, faSignal, faSitemap, faSquareParking, faTablet, faTv, faUser, faUserFriends, faUserSecret, faUsersRays } from '@fortawesome/free-solid-svg-icons';
 import agent from '../../../app/api/agent';
 import ActivityAttachmentSideBarComponent from './ActivityAttachmentSideBarComponent';
 import format from 'date-fns/format';
@@ -1327,6 +1327,19 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  </Grid.Column>
                  <Grid.Column width={14}>
                    Reservation Type: {activity.usahecFacilityReservationType}
+                 </Grid.Column>
+             </Grid>
+         </Segment>
+ }
+
+{ activity.category.name  === 'USAHEC Facilities Usage Calendar' && activity.usahecContract && 
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faFileContract} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   USAHEC Contract: {activity.usahecContract}
                  </Grid.Column>
              </Grid>
          </Segment>

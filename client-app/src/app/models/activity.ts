@@ -120,6 +120,7 @@ export interface Activity{
     usahecDirectorate: string
     usahecCalendarCategory: string
     usahecFacilityReservationType: string
+    usahecContract: string
     copyToUSAHECCalendar: boolean
     pocketCalNonAcademicEvent : boolean
     pocketCalWeek : string
@@ -388,6 +389,7 @@ export class ActivityFormValues{
     usahecDirectorate: string = ''
     usahecCalendarCategory: string = ''
     usahecFacilityReservationType: string = ''
+    usahecContract: string = ''
     copyToUSAHECCalendar: boolean = false
     pocketCalNonAcademicEvent : boolean = false
     pocketCalWeek : string = ''
@@ -649,6 +651,7 @@ export class ActivityFormValues{
         this.usahecDirectorate = activity.usahecDirectorate
         this.usahecCalendarCategory = activity.usahecCalendarCategory
         this.usahecFacilityReservationType = activity.usahecFacilityReservationType
+        this.usahecContract = activity.usahecContract
         this.copyToUSAHECCalendar = activity.copyToUSAHECCalendar
         this.pocketCalNonAcademicEvent = activity.pocketCalNonAcademicEvent
         this.pocketCalWeek = activity.pocketCalWeek

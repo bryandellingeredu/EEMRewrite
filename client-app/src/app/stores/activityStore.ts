@@ -637,6 +637,7 @@ export default class ActivityStore {
       usahecDirectorate: '',
       usahecCalendarCategory: '',
       usahecFacilityReservationType: '',
+      usahecContract: '',
       copyToUSAHECCalendar: false,
       pocketCalNonAcademicEvent: false,
     pocketCalWeek: '',

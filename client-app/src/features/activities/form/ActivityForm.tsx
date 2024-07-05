@@ -2581,24 +2581,37 @@ label="Spouse Category:"
 
                   options={[
                     { text: "", value: "" },
-                    {
-                      text: "AHEC",
-                      value: "AHEC",
-                    },
                     { text: "AHCF", value: "AHCF" },
-                    { text: "Holiday", value: "Holiday" },
+                    { text: "AHEC", value: "AHEC"},
+                    { text: "AHEC Highlight", value: "AHEC Highlight" },
+                    { text: "AWC/CBKS Tenant", value: "AWC/CBKS Tenant" },
+                    { text: "AWC Event", value: "AWC Event" },
+                    { text: "Billable Event", value: "Billable Event" },
                     { text: "Government", value: "Government" },
                     { text: "Holiday", value: "Holiday" },
+                    { text: "Paying for Setup", value: "Paying for Setup" },
                     { text: "Public Event", value: "Public Event" },
-                    { text: "Billable Event", value: "Billable Event" },
-                    { text: "AWC/CBKS Tenant", value: "AWC/CBKS Tenant" },
-                    { text: "AHEC Highlight", value: "AHEC Highlight" },
-                    { text: "AWC Event", value: "AWC Event" },
+                    { text: "Self Setup / Standard Setup", value: "Self Setup / Standard Setup" },
+                    { text: "Tour", value: "Tour" },
+              
                   ]}
                   placeholder="Reservation Type"
                   name="usahecFacilityReservationType"
                   label="Reservation Type:"
                 />
+
+<MySelectInput
+
+options={[
+  { text: "", value: "" },
+  { text: "Contract not required", value: "Contract not required" },
+  { text: "Contract required: Received", value: "Contract required: Received" },
+  { text: "Contract required: Not Received", value: "Contract required: Not Received" },
+]}
+placeholder="USAHEC Contract"
+name="usahecContract"
+label="USAHEC Contract:"
+/>
 
                 <hr color="#e03997" />
               </Segment>

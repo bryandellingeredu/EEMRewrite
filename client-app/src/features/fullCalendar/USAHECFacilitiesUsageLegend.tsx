@@ -7,7 +7,9 @@ import { useEffect} from "react";
 export default observer(function USAHECFacilitiesUsageLegend() {
   const { usahecFacilitiesUsageLegendStore } = useStore();
   const { legend, loadingInitial, loadLegend } = usahecFacilitiesUsageLegendStore;
-  const allowedNames = ["AHEC", "AHCF", "Holiday", "Public Event", "Billable Event", "AWC/CBKS Tenant", "AHEC Highlight", "AWC Event"];
+  const allowedNames = 
+  ["AHEC", "AHCF", "Holiday", "Public Event", "Billable Event", "AWC/CBKS Tenant", "AHEC Highlight",
+    "AWC Event", "Tour", "Self Setup / Standard Setup", "Paying for Setup"];
 
   useEffect(() => {
     if(!legend.length) loadLegend();
