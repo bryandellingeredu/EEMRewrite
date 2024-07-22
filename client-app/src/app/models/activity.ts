@@ -35,6 +35,7 @@ export interface Activity{
     eventLookup: string,
     eventLookupCalendar: string,
     teamLookup: string,
+    teamOwner: string,
     vtcLookup: string,
     teamLink: string,
     armyTeamLink: string,
@@ -307,6 +308,7 @@ export class ActivityFormValues{
     eventLookup: string = '';
     eventLookupCalendar: string = '';
     teamLookup: string = '';
+    teamOwner: string = '';
     vtcLookup: string = '';
     teamLink: string = '';
     armyTeamLink: string = '';
@@ -570,6 +572,7 @@ export class ActivityFormValues{
         this.eventLookup = activity.eventLookup;
         this.eventLookupCalendar = activity.eventLookupCalendar;
         this.teamLookup = activity.teamLookup;
+        this.teamOwner = activity.teamOwner;
         this.vtcLookup = activity.vtcLookup;
         this.teamLink = activity.teamLink;
         this.armyTeamLink = activity.armyTeamLink;

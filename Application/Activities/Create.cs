@@ -232,9 +232,9 @@ namespace Application.Activities
                                 UserEmail = user.Email,
                                 TeamInvites = (List<TextValueUser>)(a.TeamInvites.Any()? a.TeamInvites : new List<TextValueUser>()),
                                 RoomEmails = a.RoomEmails,
-                                PrimaryLocation = a.PrimaryLocation
+                                PrimaryLocation = a.PrimaryLocation,
                             };
-                            Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO);
+                            Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO, a.TeamOwner);
                             a.TeamLookup = teamsMeeting.Id;
                             a.TeamLink = teamsMeeting.OnlineMeeting.JoinUrl;
                             a.TeamRequester = a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? a.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();

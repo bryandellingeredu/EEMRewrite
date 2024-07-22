@@ -380,7 +380,7 @@ namespace Application.Activities
                         RequesterEmail = request.Activity.TeamRequester,
                         TeamInvites = (List<TextValueUser>)(request.Activity.TeamInvites.Any() ? request.Activity.TeamInvites : new List<TextValueUser>())
                     };
-                    await GraphHelper.UpdateTeamsMeeting(graphEventDTO, request.Activity.TeamLookup);
+                    await GraphHelper.UpdateTeamsMeeting(graphEventDTO, request.Activity.TeamLookup, request.Activity.TeamOwner);
                 }
                 else
                 {
@@ -398,7 +398,7 @@ namespace Application.Activities
                             RequesterEmail = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
                             TeamInvites = (List<TextValueUser>)(request.Activity.TeamInvites.Any() ? request.Activity.TeamInvites : new List<TextValueUser>())
                         };
-                        Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO);
+                        Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO, request.Activity.TeamOwner);
                         activity.TeamLookup = teamsMeeting.Id;
                         activity.TeamLink = teamsMeeting.OnlineMeeting.JoinUrl;
                         activity.TeamRequester = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount();

@@ -1,11 +1,14 @@
 ﻿namespace Application
 {
     using Application.Activities;
+    using Application.Emails;
     using Application.GraphSchedules;
     using Azure.Identity;
     using Domain;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.HttpResults;
     using Microsoft.Extensions.Caching.Memory;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Graph;
     using Persistence.Migrations;
     using System;
@@ -261,7 +264,7 @@
 
             return cachedRooms;
         }
-
+        
 
 
         public static Task<User> GetUserAsync(string email)
@@ -333,24 +336,31 @@
             return combinedResult;
         }
 
-        public static async Task<Event> CreateTeamsMeeting(GraphEventDTO graphEventDTO)
+        public static async Task<Event> CreateTeamsMeeting(GraphEventDTO graphEventDTO, string teamOwner)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
                   throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
-            var calendar = await _appClient.Users[graphEventDTO.RequesterEmail].Calendar
+            var address = string.IsNullOrEmpty(teamOwner) ? graphEventDTO.RequesterEmail : teamOwner;
+            var name = string.IsNullOrEmpty(teamOwner) ? graphEventDTO.RequesterEmail : graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName;
+
+            var calendar = await _appClient.Users[address].Calendar
               .Request()
               .GetAsync();
 
+
+
             List<Attendee> attendees = new List<Attendee>
-    {
+
+
+            {
         new Attendee
         {
             EmailAddress = new EmailAddress
             {
-                Address = graphEventDTO.RequesterEmail,
-                Name = graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName,
+                Address = address,
+                Name = name,
             },
             Type = AttendeeType.Required
         }
@@ -429,7 +439,7 @@
             };
 
 
-            var createdEvent = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events
+            var createdEvent = await _appClient.Users[address].Calendars[calendar.Id].Events
               .Request()
               .AddAsync(@event);
 
@@ -518,16 +528,47 @@
 
 
 
-        public static async Task UpdateTeamsMeeting(GraphEventDTO graphEventDTO, string eventId)
+        public static async Task UpdateTeamsMeeting(GraphEventDTO graphEventDTO, string eventId, string teamOwner)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
                 throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             // Fetch the existing event
-            var existingEvent = await _appClient.Users[graphEventDTO.RequesterEmail].Events[eventId]
-                .Request()
-                .GetAsync();
+
+            var eventLookup = eventId;
+
+            var address = string.IsNullOrEmpty(teamOwner) ? graphEventDTO.RequesterEmail : teamOwner;
+            var name = string.IsNullOrEmpty(teamOwner) ? graphEventDTO.RequesterEmail : graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName;
+
+            string[] possibleEmails = new[] {teamOwner, graphEventDTO.RequesterEmail, GetEEMServiceAccount() };
+            string calendarEmail = string.Empty;    
+
+            Event existingEvent = null;
+
+            foreach (var mail in possibleEmails)
+            {
+                if (!string.IsNullOrEmpty(mail))
+                {
+                    try
+                    {
+                        // Assuming id is used as the event lookup key
+                        Event @event = await _appClient.Users[mail].Events[eventLookup].Request().GetAsync();
+                        if (@event != null)
+                        {
+                            existingEvent = @event;
+                            calendarEmail = mail;
+                        }
+                    }
+                    catch (Microsoft.Graph.ServiceException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        // Event not found, continue checking next possible email
+                        continue;
+                    }
+                }
+            }
+
+
 
             if (existingEvent == null || string.IsNullOrEmpty(existingEvent.Id))
             {
@@ -572,8 +613,8 @@
         {
             EmailAddress = new EmailAddress
             {
-                Address = graphEventDTO.RequesterEmail,
-                Name = graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName,
+                Address = address,
+                Name = name,
             },
             Type = AttendeeType.Required
         }
@@ -595,7 +636,7 @@
             existingEvent.Attendees = attendees;
 
             // Update the event
-            await _appClient.Users[graphEventDTO.RequesterEmail].Events[eventId]
+            await _appClient.Users[calendarEmail].Events[eventId]
                 .Request()
                 .UpdateAsync(existingEvent);
 
@@ -632,16 +673,48 @@
             return attendeesList;
         }
 
-        public static async Task DeleteTeamsMeeting(string teamId, string requesterEmail)
+        public static async Task DeleteTeamsMeeting(string teamId, string requesterEmail, string teamOwner)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
+            var eventLookup = teamId;
+
+            string[] possibleEmails = new[] { teamOwner, requesterEmail, GetEEMServiceAccount() };
+            string calendarEmail = string.Empty;
+
+            Event existingEvent = null;
+
+            foreach (var mail in possibleEmails)
+            {
+                if (!string.IsNullOrEmpty(mail))
+                {
+                    try
+                    {
+                        // Assuming id is used as the event lookup key
+                        Event @event = await _appClient.Users[mail].Events[eventLookup].Request().GetAsync();
+                        if (@event != null)
+                        {
+                            existingEvent = @event;
+                            calendarEmail = mail;
+                        }
+                    }
+                    catch (Microsoft.Graph.ServiceException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        // Event not found, continue checking next possible email
+                        continue;
+                    }
+                }
+            }
+
             try
             {
-                await _appClient.Users[requesterEmail].Events[teamId]
-                    .Request()
-                    .DeleteAsync();
+                if (existingEvent != null)
+                {
+                    await _appClient.Users[calendarEmail].Events[eventLookup]
+                        .Request()
+                        .DeleteAsync();
+                }
             }
             catch (ServiceException ex)
             {

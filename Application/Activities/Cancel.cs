@@ -97,7 +97,7 @@ namespace Application.Activities
                 if(!string.IsNullOrEmpty(activity.TeamLookup) && !string.IsNullOrEmpty(activity.TeamRequester)){
                     try
                     {
-                        await GraphHelper.DeleteTeamsMeeting(activity.TeamLookup, activity.TeamRequester);
+                        await GraphHelper.DeleteTeamsMeeting(activity.TeamLookup, activity.TeamRequester, activity.TeamOwner);
                     }
                     catch (Exception)
                     {

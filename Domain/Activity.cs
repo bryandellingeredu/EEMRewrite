@@ -39,6 +39,7 @@ namespace Domain
         public string VTCLookup { get; set; }
         public string TeamLink { get; set; }
         public string TeamRequester { get; set; }
+        public string TeamOwner {get; set;}
         public string ArmyTeamLink {get; set;}
 
         [NotMapped]

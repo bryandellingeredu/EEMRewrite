@@ -40,11 +40,13 @@ namespace Application.Teams
                     var settings = s.LoadSettings(_config);
                     GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
 
-                    var graphResult = await GraphHelper.DeleteEvent(request.TeamDeleteRequestDTO.Id, request.TeamDeleteRequestDTO.TeamRequester, null, null, null, null);
-                    if (!graphResult) // Assuming DeleteEvent returns a bool indicating success
-                    {
-                        return Result<Unit>.Failure("Failed to delete the Teams event.");
-                    }
+                   await GraphHelper.DeleteTeamsMeeting(
+                        request.TeamDeleteRequestDTO.Id,
+                        request.TeamDeleteRequestDTO.TeamRequester,
+                        request.TeamDeleteRequestDTO.TeamOwner
+                  );
+
+                
 
                     var activity = await _context.Activities
                         .FirstOrDefaultAsync(x => x.TeamLookup == request.TeamDeleteRequestDTO.Id, cancellationToken);
@@ -54,6 +56,7 @@ namespace Application.Teams
                         activity.TeamLookup = null;
                         activity.TeamRequester = null;
                         activity.TeamLink = null;
+                        activity.TeamOwner = null;
                         await _context.SaveChangesAsync(cancellationToken);
                     }
 

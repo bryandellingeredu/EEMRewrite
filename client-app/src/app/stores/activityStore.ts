@@ -555,6 +555,7 @@ export default class ActivityStore {
       eventLookup: graphEvent.id,
       eventLookupCalendar: '',
       teamLookup: '',
+      teamOwner: '',
       vtcLookup: '',
       teamLink: '',
       armyTeamLink: '',

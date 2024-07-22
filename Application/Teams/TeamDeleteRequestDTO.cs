@@ -9,6 +9,7 @@ namespace Application.Teams
     public class TeamDeleteRequestDTO
     {
         public string Id { get; set; }  
-        public string TeamRequester { get; set; }    
+        public string TeamRequester { get; set; } 
+        public string TeamOwner { get; set; }
     }
 }

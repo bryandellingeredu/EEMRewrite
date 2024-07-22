@@ -138,6 +138,8 @@ export default observer(function ActivityForm() {
   const {user, isLoggedIn} = userStore
   const {getBackToCalendarInfoRecord} = backToCalendarStore;
   const [armyTeamLink, setArmyTeamLink] = useState('');
+  const [teamOwner, setTeamOwner] = useState('')
+  const [teamOwnerChangeIsDisabled, setTeamOwnerChangeIsDisabled] = useState(false);
   const [armyTeamLinkWarning, setArmyTeamLinkWarning ] = useState(false);
   const updateArmyTeamLink  = (newArmyTeamLink: string) => {setArmyTeamLink(newArmyTeamLink)};
   const [enlistedAidAdmin, setEnlistedAidAdmin] = useState(false);
@@ -151,6 +153,9 @@ export default observer(function ActivityForm() {
     setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
     setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
     setMemberOfExecServices((user && user.roles && user.roles.includes("ExecServices")) || false);
+    if( user && user.userName && user.userName.endsWith('armywarcollege.edu') && !activity.teamOwner && !teamOwner){
+      setTeamOwner(user.userName)
+    }
 }, [user]);
   const [roomOptionRegistryId, setRoomOptionRegistryId] = useState<string>(uuid())
   const [attendees, setAttendees] = useState<UserEmail[]>([]);
@@ -264,7 +269,7 @@ export default observer(function ActivityForm() {
       setPopupEndOpen(false);
     });
   }
-
+  const handleSetTeamOwner = (newTeamOwner: string) => setTeamOwner(newTeamOwner);
   const handleSetRoomRequired = (newRoomRequired : boolean) => setRoomRequired(newRoomRequired);
   const handleSetShowRoomWizard = (newShowRoomWizard: boolean) => setShowRoomWizard(newShowRoomWizard);
   const handleCloseSelectRoomWizard = () => {
@@ -371,7 +376,7 @@ export default observer(function ActivityForm() {
       if(id && manageSeries && manageSeries === "true"){
         await agent.Teams.deleteSeries(id);
       }else{
-        await agent.Teams.delete(activity.teamLookup, activity.teamRequester);
+        await agent.Teams.delete(activity.teamLookup, activity.teamRequester, activity.teamOwner || '');
       }
     
       setTeamIsDeleted(true);
@@ -593,6 +598,15 @@ export default observer(function ActivityForm() {
             fileType: "",
           });
         }
+        
+        if(response && response.teamOwner && response.teamOwner.endsWith('armywarcollege.edu')){
+          setTeamOwner(response.teamOwner);
+        }
+
+        if(response && (response.teamLookup || response.teamLink)){
+          setTeamOwnerChangeIsDisabled(true);
+        }
+
         if (response?.activityAttachmentGroupLookup && response?.activityAttachmentGroupLookup.length > 0 && (!copy || copy === 'false')) {
           setActivityAttachmentGroupId(response?.activityAttachmentGroupLookup);
           agent.Attachments.activityDetails(response.activityAttachmentGroupLookup).then((response) => {
@@ -884,6 +898,7 @@ export default observer(function ActivityForm() {
        !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator && !vtcSchedulingErrorIndicator && !roomResourceErrorIndicator &&
         !roomResourceOtherErrorIndicator && !flagRoomOtherErrorIndicator) {
       setSubmitting(true);
+      if (teamOwner && !activity.teamOwner) activity.teamOwner = teamOwner;
       if(roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu')){
         activity.eventClearanceLevel = 'Secret';
       }
@@ -1732,6 +1747,9 @@ export default observer(function ActivityForm() {
                     teamAttendeesLoading = {teamAttendeesLoading}
                     manageSeries={manageSeries}
                     id={id}
+                    teamOwner={teamOwner}
+                    setTeamOwner={handleSetTeamOwner}
+                    teamOwnerChangeIsDisabled={teamOwnerChangeIsDisabled}
                   />
             </SemanticForm.Field>
             <SemanticForm.Field>

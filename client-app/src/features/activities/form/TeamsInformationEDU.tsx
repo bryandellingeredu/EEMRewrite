@@ -17,10 +17,14 @@ interface Props{
     deleteTeamMeeting: () => void;
     id: string;
     manageSeries: string;
+    teamOwner: string;
+    setTeamOwner: (newTeamOwner: string) => void;
+    teamOwnerChangeIsDisabled: boolean;
   }
 
 export default function TeamsInformationEDU(
-  {attendees, setAttendees,  setTeamMeeting, teamLink, teamLookup, deleteTeamMeeting, id, manageSeries} : Props)
+  {attendees, setAttendees,  setTeamMeeting, teamLink, teamLookup, deleteTeamMeeting, id, manageSeries,
+     teamOwner, setTeamOwner, teamOwnerChangeIsDisabled} : Props)
 {
     const {modalStore} = useStore();
     const [section, setSection] = useState(teamLink ? 'showMeeting' : 'addMeeting');
@@ -28,6 +32,7 @@ export default function TeamsInformationEDU(
     const [emails, setEmails] = useState<UserEmail[]>([]);
     const [attendeesCopy, setAttendeesCopy] = useState<UserEmail[]>([]);  // attendees is not causing modal to re render
     const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm2, setSearchTerm2] = useState('');
     const [openConfirm, setOpenConfirm] = useState(false);
     const [userToDelete, setUserToDelete] = useState<UserEmail>({displayName: '', email: ''});
 
@@ -49,6 +54,10 @@ const source = uniqueEmails.map(email => ({
   description: email.email,
 }));
 
+useEffect(() => {
+  if(teamOwner) setSearchTerm2(teamOwner)
+}, [teamOwner])
+
     useEffect(() => {
         agent.EduEmails.list()
           .then((result) => {
@@ -65,6 +74,15 @@ const source = uniqueEmails.map(email => ({
       const handleSearchChange = (e: React.MouseEvent, { value }: SearchProps) => {
         setSearchTerm(value as string);
       };
+
+      const handleSearchChange2 = (e: React.MouseEvent<HTMLElement>, { value }: SearchProps) => {
+        setSearchTerm2(value as string);
+      };
+
+      const handleResultSelect2 = (e: React.MouseEvent, { result }: SearchProps) => {
+        setSearchTerm2(result.description);
+      };
+
 
       const addNonEDUUser = () => {
         const displayNameElement = document.getElementById('displayName') as HTMLInputElement;
@@ -103,6 +121,8 @@ const source = uniqueEmails.map(email => ({
         }
         setSearchTerm('');
       };
+
+   
 
       const handleDeleteButton = (user: UserEmail) => {
         setOpenConfirm(true);
@@ -215,15 +235,64 @@ const source = uniqueEmails.map(email => ({
       <Button.Group size="massive">
     <Button
      positive
-     onClick={() => setSection('needAttendees')}
+     onClick={() => setSection('addOwner')}
     >I Want to Add an EDU Teams Meeting</Button>
     <Button.Or />
     <Button  onClick={() => modalStore.closeModal()}>Cancel</Button>
   </Button.Group>
 </Segment>
    }
+
+
+    {section === 'addOwner'  && 
+    <SegmentGroup >
+      <Segment >
+        <Header as ='h2' textAlign="center">
+          <Header.Content>
+          EDU Team Meeting Owner
+          </Header.Content>
+        <Header.Subheader >
+          Enter a valid EDU email to be the owner of this Team Meeting. 
+        </Header.Subheader>
+        </Header>
+      
+      </Segment>
+      
+  <Segment textAlign="center" color='teal' >
+  <Search
+          icon='user'
+           iconPosition='left'
+            label={{ tag: true, content: 'Add an EDU Teams Owner' }}
+    labelPosition='right'
+        fluid
+        input={{ fluid: true }}
+        loading={loadingEmails}
+        disabled={loadingEmails}
+        placeholder={loadingEmails ? 'Loading...' : 'Add an EDU Teams Owner...'}
+        onSearchChange={handleSearchChange2}
+        results={source.filter(result =>
+          result.title.toLowerCase().includes(searchTerm2.toLowerCase()) ||
+          result.description.toLowerCase().includes(searchTerm2.toLowerCase())
+        )}
+        value={searchTerm2}
+        onResultSelect={handleResultSelect2}
+      />
+
+  </Segment>
+       <Segment clearing>
+     <Button size="massive" floated="right"
+      loading={loadingEmails && !searchTerm2}
+      disabled={ !searchTerm2.endsWith('armywarcollege.edu') }
+      positive
+      onClick={() => {setTeamOwner(searchTerm2); setSection('needAttendees')}}
+     >Continue</Button>
+ </Segment>
+ </SegmentGroup>
+    }
+
+
     {section === 'needAttendees' && 
-      <Segment textAlign="center">
+      <Segment textAlign="center"  >
       <Button.Group size="massive">
     <Button
      positive

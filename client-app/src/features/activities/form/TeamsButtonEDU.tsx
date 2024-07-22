@@ -15,13 +15,17 @@ interface Props{
   teamAttendeesLoading: boolean;
   id: string;
   manageSeries: string;
+  teamOwner: string;
+  setTeamOwner: (newTeamOwner: string) => void;
+  teamOwnerChangeIsDisabled: boolean;
 }
 
 
 export default function TeamsButtonEDU(
   {attendees, setAttendees, setTeamMeeting,
    makeTeamMeeting, teamLink,  teamLookup, teamIsDeleted,
-    deleteTeamMeeting, teamAttendeesLoading, id, manageSeries} : Props){
+    deleteTeamMeeting, teamAttendeesLoading, id, manageSeries,
+    teamOwner, setTeamOwner,  teamOwnerChangeIsDisabled } : Props){
     const {modalStore} = useStore();
     const {openModal} = modalStore;
     return(
@@ -43,7 +47,9 @@ export default function TeamsButtonEDU(
               deleteTeamMeeting = {deleteTeamMeeting}
               id={id}
               manageSeries={manageSeries}
-              
+              teamOwner={teamOwner}
+              setTeamOwner={setTeamOwner}
+              teamOwnerChangeIsDisabled={teamOwnerChangeIsDisabled}
               />, 'large'
             )
           }

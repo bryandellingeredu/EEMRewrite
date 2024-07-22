@@ -111,7 +111,7 @@ namespace Application.Activities
                         {
                             try
                             {
-                                await GraphHelper.DeleteTeamsMeeting(item.TeamLookup, item.TeamRequester);
+                                await GraphHelper.DeleteTeamsMeeting(item.TeamLookup, item.TeamRequester, item.TeamOwner);
                             }
                             catch (Exception)
                             {
@@ -353,7 +353,7 @@ namespace Application.Activities
                                     originalTeamRequestor,
                                 TeamInvites = (List<TextValueUser>)(request.Activity.TeamInvites.Any() ? request.Activity.TeamInvites : new List<TextValueUser>())
                             };
-                            Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO);
+                            Event teamsMeeting = await GraphHelper.CreateTeamsMeeting(graphEventDTO, a.TeamOwner);
                             a.TeamLookup = teamsMeeting.Id;
                             a.TeamLink = teamsMeeting.OnlineMeeting.JoinUrl;
                             a.TeamRequester = string.IsNullOrEmpty(originalTeamRequestor) ?

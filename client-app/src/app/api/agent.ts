@@ -346,7 +346,7 @@ const EduEmails = {
 }
 
 const Teams = {
-    delete: (id: string, teamRequester: string) => axiosRequest.post<void>('/teams/delete', {id,  teamRequester}),
+    delete: (id: string, teamRequester: string, teamOwner: string) => axiosRequest.post<void>('/teams/delete', {id,  teamRequester, teamOwner}),
     deleteSeries: (id: string) => axiosRequest.del<void>(`teams/deleteseries/${id}`),
     attendees: (id: string, teamRequester: string) => axiosRequest.post<UserEmail[]>('/teams/attendees', {id,  teamRequester}),
 }
