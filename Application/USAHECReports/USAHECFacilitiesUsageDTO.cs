@@ -22,5 +22,8 @@ namespace Application.USAHECReports
         public string CreatedBy { get; set; }
         public bool AllDayEvent { get; set; }
         public string USAHECFacilityReservationType { get; set; }
+        public string Description { get; set; }
+        public string USAHECContract { get; set; }
+
     }
 }

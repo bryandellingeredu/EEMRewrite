@@ -14,6 +14,8 @@ interface TableData{
   location: string
   actionOfficer: string
   createdBy: string
+  description: string
+  usahecContract: string
 }
 
 interface LocationData {

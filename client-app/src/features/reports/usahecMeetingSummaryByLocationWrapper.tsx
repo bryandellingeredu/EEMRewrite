@@ -25,6 +25,9 @@ interface SearchFormValues{
   location: string
   actionOfficer: string
   createdBy: string
+  description: string
+  usahecContract: string
+
 }
 
 interface TableData{
@@ -37,6 +40,8 @@ interface TableData{
   location: string
   actionOfficer: string
   createdBy: string
+  description: string
+  usahecContract: string
 }
 
 interface GroupedData {
@@ -55,6 +60,8 @@ interface CSVData{
   location: string
   actionOfficer: string
   createdBy: string
+  description: string
+  usahecContract: string
 }
 
 export default observer(function USAHECMeetingSummaryByLocationWrapper(){
@@ -128,7 +135,9 @@ export default observer(function USAHECMeetingSummaryByLocationWrapper(){
               end: item.allDayEvent ?  format(new Date(item.end), 'MM/dd/yyyy' ) : format(new Date(item.end), 'MM/dd/yyyy h:mma' ),
               actionOfficer: item.actionOfficer,
               location: item.location,
-              createdBy: item.createdBy
+              createdBy: item.createdBy,
+              description: item.description,
+              usahecContract: item.usahecContract
             }
             dataArray.push(newTableData);
           });
@@ -217,13 +226,13 @@ export default observer(function USAHECMeetingSummaryByLocationWrapper(){
           const url = `${process.env.REACT_APP_API_URL}/ExportToExcel/USAHECFacilitiesUsageReport`;
           let data: CSVData[] = [];
           if (searched && searchedData) {
-            data = searchedData.map(({ title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy}) => {
-              return { title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy};
+            data = searchedData.map(({ title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy, description, usahecContract}) => {
+              return { title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy, description, usahecContract};
             });
           }
           if(!searched && initialData){
-            data = initialData.map(({ title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy}) => {
-              return { title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy};
+            data = initialData.map(({ title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy, description, usahecContract}) => {
+              return { title,usahecFacilityReservationType,start,end,location,actionOfficer,createdBy, description, usahecContract};
             });
           }
           if(data && data.length > 0){
@@ -272,7 +281,7 @@ export default observer(function USAHECMeetingSummaryByLocationWrapper(){
 
         <Formik
         
-initialValues={{title: '', usahecFacilityReservationType: '', start: new Date(), end: nextMonth, location: '', actionOfficer: '',  createdBy: ''}}
+initialValues={{title: '', usahecFacilityReservationType: '', start: new Date(), end: nextMonth, location: '', actionOfficer: '',  createdBy: '', description: '', usahecContract: ''}}
 onSubmit={(values) => handleFormSubmit(values)}>
         {({handleSubmit}) => (
             <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'
@@ -282,11 +291,11 @@ onSubmit={(values) => handleFormSubmit(values)}>
                 <Table.Row>
                 <Table.HeaderCell style={{ minWidth: "200px" }}>Start</Table.HeaderCell>
                 <Table.HeaderCell style={{ minWidth: "200px" }}>End</Table.HeaderCell>
-                <Table.HeaderCell style={{ minWidth: "200px" }}>Room</Table.HeaderCell>
                 <Table.HeaderCell style={{ minWidth: "200px" }}>Meeting Title</Table.HeaderCell>
+                <Table.HeaderCell style={{ minWidth: "200px" }}>Room</Table.HeaderCell>
                 <Table.HeaderCell style={{ minWidth: "200px" }}>Reservation Type</Table.HeaderCell>
-                <Table.HeaderCell style={{ minWidth: "200px" }}>Booked By</Table.HeaderCell>
-                <Table.HeaderCell style={{ minWidth: "200px" }}>Action Officer</Table.HeaderCell>
+                <Table.HeaderCell style={{ minWidth: "200px" }}>USAHEC Contract</Table.HeaderCell>
+                <Table.HeaderCell style={{ minWidth: "200px" }}>Description</Table.HeaderCell>
                 <Table.HeaderCell > 
                       <Button animated color='black' onClick={handleDownload} type='button'>
                         <Button.Content hidden>Excel</Button.Content>
@@ -311,6 +320,10 @@ onSubmit={(values) => handleFormSubmit(values)}>
                            dateFormat="MMMM d, yyyy"
                         />
                     </Table.HeaderCell>
+                
+                    <Table.HeaderCell>
+                        <MyTextInput name='title'  placeholder="" />
+                    </Table.HeaderCell>
                     <Table.HeaderCell>
                           <MyDataList
                               name="location"
@@ -320,9 +333,6 @@ onSubmit={(values) => handleFormSubmit(values)}>
                                 .sort()}
                             />
                       </Table.HeaderCell>
-                    <Table.HeaderCell>
-                        <MyTextInput name='title'  placeholder="" />
-                    </Table.HeaderCell>
                     <Table.HeaderCell>
                     <MySelectInput
                   options={[
@@ -354,20 +364,19 @@ onSubmit={(values) => handleFormSubmit(values)}>
                 />
                     </Table.HeaderCell>
                     <Table.HeaderCell>
-                    <MyDataList
-                              name="createdBy"
-                              placeholder=""
-                              dataListId="createdByList"
-                              options={createdByList}
-                            />
+                    <MySelectInput
+                  options={[
+                    { text: "", value: "" },
+                    { text: "Contract not required", value: "Contract not required" },
+                    { text: "Contract required: Received", value: "Contract required: Received" },
+                    { text: "Contract required: Not Received", value: "Contract required: Not Received" },
+                  ]}
+                  placeholder=""
+                  name="usahecContract"
+                />
                     </Table.HeaderCell>
                     <Table.HeaderCell>                      
-                       <MyDataList
-                             name="actionOfficer"
-                             placeholder=""
-                             dataListId="actionOfficers"
-                             options={actionOfficers}
-                           />                   
+                    <MyTextInput name='description'  placeholder="" />
                    </Table.HeaderCell>
                    <Table.HeaderCell> 
                     <Button animated  loading={submitting} color='violet'  type='submit' >

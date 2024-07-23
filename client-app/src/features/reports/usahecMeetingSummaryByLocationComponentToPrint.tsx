@@ -13,6 +13,8 @@ interface TableData{
   location: string
   actionOfficer: string
   createdBy: string
+  description: string
+  usahecContract: string
 }
 
 interface GroupedData {
@@ -37,11 +39,11 @@ interface Props {
                   <Table.Row>
                   <Table.HeaderCell>Start</Table.HeaderCell>
                   <Table.HeaderCell>End</Table.HeaderCell>
-                  <Table.HeaderCell>Room</Table.HeaderCell>
                   <Table.HeaderCell>Meeting Title</Table.HeaderCell>
+                  <Table.HeaderCell>Room</Table.HeaderCell>
                   <Table.HeaderCell>Reservation Type</Table.HeaderCell>
-                  <Table.HeaderCell>Booked By</Table.HeaderCell>
-                  <Table.HeaderCell colSpan={2}>Action Officer</Table.HeaderCell>               
+                  <Table.HeaderCell>USAHEC Contract</Table.HeaderCell>
+                  <Table.HeaderCell colSpan={2}>Description</Table.HeaderCell>               
                   </Table.Row>
               </Table.Header>
           

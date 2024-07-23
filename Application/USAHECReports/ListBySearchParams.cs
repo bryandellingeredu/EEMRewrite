@@ -44,6 +44,16 @@ using Microsoft.Graph;
                     query = query.Where(e => EF.Functions.Like(e.Title.ToLower(), "%" + request.searchParams.Title.ToLower() + "%"));
                 }
 
+                if (!string.IsNullOrEmpty (request.searchParams.Description))
+                {
+                    query = query.Where(e => EF.Functions.Like(e.Description.ToLower(), "%" + request.searchParams.Description.ToLower() + "%"));
+                }
+
+                if (!string.IsNullOrEmpty(request.searchParams.USAHECContract))
+                {
+                    query = query.Where(e => e.USAHECContract == request.searchParams.USAHECContract);
+                }
+
                 if (!string.IsNullOrEmpty(request.searchParams. ActionOfficer))
                 {
                     query = query.Where(e => e.ActionOfficer == request.searchParams.ActionOfficer);
@@ -157,6 +167,8 @@ using Microsoft.Graph;
                             Id = activity.Id,
                             CategoryId = activity.CategoryId,
                             ActionOfficer = activity.ActionOfficer,
+                            Description = activity.Description, 
+                            USAHECContract = activity.USAHECContract,
                         })
                          .ToList();
                 }

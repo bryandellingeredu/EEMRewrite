@@ -13,6 +13,8 @@ interface TableData{
   location: string
   actionOfficer: string
   createdBy: string
+  description: string
+  usahecContract: string
 }
 
   interface Props {
@@ -39,19 +41,19 @@ export default function USAHECMeetingSummaryByLocationEventRow({item} : Props){
             {item.end}
          </Table.Cell>
          <Table.Cell>
-         {renderTextWithPopup(item.location)}
+         {renderTextWithPopup(item.title)}
          </Table.Cell>
          <Table.Cell>
-         {renderTextWithPopup(item.title)}
+         {renderTextWithPopup(item.location)}
          </Table.Cell>
          <Table.Cell>
          {renderTextWithPopup(item.usahecFacilityReservationType)}
          </Table.Cell>
          <Table.Cell>
-         {renderTextWithPopup(item.createdBy)}
+         {renderTextWithPopup(item.usahecContract)}
          </Table.Cell>
          <Table.Cell colSpan={2}>
-         {renderTextWithPopup(item.actionOfficer)}
+         {renderTextWithPopup(item.description)}
          </Table.Cell>
    </Table.Row> 
 

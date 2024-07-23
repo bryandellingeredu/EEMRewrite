@@ -103,10 +103,10 @@ namespace API.Controllers
         public IActionResult CsvFacilitiesUsageHostingReport([FromBody] USAHECFacilitiesUsageReportCSVData[] csvDataList)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("Title,Reservation Type,Start,End,Room/s, Action Officer, Created By");
+            builder.AppendLine("Title,Reservation Type,Start,End,Room/s, USAHEC Contract, Description");
             foreach (var data in csvDataList)
             {
-                builder.AppendLine($"\"{data.Title}\",\"{data.USAHECFacilityReservationType}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.ActionOfficer}\",\"{data.CreatedBy}\"");
+                builder.AppendLine($"\"{data.Title}\",\"{data.USAHECFacilityReservationType}\",\"{data.Start}\",\"{data.End}\",\"{data.Location}\",\"{data.USAHECContract}\",\"{data.Description}\"");
             }
 
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "USAHECFacilitiesUsageReport.csv");
@@ -177,6 +177,8 @@ namespace API.Controllers
             public string Location { get; set; }
             public string ActionOfficer { get; set; }
             public string CreatedBy { get; set; }
+            public string USAHECContract { get; set; }
+            public string Description { get; set; }
         }
 
         public class SVTCReportCSVData
