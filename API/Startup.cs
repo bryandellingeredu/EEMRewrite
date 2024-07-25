@@ -100,24 +100,7 @@ namespace API
                 // Map the fallback for SPA after Hangfire Dashboard configuration
                 endpoints.MapFallbackToController("Index", "Fallback");
             });
-
-            recurringJobManager.AddOrUpdate(
-        "StudentSyncCalendarJob",
-        () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateStudentCalendarFileJob(),
-        "0 */3 * * *"); // At minute 0 past every 3rd hour
-
-            recurringJobManager.AddOrUpdate(
-                "GenericSyncCalendarJob",
-                () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateSyncCalendarFilesJob(),
-                "0 1-23/3 * * *"); // At minute 0 past hour 1, 4, 7, ..., which is 1 hour after the first job
-
-            recurringJobManager.AddOrUpdate(
-                "EnlistedAideSyncCalendarJob",
-                () => serviceProvider.GetService<BackgroundJobs.BackgroundJobs>().CreateEnlistedAideSyncCalendarFileJob(),
-                "0 2-23/3 * * *"); // At minute 0 past hour 2, 5, 8, ..., which is 2 hours after the first job
         }
-
-
 
     }
   

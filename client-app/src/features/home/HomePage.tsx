@@ -50,32 +50,32 @@ export default observer(function HomePage(){
 
       useEffect(() => {
         if (userStore.isLoggedIn && (armyProfile || isEduSignedIn)) {
-          history.push(`${process.env.PUBLIC_URL}/activityTable`);
+          history.push(`${process.env.PUBLIC_URL}/spousecalendar`)
         }
       }, [userStore.isLoggedIn, armyProfile, isEduSignedIn, history]);
 
       useEffect(() => {
         if(navbarType === 'studentCalendar'){
-          history.push(`${process.env.PUBLIC_URL}/studentcalendar`)
+          history.push(`${process.env.PUBLIC_URL}/spousecalendar`)
         }
         if(navbarType === 'msfp'){
-          history.push(`${process.env.PUBLIC_URL}/msfpcalendar`)
+          history.push(`${process.env.PUBLIC_URL}/spousecalendar`)
         }
       }, [navbarType ])
 
       useEffect(() => {
         if(redirectToPage && userStore.isLoggedIn){
-          history.push(`${process.env.PUBLIC_URL}/${redirectToPage}`)
+          history.push(`${process.env.PUBLIC_URL}/spousecalendar`)
         } else if (userStore.isLoggedIn && armyProfile){
-          history.push(`${process.env.PUBLIC_URL}/${redirectToPage}`)
+          history.push(`${process.env.PUBLIC_URL}/spousecalendar`)
         } 
       }, [redirectToPage, userStore.isLoggedIn, armyProfile ])
 
       useEffect(() => {
         if(redirectId && redirectCategoryId && userStore.isLoggedIn){
-          history.push(`${process.env.PUBLIC_URL}/activities/${redirectId}/${redirectCategoryId}`)
+          history.push(`${process.env.PUBLIC_URL}/spousecalendar`)
         } else if (userStore.isLoggedIn && armyProfile){
-          history.push(`${process.env.PUBLIC_URL}/activityTable`)
+          history.push(`${process.env.PUBLIC_URL}/spousecalendar`)
         } 
       }, [redirectId, redirectCategoryId, userStore.isLoggedIn, armyProfile ])
 
@@ -97,13 +97,13 @@ export default observer(function HomePage(){
 
     {userStore.isLoggedIn && armyProfile && 
         
-        <Button as={Link} to={`${process.env.PUBLIC_URL}/activityTable`} size='huge' inverted>
+        <Button as={Link} to={`${process.env.PUBLIC_URL}/spouseCalendar`} size='huge' inverted>
         Go to Events
     </Button>
      }
 
      {userStore.isLoggedIn && !armyProfile && isEduSignedIn &&
-      <Button as={Link} to={`${process.env.PUBLIC_URL}/activityTable`} size='huge' inverted>
+      <Button as={Link} to={`${process.env.PUBLIC_URL}/spouseCalendar`} size='huge' inverted>
         Go to Events
     </Button>
      }
