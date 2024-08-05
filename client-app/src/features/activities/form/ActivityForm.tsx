@@ -1886,7 +1886,6 @@ export default observer(function ActivityForm() {
                       <Segment><MySemanticCheckBox  name="roomResourceSipr" label="SIPR" disabled={roomEmails.length === 1 && roomEmails[0] === 'Bldg650CollinsHallB030@armywarcollege.edu' }/></Segment>
                       <Segment><MySemanticCheckBox  name="roomResourceRen" label="REN"/></Segment>
                       <Segment><MySemanticCheckBox  name="roomResourceNts" label="NTS" disabled={roomEmails.length === 1 && roomEmails[0] === 'Bldg650CollinsHallB030@armywarcollege.edu' }/></Segment>
-                      <Segment><MySemanticCheckBox  name="roomResourceNtg" label="NTG" disabled={roomEmails.length === 1 && roomEmails[0] === 'Bldg650CollinsHallB030@armywarcollege.edu' }/></Segment>
                       <Segment>
                         <MySemanticCheckBox  name="roomResourceOther" label="Other"/>
                         {values.roomResourceOther &&  <MyTextInput name="roomResourceOtherText" placeholder="Other"/> }
@@ -2379,18 +2378,13 @@ export default observer(function ActivityForm() {
                    name="studentCalendarUniform"
                    label="Uniform:"
                    options={['',
-                    'Uniform Required: Special Event--Class A/Army Service Uniform (ASU) or comparable uniform for other services; Civilians: Traditional Business--gentlemen: matching suit, dress shirt, tie and leather dress shoes; ladies: suit or jacket with coordinating skirt/slacks or a dress, and dress shoes.',
-                    'Service Dress (Class B)--Military: Class B/Army Service Uniform (ASU) (rank and name plate required, no jacket, tie required if wearing long sleeve shirt/no tie with short sleeve shirt) or comparable uniform for other services; Civilians: Business--gentlemen: sports jacket with dress slacks, dress shirt, and no tie, and leather dress shoes;ladies: jacket or business top with skirt or slacks or a dress, and dress shoes.',
-                    'Smart Business: gentlemen: sports jacket with dress slacks, dress shirt and tie, and leather dress shoes; ladies: jacket with skirt or slacks or a dress, and dress shoes. Or Class B/ASU or comparable attire for other services is an authorized equivalent standard of dress. Tuesday is "tieless Tuesday" no tie is required with suit.',
-                    'Business Casual: gentlemen: slacks, dress shirt or collared polo shirt/buttoned shirt and/or sweater, leather shoes, boat shoes, or loafers (no sneakers); ladies: skirt or slacks with top or casual dress and casual shoes. Class B/ASU or comparable attire for other services is an authorized equivalent standard of dress.',
-                    'Combat and Functional: Military--Army Combat Uniform or comparable attire for other services (flight suits authorized); Civilians: Business Casual--gentlemen: slacks, dress shirt or collared polo shirt/buttoned shirt, and/or sweater, leather shoes, boat shoes, or loafers (no sneakers); ladies: skirt or slacks with top or casual dress, and casual shoes.',
-                    'Bliss Auditorium, random seating.',
-                    'Seminar Rooms, Root Hall. ',
-                    'Bliss Auditorium, assigned seating by seminar.',
-                    'Wil Washcoe Auditorium (WWA).',
-                    'Attendance voluntary.',
-                    'Spouses invited to attend, the name tag must be displayed.',
-                    'Meet in accordance with instructions in Electives syllabi and previously issued course and classroom assignment instructions.',
+                    'Smart Business : Gentlemen:  Sports jacket with dress slacks, dress shirt, and tie; and leather dress shoes. Ladies: Jacket with skirt or slacks, or a dress, dress shoes. Class B/ASU (AGSU) or comparable attire for other services is an authorized equivalent standard of dress. ',
+                    'Business : Gentlemen: Sports jacket with dress slacks, dress shirt, and no tie; and leather dress shoes. Ladies: Jacket or business top with skirt or slacks, or a dress, dress shoes. Class B/ASU (AGSU) or comparable attire for other services is an authorized equivalent standard of dress. ',
+                    'Business Casual : Gentlemen: Slacks, dress shirt or collared polo shirt/buttoned shirt, and/or sweater; leather shoes, boat shoes, or loafers (no sneakers). Ladies: skirt or slacks with top or casual dress. Casual shoes.',
+                    'Casual : Gentlemen: Jeans, slacks, or shorts with casual shirt and sneakers/sandals. Ladies: Jeans, slacks, skirt, or shorts with casual shirt, or casual dress, and sneakers/sandals.',
+                    'Combat and Functional : Military: Army Combat Uniform or comparable attire for other services (flight suits authorized). Civilians: Business Casual',
+                    'Service Dress (Class A) : Military: Class A/Army Service Uniform (ASU) / Army Green Service uniform (AGSU) or comparable uniform for other services. Civilians: Traditional Business.',
+                    'Service Dress (Class B) : Military: Class B/Army Service Uniform (ASU) / Army Green Service uniform (AGSU)  (rank and name plate required, no jacket, tie required if wearing long sleeve shirt/ no tie with short sleeve shirt,) or comparable uniform for other services. Civilians: Smart Business  '
                   ]}
                  />
 
