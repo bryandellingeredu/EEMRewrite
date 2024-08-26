@@ -20,6 +20,7 @@ import Pikaday from "pikaday";
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 import ReactDOM from 'react-dom';
 import html2canvas from 'html2canvas';
+import OutlookOnlyModal from "./OutlookOnlyModal";
 
 
 
@@ -27,7 +28,8 @@ export default observer(function RoomCalendar() {
   const calendarDivRef = useRef<HTMLDivElement>(null);
   const { id, backToCalendarId } = useParams<{id: string, backToCalendarId?: string }>();
     const [view, setView] = useState(localStorage.getItem("calendarViewRoom") || "dayGridMonth");
-    const {graphRoomStore, activityStore, categoryStore, backToCalendarStore} = useStore();
+    const {graphRoomStore, activityStore, categoryStore, backToCalendarStore, modalStore} = useStore();
+    const {openModal} = modalStore;
     const {addBackToCalendarInfoRecord, getBackToCalendarInfoRecord} = backToCalendarStore;
     const [isInitialDateSet, setIsInitialDateSet] = useState(false);
     const [initialDate, setInitialDate] = useState<Date | null>(null);
@@ -110,7 +112,14 @@ picURL: '',
       var sanitizedTitle = clickInfo.event.title.replace(/\//g, '');
       getActivityIdByRoom( sanitizedTitle, clickInfo.event.startStr, clickInfo.event.endStr, id).then((activity) => {
         if(!activity || activity.id === '00000000-0000-0000-0000-000000000000' ){
-          toast.info(`Event ${clickInfo.event.title} is reserved in outlook only, there is no eem information`, {
+           
+          modalStore.openModal(<OutlookOnlyModal
+             title = {clickInfo.event.title}
+             start = {clickInfo.event.startStr}
+             end = {clickInfo.event.endStr} 
+             room = {graphRoom.displayName || graphRoom.emailAddress} />);
+
+       /*   toast.info(`Event ${clickInfo.event.title} is reserved in outlook only, there is no eem information`, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -119,7 +128,7 @@ picURL: '',
             draggable: true,
             progress: undefined,
             theme: "light",
-            });
+            }); */
         } else {
           const category = categories.find(x => x.id === activity.categoryId);
           history.push(`${process.env.PUBLIC_URL}/activities/${activity.id}/${category?.id}/${backToCalendarInfo.id}`);

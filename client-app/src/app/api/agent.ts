@@ -362,6 +362,12 @@ const RoomReports = {
          axiosRequest.post<RoomReportEventsResponseDTO[]>('roomReport/getEvents', {start, end, email})
 }
 
+const Tickets = {
+    create: (title: string, start: string, end: string, room: string, comments: string) => axiosRequest.post<void>(
+        'tickets',{title, start, end, room, comments})
+}
+
+
 const agent = {
     Activities,
     Account,
@@ -392,7 +398,8 @@ const agent = {
     EduEmails,
     Teams,
     PocketCalendar,
-    RoomReports
+    RoomReports,
+    Tickets
 }
 
 export default agent;
