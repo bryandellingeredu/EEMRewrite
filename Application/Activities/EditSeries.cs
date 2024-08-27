@@ -360,6 +360,10 @@ namespace Application.Activities
                                     a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? a.CoordinatorEmail : GraphHelper.GetEEMServiceAccount() :
                                     originalTeamRequestor;
                         }
+                        else
+                        {
+                            a.TeamOwner = null;
+                        }
                       newActivities.Add(a);
                     }
                     newRecurrence.Activities = newActivities;   

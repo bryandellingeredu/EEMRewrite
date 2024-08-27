@@ -403,6 +403,10 @@ namespace Application.Activities
                         activity.TeamLink = teamsMeeting.OnlineMeeting.JoinUrl;
                         activity.TeamRequester = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount();
                     }
+                    else
+                    {
+                        activity.TeamOwner = null;
+                    }
                 }
 
 

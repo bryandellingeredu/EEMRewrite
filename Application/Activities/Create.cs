@@ -239,6 +239,10 @@ namespace Application.Activities
                             a.TeamLink = teamsMeeting.OnlineMeeting.JoinUrl;
                             a.TeamRequester = a.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? a.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
                         }
+                        else
+                        {
+                            a.TeamOwner = null;
+                        }
 
                         //create a 30 minute prep time for vtc events
                         if (a.VTC && !a.AllDayEvent)
