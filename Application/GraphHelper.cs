@@ -1,12 +1,16 @@
 ﻿namespace Application
 {
     using Application.Activities;
+    using Application.Core;
     using Application.Emails;
     using Application.GraphSchedules;
+    using Application.RoomReport;
     using Azure.Identity;
     using Domain;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.HttpResults;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Logging;
     using Microsoft.Graph;
@@ -14,6 +18,7 @@
     using System;
     using System.Globalization;
     using System.IO;
+    using System.Text.RegularExpressions;
     using static System.Net.WebRequestMethods;
     using File = File;
 
@@ -189,18 +194,18 @@
         }
 
 
-        public static async Task<Event> GetEventAsync(string email, string id, string lastUpdatedBy, string createdBy, string eventCalendarId)
+        public static async Task<Event> GetEventAsync(string email, string id, string lastUpdatedBy, string createdBy, string eventCalendarId, string eventCalendarEmail)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             var eventLookup = id;
 
-            if (!string.IsNullOrEmpty(eventCalendarId))
+            if (!string.IsNullOrEmpty(eventCalendarId) && !string.IsNullOrEmpty(eventCalendarEmail))
             {
                 try
                 {
-                    Event @event = await _appClient.Me.Calendars[eventCalendarId].Events[eventLookup].Request().GetAsync();
+                    Event @event = await _appClient.Users[eventCalendarEmail].Calendars[eventCalendarId].Events[eventLookup].Request().GetAsync();
                     if (@event != null)
                     {
                         return @event;
@@ -212,7 +217,7 @@
                 }
             }
 
-            string[] possibleEmails = new[] { GetEEMServiceAccount(), email, lastUpdatedBy, createdBy };
+            string[] possibleEmails = new[] { GetEEMServiceAccount(), email, lastUpdatedBy, createdBy, eventCalendarEmail };
 
             foreach (var mail in possibleEmails)
             {
@@ -443,8 +448,49 @@
               .Request()
               .AddAsync(@event);
 
+       
+            try
+            {
+                Event fullEvent = null;
+                int maxRetries = 10;
+                int delay = 1000; // 1 seconds
+                bool onlineMeetingAvailable = false;
 
-            return createdEvent;
+                for (int i = 0; i < maxRetries; i++)
+                {
+                    // Fetch the event again to get all properties including the Teams link
+                    fullEvent = await _appClient.Users[address].Calendars[calendar.Id].Events[createdEvent.Id]
+                        .Request()
+                        .GetAsync();
+
+                    // Check if the OnlineMeeting details are available
+                    if (fullEvent.OnlineMeeting != null && !string.IsNullOrEmpty(fullEvent.OnlineMeeting.JoinUrl))
+                    {
+                        onlineMeetingAvailable = true;
+                        break;
+                    }
+
+                    // Wait before retrying
+                    await Task.Delay(delay);
+                }
+
+                if (!onlineMeetingAvailable)
+                {
+                    throw new Exception("Online meeting details are not available after multiple attempts.");
+                }
+
+                return fullEvent;
+
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                Console.WriteLine($"An error occurred while fetching the full event: {ex.Message}");
+                throw; // Re-throw the exception if you want to propagate it further
+            }
+
+         
+
         }
 
         private async static Task<string> GetRoomNames(string[] roomEmails)
@@ -480,7 +526,7 @@
                             DisplayName = user.DisplayName
                         });
                     }
-                    else if (directoryObject is Group group)
+                    else if (directoryObject is Microsoft.Graph.Group group)
                     {
                         allMembers.Add(new TextValueUser
                         {
@@ -506,7 +552,7 @@
                                 DisplayName = user.DisplayName
                             });
                         }
-                        else if (directoryObject is Group group)
+                        else if (directoryObject is Microsoft.Graph.Group group)
                         {
                             allMembers.Add(new TextValueUser
                             {
@@ -531,18 +577,15 @@
         public static async Task UpdateTeamsMeeting(GraphEventDTO graphEventDTO, string eventId, string teamOwner)
         {
             EnsureGraphForAppOnlyAuth();
-            _ = _appClient ??
-                throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+            _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
             // Fetch the existing event
-
             var eventLookup = eventId;
-
             var address = string.IsNullOrEmpty(teamOwner) ? graphEventDTO.RequesterEmail : teamOwner;
             var name = string.IsNullOrEmpty(teamOwner) ? graphEventDTO.RequesterEmail : graphEventDTO.RequesterFirstName + " " + graphEventDTO.RequesterLastName;
 
-            string[] possibleEmails = new[] {teamOwner, graphEventDTO.RequesterEmail, GetEEMServiceAccount() };
-            string calendarEmail = string.Empty;    
+            string[] possibleEmails = new[] { teamOwner, graphEventDTO.RequesterEmail, GetEEMServiceAccount() };
+            string calendarEmail = string.Empty;
 
             Event existingEvent = null;
 
@@ -552,12 +595,12 @@
                 {
                     try
                     {
-                        // Assuming id is used as the event lookup key
                         Event @event = await _appClient.Users[mail].Events[eventLookup].Request().GetAsync();
                         if (@event != null)
                         {
                             existingEvent = @event;
                             calendarEmail = mail;
+                            break; // Exit the loop if event is found
                         }
                     }
                     catch (Microsoft.Graph.ServiceException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -568,78 +611,97 @@
                 }
             }
 
-
-
             if (existingEvent == null || string.IsNullOrEmpty(existingEvent.Id))
             {
                 throw new Exception("Team Event Not Found.");
             }
 
+            // Compare existing event details with the new details
+            bool isUpdateRequired = false;
 
-            // Update event details
-            existingEvent.IsOnlineMeeting = true;
-            existingEvent.OnlineMeetingProvider = OnlineMeetingProviderType.TeamsForBusiness;
+            // Create an object to hold the updates
+            var patchEvent = new Event();
 
-            existingEvent.Location = new Microsoft.Graph.Location
+            // Preserve online meeting information if it exists
+            if (existingEvent.OnlineMeeting != null)
             {
-               
-                      DisplayName = graphEventDTO.RoomEmails.Any() ? await GetRoomNames(graphEventDTO.RoomEmails) : 
-                      string.IsNullOrEmpty(graphEventDTO.PrimaryLocation) ? "Teams Meeting Only" : graphEventDTO.PrimaryLocation
-                
-            };
-            existingEvent.Subject = $"{graphEventDTO.EventTitle} (Teams Meeting)";
-            existingEvent.IsAllDay = graphEventDTO.IsAllDay;
-            existingEvent.Body = new ItemBody
+                patchEvent.OnlineMeeting = existingEvent.OnlineMeeting;
+            }
+
+            // Check Location
+            string newLocation = graphEventDTO.RoomEmails.Any() ? await GetRoomNames(graphEventDTO.RoomEmails) :
+                string.IsNullOrEmpty(graphEventDTO.PrimaryLocation) ? "Teams Meeting Only" : graphEventDTO.PrimaryLocation;
+
+            if (existingEvent.Location?.DisplayName != newLocation)
+            {
+                patchEvent.Location = new Microsoft.Graph.Location { DisplayName = newLocation };
+                isUpdateRequired = true;
+            }
+
+            // Check Subject
+            if (existingEvent.Subject != $"{graphEventDTO.EventTitle} (Teams Meeting)")
+            {
+                patchEvent.Subject = $"{graphEventDTO.EventTitle} (Teams Meeting)";
+                isUpdateRequired = true;
+            }
+
+            // Check IsAllDay
+            if (existingEvent.IsAllDay != graphEventDTO.IsAllDay)
+            {
+                patchEvent.IsAllDay = graphEventDTO.IsAllDay;
+                isUpdateRequired = true;
+            }
+
+            // Always include the body content, otherwise the teams meeting in outlook goes away
+            string existingBodyContent = existingEvent.Body?.Content ?? string.Empty;
+
+            patchEvent.Body = new ItemBody
             {
                 ContentType = BodyType.Html,
-                Content = graphEventDTO.EventDescription
-            };
-            existingEvent.Start = new DateTimeTimeZone
-            {
-                DateTime = graphEventDTO.Start,
-                TimeZone = "Eastern Standard Time"
-            };
-            existingEvent.End = new DateTimeTimeZone
-            {
-                DateTime = graphEventDTO.End,
-                TimeZone = "Eastern Standard Time"
+                Content = existingBodyContent
             };
 
+            // Convert Start and End times to UTC for comparison
+            DateTime graphEventStartUtc = DateTime.Parse(graphEventDTO.Start);
+            DateTime graphEventEndUtc = DateTime.Parse(graphEventDTO.End);
 
-            // Update the attendees
-            List<Attendee> attendees = new List<Attendee>
-    {
-        new Attendee
-        {
-            EmailAddress = new EmailAddress
+            DateTime existingEventStartUtc = DateTime.Parse(existingEvent.Start.DateTime);
+            DateTime existingEventEndUtc = DateTime.Parse(existingEvent.End.DateTime);
+
+            // Check Start and End Time
+            if (existingEventStartUtc != graphEventStartUtc)
             {
-                Address = address,
-                Name = name,
-            },
-            Type = AttendeeType.Required
-        }
-    };
-            foreach (var invitee in graphEventDTO.TeamInvites)
-            {
-                attendees.Add(
-                    new Attendee
-                    {
-                        EmailAddress = new EmailAddress
-                        {
-                            Address = invitee.Email,
-                            Name = invitee.DisplayName
-                        },
-                        Type = AttendeeType.Optional
-                    }
-                );
+                patchEvent.Start = new DateTimeTimeZone { DateTime = graphEventDTO.Start, TimeZone = "Eastern Standard Time" };
+                isUpdateRequired = true;
             }
-            existingEvent.Attendees = attendees;
 
-            // Update the event
-            await _appClient.Users[calendarEmail].Events[eventId]
-                .Request()
-                .UpdateAsync(existingEvent);
+            if (existingEventEndUtc != graphEventEndUtc)
+            {
+                patchEvent.End = new DateTimeTimeZone { DateTime = graphEventDTO.End, TimeZone = "Eastern Standard Time" };
+                isUpdateRequired = true;
+            }
 
+            // Check Attendees
+            List<string> newAttendees = new List<string> { address }.Concat(graphEventDTO.TeamInvites.Select(i => i.Email)).ToList();
+            List<string> existingAttendees = existingEvent.Attendees?.Select(a => a.EmailAddress.Address).ToList() ?? new List<string>();
+
+            if (!new HashSet<string>(newAttendees).SetEquals(existingAttendees))
+            {
+                patchEvent.Attendees = newAttendees.Select(email => new Attendee
+                {
+                    EmailAddress = new EmailAddress { Address = email }
+                }).ToList();
+                isUpdateRequired = true;
+            }
+
+            // If no changes are detected, skip the update
+            if (!isUpdateRequired)
+            {
+                return;
+            }
+
+            // If update is required, perform the PATCH request
+            await _appClient.Users[calendarEmail].Events[eventId].Request().UpdateAsync(patchEvent);
         }
 
 
@@ -721,6 +783,273 @@
                 // Log the exception or handle it further here if needed
                 throw ex;
             }
+        }
+
+        public static async Task<Event> UpdateEvent(GraphEventDTO graphEventDTO)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            var easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            DateTime graphEventStartEst = DateTime.Parse(graphEventDTO.Start);
+            DateTime graphEventEndEst = DateTime.Parse(graphEventDTO.End);
+            DateTime graphEventStartUtc = TimeZoneInfo.ConvertTimeToUtc(graphEventStartEst, easternZone);
+            DateTime graphEventEndUtc = TimeZoneInfo.ConvertTimeToUtc(graphEventEndEst, easternZone);
+
+            string calendarId = string.Empty;
+            string calendarEmail = string.Empty;
+            var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room") + "?$top=200";
+            var placesRequest = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
+
+            if (!string.IsNullOrEmpty(graphEventDTO.EventLookup)) // there is an existing outlook event lets try and find it.
+            {
+  
+
+                string[] possibleEmails = new[] { graphEventDTO.EventCalendarEmail, GetEEMServiceAccount(), graphEventDTO.CreatedBy, graphEventDTO.Updated, graphEventDTO.UserEmail, graphEventDTO.Coordinator};
+                // get the rooms
+
+                foreach (var email in possibleEmails)
+                {
+                    if (email != null)
+                    {
+                        try
+                        {
+                            var @event = await _appClient.Users[email].Events[graphEventDTO.EventLookup].Request().GetAsync();
+                            if (@event != null)
+              
+                            {
+                            
+                                calendarEmail = email;
+                                var calendar = await _appClient.Users[calendarEmail].Calendar.Request().GetAsync();
+                                var attendeeList = @event.Attendees.ToList();
+                                var existingAttendeeEmails = attendeeList.Select(a => a.EmailAddress.Address).ToList();
+                                var existingRoomEmails = attendeeList.Where(a => a.Type == AttendeeType.Optional).Select(a => a.EmailAddress.Address);
+                                var roomsToRemove = existingRoomEmails.Where(existingRoom => !graphEventDTO.RoomEmails.Contains(existingRoom)).ToList();
+                                var roomsToAdd = graphEventDTO.RoomEmails.Where(newRoom => !existingRoomEmails.Contains(newRoom)).ToList();
+
+                                attendeeList.RemoveAll(a => a.Type == AttendeeType.Optional && roomsToRemove.Contains(a.EmailAddress.Address));
+
+                                foreach (var roomEmail in roomsToAdd)
+                                {
+                                    attendeeList.Add(new Attendee
+                                    {
+                                        EmailAddress = new EmailAddress
+                                        {
+                                            Address = roomEmail,
+                                            Name = roomEmail 
+                                        },
+                                        Type = AttendeeType.Optional 
+                                    });
+                                }
+
+
+                                bool isUpdated = false;
+
+                                // Create a new Event object to hold only the changes
+                                var patchEvent = new Event();
+
+                                // Check if Subject has changed
+                                if (@event.Subject != graphEventDTO.EventTitle)
+                                {
+                                    patchEvent.Subject = graphEventDTO.EventTitle;
+                                    isUpdated = true;
+                                }
+
+                                // Check if IsAllDay has changed
+                                if (@event.IsAllDay != graphEventDTO.IsAllDay)
+                                {
+                                    patchEvent.IsAllDay = graphEventDTO.IsAllDay;
+                                    isUpdated = true;
+                                }
+
+                                // Check if Body content or content type has changed
+
+                                string StripHtmlTags(string input)
+                                {
+                                    return Regex.Replace(input, "<.*?>", string.Empty);
+                                }
+
+                                // Check if Body content or content type has changed
+                                string existingBodyPlainText = StripHtmlTags(@event.Body?.Content ?? string.Empty).Trim();
+                                string graphEventDescriptionPlainText = graphEventDTO.EventDescription.Trim();
+
+                                if (existingBodyPlainText != graphEventDescriptionPlainText )
+                                {
+                                    patchEvent.Body = new ItemBody
+                                    {
+                                        ContentType = BodyType.Html,
+                                        Content = graphEventDTO.EventDescription
+                                    };
+                                    isUpdated = true;
+                                }
+
+                                // Convert Start and End times to UTC for comparison
+                                DateTime eventStartUtc = DateTime.MinValue;
+                                if (@event.Start?.DateTime != null)
+                                {
+                                    eventStartUtc = DateTime.Parse(@event.Start.DateTime);
+                                }
+
+                                if (eventStartUtc != graphEventStartUtc)
+                                {
+                                    patchEvent.Start = new DateTimeTimeZone
+                                    {
+                                        DateTime = graphEventDTO.Start,
+                                        TimeZone = "Eastern Standard Time"
+                                    };
+                                    isUpdated = true;
+                                }
+
+                                DateTime eventEndUtc = DateTime.MinValue;
+                                if (@event.End?.DateTime != null)
+                                {
+                                    eventEndUtc = DateTime.Parse(@event.End.DateTime);
+                                }
+
+                                if (eventEndUtc != graphEventEndUtc)
+                                {
+                                    patchEvent.End = new DateTimeTimeZone
+                                    {
+                                        DateTime = graphEventDTO.End,
+                                        TimeZone = "Eastern Standard Time"
+                                    };
+                                    isUpdated = true;
+                                }
+
+                                // Check if Attendees need to be updated
+                                if (roomsToAdd.Any() || roomsToRemove.Any())
+                                {
+                                    patchEvent.Attendees = attendeeList;
+                                    isUpdated = true;
+                                }
+
+                                // Only send PATCH request if there are changes
+                                if (isUpdated)
+                                {
+                                    // Use PATCH request with only the modified properties
+                                    var result = await _appClient.Users[email]
+                                                                 .Events[@event.Id]
+                                                                 .Request()
+                                                                 .UpdateAsync(patchEvent);
+
+                                    // Fetch the updated event with expanded properties
+                                    var expandedEvent = await _appClient.Users[email]
+                                                                        .Calendars[calendar.Id]
+                                                                        .Events[result.Id]
+                                                                        .Request()
+                                                                        .Expand("calendar")
+                                                                        .GetAsync();
+
+                                    return expandedEvent;
+                                }
+                                else
+                                {
+                                    // No changes, fetch the existing event
+                                    var expandedEvent = await _appClient.Users[email]
+                                                                        .Calendars[calendar.Id]
+                                                                        .Events[graphEventDTO.EventLookup]
+                                                                        .Request()
+                                                                        .Expand("calendar")
+                                                                        .GetAsync();
+
+                                    return expandedEvent;
+                                }
+
+
+                            }
+
+                        }
+                        catch (Microsoft.Graph.ServiceException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                        {
+                            continue;
+                        }
+
+                    }
+
+                }
+
+
+            }
+            else // there is no existing event we will add a new one
+            {
+                calendarEmail = graphEventDTO.CreatedBy.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? graphEventDTO.CreatedBy : GraphHelper.GetEEMServiceAccount();
+                var calendar = await _appClient.Users[graphEventDTO.RequesterEmail].Calendar.Request().GetAsync();
+                List<Attendee> attendees = new List<Attendee>();
+                bool scheduleUsingServiceAccount = calendarEmail == GetEEMServiceAccount();
+                attendees.Add(
+                    new Attendee
+                    {
+                        EmailAddress = new EmailAddress
+                            {
+                                Address = graphEventDTO.CreatedBy,
+                                Name = graphEventDTO.CreatedBy
+                            },
+                        Type = AttendeeType.Required
+                    });
+                foreach (var roomEmail in graphEventDTO.RoomEmails)
+                {
+                    attendees.Add(
+                      new Attendee
+                      {
+                          EmailAddress = new EmailAddress
+                          {
+                              Address = roomEmail,
+                              Name = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == roomEmail).FirstOrDefault().DisplayName
+                          },
+                          Type = AttendeeType.Optional
+                      }
+                    );
+                }
+
+                var @event = new Event
+                {
+                    Subject = scheduleUsingServiceAccount ? $"{graphEventDTO.EventTitle} - Requested by: {graphEventDTO.CreatedBy}" : graphEventDTO.EventTitle,
+                    IsAllDay = graphEventDTO.IsAllDay,
+                    Body = new ItemBody
+                    {
+                        ContentType = BodyType.Html,
+                        Content = graphEventDTO.EventDescription
+                    },
+                    Start = new DateTimeTimeZone
+                    {
+                        DateTime = graphEventDTO.Start,
+                        TimeZone = "Eastern Standard Time"
+                    },
+                    End = new DateTimeTimeZone
+                    {
+                        DateTime = graphEventDTO.End,
+                        TimeZone = "Eastern Standard Time"
+                    },
+                    Attendees = attendees
+
+                };
+
+                if (graphEventDTO.RoomEmails.Any())
+                {
+
+                    Microsoft.Graph.Location location = new Microsoft.Graph.Location
+                    {
+                        DisplayName = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString() == graphEventDTO.RoomEmails[0]).FirstOrDefault().DisplayName
+                    };
+
+                    @event.Location = location;
+                }
+
+                var result = await _appClient.Users[calendarEmail].Calendars[calendar.Id].Events
+              .Request()
+              .AddAsync(@event);
+
+                var expandedEvent = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events[result.Id]
+                .Request()
+                .Expand("calendar")
+                .GetAsync();
+
+                return expandedEvent;
+            }
+
+            return null;
+
         }
 
 
@@ -880,18 +1209,18 @@
             throw new InvalidOperationException("Event not found for any of the provided emails or calendar ID.");
         }
 
-        public static async Task<bool> DeleteEvent(string eventLookup, string coordinatorEmail, string oldCoordinatorEmail, string lastUpdatedBy, string createdBy, string eventCalendarId)
+        public static async Task<bool> DeleteEvent(string eventLookup, string coordinatorEmail, string oldCoordinatorEmail, string lastUpdatedBy, string createdBy, string eventCalendarId, string eventCalendarEmail)
         {
             try
             {
                 EnsureGraphForAppOnlyAuth();
                 _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
-                if (!string.IsNullOrEmpty(eventCalendarId))
+                if (!string.IsNullOrEmpty(eventCalendarId) && !string.IsNullOrEmpty(eventCalendarEmail))
                 {
                     try
                     {
-                        Event @event = await _appClient.Me.Calendars[eventCalendarId].Events[eventLookup].Request().GetAsync();
+                        Event @event = await _appClient.Users[eventCalendarEmail].Calendars[eventCalendarId].Events[eventLookup].Request().GetAsync();
                         if (@event != null)
                         {
                             await _appClient.Me.Calendars[eventCalendarId].Events[eventLookup]
@@ -906,7 +1235,7 @@
                     }
                 }
 
-                string[] possibleEmails = new[] { GetEEMServiceAccount(), coordinatorEmail, oldCoordinatorEmail, lastUpdatedBy, createdBy };
+                string[] possibleEmails = new[] { GetEEMServiceAccount(), coordinatorEmail, oldCoordinatorEmail, lastUpdatedBy, createdBy, eventCalendarEmail };
                 Microsoft.Graph.Event eventToDelete = null;
                 string calendarUsed = null;
 

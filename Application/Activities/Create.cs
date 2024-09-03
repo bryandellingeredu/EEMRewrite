@@ -193,8 +193,9 @@ namespace Application.Activities
                             Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                             a.EventLookup = evt.Id;
                             a.EventLookupCalendar = evt.Calendar.Id;
+                            a.EventLookupCalendarEmail = evt.Organizer.EmailAddress.Address;
 
-                     
+
 
                             if (a.CoordinatorEmail == GraphHelper.GetEEMServiceAccount())
                             {

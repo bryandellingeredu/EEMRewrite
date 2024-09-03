@@ -58,14 +58,14 @@ namespace Application.Activities
                 {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar);
+                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail);
                     }
                     catch (Exception)
                     {
 
                         try
                         {
-                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar);
+                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail);
                         }
                         catch (Exception)
                         {
@@ -80,7 +80,7 @@ namespace Application.Activities
                 {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar);
+                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail);
                     }
                     catch (Exception ex)
                     {
@@ -102,6 +102,7 @@ namespace Application.Activities
                 activity.VTCLookup = null;
                 activity.EventLookup = null;
                 activity.EventLookupCalendar = null;
+                activity.EventLookupCalendarEmail = null;   
                 activity.TeamLookup= null;  
                 activity.TeamRequester = null;
                 activity.TeamLink= null;    

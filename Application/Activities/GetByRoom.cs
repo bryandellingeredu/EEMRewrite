@@ -87,7 +87,7 @@ namespace Application.Activities
                         Event evt;
                         try
                         {
-                            evt = await GraphHelper.GetEventAsync(item.CoordinatorEmail, item.EventLookup, item.LastUpdatedBy, item.CreatedBy, item.EventLookupCalendar);
+                            evt = await GraphHelper.GetEventAsync(item.CoordinatorEmail, item.EventLookup, item.LastUpdatedBy, item.CreatedBy, item.EventLookupCalendar, item.EventLookupCalendarEmail);
                         }
                         catch (Exception)
                         {

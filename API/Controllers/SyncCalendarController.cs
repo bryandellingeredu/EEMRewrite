@@ -35,6 +35,7 @@ namespace API.Controllers
             if (studentType == "dk26") studentType = "DEP2026";
             if (studentType == "Residnent") studentType = "Resident";
             if (studentType == "Calenda") studentType = "Resident";
+            if (studentType == "DE2026") studentType = "DEP2026";
             SyncCalendar syncCalendar = await _context.SyncCalendars.FirstAsync(x => x.Route == studentType);
             Response.Headers.Append("Content-Type", "text/calendar");
             return File(Encoding.UTF8.GetBytes(syncCalendar.Text), "text/calendar", "calendar.ics");

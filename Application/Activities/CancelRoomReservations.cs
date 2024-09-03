@@ -51,7 +51,7 @@ namespace Application.Activities
               if (!string.IsNullOrEmpty(activity.VTCLookup)) {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
+                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail);
                         activity.VTCLookup = null;
                         await _context.SaveChangesAsync();
                     }catch (Exception )
@@ -70,7 +70,7 @@ namespace Application.Activities
                 if (!string.IsNullOrEmpty(activity.CoordinatorEmail) && !string.IsNullOrEmpty(activity.EventLookup)) {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
+                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail   );
                         activity.EventLookup= null;
                         var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
                         activity.LastUpdatedBy = user.Email;
@@ -82,7 +82,7 @@ namespace Application.Activities
                     {
                         try
                         {
-                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount(), activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar);
+                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount(), activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail  );
                             activity.EventLookup = null;
                             activity.EventLookupCalendar = null;
                             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());

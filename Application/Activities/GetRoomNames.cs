@@ -43,7 +43,7 @@ namespace Application.Activities
                 Event evt;
                 try
                 {
-                    evt = await GraphHelper.GetEventAsync(coordinatorEmail, request.EventLookup, null, null, null);
+                    evt = await GraphHelper.GetEventAsync(coordinatorEmail, request.EventLookup, null, null, null, null);
                 }
                 catch (Exception)
                 {

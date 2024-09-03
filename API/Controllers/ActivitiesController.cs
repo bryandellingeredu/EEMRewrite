@@ -103,7 +103,7 @@ HandleResult(await Mediator.Send(
         public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {
             activity.Id = id;
-            return HandleResult(await Mediator.Send(new Edit.Command { Activity = activity }));
+            return HandleResult(await Mediator.Send(new Update.Command { Activity = activity }));
         }
 
         [HttpPut("cancel/{id}")]

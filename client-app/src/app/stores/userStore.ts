@@ -156,9 +156,9 @@ export default class UserStore {
       try{
         const creds: UserFormValues = {
             password: `${graphUser.id}aA`,
-            email: graphUser.mail,
-            displayName: graphUser.displayName || graphUser.mail,
-            userName: graphUser.mail
+            email: graphUser.mail || graphUser.userPrincipalName,
+            displayName: graphUser.displayName || graphUser.mail || graphUser.userPrincipalName,
+            userName: graphUser.mail || graphUser.userPrincipalName
         }
         const user = await agent.Account.signInGraphUser(creds);
         const roles = await agent.Account.getRoles(user.userName);

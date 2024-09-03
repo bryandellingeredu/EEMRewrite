@@ -554,6 +554,7 @@ export default class ActivityStore {
       makeTeamMeeting: false,
       eventLookup: graphEvent.id,
       eventLookupCalendar: '',
+      eventLookupCalendarEmail: '',
       teamLookup: '',
       teamOwner: '',
       vtcLookup: '',

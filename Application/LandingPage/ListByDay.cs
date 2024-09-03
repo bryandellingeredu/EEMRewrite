@@ -69,7 +69,7 @@ namespace Application.LandingPage
                 Event evt;
                 try
                 {
-                    evt = await GraphHelper.GetEventAsync(coordinator, eventLookup, null, null, null);
+                    evt = await GraphHelper.GetEventAsync(coordinator, eventLookup, null, null, null, null );
                 }
                 catch (Exception)
                 {

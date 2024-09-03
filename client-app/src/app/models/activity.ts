@@ -34,6 +34,7 @@ export interface Activity{
     coordinatorName: string,
     eventLookup: string,
     eventLookupCalendar: string,
+    eventLookupCalendarEmail: string,
     teamLookup: string,
     teamOwner: string,
     vtcLookup: string,
@@ -307,6 +308,7 @@ export class ActivityFormValues{
     teamInvites: UserEmail[] | [] = [];
     eventLookup: string = '';
     eventLookupCalendar: string = '';
+    eventLookupCalendarEmail: string = ''
     teamLookup: string = '';
     teamOwner: string = '';
     vtcLookup: string = '';
@@ -571,6 +573,7 @@ export class ActivityFormValues{
         this.teamInvites = activity.teamInvites;
         this.eventLookup = activity.eventLookup;
         this.eventLookupCalendar = activity.eventLookupCalendar;
+        this.eventLookupCalendarEmail = activity.eventLookupCalendarEmail;
         this.teamLookup = activity.teamLookup;
         this.teamOwner = activity.teamOwner;
         this.vtcLookup = activity.vtcLookup;
