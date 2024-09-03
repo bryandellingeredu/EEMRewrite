@@ -974,7 +974,7 @@
             else // there is no existing event we will add a new one
             {
                 calendarEmail = graphEventDTO.CreatedBy.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? graphEventDTO.CreatedBy : GraphHelper.GetEEMServiceAccount();
-                var calendar = await _appClient.Users[graphEventDTO.RequesterEmail].Calendar.Request().GetAsync();
+                var calendar = await _appClient.Users[calendarEmail].Calendar.Request().GetAsync();
                 List<Attendee> attendees = new List<Attendee>();
                 bool scheduleUsingServiceAccount = calendarEmail == GetEEMServiceAccount();
                 attendees.Add(
@@ -982,9 +982,9 @@
                     {
                         EmailAddress = new EmailAddress
                             {
-                                Address = graphEventDTO.CreatedBy,
-                                Name = graphEventDTO.CreatedBy
-                            },
+                                Address = calendarEmail,
+                                Name = calendarEmail
+                        },
                         Type = AttendeeType.Required
                     });
                 foreach (var roomEmail in graphEventDTO.RoomEmails)
@@ -1040,7 +1040,7 @@
               .Request()
               .AddAsync(@event);
 
-                var expandedEvent = await _appClient.Users[graphEventDTO.RequesterEmail].Calendars[calendar.Id].Events[result.Id]
+                var expandedEvent = await _appClient.Users[calendarEmail].Calendars[calendar.Id].Events[result.Id]
                 .Request()
                 .Expand("calendar")
                 .GetAsync();
