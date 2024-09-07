@@ -782,6 +782,15 @@ namespace API.BackgroundJobs
             writer.WriteLine("TRANSP:OPAQUE");
             writer.WriteLine($"UID:{activity.Id}");
             writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:BUSY");
+            // Conditionally add Teams or EDU links as their own sections in the calendar
+            if (!string.IsNullOrEmpty(activity.TeamLink))
+            {
+                writer.WriteLine($"URL:{activity.TeamLink}");
+            }
+            if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
+            {
+                writer.WriteLine($"URL:{activity.ArmyTeamLink}");
+            }
             if (activity.Category != null)
             {
                 writer.WriteLine($"CATEGORIES:{activity.Category}");

@@ -2711,7 +2711,8 @@ label="USAHEC Contract:"
                   name="type"
                   label="Type of Event:"
                 />
-
+               
+               {/*
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={4}>
@@ -2739,6 +2740,7 @@ label="USAHEC Contract:"
                   </Grid.Row>
                 </Grid>
                 <Divider />
+                */}
 
                 <Grid>
                   <Grid.Row>
@@ -2755,10 +2757,12 @@ label="USAHEC Contract:"
                           name="cslDirectorateDSW"
                           label="DSW"
                         />
+                        {/*
                         <MySemanticCheckBox
                           name="cslDirectorateDTI"
                           label="DTI"
                         />
+                        */}
                         <MySemanticCheckBox
                           name="cslDirectorateOPS"
                           label="OPS"
@@ -2887,7 +2891,7 @@ label="USAHEC Contract:"
                   name="communicationSupport"
                   label="Communication Support:"
                 />
-
+                {/*
                 <MySelectInput
                   options={[
                     { text: "", value: "" },
@@ -2902,6 +2906,7 @@ label="USAHEC Contract:"
                   name="faxClassification"
                   label="FAX Classification:"
                 />
+                */}
 
                 <MyTextArea
                   rows={3}
@@ -2910,6 +2915,7 @@ label="USAHEC Contract:"
                   label="Communication Comments:"
                 />
 
+              {/*
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={4}>
@@ -2923,6 +2929,7 @@ label="USAHEC Contract:"
                   </Grid.Row>
                 </Grid>
                 <Divider />
+                */}
 
                 <Grid>
                   <Grid.Row>

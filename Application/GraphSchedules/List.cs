@@ -96,7 +96,7 @@ namespace Application.GraphSchedules
                     ? g.SelectMany(x => x.ScheduleItems).ToList()
                     : new List<ScheduleItem>() // null-check
             })
-            .ToList();
+             .ToList() ?? new List<ScheduleInformation>();
 
                     foreach (var item in result)
                     {

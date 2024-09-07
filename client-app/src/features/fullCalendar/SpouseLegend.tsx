@@ -1,5 +1,7 @@
+import { faCalendarPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState} from "react";
-import { Label } from "semantic-ui-react";
+import { Icon, Label } from "semantic-ui-react";
 
 interface Legend{
     id: string
@@ -24,6 +26,15 @@ export default function SpouseLegend(){
              {spouseLegend.map(item => (
         <Label key={item.id} size='big' style={{backgroundColor: item.color, color: 'white', marginBottom: '5px'}} content = {item.name} />
       ))}
+                  <Label size='big' style={{ marginBottom: '5px'}} color='grey'>
+      <Icon name='redo alternate' /> Repeating Event
+      </Label>
+      <Label style={{ marginBottom: '5px'}} color='grey' size='big'>
+      <Icon name='tv' /> Teams Meeting
+      </Label>
+      <Label style={{ marginBottom: '5px'}} color='grey' size='big'>
+      <FontAwesomeIcon icon={faCalendarPlus} className="fa-calendar-plus"  style={{ marginRight: '8px' }} />From Other Calendar
+      </Label>
         </div>
     )
 }

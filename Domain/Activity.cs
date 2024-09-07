@@ -115,6 +115,9 @@ namespace Domain
         public DateTime? AmbassadorEnd {get; set;}
         public bool CSMRequested { get; set; }
         public bool CSMRequestedNotificationSent { get; set; }
+        public bool SVTCNotificationSent {get; set; }
+        public bool SecretNotificationSent { get; set; }  
+        public bool CIORepsNotificationSent {get; set;}  
         public DateTime? CSMStart {get; set;}
         public DateTime? CSMEnd {get; set;}
         public string Report { get; set; }

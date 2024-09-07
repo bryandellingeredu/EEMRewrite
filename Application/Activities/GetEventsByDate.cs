@@ -118,6 +118,7 @@ namespace Application.Activities
                         CopiedTosymposiumAndConferences = activity.CopiedTosymposiumAndConferences,
                         SymposiumLinkInd = activity.SymposiumLinkInd,
                         SymposiumLink = activity.SymposiumLink,
+                        FromExternalCalendarInd = activity.CategoryId != category.Id
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);
@@ -127,6 +128,7 @@ namespace Application.Activities
                 return Result<List<FullCalendarEventDTO>>.Success(fullCalendarEventDTOs);
             }
 
+       
 
             private string GetColor(Category category, Activity activity, List<CSLCalendarLegend> cslLegendList, List<USAHECFacilitiesUsageLegend> usahecFacilitiesUsageLegend)
             {

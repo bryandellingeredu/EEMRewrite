@@ -11,6 +11,7 @@ import MSFPLegend from "./MSFPLegend";
 import CIOEventPlanningLegend from "./CIOEventPlanningLegend";
 import { useState, useEffect } from "react";
 import SpouseLegend from "./SpouseLegend";
+import GenericLegend from "./GenericLegend";
 
 interface Props {
     id: string
@@ -33,6 +34,8 @@ if (id === 'cio' && !cioEventPlanningAdmin) {
     </Header>
   );
 } 
+
+
 
 
     return(
@@ -223,12 +226,29 @@ if (id === 'cio' && !cioEventPlanningAdmin) {
       
     </Header>
   </Divider>
+   
+  {(() => {
+    switch (id) {
+      case 'csl':
+        return <CSLLegend />;
+      case 'usahecFacilitiesUsage':
+        return <USAHECFacilitiesUsageLegend />;
+      case 'militaryFamilyAndSpouseProgram':
+        return <MSFPLegend />;
+      case 'cio':
+        if (cioEventPlanningAdmin) {
+          return <CIOEventPlanningLegend />;
+        } else {
+          return <GenericLegend />;
+        }
+      case 'spouse':
+        return <SpouseLegend />;
+      default:
+        return <GenericLegend />;
+    }
+  })()}
 
-    {id === 'csl' && <CSLLegend />}
-    {id === 'usahecFacilitiesUsage' && <USAHECFacilitiesUsageLegend />}
-    {id === 'militaryFamilyAndSpouseProgram' && <MSFPLegend />}
-    {id === 'cio' && cioEventPlanningAdmin && <CIOEventPlanningLegend />}
-    {id === 'spouse' && <SpouseLegend />}
+
     </>
     )
 }

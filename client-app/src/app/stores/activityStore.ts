@@ -789,7 +789,10 @@ export default class ActivityStore {
     roomResourceOther : false,
     roomResourceOtherText: '',
     roomResourceNotificationSent: false,
-    spouseCategory: ''
+    spouseCategory: '',
+    svtcNotificationSent: false,
+    secretNotificationSent: false,
+    cioRepsNotificationSent: false
     }
     return activity;
   }

@@ -20,6 +20,9 @@ import CIOEventPlanningTable from "./CIOEventPlanningTable";
 import ReactDOM from 'react-dom';
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo";
 import html2canvas from 'html2canvas';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarPlus } from "@fortawesome/free-solid-svg-icons";
+
 
 
 export default observer(function GenericCalendar() {
@@ -266,6 +269,7 @@ ${id === "internationalfellows" && arg.event.extendedProps.studentCalendarNotes
     const eventDot = info.el.querySelector('.fc-daygrid-event-dot');
     const recurring = info.event.extendedProps.recurring;
     const teamInd = info.event.extendedProps.teamInd;
+    const fromExternalCalendarInd = info.event.extendedProps.fromExternalCalendarInd;
   
     if (eventDot) {
       eventDot.style.borderColor = eventColor;
@@ -286,6 +290,22 @@ ${id === "internationalfellows" && arg.event.extendedProps.studentCalendarNotes
         eventContent.prepend(icon);
       }
     }
+    if (fromExternalCalendarInd){
+      const eventContent = info.el.querySelector('.fc-event-title');
+
+    // Create a container for the FontAwesome icon
+    const iconContainer = document.createElement('span');
+
+    // Use React to render the FontAwesomeIcon into the container
+    ReactDOM.render(
+      <FontAwesomeIcon icon={faCalendarPlus} className="fa-calendar-plus"  style={{ marginRight: '8px' }} />,
+      iconContainer
+    );
+
+    // Prepend the rendered icon container to the event content
+    eventContent.prepend(iconContainer);
+    }
+
     if(searchQuery){
       highlightMatchingEvents(searchQuery)
     }
