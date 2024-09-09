@@ -459,18 +459,6 @@ namespace API.BackgroundJobs
                 {
                     string description = activity.Description;
                     description = description + $"---ACTION OFFICER---{activity.ActionOfficer} ({activity.ActionOfficerPhone})";
-                    if (!string.IsNullOrEmpty(activity.Hyperlink) && !string.IsNullOrEmpty(activity.HyperlinkDescription))
-                    {
-                        description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
-                    }
-                    if (!string.IsNullOrEmpty(activity.TeamLink))
-                    {
-                        description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink}";
-                    }
-                    if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
-                    {
-                        description = description + $"---ARMY TEAM MEETING LINK--- {activity.ArmyTeamLink}";
-                    }
                     if (activity.CopiedTostudentCalendar || activity.CopiedTointernationalfellows)
                     {
                         if (activity.StudentCalendarMandatory)
@@ -489,6 +477,18 @@ namespace API.BackgroundJobs
                         {
                             description = description + $"---NOTES--- {activity.StudentCalendarNotes}";
                         }
+                         if (!string.IsNullOrEmpty(activity.Hyperlink) && !string.IsNullOrEmpty(activity.HyperlinkDescription))
+                    {
+                        description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
+                    }
+                    if (!string.IsNullOrEmpty(activity.TeamLink))
+                    {
+                        description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink}";
+                    }
+                    if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
+                    {
+                        description = description + $"---ARMY TEAM MEETING LINK--- {activity.ArmyTeamLink}";
+                    }
 
                     }
                     writer.WriteLine("BEGIN:VEVENT");
@@ -550,10 +550,11 @@ namespace API.BackgroundJobs
 
             List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>
                 {
-                    new StudentCalendarInfo{StudentType = "Resident", Color = "#006400", StudentCalendarResident = true, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false},
-                    new StudentCalendarInfo{StudentType = "DEP2024", Color = "#FF8C00", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = true, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false},
-                    new StudentCalendarInfo{StudentType = "DEP2025", Color = "#EE4B2B", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = true, StudentCalendarDistanceGroup3 = false},
-                    new StudentCalendarInfo{StudentType = "DEP2026", Color = "#800080", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = true},
+                    new StudentCalendarInfo{StudentType = "Resident", Color = "#006400", StudentCalendarResident = true, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
+                    new StudentCalendarInfo{StudentType = "DEP2024", Color = "#FF8C00", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = true, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
+                    new StudentCalendarInfo{StudentType = "DEP2025", Color = "#EE4B2B", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = true, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
+                    new StudentCalendarInfo{StudentType = "DEP2026", Color = "#800080", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = true, StudentCalendarDistanceGroup4 = false},
+                    new StudentCalendarInfo{StudentType = "DEP2027", Color = "#B22222", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = true},
                 };
 
             Settings s = new Settings();
@@ -561,7 +562,7 @@ namespace API.BackgroundJobs
             GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
             var allrooms = await GraphHelper.GetRoomsAsync();
 
-            string[] studentTypes = { "notastudent", "Resident", "DEP2024", "DEP2025", "DEP2026" };
+            string[] studentTypes = { "notastudent", "Resident", "DEP2024", "DEP2025", "DEP2026", "DEP2027" };
 
             foreach (var studentType in studentTypes) {
                 StringWriter writer = new StringWriter();
@@ -597,7 +598,7 @@ namespace API.BackgroundJobs
                              (studentType == "notastudent" || studentType == "Resident") &&
                               studentCalendarInfo.StudentCalendarResident &&
                               (activity.StudentCalendarResident ||
-                                (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3)
+                                (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup4 )
                               )
                             )
                         {
@@ -606,6 +607,7 @@ namespace API.BackgroundJobs
                         if ((studentType == "DL24" || studentType == "DEP2024" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup1) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
                         if ((studentType == "DL25" || studentType == "DEP2025" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup2) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
                         if ((studentType == "DL26" || studentType == "DEP2026"  ||studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup3) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                        if ((studentType == "DL27" || studentType == "DEP2027"  ||studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup4 && activity.StudentCalendarDistanceGroup4) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
                     }
                 }
                 writer.WriteLine("END:VCALENDAR");
@@ -729,24 +731,13 @@ namespace API.BackgroundJobs
                 description = description + $"---STUDENT TYPE---{studentCalendarInfo.StudentType}";
             }
             description = description + $"---ACTION OFFICER---{activity.ActionOfficer} ({activity.ActionOfficerPhone})";
-            if (!string.IsNullOrEmpty(activity.Hyperlink) && !string.IsNullOrEmpty(activity.HyperlinkDescription))
-            {
-                description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
-            }
-            if (!string.IsNullOrEmpty(activity.TeamLink))
-            {
-                description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink}";
-            }
-            if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
-            {
-                description = description + $"---ARMY TEAM MEETING LINK--- {activity.ArmyTeamLink}";
-            }
             if (
                 (activity.StudentCalendarMandatory && activity.CopiedTointernationalfellows) ||
                 (activity.StudentCalendarMandatory && studentCalendarInfo.StudentCalendarResident) ||
                 (activity.StudentCalendarDistanceGroup1Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup1) ||
                 (activity.StudentCalendarDistanceGroup2Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup2) ||
-                (activity.StudentCalendarDistanceGroup3Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup3)
+                (activity.StudentCalendarDistanceGroup3Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup3) ||
+                (activity.StudentCalendarDistanceGroup4Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup4)
                )
             {
                 description = description + $"---ATTENDANCE--- attendance is mandatory.";
@@ -762,6 +753,18 @@ namespace API.BackgroundJobs
             if (!string.IsNullOrEmpty(activity.StudentCalendarNotes))
             {
                 description = description + $"---NOTES--- {activity.StudentCalendarNotes}";
+            }
+            if (!string.IsNullOrEmpty(activity.Hyperlink) && !string.IsNullOrEmpty(activity.HyperlinkDescription))
+            {
+                description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
+            }
+            if (!string.IsNullOrEmpty(activity.TeamLink))
+            {
+                description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink}";
+            }
+            if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
+            {
+                description = description + $"---ARMY TEAM MEETING LINK--- {activity.ArmyTeamLink}";
             }
             writer.WriteLine("BEGIN:VEVENT");
             writer.WriteLine($"DTSTAMP:{DateTime.UtcNow.ToString("yyyyMMddTHHmmssZ")}");

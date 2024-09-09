@@ -1365,6 +1365,7 @@
                 if(studentType == "DL24" && activity.StudentCalendarDistanceGroup1) addNotification = true;
                 if (studentType == "DL25" && activity.StudentCalendarDistanceGroup2) addNotification = true;
                 if (studentType == "DL26" && activity.StudentCalendarDistanceGroup3) addNotification = true;
+                if (studentType == "DL27" && activity.StudentCalendarDistanceGroup4) addNotification = true;
 
                 if (string.IsNullOrEmpty(studentType) || studentType == "notastudent") addNotification = true;
 

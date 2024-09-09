@@ -2320,7 +2320,8 @@ export default observer(function ActivityForm() {
                     </div>
                      }
                     </Segment>
-                    <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                 {/*  <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                  
                     <MySemanticCheckBox
                       name="studentCalendarDistanceGroup1"
                       label="DEP 2024"
@@ -2332,8 +2333,9 @@ export default observer(function ActivityForm() {
                       label="Attendance is Mandatory"
                     />
                     </div>
-                     }
+                   
                     </Segment>
+                      */}
                     <Segment style={{ backgroundColor: "#f4e9f7" }}>
                     <MySemanticCheckBox
                       name="studentCalendarDistanceGroup2"
@@ -2362,6 +2364,22 @@ export default observer(function ActivityForm() {
                     </div>
                      }
                     </Segment>
+
+                    <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                    <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup4"
+                      label="DEP 2027"
+                    />
+                      {values.studentCalendarDistanceGroup4 && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup4Mandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                     }
+                    </Segment>
+                    
                   </Segment.Group>
                   </Grid.Column>
                   </Grid.Row>

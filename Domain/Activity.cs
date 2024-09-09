@@ -291,9 +291,13 @@ namespace Domain
         public bool StudentCalendarDistanceGroup1 {get; set;}
         public bool StudentCalendarDistanceGroup2 {get; set;}
         public bool StudentCalendarDistanceGroup3 {get; set;}
+
+        public bool StudentCalendarDistanceGroup4 {get; set;}
+
         public bool StudentCalendarDistanceGroup1Mandatory {get; set;}
         public bool StudentCalendarDistanceGroup2Mandatory {get; set;}
         public bool StudentCalendarDistanceGroup3Mandatory {get; set;}
+         public bool StudentCalendarDistanceGroup4Mandatory {get; set;}
         public bool RoomResourceNipr {get; set;}
         public bool RoomResourceSipr {get; set;}
         public bool RoomResourceRen {get; set;}

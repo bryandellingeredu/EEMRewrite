@@ -260,9 +260,11 @@ export interface Activity{
     studentCalendarDistanceGroup1 : boolean
     studentCalendarDistanceGroup2 : boolean
     studentCalendarDistanceGroup3 : boolean
+    studentCalendarDistanceGroup4 : boolean
     studentCalendarDistanceGroup1Mandatory : boolean
     studentCalendarDistanceGroup2Mandatory : boolean
     studentCalendarDistanceGroup3Mandatory : boolean
+    studentCalendarDistanceGroup4Mandatory : boolean
     roomResourceNipr : boolean
     roomResourceSipr : boolean
     roomResourceRen : boolean
@@ -534,9 +536,11 @@ export class ActivityFormValues{
     studentCalendarDistanceGroup1 : boolean = false
     studentCalendarDistanceGroup2 : boolean = false
     studentCalendarDistanceGroup3 : boolean = false
+    studentCalendarDistanceGroup4 : boolean = false
     studentCalendarDistanceGroup1Mandatory : boolean = false
     studentCalendarDistanceGroup2Mandatory : boolean = false
     studentCalendarDistanceGroup3Mandatory : boolean = false
+    studentCalendarDistanceGroup4Mandatory : boolean = false
     roomResourceNipr : boolean = false
     roomResourceSipr : boolean = false
     roomResourceRen : boolean = false
@@ -801,9 +805,11 @@ export class ActivityFormValues{
     this.studentCalendarDistanceGroup1 =  activity.studentCalendarDistanceGroup1
     this.studentCalendarDistanceGroup2 =  activity.studentCalendarDistanceGroup2
     this.studentCalendarDistanceGroup3 =  activity.studentCalendarDistanceGroup3
+    this.studentCalendarDistanceGroup4 =  activity.studentCalendarDistanceGroup4
     this.studentCalendarDistanceGroup1Mandatory  =  activity.studentCalendarDistanceGroup1Mandatory
     this.studentCalendarDistanceGroup2Mandatory  =  activity.studentCalendarDistanceGroup2Mandatory
     this.studentCalendarDistanceGroup3Mandatory  =  activity.studentCalendarDistanceGroup3Mandatory
+    this.studentCalendarDistanceGroup4Mandatory  =  activity.studentCalendarDistanceGroup4Mandatory
     this.roomResourceNipr =  activity.roomResourceNipr
     this.roomResourceSipr =  activity.roomResourceSipr
     this.roomResourceRen =  activity.roomResourceRen

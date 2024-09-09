@@ -369,6 +369,18 @@ namespace Application
                             }
 
                         }
+                            if (_activity.CopiedTostudentCalendar && _activity.StudentCalendarDistanceGroup4Mandatory)
+                        {
+                            if (_oldActivity != null && _activity.StudentCalendarDistanceGroup4Mandatory != _oldActivity.StudentCalendarDistanceGroup4Mandatory)
+                            {
+                                body = body + $"<p style='color: darkred;'><strong>Attendance: </strong>DEP 27 Attendance was optional but was changed to  Mandatory </p>";
+                            }
+                            else
+                            {
+                                body = body + $"<p><strong>Attendance: </strong>DEP 27 Attendance is Mandatory </p>";
+                            }
+
+                        }
                         if (_oldActivity != null && _activity.CopiedTostudentCalendar && !_activity.StudentCalendarMandatory && _oldActivity.StudentCalendarMandatory)
                         {
                             body = body + $"<p><strong>Attendance: </strong>Resident Attendance was Mandatory but is now Optional </p>";
@@ -385,6 +397,11 @@ namespace Application
                         {
                             body = body + $"<p><strong>Attendance: </strong>DEP 26 Attendance was Mandatory but is now Optional </p>";
                         }
+                        if (_oldActivity != null && _activity.CopiedTostudentCalendar && !_activity.StudentCalendarDistanceGroup4Mandatory && _oldActivity.StudentCalendarDistanceGroup4Mandatory)
+                        {
+                            body = body + $"<p><strong>Attendance: </strong>DEP 27 Attendance was Mandatory but is now Optional </p>";
+                        }
+
 
                         if (_activity.CopiedTostudentCalendar && !string.IsNullOrEmpty(_activity.StudentCalendarPresenter))
                         {

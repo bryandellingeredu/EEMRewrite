@@ -29,6 +29,7 @@ interface ResidentAndDistanceStudentCalendarCategory{
     group: string
     title: string
     color: string
+    visible: boolean
 }
 
 export default observer(function ResidentAndDistanceStudentCalendar(){
@@ -66,21 +67,23 @@ useEffect(() => {
           setStudentCategories(JSON.parse(localStorage.getItem("studentCategories1") || '{}'));
         } else {
           setStudentCategories([
-            { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B' },
-            { id: 2, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400' },
-            { id: 3, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00' },
-            { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B' },
-            { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080' },
+            { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B', visible: true },
+            { id: 2, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true },
+            { id: 3, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false },
+            { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true },
+            { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true },
+            { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup4', title: 'DEP 2027', color: '#B22222', visible: false  },
           ]);
         }
       } else {
         setShowLabels(false);
         setStudentCategories([
-          { id: 1, isSelected: false, group: '', title: 'Show All', color: '#00008B' },
-          { id: 2, isSelected: user.studentType === "Resident", group: 'studentCalendarResident', title: 'Resident', color: '#006400' },
-          { id: 3, isSelected: user.studentType === "DL24", group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00' },
-          { id: 4, isSelected: user.studentType === "DL25", group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B' },
-          { id: 5, isSelected: user.studentType === "DL26", group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080' },
+          { id: 1, isSelected: false, group: '', title: 'Show All', color: '#00008B', visible: true },
+          { id: 2, isSelected: user.studentType === "Resident", group: 'studentCalendarResident', title: 'Resident', color: '#006400' , visible: true },
+          { id: 3, isSelected: user.studentType === "DL24", group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false },
+          { id: 4, isSelected: user.studentType === "DL25", group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true },
+          { id: 5, isSelected: user.studentType === "DL26", group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true },
+          { id: 6, isSelected: user.studentType === "DL27", group: 'studentCalendarDistanceGroup4', title: 'DEP 2027', color: '#B22222', visible: false },
         ]);
       }
     }
@@ -227,6 +230,7 @@ const getStudentPrograms = (extendedProps : any) => {
     if(extendedProps.studentCalendarDistanceGroup1 ) programs.push('DEP 2024');
     if(extendedProps.studentCalendarDistanceGroup2 ) programs.push('DEP 2025');
     if(extendedProps.studentCalendarDistanceGroup3 ) programs.push('DEP 2026');
+    if(extendedProps.studentCalendarDistanceGroup4 ) programs.push('DEP 2027');
     if(programs.length < 1) programs.push('Resident');
     return programs.join(', ');
 }
@@ -351,6 +355,37 @@ ${arg.event.extendedProps.studentCalendarNotes
     }
   };
 
+  const checkCategoryVisibility = (studentType: string): boolean => {
+    // Map studentType to category IDs directly
+    let categoryId: number | null = null;
+    debugger;
+    switch (studentType) {
+      case "Resident":
+        categoryId = 2;
+        break;
+      case "DEP2024":
+        categoryId = 3;
+        break;
+      case "DEP2025":
+        categoryId = 4;
+        break;
+      case "DEP2026":
+        categoryId = 5;
+        break;
+      case "DEP2027":
+        categoryId = 6;
+        break;
+      default:
+        categoryId = 2;
+    }
+  
+    // Find the category based on the determined categoryId
+    const category = studentCategories.find(cat => cat.id === categoryId);
+  
+    // Return the visibility of the category, or false if not found
+    return category ? category.visible : false;
+  };
+
 return(
     <>
      {(loadingInitial || !user)
@@ -404,6 +439,7 @@ return(
     <div>
     {studentCategories.map(studentCategory => (
       <ResidentAndDistanceStudentCalendarComponent key={studentCategory.id}
+      visible={studentCategory.visible}
       studentCategory = {studentCategory}
       handleLabelClick = {handleLabelClick} />
     ))}
@@ -475,22 +511,25 @@ return(
       slotMaxTime={"21:00:00"}
       loading={(isLoading) => setIsLoading(isLoading)}
 
-      eventDidMount={(info: any) => {
-        const selectedstudentCategories = studentCategories.filter(category => category.isSelected);
-    
       
-    
+
+      eventDidMount={(info: any) => {
+        const selectedstudentCategories = studentCategories.filter(category => category.isSelected && category.visible)
+  
         let shouldDisplayEvent = (
             (selectedstudentCategories.some(category => category.id === 2) && info.event.extendedProps.studentCalendarResident) ||
             (selectedstudentCategories.some(category => category.id === 3) && info.event.extendedProps.studentCalendarDistanceGroup1) ||
             (selectedstudentCategories.some(category => category.id === 4) && info.event.extendedProps.studentCalendarDistanceGroup2) ||
             (selectedstudentCategories.some(category => category.id === 5) && info.event.extendedProps.studentCalendarDistanceGroup3) ||
+            (selectedstudentCategories.some(category => category.id === 6) && info.event.extendedProps.studentCalendarDistanceGroup4) ||
             (
               selectedstudentCategories.some(category => category.id === 2) &&
                (!info.event.extendedProps.studentCalendarResident &&
                 !info.event.extendedProps.studentCalendarDistanceGroup1 &&
                 !info.event.extendedProps.studentCalendarDistanceGroup2 &&
-                !info.event.extendedProps.studentCalendarDistanceGroup3)
+                !info.event.extendedProps.studentCalendarDistanceGroup3 &&
+                !info.event.extendedProps.studentCalendarDistanceGroup4
+              )
             )
         );
 
@@ -501,8 +540,9 @@ return(
         if (selectedstudentCategories.length < 1) {
           shouldDisplayEvent = true;
         }
+
     
-        if (!shouldDisplayEvent) {
+        if (!shouldDisplayEvent || !checkCategoryVisibility(info.event.extendedProps.studentType)) {
             info.el.style.display = 'none';
         } else {
             const eventColor = info.event.backgroundColor;
@@ -510,15 +550,19 @@ return(
             if (eventDot) {
                 eventDot.style.borderColor = eventColor;
             }
-
-            if(info.event.extendedProps.studentCalendarMandatory){
+            if (info.event.extendedProps.studentCalendarMandatory) {
               const eventContent = info.el.querySelector('.fc-event-title');
               if (eventContent) {
-                  const icon = document.createElement('i');
-                  icon.className = 'exclamation triangle icon'; // The Semantic UI class for the exclamation triangle icon
-                  eventContent.prepend(icon);
+                const icon = document.createElement('i');
+                icon.className = 'exclamation triangle icon'; // The Semantic UI class for the exclamation triangle icon
+                
+                // Add custom styles to make the icon larger and bright orange
+                icon.style.fontSize = '1.5em'; // Increase size of the icon (adjust as needed)
+                icon.style.color = 'orange'; // Set the color to bright orange
+                
+                eventContent.prepend(icon); // Prepend the icon to the event content
               }
-          }
+            }
     
             // Style for recurring events
             if (info.event.extendedProps.recurring) {

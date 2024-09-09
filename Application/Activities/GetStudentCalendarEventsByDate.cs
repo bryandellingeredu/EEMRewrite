@@ -33,10 +33,11 @@ namespace Application.Activities
 
                 List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>
             {
-                new StudentCalendarInfo{StudentType = "Resident", Color = "#006400", StudentCalendarResident = true, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false},
-                new StudentCalendarInfo{StudentType = "DEP2024", Color = "#FF8C00", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = true, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false},
-                new StudentCalendarInfo{StudentType = "DEP2025", Color = "#EE4B2B", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = true, StudentCalendarDistanceGroup3 = false},
-                new StudentCalendarInfo{StudentType = "DEP2026", Color = "#800080", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = true},
+                new StudentCalendarInfo{StudentType = "Resident", Color = "#006400", StudentCalendarResident = true, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
+                new StudentCalendarInfo{StudentType = "DEP2024", Color = "#FF8C00", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = true, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
+                new StudentCalendarInfo{StudentType = "DEP2025", Color = "#EE4B2B", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = true, StudentCalendarDistanceGroup3 = false,StudentCalendarDistanceGroup4 = false},
+                new StudentCalendarInfo{StudentType = "DEP2026", Color = "#800080", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = true,StudentCalendarDistanceGroup4 = false},
+                new StudentCalendarInfo{StudentType = "DEP2027", Color = "#B22222", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false,StudentCalendarDistanceGroup4 = true},
         };
 
                 var activities = await _context.Activities.Include(x => x.Organization)
@@ -59,7 +60,7 @@ namespace Application.Activities
                     {
                         if (studentCalendarInfo.StudentCalendarResident &&
                             (activity.StudentCalendarResident ||
-                                (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3)
+                                (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3 && !activity.StudentCalendarDistanceGroup4 )
                             )
                           )
                         {
@@ -68,6 +69,7 @@ namespace Application.Activities
                         if (studentCalendarInfo.StudentCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup1) fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, studentCalendarInfo));
                         if (studentCalendarInfo.StudentCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup2) fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, studentCalendarInfo));
                         if (studentCalendarInfo.StudentCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup3) fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, studentCalendarInfo));
+                        if (studentCalendarInfo.StudentCalendarDistanceGroup4 && activity.StudentCalendarDistanceGroup4) fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, studentCalendarInfo));
                     }
                 }
                 return Result<List<FullCalendarEventDTO>>.Success(fullCalendarEventDTOs);
@@ -82,7 +84,13 @@ namespace Application.Activities
                     Start = Helper.GetStringFromDateTime(activity.Start, activity.AllDayEvent),
                     End = Helper.GetStringFromDateTime(activity.AllDayEvent ? activity.End.AddDays(1) : activity.End, activity.AllDayEvent),
                     Color = studentCalendarInfo.Color,
-                    BorderColor = activity.IMC ? "#EE4B2B" : string.Empty,
+                    BorderColor = (
+                        (activity.StudentCalendarMandatory && studentCalendarInfo.StudentCalendarResident) ||
+                        (activity.StudentCalendarDistanceGroup1Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup1) ||
+                        (activity.StudentCalendarDistanceGroup2Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup2) ||
+                        (activity.StudentCalendarDistanceGroup3Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup3) ||
+                        (activity.StudentCalendarDistanceGroup4Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup4)
+                        )? "#EE4B2B" : string.Empty,
                     AllDay = activity.AllDayEvent,
                     CategoryId = activity.CategoryId.ToString(),
                     Description = activity.Description,
@@ -100,7 +108,8 @@ namespace Application.Activities
                                                 (activity.StudentCalendarMandatory && studentCalendarInfo.StudentCalendarResident) ||
                                                 (activity.StudentCalendarDistanceGroup1Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup1) ||
                                                 (activity.StudentCalendarDistanceGroup2Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup2) ||
-                                                (activity.StudentCalendarDistanceGroup3Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup3)
+                                                (activity.StudentCalendarDistanceGroup3Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup3) ||
+                                                (activity.StudentCalendarDistanceGroup4Mandatory && studentCalendarInfo.StudentCalendarDistanceGroup4)
                                               ),
                     HyperLink = activity.Hyperlink,
                     HyperLinkDescription = activity.HyperlinkDescription,
@@ -117,6 +126,7 @@ namespace Application.Activities
                     StudentCalendarDistanceGroup1 = studentCalendarInfo.StudentCalendarDistanceGroup1,
                     StudentCalendarDistanceGroup2 = studentCalendarInfo.StudentCalendarDistanceGroup2,
                     StudentCalendarDistanceGroup3 = studentCalendarInfo.StudentCalendarDistanceGroup3,
+                    StudentCalendarDistanceGroup4 = studentCalendarInfo.StudentCalendarDistanceGroup4,
                     StudentType = studentCalendarInfo.StudentType,
                 };
             }
@@ -131,5 +141,6 @@ namespace Application.Activities
         public bool StudentCalendarDistanceGroup1 { get; set; }
         public bool StudentCalendarDistanceGroup2 { get; set; }
         public bool StudentCalendarDistanceGroup3 { get; set; }
+        public bool StudentCalendarDistanceGroup4 { get; set; }
     }
 }

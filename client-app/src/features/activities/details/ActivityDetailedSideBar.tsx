@@ -1443,7 +1443,8 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
  }
 
 {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) &&
-   !activity.studentCalendarResident && !activity.studentCalendarDistanceGroup1  && !activity.studentCalendarDistanceGroup2 && !activity.studentCalendarDistanceGroup3 &&
+   !activity.studentCalendarResident && !activity.studentCalendarDistanceGroup1  &&
+   !activity.studentCalendarDistanceGroup2 && !activity.studentCalendarDistanceGroup3 && !activity.studentCalendarDistanceGroup4  &&
    <Segment attached>
    <Grid verticalAlign='middle'>
        <Grid.Column width={1}>
@@ -1512,6 +1513,20 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
 </Segment>
 }
 
+{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) &&
+   activity.studentCalendarDistanceGroup4 &&
+   <Segment attached>
+   <Grid verticalAlign='middle'>
+       <Grid.Column width={1}>
+       <Icon name='user' size='large' color='teal' />
+       </Grid.Column>
+       <Grid.Column width={14}>
+        Student Type:  DEP 2027
+       </Grid.Column>
+   </Grid>
+</Segment>
+}
+
 
 {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarMandatory &&
              <Segment attached>
@@ -1569,6 +1584,18 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  </Grid.Column>
                  <Grid.Column width={14}>
                   DEP 2026 Attendance is Mandatory
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+    {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarDistanceGroup4 && activity.studentCalendarDistanceGroup4Mandatory &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <Icon name='street view' size='large' color='teal' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                  DEP 2027 Attendance is Mandatory
                  </Grid.Column>
              </Grid>
  </Segment>
