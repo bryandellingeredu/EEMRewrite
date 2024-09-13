@@ -341,18 +341,42 @@ export default observer(function ActivityForm() {
     setCUIWarningHasBeenDisplayed(true);
   }
 
-  function handleActivityDocumentUpload(file: any) {
+  function handleExecServicesDocumentUpload(file: any) {
     const activityAttachmentId = uuid();
     const fileName = file.name;
     const fileType = file.type;
 
-    uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId)
+    uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId, true)
       .then((response) => {
         const activityAttachment: ActivityAttachment = {
           id: activityAttachmentId,
           activityAttachmentGroupId,
           fileName,
-          fileType
+          fileType,
+          executiveServices: true
+        };
+        setActivityAttachments([...activityAttachments, activityAttachment]);
+        toast.success(`${activityAttachment.fileName} successfully uploaded`);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(`Error uploading ${fileName}: ${error.message}`);
+      });
+  }
+
+  function handleActivityDocumentUpload(file: any) {
+    const activityAttachmentId = uuid();
+    const fileName = file.name;
+    const fileType = file.type;
+
+    uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId, false)
+      .then((response) => {
+        const activityAttachment: ActivityAttachment = {
+          id: activityAttachmentId,
+          activityAttachmentGroupId,
+          fileName,
+          fileType,
+          executiveServices: false
         };
         setActivityAttachments([...activityAttachments, activityAttachment]);
         toast.success(`${activityAttachment.fileName} successfully uploaded`);
@@ -2634,7 +2658,7 @@ label="Executive Services Category:"
                           <Grid>
                             <Grid.Row>
                               <Grid.Column width={1}>
-                                <strong>Attachments:</strong>
+                                <strong>Executive Services Attachments:</strong>
                               </Grid.Column>
                               <Grid.Column width={15}>
                               <ButtonGroup>
@@ -2642,7 +2666,7 @@ label="Executive Services Category:"
                                onClick={() =>
                                 openModal(
                                   <UploadAttachmentModal
-                                  uploadDocument={handleActivityDocumentUpload}
+                                  uploadDocument={handleExecServicesDocumentUpload}
                                   loading={uploading}
                                   color={'black'}
                                   activityAttachments = {activityAttachments}
@@ -2655,7 +2679,7 @@ label="Executive Services Category:"
                                 <Icon name='paperclip' size="large" />
                                 </Button.Content>
                                 </Button>
-                                {activityAttachments.map((attachment) => (
+                                {activityAttachments.filter(x => x.executiveServices).map((attachment) => (
                                     <ActivityAttachmentComponent key={attachment.id} attachmentActivityId = {attachment.id} fileName = {attachment.fileName} deleteActivityAttachment = {deleteActivityAttachment} />
                                  ))}
                                 </ButtonGroup>
@@ -3783,7 +3807,7 @@ label="USAHEC Contract:"
                 }
             </SemanticForm.Group>
 
-            <Divider />
+           {/*}
             <Grid>
               <Grid.Row>
                 <Grid.Column width={16}>
@@ -3991,6 +4015,7 @@ label="USAHEC Contract:"
                 </Grid.Column>
               </Grid.Row>
             </Grid>
+            */}
             <Divider />
 
             {armyProfile && armyProfile?.mail && (
@@ -4040,7 +4065,7 @@ label="USAHEC Contract:"
                       name="hostingReport.purposeOfVisit"
                       label="Purpose of Visit / Visit Objectives:"
                     />
-                    {values.report === "Hosting Report" && (
+                    {values.report === "Hosting Report" && false &&  (
                       <>
                         <Divider color="black" />
                         <Grid>
@@ -4939,7 +4964,7 @@ label="USAHEC Contract:"
                                 <Icon name='paperclip' size="large" />
                                 </Button.Content>
                                 </Button>
-                                {activityAttachments.map((attachment) => (
+                                {activityAttachments.filter(x => !x.executiveServices).map((attachment) => (
                                     <ActivityAttachmentComponent key={attachment.id} attachmentActivityId = {attachment.id} fileName = {attachment.fileName} deleteActivityAttachment = {deleteActivityAttachment} />
                                  ))}
                                 </ButtonGroup>

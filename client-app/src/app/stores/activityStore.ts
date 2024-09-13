@@ -840,6 +840,7 @@ export default class ActivityStore {
   uploadActivityDocument = async (file: any, activityAttachmentGroupId: string, activityAttachmentId: string, execServices: boolean = false) => {
     this.uploading = true;
     try{
+      debugger;
       const response = await agent.Uploads.uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId, execServices );
       runInAction(() => {
         this.uploading = false;

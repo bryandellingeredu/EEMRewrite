@@ -12,6 +12,7 @@ namespace Domain
          public byte[] BinaryData {get; set;}
          public string FileName {get;  set;}
          public string FileType {get; set;}
+         public bool ExecutiveServices { get; set;}  
 
     }
 }

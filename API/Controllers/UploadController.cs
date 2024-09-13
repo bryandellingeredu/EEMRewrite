@@ -20,10 +20,13 @@ namespace API.Controllers
         }
 
         [HttpPost("addActivityAttachment")]
-        public async Task<IActionResult> AddActivityAttachment([FromForm] string activityAttachmentGroupId, [FromForm]string activityAttachmentId, [FromForm] AddActivityAttachment.Command command)
+        public async Task<IActionResult> AddActivityAttachment([FromForm] string activityAttachmentGroupId, [FromForm]string activityAttachmentId, [FromForm] string execServices, [FromForm] AddActivityAttachment.Command command)
         {
+            bool executiveServices = !string.IsNullOrEmpty(execServices) && bool.TryParse(execServices, out bool result) && result;
+
             command.ActivityAttachmentGroupId= Guid.Parse(activityAttachmentGroupId); 
             command.Id= Guid.Parse(activityAttachmentId); 
+            command.ExecutiveServices = executiveServices;
             return HandleResult(await Mediator.Send(command));
         }
 
@@ -53,7 +56,7 @@ namespace API.Controllers
         {
             var files = await _context.ActivityAttachments
                 .Where(x => x.ActivityAttachmentGroupId == activityAttachmentGroupId)
-                .Select(x => new { x.Id, x.ActivityAttachmentGroupId, x.FileName, x.FileType })
+                .Select(x => new { x.Id, x.ActivityAttachmentGroupId, x.FileName, x.FileType, x.ExecutiveServices })
                 .ToListAsync();
             if (files == null || !files.Any())  return NotFound();
            return Ok(files);
@@ -64,7 +67,7 @@ namespace API.Controllers
         {
             var file = await _context.ActivityAttachments
                 .Where(x => x.Id == id)
-                .Select(x => new { x.Id, x.ActivityAttachmentGroupId, x.FileName, x.FileType })
+                .Select(x => new { x.Id, x.ActivityAttachmentGroupId, x.FileName, x.FileType, x.ExecutiveServices })
                 .FirstOrDefaultAsync();
             if (file == null )  return NotFound();
            return Ok(file);

@@ -16,6 +16,7 @@ namespace Application.Uploads
             public Guid ActivityAttachmentGroupId { get; set; }
             public Guid Id { get; set; }
             public IFormFile File { get; set; }
+            public bool ExecutiveServices { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -40,7 +41,8 @@ namespace Application.Uploads
                              ActivityAttachmentGroupId=request.ActivityAttachmentGroupId,
                             FileName = request.File.FileName,
                             BinaryData = ms.ToArray(),
-                            FileType = request.File.ContentType           
+                            FileType = request.File.ContentType,
+                            ExecutiveServices = request.ExecutiveServices,
                          };
                         await _context.ActivityAttachments.AddAsync(activityAttachment);
                         var result = await _context.SaveChangesAsync() > 0;

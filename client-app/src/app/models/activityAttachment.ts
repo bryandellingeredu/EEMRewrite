@@ -3,4 +3,5 @@ export interface ActivityAttachment{
     activityAttachmentGroupId: string
     fileName: string
     fileType: string
+    executiveServices: boolean
 }
