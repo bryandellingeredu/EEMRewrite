@@ -1,5 +1,5 @@
 import { Button, Divider, Header, Icon } from "semantic-ui-react";
-import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap, faPeopleGroup, faHouseChimneyWindow, faCalendarWeek, faClipboardUser, faUsersRays, faEarthAmericas, faUserFriends } from "@fortawesome/free-solid-svg-icons";
+import { faBahai, faBookOpenReader, faBus, faCalendar, faChalkboardTeacher, faChurch, faDove, faNewspaper, faO, faPersonRifle, faGraduationCap, faPeopleGroup, faHouseChimneyWindow, faCalendarWeek, faClipboardUser, faUsersRays, faEarthAmericas, faUserFriends, faChessKing } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPersonMilitaryPointing } from "@fortawesome/free-solid-svg-icons";
 import CSLLegend from "./CSLLegend";
@@ -12,6 +12,7 @@ import CIOEventPlanningLegend from "./CIOEventPlanningLegend";
 import { useState, useEffect } from "react";
 import SpouseLegend from "./SpouseLegend";
 import GenericLegend from "./GenericLegend";
+import ExecLegend from "./ExecLegend";
 
 interface Props {
     id: string
@@ -155,6 +156,12 @@ if (id === 'cio' && !cioEventPlanningAdmin) {
           International Fellows
         </>
       }
+        {id === 'exec' &&
+        <>
+           <FontAwesomeIcon icon={faChessKing} size='2x' style={{marginRight: '10px'}} />
+          Executive Services Calendar
+        </>
+      }
     {id === 'community' &&
         <>
           <Icon name='handshake'  />
@@ -229,6 +236,8 @@ if (id === 'cio' && !cioEventPlanningAdmin) {
    
   {(() => {
     switch (id) {
+      case 'exec':
+       return <ExecLegend />;
       case 'csl':
         return <CSLLegend />;
       case 'usahecFacilitiesUsage':

@@ -27,6 +27,7 @@ interface ActivityCalendarInformationDTO{
     copiedTocsl: boolean;
     copiedTogarrison: boolean;
     copiedTointernationalfellows: boolean;
+    copiedToexec: boolean;
     copiedTogeneralInterest: boolean;
     copiedToholiday: boolean;
     copiedTopksoi: boolean;
@@ -60,6 +61,7 @@ export default observer(function AddToCalendars() {
          copiedTocsl: false,
          copiedTogarrison: false,
          copiedTointernationalfellows: false,
+         copiedToexec: false,
          copiedTogeneralInterest: false,
          copiedToholiday: false,
          copiedTopksoi: false,
@@ -112,6 +114,7 @@ export default observer(function AddToCalendars() {
                 copiedTocsl: response.copiedTocsl,
                 copiedTogarrison: response.copiedTogarrison,
                 copiedTointernationalfellows: response.copiedTointernationalfellows,
+                copiedToexec: response.copiedToexec,
                 copiedTogeneralInterest: response.copiedTogeneralInterest,
                 copiedToholiday: response.copiedToholiday,
                 copiedTopksoi: response.copiedToholiday,
@@ -236,6 +239,14 @@ export default observer(function AddToCalendars() {
                                    label="International Fellows"
                             disabled={categories.find(x => x.id === categoryId)?.routeName === "internationalfellows"}
                           />
+
+                              <MySemanticCheckBox
+                                   name="copiedToexec"
+                                   label="Executive Services Calendar"
+                            disabled={categories.find(x => x.id === categoryId)?.routeName === "exec"}
+                          />
+
+                          
 
 
                         </SemanticForm.Group>

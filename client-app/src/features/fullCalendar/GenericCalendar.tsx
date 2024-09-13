@@ -195,6 +195,7 @@ useEffect(() => {
     ${arg.event.extendedProps.actionOfficer ? '<p><strong>Action Officer: <strong>' + arg.event.extendedProps.actionOfficer + '</p>' : ''}
     ${arg.event.extendedProps.actionOfficerPhone ?'<p><strong>Action Officer Phone: <strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
     ${arg.event.extendedProps.copiedTosymposiumAndConferences && arg.event.extendedProps.symposiumLinkInd && arg.event.extendedProps.symposiumLink?'<p><strong>Click to view registration link<strong></p>' : ''}
+    ${id === "exec" && arg.event.extendedProps.execCategory ?'<p><strong>Category: <strong>' + arg.event.extendedProps.execCategory + '</p>' : ''}
     ${id === "cio" && arg.event.extendedProps.eventPlanningPAX?'<p><strong>PAX: <strong>' + arg.event.extendedProps.eventPlanningPAX + '</p>' : ''}
     ${id === "cio" && arg.event.extendedProps.eventPlanningStatus?'<p><strong>Status: <strong>' + arg.event.extendedProps.eventPlanningStatus + '</p>' : ''}
     ${id === "cio" && arg.event.extendedProps.eventClearanceLevel?'<p><strong>Event Clearance Level: <strong>' + arg.event.extendedProps.eventClearanceLevel + '</p>' : '<p><strong>Event Clearance Level: <strong> Undetermined </p>'}

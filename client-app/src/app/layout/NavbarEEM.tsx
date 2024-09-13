@@ -199,7 +199,7 @@ export default observer(function NavbarEEM() {
               Rooms
             </Menu.Item>
             { isSignedIn && user && roomDelegates && roomDelegates.some(
-               (delegate) => delegate.delegateEmail === user.userName
+               (delegate) => delegate.delegateEmail.toLowerCase() === user.userName.toLocaleLowerCase()
              ) &&
             <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/approveanyroomreservation`}>
               Approve Room Reservations

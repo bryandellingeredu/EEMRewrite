@@ -4,7 +4,7 @@ import { Segment, Icon, Grid, List } from 'semantic-ui-react'
 import { observer } from 'mobx-react-lite'
 import { Activity } from '../../../app/models/activity'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faCamera, faChalkboardTeacher, faCheck, faChurch, faClipboardUser, faClock, faComputer, faDove, faEarthAmericas, faEnvelope, faFax, faFileContract, faGraduationCap, faHashtag, faIdCard, faLaptop, faMobile, faNetworkWired, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faPhone, faPhoneFlip, faPrint, faServer, faShieldHalved, faSignal, faSitemap, faSquareParking, faTablet, faTv, faUser, faUserFriends, faUserSecret, faUsersRays } from '@fortawesome/free-solid-svg-icons';
+import { faBahai, faBookmark, faBookOpenReader, faBuilding, faBus, faCalendar, faCalendarCheck, faCalendarWeek, faCamera, faChalkboardTeacher, faCheck, faChessKing, faChurch, faClipboardUser, faClock, faComputer, faDove, faEarthAmericas, faEnvelope, faFax, faFileContract, faGraduationCap, faHashtag, faIdCard, faLaptop, faMobile, faNetworkWired, faNewspaper, faP, faPalette, faPeopleGroup, faPeopleRoof, faPersonMilitaryPointing, faPersonRifle, faPhone, faPhoneFlip, faPrint, faServer, faShieldHalved, faSignal, faSitemap, faSquareParking, faTablet, faTv, faUser, faUserFriends, faUserSecret, faUsersRays } from '@fortawesome/free-solid-svg-icons';
 import agent from '../../../app/api/agent';
 import ActivityAttachmentSideBarComponent from './ActivityAttachmentSideBarComponent';
 import format from 'date-fns/format';
@@ -470,6 +470,19 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  </Grid.Column>
                  <Grid.Column width={14}>
                    Added to the ASEP Calendar
+                 </Grid.Column>
+             </Grid>
+ </Segment>
+ }
+
+{activity.copiedToexec &&
+             <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faChessKing} size='2x'  color='#00b5ad' />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                   Added to the Executive Services Calendar
                  </Grid.Column>
              </Grid>
  </Segment>
@@ -1303,6 +1316,21 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
     </Segment>
  }
 
+{ activity.copiedToexec && activity.execCategory && 
+   <Segment attached>
+             <Grid verticalAlign='middle'>
+                 <Grid.Column width={1}>
+                 <FontAwesomeIcon icon={faBookmark} size='2x' color='#00b5ad'  />
+                 </Grid.Column>
+                 <Grid.Column width={14}>
+                 <span style={{paddingLeft: '10px'}}>
+                    Executive Services Category: {activity.execCategory}
+                 </span>                 
+                 </Grid.Column>
+             </Grid>
+    </Segment>
+ }
+
 
 { activity.category.name  === 'USAHEC Calendar' && activity.usahecCalendarCategory && 
    <Segment attached>
@@ -1552,6 +1580,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
              </Grid>
  </Segment>
  }
+ 
  {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) && activity.studentCalendarDistanceGroup1 && activity.studentCalendarDistanceGroup1Mandatory &&
              <Segment attached>
              <Grid verticalAlign='middle'>

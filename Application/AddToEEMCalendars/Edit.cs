@@ -51,6 +51,7 @@ namespace Application.AddToEEMCalendars
                     activity.CopiedTocsl = request.ActivityCalendarInformationDTO.CopiedTocsl;
                     activity.CopiedTogarrison = request.ActivityCalendarInformationDTO.CopiedTogarrison;
                     activity.CopiedTointernationalfellows = request.ActivityCalendarInformationDTO.CopiedTointernationalfellows;
+                    activity.CopiedToexec = request.ActivityCalendarInformationDTO.CopiedToexec;
                     activity.CopiedTogeneralInterest = request.ActivityCalendarInformationDTO.CopiedTogeneralInterest;
                     activity.CopiedToholiday = request.ActivityCalendarInformationDTO.CopiedToholiday;
                     activity.CopiedTopksoi = request.ActivityCalendarInformationDTO.CopiedTopksoi;
@@ -88,7 +89,8 @@ namespace Application.AddToEEMCalendars
                         item.CopiedTospouse = request.ActivityCalendarInformationDTO.CopiedTospouse;
                         item.CopiedTocsl = request.ActivityCalendarInformationDTO.CopiedTocsl;
                         item.CopiedTogarrison = request.ActivityCalendarInformationDTO.CopiedTogarrison;
-                         item.CopiedTointernationalfellows = request.ActivityCalendarInformationDTO.CopiedTointernationalfellows;
+                        item.CopiedTointernationalfellows = request.ActivityCalendarInformationDTO.CopiedTointernationalfellows;
+                        item.CopiedToexec = request.ActivityCalendarInformationDTO.CopiedToexec;
                         item.CopiedTogeneralInterest = request.ActivityCalendarInformationDTO.CopiedTogeneralInterest;
                         item.CopiedToholiday = request.ActivityCalendarInformationDTO.CopiedToholiday;
                         item.CopiedTopksoi = request.ActivityCalendarInformationDTO.CopiedTopksoi;

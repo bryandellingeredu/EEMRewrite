@@ -31,6 +31,7 @@ import LocationRadioButtons from "./LocationRadioButtons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookOpenReader,
+  faChessKing,
   faFileLines,
   faGlobeAmericas,
   faPeopleRoof,
@@ -898,6 +899,8 @@ export default observer(function ActivityForm() {
        !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator && !vtcSchedulingErrorIndicator && !roomResourceErrorIndicator &&
         !roomResourceOtherErrorIndicator && !flagRoomOtherErrorIndicator) {
       setSubmitting(true);
+      if(activity.title) activity.title = activity.title.replace(/#[\w-]+/g, '').trim();
+      if(activity.description) activity.description = activity.description.replace(/#[\w-]+/g, '').trim();
       if (teamOwner && !activity.teamOwner) activity.teamOwner = teamOwner;
       if(roomEmails.includes('Bldg650CollinsHallB037SVTC@armywarcollege.edu')){
         activity.eventClearanceLevel = 'Secret';
@@ -1131,6 +1134,7 @@ export default observer(function ActivityForm() {
           { routeName: "cio", copiedTo: "copiedTocio" },
           { routeName: "garrison", copiedTo: "copiedTogarrison" },
           { routeName: "internationalfellows", copiedTo: "copiedTointernationalfellows" },
+          { routeName: "exec", copiedTo: "copiedToexec" },
           { routeName: "generalInterest", copiedTo: "copiedTogeneralInterest" },
           { routeName: "holiday", copiedTo: "copiedToholiday" },
           { routeName: "pksoi", copiedTo: "copiedTopksoi" },
@@ -2589,6 +2593,98 @@ label="Spouse Category:"
 </Segment>
             }
 
+            {values.copiedToexec && <Segment style={{backgroundColor: '#FFF2D7'}}>
+            <Header as="h5" icon textAlign="center" color="pink">
+            <FontAwesomeIcon
+                    icon={faChessKing}
+                    size="2x"
+                    style={{ marginRight: "10px" }}
+                  />
+                    <Header.Content>
+                    Executive Services Information
+                  </Header.Content>
+                  </Header>
+                  <MySelectInput
+
+options={[
+  { text: "", value: "" },
+  {
+    text: "Class Lectures NTL/EL",
+    value: "Class Lectures NTL/EL",
+  },
+  { text: "CSL", value: "CSL" },
+  { text: "DV Visits", value: "DV Visits" },
+  { text: "Events", value: "Events" },
+  { text: "Graduation & Service B-Day Celebrations", value: "Graduation & Service B-Day Celebrations" },
+  { text: "Off-Sites & Outreach", value: "Off-Sites & Outreach" },
+  { text: "SLDS", value: "SLDS" },
+  { text: "Socials", value: "Socials" },
+]}
+placeholder="Executive Services Category"
+name="execCategory"
+label="Executive Services Category:"
+/>
+
+
+
+
+
+
+
+                          <Grid>
+                            <Grid.Row>
+                              <Grid.Column width={1}>
+                                <strong>Attachments:</strong>
+                              </Grid.Column>
+                              <Grid.Column width={15}>
+                              <ButtonGroup>
+                              <Button animated='vertical'basic size='tiny' type='button' color='pink'
+                               onClick={() =>
+                                openModal(
+                                  <UploadAttachmentModal
+                                  uploadDocument={handleActivityDocumentUpload}
+                                  loading={uploading}
+                                  color={'black'}
+                                  activityAttachments = {activityAttachments}
+                                  />, 'large'
+                                )
+                              }
+                              >
+                                <Button.Content hidden>Add File</Button.Content>
+                                <Button.Content visible>
+                                <Icon name='paperclip' size="large" />
+                                </Button.Content>
+                                </Button>
+                                {activityAttachments.map((attachment) => (
+                                    <ActivityAttachmentComponent key={attachment.id} attachmentActivityId = {attachment.id} fileName = {attachment.fileName} deleteActivityAttachment = {deleteActivityAttachment} />
+                                 ))}
+                                </ButtonGroup>
+                            
+                              </Grid.Column>
+                            </Grid.Row>
+                          </Grid>
+                          <Divider color="black" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr color="#e03997" />
+              </Segment>
+              }
+
             {
             (
               categories.find((x) => x.id === values.categoryId)?.name ==="USAHEC Facilities Usage Calendar"
@@ -3131,6 +3227,7 @@ label="USAHEC Contract:"
               "USAHEC Calendar",
               "USAHEC Facilities Usage Calendar",
               "CSL Calendar",
+              "Executive Services Calendar"
             ].includes(
               categories.find((x) => x.id === values.categoryId)?.name || ""
             ) && <></>}
@@ -3367,6 +3464,17 @@ label="USAHEC Contract:"
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
                           />
+
+                     <MySemanticCheckBox
+                            name="copiedToexec"
+                            label="Executive Services Calendar"
+                            disabled={categories
+                              .filter((x) => x.routeName === "exec")
+                              .map((x) => x.id)
+                              .includes(currentCategoryId)}
+                          />
+
+
                   
                         </SemanticForm.Group>
                       </Grid.Column>

@@ -37,5 +37,6 @@ namespace Domain
         public bool CopiedTobattlerhythm { get; set; }
         public bool CopiedTostaff { get; set; }
         public bool CopiedTostudentCalendar { get; set; }
+        public bool CopiedToexec {get; set;}
     }
 }

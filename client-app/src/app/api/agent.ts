@@ -263,11 +263,12 @@ const Uploads = {
         headers: {'Content-Type': 'multipart/form-data'}
       })
     },
-    uploadActivityDocument: (file: any, activityAttachmentGroupId: string, activityAttachmentId : string) => {
+    uploadActivityDocument: (file: any, activityAttachmentGroupId: string, activityAttachmentId : string, execServices : boolean) => {
         let formData = new FormData();
         formData.append('File', file);
         formData.append('activityAttachmentGroupId', activityAttachmentGroupId );
         formData.append('activityAttachmentId', activityAttachmentId  );
+        formData.append('execServices', String(execServices));
         return axios.post('upload/addActivityAttachment', formData, {
           headers: {'Content-Type': 'multipart/form-data'}
         })

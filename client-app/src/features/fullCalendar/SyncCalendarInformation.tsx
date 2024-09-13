@@ -38,6 +38,7 @@ const cases = [
       { routeName: "csl", title: "CSL Calendar" },
       { routeName: "garrison", title: "Garrison Calendar" },
       { routeName: "internationalfellows", title: "International Fellows" },
+      { routeName: "exec", title: "Executive Services Calendar" },
       { routeName: "GeneralInterest", title: "General Interest" },
       { routeName: "holiday", title: "Holiday Calendar" },
       { routeName: "pksoi", title: "PKSOI Calendar" },

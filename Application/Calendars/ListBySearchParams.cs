@@ -106,6 +106,10 @@ namespace Application.Calendars
                 {
                     query = query.Where(e => e.CopiedTointernationalfellows);
                 }
+                if (request.Id == "exec")
+                {
+                    query = query.Where(e => e.CopiedToexec);
+                }
                 if (request.Id == "generalInterest")
                 {
                     query = query.Where(e => e.CopiedTogeneralInterest);

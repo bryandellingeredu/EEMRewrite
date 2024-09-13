@@ -53,6 +53,7 @@ namespace Application.Activities
                                       (category.RouteName == "csl" && x.CopiedTocsl) ||
                                       (category.RouteName == "garrison" && x.CopiedTogarrison) ||
                                       (category.RouteName == "internationalfellows" && x.CopiedTointernationalfellows) ||
+                                      (category.RouteName == "exec" && x.CopiedToexec) ||
                                       (category.RouteName == "generalInterest" && x.CopiedTogeneralInterest) ||
                                       (category.RouteName == "holiday" && x.CopiedToholiday) ||
                                       (category.RouteName == "pksoi" && x.CopiedTopksoi) ||
@@ -110,6 +111,7 @@ namespace Application.Activities
                         HyperLinkDescription = activity.HyperlinkDescription,
                         EducationalCategory = activity.EducationalCategory,
                         SpouseCategory = activity.SpouseCategory,
+                        ExecCategory = activity.ExecCategory,
                         EventPlanningPAX = activity.EventPlanningPAX,
                         EventPlanningStatus = activity.EventPlanningStatus,
                         EventClearanceLevel = activity.EventClearanceLevel,
@@ -179,6 +181,29 @@ namespace Application.Activities
                      default:
                       return "#00008B";
                    }
+                }
+
+                if(category.RouteName == "exec" && !string.IsNullOrEmpty (activity.ExecCategory)){
+                    switch (activity.ExecCategory){
+                        case "Class Lectures NTL/EL":
+                            return "#ffa14e";
+                         case "CSL":
+                            return "#800080";
+                        case "DV Visits":
+                            return "#0579cc";
+                        case "Events":
+                            return "#819e43";
+                        case "Graduation & Service B-Day Celebrations":
+                            return "#d1c9a2";
+                        case "Off-Sites & Outreach":
+                            return "#058a8a";
+                        case "SLDS":
+                            return "#ffcc05";
+                        case "Socials":
+                            return "#e6a19f";
+                        default:
+                            return "#00008B";
+                    }
                 }
 
                 if(category.RouteName == "militaryFamilyAndSpouseProgram" && !string.IsNullOrEmpty(activity.EducationalCategory)) 

@@ -178,6 +178,7 @@ namespace Domain
         public string USAHECDirectorate {get; set;}
         public string USAHECCalendarCategory {get; set;}
         public string SpouseCategory {get; set;}
+        public string ExecCategory {get; set;}
         public string USAHECFacilityReservationType {get; set;}
          public string USAHECContract {get; set;}
         public bool CopyToUSAHECCalendar {get; set;}
@@ -231,6 +232,7 @@ namespace Domain
         public bool CopiedTobattlerhythm {get; set;}
         public bool CopiedTostaff {get; set;}
         public bool CopiedTospouse {get; set;}
+        public bool CopiedToexec {get; set;}
         public bool Cancelled { get; set; }
         public string CancelledReason { get; set; }
         public string CancelledBy { get; set; }

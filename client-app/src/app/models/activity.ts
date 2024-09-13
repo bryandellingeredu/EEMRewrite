@@ -181,6 +181,7 @@ export interface Activity{
     copiedTobattlerhythm : boolean,
     copiedTostaff: boolean,
     copiedTospouse: boolean,
+    copiedToexec: boolean,
     cancelled: boolean;
     cancelledReason : string
     cancelledBy: string
@@ -275,6 +276,7 @@ export interface Activity{
     roomResourceOtherText : string
     roomResourceNotificationSent : boolean
     spouseCategory : string
+    execCategory: string
     svtcNotificationSent: boolean
     secretNotificationSent: boolean
     cioRepsNotificationSent: boolean
@@ -457,6 +459,7 @@ export class ActivityFormValues{
     copiedTobattlerhythm : boolean = false;
     copiedTostaff: boolean = false;
     copiedTospouse: boolean = false;
+    copiedToexec: boolean = false;
     cancelled: boolean = false;
     cancelledReason : string = '';
     cancelledBy: string = '';
@@ -551,6 +554,7 @@ export class ActivityFormValues{
     roomResourceOtherText : string = ''
     roomResourceNotificationSent : boolean = false
     spouseCategory : string = ''
+    execCategory : string = ''
     svtcNotificationSent : boolean = false
     secretNotificationSent: boolean = false
     cioRepsNotificationSent: boolean = false
@@ -725,7 +729,8 @@ export class ActivityFormValues{
         this.copiedTosymposiumAndConferences = activity.copiedTosymposiumAndConferences;
         this.copiedTobattlerhythm = activity.copiedTobattlerhythm
         this.copiedTostaff = activity.copiedTostaff
-        this.copiedTospouse = activity. copiedTospouse
+        this.copiedTospouse = activity.copiedTospouse
+        this.copiedToexec = activity.copiedToexec
         this.cancelled = activity.cancelled;
         this.cancelledReason = activity.cancelledReason;
         this.cancelledBy  = activity.cancelledBy
@@ -820,6 +825,7 @@ export class ActivityFormValues{
     this.roomResourceOtherText =  activity.roomResourceOtherText
     this.roomResourceNotificationSent = activity.roomResourceNotificationSent
     this.spouseCategory = activity.spouseCategory
+    this.execCategory = activity.execCategory
     this.svtcNotificationSent = activity.svtcNotificationSent
     this.secretNotificationSent = activity.secretNotificationSent
     this.cioRepsNotificationSent = activity.cioRepsNotificationSent

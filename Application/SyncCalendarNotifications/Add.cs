@@ -87,6 +87,9 @@ namespace Application.SyncCalendarNotifications
                     case "internationalfellows":
                         syncCalendarNotification.CopiedTointernationalfellows = true;
                         break;
+                    case "exec":
+                        syncCalendarNotification.CopiedToexec = true;
+                        break;
                     case "generalInterest":
                         syncCalendarNotification.CopiedTogeneralInterest = true;
                         break;

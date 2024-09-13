@@ -6,6 +6,7 @@ using Microsoft.Graph;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System.Resources;
+using Application.Emails;
 
 namespace Application
 {
@@ -139,9 +140,9 @@ namespace Application
             await this.SendAddToMyCalendarEmails();
             if ((_activity.Start - DateTime.Now).TotalHours <= 72 || _activity.CopiedTosymposiumAndConferences ) await this.SendSyncCalendarNotificationEmails();
             if(!_activity.RoomResourceNotificationSent && (_activity.RoomResourceNipr || _activity.RoomResourceSipr || _activity.RoomResourceOther || _activity.RoomResourceRen || _activity.RoomResourceNtg || _activity.RoomResourceNts)) await this.sendRoomResourceNotification();
-            if (!_activity.SVTCNotificationSent && _activity.RoomEmails.Any(email => _svtcRooms.Contains(email))) await this.sendSVTCNotification();
-            if (!_activity.CIORepsNotificationSent && _activity.RoomEmails.Any(email => _cioRooms.Contains(email))) await this.sendCIORepsNotification();
-            if (!_activity.SecretNotificationSent && _activity.RoomEmails.Any() && (_activity.EventClearanceLevel == "Secret" || _activity.EventClearanceLevel == "Top Secret" || _activity.EventClearanceLevel == "TS-SCI")) await this.sendSecretNotification();
+            if (_activity.RoomEmails != null  && !_activity.SVTCNotificationSent && _activity.RoomEmails.Any(email => _svtcRooms.Contains(email))) await this.sendSVTCNotification();
+            if (_activity.RoomEmails != null  && !_activity.CIORepsNotificationSent && _activity.RoomEmails.Any(email => _cioRooms.Contains(email))) await this.sendCIORepsNotification();
+            if (_activity.RoomEmails != null  && !_activity.SecretNotificationSent && _activity.RoomEmails.Any() && (_activity.EventClearanceLevel == "Secret" || _activity.EventClearanceLevel == "Top Secret" || _activity.EventClearanceLevel == "TS-SCI")) await this.sendSecretNotification();
         }
 
         private async Task SendSyncCalendarNotificationEmails()
@@ -165,6 +166,7 @@ namespace Application
               (x.CopiedTocsl && _activity.CopiedTocsl) ||
               (x.CopiedTogarrison && _activity.CopiedTogarrison) ||
               (x.CopiedTointernationalfellows && _activity.CopiedTointernationalfellows) ||
+              (x.CopiedToexec && _activity.CopiedToexec) ||
               (x.CopiedTogeneralInterest && _activity.CopiedTogeneralInterest) ||
               (x.CopiedToholiday && _activity.CopiedToholiday) ||
               (x.CopiedTosocialEventsAndCeremonies && _activity.CopiedTosocialEventsAndCeremonies) ||

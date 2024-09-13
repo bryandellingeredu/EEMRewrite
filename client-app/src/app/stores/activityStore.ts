@@ -792,9 +792,11 @@ export default class ActivityStore {
     roomResourceOtherText: '',
     roomResourceNotificationSent: false,
     spouseCategory: '',
+    execCategory: '',
     svtcNotificationSent: false,
     secretNotificationSent: false,
-    cioRepsNotificationSent: false
+    cioRepsNotificationSent: false,
+    copiedToexec: false
     }
     return activity;
   }
@@ -835,10 +837,10 @@ export default class ActivityStore {
     }
   }
 
-  uploadActivityDocument = async (file: any, activityAttachmentGroupId: string, activityAttachmentId: string) => {
+  uploadActivityDocument = async (file: any, activityAttachmentGroupId: string, activityAttachmentId: string, execServices: boolean = false) => {
     this.uploading = true;
     try{
-      const response = await agent.Uploads.uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId );
+      const response = await agent.Uploads.uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId, execServices );
       runInAction(() => {
         this.uploading = false;
         store.modalStore.closeModal();

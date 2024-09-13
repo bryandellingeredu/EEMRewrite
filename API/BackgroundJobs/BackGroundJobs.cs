@@ -335,7 +335,7 @@ namespace API.BackgroundJobs
             "internationalfellows", "generalInterest","holiday","pksoi", "socialEventsAndCeremonies",
             "usahec", "ssiAndUsawcPress", "ssl", "trainingAndMiscEvents", "usahecFacilitiesUsage",
             "visitsAndTours", "symposiumAndConferences", "militaryFamilyAndSpouseProgram", "spouse","battlerhythm",
-            "staff", "imc", "cio"};
+            "staff", "imc", "cio", "exec"};
 
             Settings s = new Settings();
             var settings = s.LoadSettings(_config);
@@ -392,6 +392,9 @@ namespace API.BackgroundJobs
                         break;
                     case "internationalfellows":
                         query = query.Where(a => a.CopiedTointernationalfellows);
+                        break;
+                    case "exec":
+                        query = query.Where(a => a.CopiedToexec);
                         break;
                     case "generalInterest":
                         query = query.Where(a => a.CopiedTogeneralInterest);
@@ -901,6 +904,9 @@ namespace API.BackgroundJobs
                     break;
                 case "internationalfellows":
                     retval = "International Fellows";
+                    break;
+                case "exec":
+                    retval = "Executive Services Calendar";
                     break;
                 case "generalInterest":
                     retval = "General Interest";
