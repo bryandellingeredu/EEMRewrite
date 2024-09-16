@@ -1,0 +1,65 @@
+#Bldg650_Basement * .cls-1, #Bldg650_Basement * .cls-2, #Bldg650_Basement * .cls-3, #Bldg650_Basement * .cls-4 {
+    stroke-width: 0px;
+  }
+
+  #Bldg650_Basement * .cls-1, #Bldg650_Basement * .cls-5, #Bldg650_Basement * .cls-6 {
+    fill: #000;
+  }
+
+  #Bldg650_Basement * .cls-7 {
+    stroke-miterlimit: 2;
+  }
+
+  #Bldg650_Basement * .cls-7, #Bldg650_Basement * .cls-2, #Bldg650_Basement * .cls-8, #Bldg650_Basement * .cls-9 {
+    fill: none;
+  }
+
+  #Bldg650_Basement * .cls-7, #Bldg650_Basement * .cls-9 {
+    stroke: rgb(0, 0, 0);
+  }
+
+  #Bldg650_Basement * .cls-7, #Bldg650_Basement * .cls-9, #Bldg650_Basement * .cls-6 {
+    stroke-width: 2.5px;
+  }
+
+  #Bldg650_Basement * .cls-10 {
+    fill: #d900ff;
+  }
+
+  #Bldg650_Basement * .cls-10, #Bldg650_Basement * .cls-8, #Bldg650_Basement * .cls-9, #Bldg650_Basement * .cls-6 {
+    stroke-miterlimit: 10;
+  }
+
+  #Bldg650_Basement * .cls-10, #Bldg650_Basement * .cls-8, #Bldg650_Basement * .cls-6 {
+    stroke: #000;
+  }
+
+  #Bldg650_Basement * .cls-8 {
+    stroke-width: .75px;
+  }
+
+  #Bldg650_Basement * .cls-5 {
+    font-family: Roboto;
+    font-size: 16px;
+    isolation: isolate;
+  }
+
+  #Bldg650_Basement * .cls-11 {
+    letter-spacing: -.02em;
+  }
+
+  #Bldg650_Basement * .cls-3 {
+    fill: #fff;
+  }
+
+  #Bldg650_Basement * .cls-4 {
+    fill: #ffcc02;
+  }
+
+  polygon[id^="r"], rect[id^="r"], path[id^="r"] {
+    pointer-events: visible;
+  }
+
+  polygon:not([id^="r"]), rect:not([id^="r"]), path:not([id^="r"]) {
+    pointer-events: none;
+  }

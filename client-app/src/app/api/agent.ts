@@ -35,6 +35,7 @@ import { SyncCalendarNotificationDTO } from '../models/syncCalendarNotificationD
 import { UserEmail } from '../models/userEmail';
 import { RoomReport } from '../models/roomReport';
 import { RoomReportEventsResponseDTO } from '../models/roomReportEventsResponseDTO';
+import { Person } from '../models/person';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -368,6 +369,10 @@ const Tickets = {
         'tickets',{title, start, end, room, comments})
 }
 
+const Persons = {
+    list: () => axiosRequest.get<Person[]>('/persons'),
+}
+
 
 const agent = {
     Activities,
@@ -400,7 +405,8 @@ const agent = {
     Teams,
     PocketCalendar,
     RoomReports,
-    Tickets
+    Tickets,
+    Persons
 }
 
 export default agent;

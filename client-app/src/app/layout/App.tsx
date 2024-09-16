@@ -64,6 +64,7 @@ import ApproveAnyRoomReservation from '../../features/rooms/ApproveAnyRoomReserv
 import ResidentAndDistanceStudentCalendar from '../../features/fullCalendar/ResidentAndDistanceStudentCalendar';
 import spouseCalendarWrapper from '../../features/spouse/spouseCalendarWrapper';
 import roomUsageReport from '../../features/roomReports/roomUsageReport';
+import CampusLocator from '../../features/locator/campusLocator';
 
 function App() {
   const location = useLocation();
@@ -185,6 +186,7 @@ function App() {
                 <Route path={`${process.env.PUBLIC_URL}/server-error`} component={ServerError} />
                 <Route path={`${process.env.PUBLIC_URL}/account/registerSuccess`} component={RegisterSuccess} />
                 <Route path={`${process.env.PUBLIC_URL}/account/verifyEmail`} component={ConfirmEmail} />
+                <Route path={`${process.env.PUBLIC_URL}/campuslocator`} component={CampusLocator} />
                 <Route component={NotFound}/>
               </Switch>    
          

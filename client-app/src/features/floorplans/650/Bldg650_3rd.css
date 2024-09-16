@@ -1,0 +1,68 @@
+#Bldg650_3rd * .cls-1 {
+    font-size: 14px;
+  }
+  
+  #Bldg650_3rd * .cls-1, #Bldg650_3rd * .cls-2, #Bldg650_3rd * .cls-3, #Bldg650_3rd * .cls-4, #Bldg650_3rd * .cls-5 {
+    fill: #000;
+  }
+  
+  #Bldg650_3rd * .cls-1, #Bldg650_3rd * .cls-3, #Bldg650_3rd * .cls-4 {
+    font-family: Roboto;
+    isolation: isolate;
+  }
+  
+  #Bldg650_3rd * .cls-2, #Bldg650_3rd * .cls-6, #Bldg650_3rd * .cls-7 {
+    stroke-width: 0px;
+  }
+  
+  #Bldg650_3rd * .cls-8 {
+    fill: #d900ff;
+  }
+  
+  #Bldg650_3rd * .cls-8, #Bldg650_3rd * .cls-9, #Bldg650_3rd * .cls-10, #Bldg650_3rd * .cls-5 {
+    stroke-miterlimit: 10;
+  }
+  
+  #Bldg650_3rd * .cls-8, #Bldg650_3rd * .cls-9, #Bldg650_3rd * .cls-5 {
+    stroke: #000;
+  }
+  
+  #Bldg650_3rd * .cls-9 {
+    stroke-width: .75px;
+  }
+  
+  #Bldg650_3rd * .cls-9, #Bldg650_3rd * .cls-10 {
+    fill: none;
+  }
+  
+  #Bldg650_3rd * .cls-3 {
+    font-size: 12px;
+  }
+  
+  #Bldg650_3rd * .cls-10 {
+    stroke: rgb(0, 0, 0);
+  }
+  
+  #Bldg650_3rd * .cls-10, #Bldg650_3rd * .cls-5 {
+    stroke-width: 2.5px;
+  }
+  
+  #Bldg650_3rd * .cls-4 {
+    font-size: 16px;
+  }
+  
+  #Bldg650_3rd * .cls-6 {
+    fill: #fff;
+  }
+  
+  #Bldg650_3rd * .cls-7 {
+    fill: #ffcc02;
+  }
+  
+  polygon[id^="r"], rect[id^="r"], path[id^="r"] {
+    pointer-events: visible;
+  }
+  
+  polygon:not([id^="r"]), rect:not([id^="r"]), path:not([id^="r"]) {
+    pointer-events: none;
+  }

@@ -1,0 +1,72 @@
+#Bldg650_1st * .cls-1, #Bldg650_1st * .cls-2, #Bldg650_1st * .cls-3, #Bldg650_1st * .cls-4, #Bldg650_1st * .cls-5, #Bldg650_1st * .cls-6 {
+    fill: #000;
+  }
+  
+  #Bldg650_1st * .cls-1, #Bldg650_1st * .cls-7, #Bldg650_1st * .cls-8, #Bldg650_1st * .cls-9, #Bldg650_1st * .cls-6 {
+    stroke-miterlimit: 10;
+  }
+  
+  #Bldg650_1st * .cls-1, #Bldg650_1st * .cls-7, #Bldg650_1st * .cls-8, #Bldg650_1st * .cls-6 {
+    stroke: #000;
+  }
+  
+  #Bldg650_1st * .cls-2 {
+    font-size: 14px;
+  }
+  
+  #Bldg650_1st * .cls-2, #Bldg650_1st * .cls-4, #Bldg650_1st * .cls-5 {
+    font-family: Roboto-Regular, Roboto;
+    isolation: isolate;
+  }
+  
+  #Bldg650_1st * .cls-3, #Bldg650_1st * .cls-10, #Bldg650_1st * .cls-11, #Bldg650_1st * .cls-12 {
+    stroke-width: 0px;
+  }
+  
+  #Bldg650_1st * .cls-10, #Bldg650_1st * .cls-8, #Bldg650_1st * .cls-9 {
+    fill: none;
+  }
+  
+  #Bldg650_1st * .cls-7 {
+    fill: #d900ff;
+  }
+  
+  #Bldg650_1st * .cls-8 {
+    stroke-width: .75px;
+  }
+  
+  #Bldg650_1st * .cls-4 {
+    font-size: 12px;
+  }
+  
+  #Bldg650_1st * .cls-9 {
+    stroke: rgb(0, 0, 0);
+  }
+  
+  #Bldg650_1st * .cls-9, #Bldg650_1st * .cls-6 {
+    stroke-width: 2.5px;
+  }
+  
+  #Bldg650_1st * .cls-5 {
+    font-size: 16px;
+  }
+  
+  #Bldg650_1st * .cls-13 {
+    letter-spacing: -.02em;
+  }
+  
+  #Bldg650_1st * .cls-11 {
+    fill: #fff;
+  }
+  
+  #Bldg650_1st * .cls-12 {
+    fill: #ffcc02;
+  }
+  
+  polygon[id^="r"], rect[id^="r"], path[id^="r"] {
+    pointer-events: visible;
+  }
+  
+  polygon:not([id^="r"]), rect:not([id^="r"]), path:not([id^="r"]) {
+    pointer-events: none;
+  }

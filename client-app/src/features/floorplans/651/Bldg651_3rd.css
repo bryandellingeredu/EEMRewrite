@@ -1,0 +1,74 @@
+#Bldg651_3rd * .cls-2, #Bldg651_3rd * .cls-3, #Bldg651_3rd * .cls-4, #Bldg651_3rd * .cls-5 {
+    stroke-width: 0px;
+  }
+  
+  #Bldg651_3rd * .cls-2, #Bldg651_3rd * .cls-6, #Bldg651_3rd * .cls-7, #Bldg651_3rd * .cls-8 {
+    fill: #000;
+  }
+  
+  #Bldg651_3rd * .cls-3, #Bldg651_3rd * .cls-10, #Bldg651_3rd * .cls-11, #Bldg651_3rd * .cls-12, #Bldg651_3rd * .cls-13 {
+    fill: none;
+  }
+  
+  #Bldg651_3rd * .cls-14 {
+    fill: #d900ff;
+  }
+  
+  #Bldg651_3rd * .cls-14, #Bldg651_3rd * .cls-10, #Bldg651_3rd * .cls-11, #Bldg651_3rd * .cls-12, #Bldg651_3rd * .cls-13, #Bldg651_3rd * .cls-8 {
+    stroke-miterlimit: 10;
+  }
+  
+  #Bldg651_3rd * .cls-14, #Bldg651_3rd * .cls-10, #Bldg651_3rd * .cls-13, #Bldg651_3rd * .cls-8 {
+    stroke: #000;
+  }
+  
+  #Bldg651_3rd * .cls-10 {
+    stroke-width: .75px;
+  }
+  
+  #Bldg651_3rd * .cls-6 {
+    font-size: 13px;
+  }
+  
+  #Bldg651_3rd * .cls-6, #Bldg651_3rd * .cls-7 {
+    font-family: Roboto-Regular, Roboto;
+    isolation: isolate;
+  }
+  
+  #Bldg651_3rd * .cls-11 {
+    stroke: black;
+  }
+  
+  #Bldg651_3rd * .cls-11, #Bldg651_3rd * .cls-8 {
+    stroke-width: 2.5px;
+  }
+  
+  #Bldg651_3rd * .cls-12 {
+    stroke: #fff;
+    stroke-dasharray: 0 0 3 12;
+    stroke-width: 2.6px;
+  }
+  
+  #Bldg651_3rd * .cls-7 {
+    font-size: 16px;
+  }
+  
+  #Bldg651_3rd * .cls-13 {
+    stroke-width: 5px;
+  }
+  
+  #Bldg651_3rd * .cls-4 {
+    fill: #fff;
+  }
+  
+  #Bldg651_3rd * .cls-5 {
+    fill: #ffcc02;
+  }
+  
+  polygon[id^="r"], rect[id^="r"], path[id^="r"] {
+    pointer-events: visible;
+  }
+  
+  polygon:not([id^="r"]), rect:not([id^="r"]), path:not([id^="r"]) {
+    pointer-events: none;
+  }

@@ -190,14 +190,25 @@ export default observer(function NavbarEEM() {
                     text="All Rooms"
                     as={Link}
                     to={`${process.env.PUBLIC_URL}/bldg651Calendar/all`}
-                  />
-             </Dropdown.Menu>
+                  />    
+                  </Dropdown.Menu>   
             </Dropdown>
 
+            <Dropdown item text="Rooms & Locator">
+                <Dropdown.Menu>
+                <Dropdown.Item
+                    text="Rooms"
+                    as={Link}
+                    to={`${process.env.PUBLIC_URL}/rooms`}
+                  />
+                   <Dropdown.Item
+             text="Campus Locator"
+             as={Link}
+             to={`${process.env.PUBLIC_URL}/campuslocator`}
+             />
+                </Dropdown.Menu>
+            </Dropdown>
 
-            <Menu.Item as={NavLink} to={`${process.env.PUBLIC_URL}/rooms`}>
-              Rooms
-            </Menu.Item>
             { isSignedIn && user && roomDelegates && roomDelegates.some(
                (delegate) => delegate.delegateEmail.toLowerCase() === user.userName.toLocaleLowerCase()
              ) &&

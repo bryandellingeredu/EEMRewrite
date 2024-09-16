@@ -1,0 +1,128 @@
+#Bldg651_Terrace * .cls-1 {
+    fill: #fcfafa;
+}
+
+#Bldg651_Terrace * .cls-1,
+#Bldg651_Terrace * .cls-2,
+#Bldg651_Terrace * .cls-3,
+#Bldg651_Terrace * .cls-4,
+#Bldg651_Terrace * .cls-5,
+#Bldg651_Terrace * .cls-6,
+#Bldg651_Terrace * .cls-7,
+#Bldg651_Terrace * .cls-8,
+#Bldg651_Terrace * .cls-9,
+#Bldg651_Terrace * .cls-10 {
+    stroke-miterlimit: 10;
+}
+
+#Bldg651_Terrace * .cls-1,
+#Bldg651_Terrace * .cls-2,
+#Bldg651_Terrace * .cls-4,
+#Bldg651_Terrace * .cls-7,
+#Bldg651_Terrace * .cls-11,
+#Bldg651_Terrace * .cls-12,
+#Bldg651_Terrace * .cls-10 {
+    stroke: black;
+}
+
+#Bldg651_Terrace * .cls-14 {
+    font-size: 14px;
+}
+
+#Bldg651_Terrace * .cls-14,
+#Bldg651_Terrace * .cls-15,
+#Bldg651_Terrace * .cls-17,
+#Bldg651_Terrace * .cls-9 {
+    /* fill: none; */
+    fill: #000;
+}
+
+#Bldg651_Terrace * .cls-14,
+#Bldg651_Terrace * .cls-17 {
+    font-family: Roboto-Regular, Roboto;
+    isolation: isolate;
+}
+
+#Bldg651_Terrace * .cls-15,
+#Bldg651_Terrace * .cls-18,
+#Bldg651_Terrace * .cls-19,
+#Bldg651_Terrace * .cls-20 {
+    stroke-width: 0px;
+}
+
+#Bldg651_Terrace * .cls-2 {
+    fill: #fcfcfc;
+}
+
+#Bldg651_Terrace * .cls-2,
+#Bldg651_Terrace * .cls-3,
+#Bldg651_Terrace * .cls-7,
+#Bldg651_Terrace * .cls-9 {
+    stroke-width: 2.5px;
+}
+
+#Bldg651_Terrace * .cls-3,
+#Bldg651_Terrace * .cls-4,
+#Bldg651_Terrace * .cls-18,
+#Bldg651_Terrace * .cls-6,
+#Bldg651_Terrace * .cls-7,
+#Bldg651_Terrace * .cls-11,
+#Bldg651_Terrace * .cls-8,
+#Bldg651_Terrace * .cls-12,
+#Bldg651_Terrace * .cls-10 {
+    fill: none;
+}
+
+#Bldg651_Terrace * .cls-3,
+#Bldg651_Terrace * .cls-5,
+#Bldg651_Terrace * .cls-6,
+#Bldg651_Terrace * .cls-8,
+#Bldg651_Terrace * .cls-9 {
+    stroke: #000;
+}
+
+#Bldg651_Terrace * .cls-17 {
+    font-size: 16px;
+}
+
+#Bldg651_Terrace * .cls-4 {
+    stroke-width: .5px;
+}
+
+#Bldg651_Terrace * .cls-5 {
+    fill: #d900ff;
+}
+
+#Bldg651_Terrace * .cls-6 {
+    stroke-width: .75px;
+}
+
+#Bldg651_Terrace * .cls-11 {
+    stroke-miterlimit: 9.99;
+    stroke-width: .25px;
+}
+
+#Bldg651_Terrace * .cls-8 {
+    stroke-width: 5px;
+}
+
+#Bldg651_Terrace * .cls-19 {
+    fill: #fff;
+}
+
+#Bldg651_Terrace * .cls-12 {
+    stroke-miterlimit: 9.99;
+    stroke-width: .25px;
+}
+
+#Bldg651_Terrace * .cls-20 {
+    fill: #ffcc02;
+}
+
+polygon[id^="r"], rect[id^="r"], path[id^="r"] {
+    pointer-events: visible;
+  }
+  
+  polygon:not([id^="r"]), rect:not([id^="r"]), path:not([id^="r"]) {
+    pointer-events: none;
+  }
