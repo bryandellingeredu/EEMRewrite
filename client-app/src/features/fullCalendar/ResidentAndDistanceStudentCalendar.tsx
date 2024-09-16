@@ -72,7 +72,7 @@ useEffect(() => {
             { id: 3, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false },
             { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true },
             { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true },
-            { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup4', title: 'DEP 2027', color: '#B22222', visible: false  },
+            { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup4', title: 'DEP 2027', color: '#B22222', visible: true  },
           ]);
         }
       } else {
@@ -83,7 +83,7 @@ useEffect(() => {
           { id: 3, isSelected: user.studentType === "DL24", group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false },
           { id: 4, isSelected: user.studentType === "DL25", group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true },
           { id: 5, isSelected: user.studentType === "DL26", group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true },
-          { id: 6, isSelected: user.studentType === "DL27", group: 'studentCalendarDistanceGroup4', title: 'DEP 2027', color: '#B22222', visible: false },
+          { id: 6, isSelected: user.studentType === "DL27", group: 'studentCalendarDistanceGroup4', title: 'DEP 2027', color: '#B22222', visible: true },
         ]);
       }
     }
