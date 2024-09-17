@@ -12,6 +12,8 @@ import Bldg650_Basement from "../floorplans/650/Bldg650_Basement";
 import Bldg650_1st from "../floorplans/650/Bldg650_1st";
 import Bldg650_2nd from "../floorplans/650/Bldg650_2nd";
 import Bldg650_3rd from "../floorplans/650/Bldg650_3rd";
+import { GraphRoom } from "../../app/models/graphRoom";
+import RoomListItem from "../rooms/RoomListItem";
 
 interface RoomOption {
     key: string;
@@ -67,15 +69,29 @@ export default observer(function CampusLocator(){
 
     const [svgElem, setSvgElem] = useState<SVGElement | null>(null);
 
-    const { personStore } = useStore();
-    const { persons, loadPersons, loadingInitial } = personStore;
+    const { personStore, graphRoomStore } = useStore();
+    const { persons, loadPersons } = personStore;
+    const {graphRooms, loadGraphRooms} = graphRoomStore;
+
+    const [graphRoom, setGraphRoom] = useState<GraphRoom | null >(null);
+
 
     const [arrayOfPersons, setArrayOfPersons] = useState<any[]>([])
     const [clickedRoom, setClickedRoom] = useState<string | null>(null);
+    const [showAvailabilityIndicatorList, setShowAvailabilityIndicatorList] = useState<string[]>([]);
+
+    
+  function handleAddIdToShowAvailabilityIndicatorList(id: string) {
+    setShowAvailabilityIndicatorList([...showAvailabilityIndicatorList, id]);
+  }
 
     useEffect(() => {
         if (persons.length < 1) loadPersons();
     }, [personStore]);
+
+    useEffect(() => {
+        if(!graphRooms.length) loadGraphRooms()
+      }, [loadGraphRooms, graphRooms.length])
 
     const fullNamePersons = persons.map(person => ({
         ...person,
@@ -117,6 +133,7 @@ export default observer(function CampusLocator(){
         setBldgValue("");
         setFloorValue("");
         setRoomValue("");
+        setGraphRoom(null);
 
         setPersonValue(value);
         const person = personOptions.find(p => p.value === value) || null;
@@ -153,6 +170,7 @@ export default observer(function CampusLocator(){
                     setFillRoom(roomObj.value);
                 } else {
                     setRoomValue("");
+                    setGraphRoom(null);
                 }
             } else {
                 // person's building number doesn't match any building listed
@@ -171,6 +189,7 @@ export default observer(function CampusLocator(){
         setFloorValue("");
         setRoomValue("");
         setPersonValue("");
+        setGraphRoom(null);
 
         // bldg will contain the object for the selected building (i.e. floors and rooms)
         const bldg = bldgOptions.find(b => b.value === value);
@@ -197,6 +216,7 @@ export default observer(function CampusLocator(){
         setArrayOfPersons([]);
         setRoomValue("");
         setPersonValue("");
+        setGraphRoom(null);
 
         const floorObj = selectedBldg ? selectedBldg.floors.find(f => f.value === value) || null : null;
         setSelectedFloor(floorObj);
@@ -222,6 +242,7 @@ export default observer(function CampusLocator(){
         setRoomValue(value);
         setArrayOfPersons([]);
         setPersonValue("");
+        setGraphRoom(null);
 
         const roomObj = roomOptions ? roomOptions.find(r => r.value === value) || null : null;
         const floorObj = selectedBldg ? selectedBldg.floors.find(f => f.rooms.some(r => r.value === value)) || null : null;
@@ -234,6 +255,7 @@ export default observer(function CampusLocator(){
             const personArray = personOptions.filter(person => person.details.bldgNum === selectedBldg.value && person.details.roomNum === roomObj.key);
             setArrayOfPersons([]);
             setArrayOfPersons(personArray);
+            findAndSetGraphRoom(roomObj.value);
         }
     };
 
@@ -257,6 +279,7 @@ export default observer(function CampusLocator(){
     }, [fillRoom]);
 
     const handleClick: React.MouseEventHandler<SVGElement> = (event) => {
+        setGraphRoom(null);
         const target = event.target as SVGElement;
 
         // 1) r followed by a number
@@ -286,13 +309,15 @@ export default observer(function CampusLocator(){
     };
 
     useEffect(() => {
-        if (clickedRoom) {
+        if (clickedRoom && graphRooms && graphRooms.length > 0) {
+            debugger;
             // need the building number as well
             setArrayOfPersons([]);
             setPersonValue("");
             setRoomValue("");
 
             if (selectedBldg) {
+                
                 const roomObj = roomOptions ? roomOptions.find(r => r.value === clickedRoom) || null : null;
                 const floorObj = selectedBldg ? selectedBldg.floors.find(f => f.rooms.some(r => r.value === clickedRoom)) || null : null;
                 setSelectedFloor(floorObj);
@@ -309,14 +334,108 @@ export default observer(function CampusLocator(){
                     const personArray = personOptions.filter(person => person.details.bldgNum === selectedBldg.value && person.details.roomNum === roomObj.key);
                     setArrayOfPersons([]);
                     setArrayOfPersons(personArray);
+                    findAndSetGraphRoom(roomObj.value);
                 } else {
                     setRoomValue("");
+                    setGraphRoom(null);
                 }
             }
         }
-    }, [clickedRoom]);
+    }, [clickedRoom, graphRooms, graphRooms.length]);
 
-    if (loadingInitial) return <LoadingComponent content='Loading data' />
+    const findAndSetGraphRoom = (r : string) => {
+        debugger;
+        if(selectedBldg && r ){
+        const roomNumber = r.substring(1);
+        let filteredGraphRooms = [...graphRooms]
+        if (selectedBldg.value === '651'){
+            filteredGraphRooms = filteredGraphRooms.filter(x => x.building === 'Bldg 651');
+            let gRoom: GraphRoom | undefined = filteredGraphRooms.find(x => {
+                let roomNumberMatch = x.displayName.match(/Rm ([A-Za-z0-9]+)$/);
+                return roomNumberMatch && roomNumberMatch[1] === roomNumber;
+            });
+            if(gRoom) setGraphRoom(gRoom);
+          } else {
+            filteredGraphRooms = filteredGraphRooms.filter(x => x.building === 'Collins Hall, Bldg 650');
+            
+            let gRoom: GraphRoom | undefined = filteredGraphRooms.find(x => {
+                // Use the regex directly to test if roomValue exists in displayName
+                let roomNumberMatch = x.displayName.match(new RegExp(`\\b${roomNumber}\\b`));
+                
+                // Return true if a match is found
+                return roomNumberMatch !== null;
+            });
+
+            if (gRoom){
+                setGraphRoom(gRoom);
+            }else{
+                switch (roomNumber) {
+                    case '2010-21':
+                        setGraphRoom(
+                            filteredGraphRooms.find(
+                                x => x.emailAddress === 'Bldg650CollinsHall22ndInfConferenceRoomSVTC@armywarcollege.edu'
+                            ) || null
+                        );
+                        break;
+                    case '1030':
+                        setGraphRoom(
+                                filteredGraphRooms.find(
+                                    x => x.emailAddress === 'Bldg650CollinsHallAachenRoomSVTC@armywarcollege.edu'
+                                ) || null
+                            );
+                            break;
+                     case '1030':
+                        setGraphRoom(
+                                filteredGraphRooms.find(
+                                    x => x.emailAddress === 'Bldg650CollinsHallAachenRoomSVTC@armywarcollege.edu'
+                                ) || null
+                              );
+                              break;
+                    case 'B059':
+                        setGraphRoom(
+                            filteredGraphRooms.find(
+                                x => x.emailAddress === 'Bldg650CollinsHallArdennesRoomCafeteria@armywarcollege.edu'
+                            ) || null
+                          );
+                            break;
+                    case 'B047E':
+                         setGraphRoom(
+                            filteredGraphRooms.find(
+                                x => x.emailAddress === 'Bldg650CollinsHallBSAPConferenceRoomSVTC@armywarcollege.edu'
+                              ) || null
+                            );
+                        break;
+                    case '3010':
+                            setGraphRoom(
+                               filteredGraphRooms.find(
+                                   x => x.emailAddress === 'Bldg650CollinsHallNormandyConferenceRoomSVTC@armywarcollege.edu'
+                                 ) || null
+                               );
+                           break;
+                    case '2009-21':
+                            setGraphRoom(
+                               filteredGraphRooms.find(
+                                   x => x.emailAddress === 'Bldg650CollinsHall18thInfConferenceRoom@armywarcollege.edu'
+                                 ) || null
+                               );
+                           break;
+                        case 'B038':
+                            setGraphRoom(
+                               filteredGraphRooms.find(
+                                   x => x.emailAddress === 'Bldg650CollinsHallMediaRoom@armywarcollege.edu'
+                                 ) || null
+                               );
+                           break;
+                    default:
+                        setGraphRoom(null);
+                }
+            }
+          }
+        }
+
+    }
+
+    if (graphRoomStore.loadingInitial || personStore.loadingInitial) return <LoadingComponent content='Loading data' />
 
    return(
     <>
@@ -420,6 +539,13 @@ export default observer(function CampusLocator(){
                                 </Card>
                             ))}
                         </CardGroup>
+                        {graphRoom &&
+                         <RoomListItem
+                         room={graphRoom}
+                         showAvailabilityIndicatorList={showAvailabilityIndicatorList}
+                         addIdToShowAvailabilityIndicatorList={() => handleAddIdToShowAvailabilityIndicatorList(graphRoom.id)}
+                       />
+                        }
             </GridColumn>
         </GridRow>
        </Grid>
