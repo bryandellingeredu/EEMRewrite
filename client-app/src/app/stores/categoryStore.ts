@@ -26,6 +26,7 @@ constructor() {
                text: category.name === 'Academic Calendar' ? 'Student Calendar Academic Year 2023' :
                      category.name === 'Academic IMC Event' ? 'Faculty Calendar' :
                      category.name === 'Military Family and Spouse Program' ? 'Military Spouse and Family Program' :
+                     category.name === 'USAHEC Facilities Usage Calendar' ? 'USAHEC Calendar' :
                      category.name === 'SSL Calendar' ? 'SSL Admin Calendar' : category.name,
             value: category.id });
         }
