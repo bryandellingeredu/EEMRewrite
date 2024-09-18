@@ -324,7 +324,7 @@ const highlightMatchingEvents = (query: string) => {
         {categoriesWithSelected.filter(x => x.imcColor && x.imcColor.length)
         .filter(
           (item) =>
-            item.name !== "PKSOI Calendar" && item.name !== "Staff Calendar" && item.name !== "Other"
+            item.name !== "PKSOI Calendar" && item.name !== "USAHEC Calendar" && item.name !== "Staff Calendar" && item.name !== "Other"
         ).map(category => (
           <Label size="large"
             key={category.id} 
@@ -334,6 +334,7 @@ const highlightMatchingEvents = (query: string) => {
             <Icon name={category.selected ? 'check square outline' : 'square outline'} size="large" />
             {category.name === 'Academic IMC Event'? 'Faculty Calendar' : 
             category.name === 'Military Family and Spouse Program'? 'Military Spouse and Family Program' : 
+            category.name === 'USAHEC Facilities Usage Calendar'? 'USAHEC Calendar' : 
              category.name === 'SSL Calendar'? 'SSL Admin Calendar' : category.name}
           </Label>
       ))}
