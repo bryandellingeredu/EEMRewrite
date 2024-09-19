@@ -541,6 +541,7 @@ export default observer(function CampusLocator(){
                         </CardGroup>
                         {graphRoom &&
                          <RoomListItem
+                         showRoomLocation={false}
                          room={graphRoom}
                          showAvailabilityIndicatorList={showAvailabilityIndicatorList}
                          addIdToShowAvailabilityIndicatorList={() => handleAddIdToShowAvailabilityIndicatorList(graphRoom.id)}

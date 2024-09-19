@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { Button, Card, Divider, Grid, Header, Icon, Label, Segment, Image } from "semantic-ui-react";
+import { Button, Card, Divider, Grid, Header, Icon, Label, Segment, Image, ButtonGroup } from "semantic-ui-react";
 import { GraphRoom } from "../../app/models/graphRoom";
 import RoomAvailability from "./RoomAvailability";
 import { useStore } from "../../app/stores/store";
@@ -8,15 +8,17 @@ import LoadingComponent from "../../app/layout/LoadingComponent";
 import RoomPictureModal from "./RoomPictureModal";
 import { NavLink } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import RoomLocationModal from "../locator/roomLocationModal";
 
 interface Props{
     room: GraphRoom
     showAvailabilityIndicatorList: string[]
     addIdToShowAvailabilityIndicatorList: (id: string) => void
+    showRoomLocation: boolean
 }
 
 export default observer (function RoomListItem(
-  {room, showAvailabilityIndicatorList, addIdToShowAvailabilityIndicatorList} : Props) {
+  {room, showAvailabilityIndicatorList, addIdToShowAvailabilityIndicatorList, showRoomLocation} : Props) {
 
     const {graphRoomStore, modalStore, userStore} = useStore();
     const{ roomDelegates, loadingInitial, loadRoomDelegates} = graphRoomStore;
@@ -29,7 +31,7 @@ export default observer (function RoomListItem(
 
 
     return (
-            <Card>
+            <Card fluid>
             <Card.Content>
             {user && !loadingInitial && roomDelegates && roomDelegates.length > 0 &&
             roomDelegates.filter(x => x.roomEmail === room.emailAddress)
@@ -46,7 +48,7 @@ export default observer (function RoomListItem(
               Capacity: {room.capacity}
             </Label>
               <Card.Header style={{marginTop: '5px'}}>
-              {room.thumbURL && <Image floated='left' size='small' src={room.thumbURL} className="clickable-image"
+              {room.thumbURL && <Image  style={{paddingBottom: '10px'}} floated='left' size='small' src={room.thumbURL} className="clickable-image"
                onClick={() => openModal(<RoomPictureModal url={room.picURL}/>, 'large')}
               />}    
               {room.displayName}
@@ -58,11 +60,24 @@ export default observer (function RoomListItem(
               }
               <Card.Description>
               <Card.Content extra>
-        
+           <ButtonGroup fluid>
                 <Button basic color='orange'
-                fluid
                  content = 'Check Availability and Reserve Room'
                  onClick={() => addIdToShowAvailabilityIndicatorList(room.id)}/>
+                 {showRoomLocation &&
+                  (room.building === 'Bldg 651' || room.building === 'Collins Hall, Bldg 650' ) &&
+                <Button basic color='olive' type='button'
+                content='Show Room Location'
+                onClick={() => openModal(
+                <RoomLocationModal
+                 bldg={room.building}
+                 floor={room.floorLabel}
+                 displayName={room.displayName}
+                 email={room.emailAddress}
+                 />,
+                 'large')}
+                /> }
+            </ButtonGroup>
           
             </Card.Content>
             { showAvailabilityIndicatorList.includes(room.id) && 

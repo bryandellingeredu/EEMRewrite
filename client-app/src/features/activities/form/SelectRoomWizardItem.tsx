@@ -3,6 +3,7 @@ import { GraphRoom } from "../../../app/models/graphRoom";
 import { useStore } from "../../../app/stores/store";
 import RoomPictureModal from "../../rooms/RoomPictureModal";
 import  { useState } from 'react';
+import RoomLocationModal from "../../locator/roomLocationModal";
 
 interface Props{
     room: GraphRoom
@@ -46,6 +47,20 @@ export default function SelectRoomWizardItem({room, unavailable,setRoomEmails, r
            {room.address.street} {room.address.city} 
           </Card.Description>
          }
+
+               {
+                  (room.building === 'Bldg 651' || room.building === 'Collins Hall, Bldg 650' ) &&
+                <Button basic color='olive' fluid type='button'
+                content='Show Room Location'
+                onClick={() => openModal(
+                <RoomLocationModal
+                 bldg={room.building}
+                 floor={room.floorLabel}
+                 displayName={room.displayName}
+                 email={room.emailAddress}
+                 />,
+                 'large')}
+                /> }
      
         <Divider horizontal>
         <Header as='h5'>

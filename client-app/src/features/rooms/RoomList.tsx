@@ -288,6 +288,7 @@ export default observer(function RoomList() {
       <Card.Group itemsPerRow={3}>
         {filteredGraphRooms.map(room => (
           <RoomListItem
+            showRoomLocation={true}
             key={room.id}
             room={room}
             showAvailabilityIndicatorList={showAvailabilityIndicatorList}
