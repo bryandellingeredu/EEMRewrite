@@ -63,7 +63,7 @@ useEffect(() => {
     } else {
       if (user.studentType === 'not a student') {
         setShowLabels(true);
-        if (localStorage.getItem("studentCategories")) {
+        if (localStorage.getItem("studentCategories1")) {
           setStudentCategories(JSON.parse(localStorage.getItem("studentCategories1") || '{}'));
         } else {
           setStudentCategories([
@@ -444,8 +444,8 @@ return(
       handleLabelClick = {handleLabelClick} />
     ))}
        <Label size='large'  color='teal'>
-    <Icon name='exclamation triangle'/> Mandatory
-  </Label>
+          <Icon name='exclamation triangle'/> Mandatory
+      </Label>
     </div>
    }
 

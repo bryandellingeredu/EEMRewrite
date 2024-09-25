@@ -65,6 +65,7 @@ import ResidentAndDistanceStudentCalendar from '../../features/fullCalendar/Resi
 import spouseCalendarWrapper from '../../features/spouse/spouseCalendarWrapper';
 import roomUsageReport from '../../features/roomReports/roomUsageReport';
 import CampusLocator from '../../features/locator/campusLocator';
+import ResidentAndDistanceAndStaffFellowsCalendar from '../../features/fullCalendar/ResidentAndDistanceAndStaffFellowsCalendar';
 
 function App() {
   const location = useLocation();
@@ -138,7 +139,9 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/customcalendar/:backToCalendarId`} component={CustomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/customcalendar`} component={CustomCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/residentAndDistanceStudentCalendar/:backToCalendarId`} component={ResidentAndDistanceStudentCalendar}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/residentAndDistanceAndStaffFellowsCalendar/:backToCalendarId`} component={ResidentAndDistanceAndStaffFellowsCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/residentAndDistanceStudentCalendar`} component={ResidentAndDistanceStudentCalendar}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/residentAndDistanceAndStaffFellowsCalendar`} component={ResidentAndDistanceAndStaffFellowsCalendar}/>
 
                 <Route exact path={[
                   `${process.env.PUBLIC_URL}/genericcalendar/:id`,

@@ -796,7 +796,9 @@ export default class ActivityStore {
     svtcNotificationSent: false,
     secretNotificationSent: false,
     cioRepsNotificationSent: false,
-    copiedToexec: false
+    copiedToexec: false,
+    internationalFellowsStaffEvent: false,
+    internationalFellowsStudentEvent: false
     }
     return activity;
   }

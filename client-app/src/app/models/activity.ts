@@ -280,6 +280,8 @@ export interface Activity{
     svtcNotificationSent: boolean
     secretNotificationSent: boolean
     cioRepsNotificationSent: boolean
+    internationalFellowsStaffEvent : boolean
+    internationalFellowsStudentEvent : boolean
 }
 
 export class Activity implements Activity{
@@ -558,6 +560,8 @@ export class ActivityFormValues{
     svtcNotificationSent : boolean = false
     secretNotificationSent: boolean = false
     cioRepsNotificationSent: boolean = false
+    internationalFellowsStaffEvent : boolean = false
+    internationalFellowsStudentEvent : boolean = false
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -829,6 +833,8 @@ export class ActivityFormValues{
     this.svtcNotificationSent = activity.svtcNotificationSent
     this.secretNotificationSent = activity.secretNotificationSent
     this.cioRepsNotificationSent = activity.cioRepsNotificationSent
+    this.internationalFellowsStaffEvent = activity.internationalFellowsStaffEvent
+    this.internationalFellowsStudentEvent = activity.internationalFellowsStudentEvent
        } 
     }
 }

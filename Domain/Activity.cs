@@ -308,5 +308,7 @@ namespace Domain
         public bool RoomResourceNotApplicable {get; set;}
         public bool RoomResourceOther {get; set;}
         public string RoomResourceOtherText {get; set;}
+        public bool InternationalFellowsStaffEvent {get; set;}
+        public bool InternationalFellowsStudentEvent {get; set;}
     }
 }

@@ -170,7 +170,9 @@ export default observer(function NavbarEEM() {
           category.name
         }
         as={Link} 
-        to={category.name === 'Student Calendar' ? `${process.env.PUBLIC_URL}/residentAndDistanceStudentCalendar` : `${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}
+        to={category.name === 'Student Calendar' ? `${process.env.PUBLIC_URL}/residentAndDistanceStudentCalendar` :
+            category.name === 'International Fellows' ? `${process.env.PUBLIC_URL}/residentAndDistanceAndStaffFellowsCalendar` :
+         `${process.env.PUBLIC_URL}/genericcalendar/${category.routeName}`}
       />
     ))
 }

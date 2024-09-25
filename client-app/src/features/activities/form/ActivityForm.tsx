@@ -2267,17 +2267,108 @@ export default observer(function ActivityForm() {
        />
        <Header.Content>International Fellows Information</Header.Content>
      </Header>
-     <Divider />
+
 
      <Grid>
-                        <Grid.Row>
-                          <Grid.Column width={3}>
-                            <strong>Attendance is Mandatory:</strong>
-                          </Grid.Column>
-                          <Grid.Column width={13}>
-                            <SemanticForm.Group inline>
-                              <MySemanticCheckBox name="studentCalendarMandatory" />
-                            </SemanticForm.Group>
+          <Grid.Row>
+            <Grid.Column width={16}>
+              <Segment.Group horizontal >
+              <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                    <strong>International Fellows Event Type:</strong>
+                </Segment>
+                <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                <MySemanticCheckBox
+                      name="internationalFellowsStaffEvent"
+                      label="International Fellows Staff Event"
+                    />
+                </Segment>
+                <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                <MySemanticCheckBox
+                      name="internationalFellowsStudentEvent"
+                      label="International Fellows Student Event"
+                    />
+                </Segment>
+              </Segment.Group>
+
+              <Segment.Group horizontal>
+                  <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                    <strong>Student Type:</strong>
+                  </Segment>
+                  <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                    <MySemanticCheckBox
+                      name="studentCalendarResident"
+                      label="Resident"
+                    />
+                      {(values.studentCalendarResident || values.studentCalendarMandatory) && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarMandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                     }
+                    </Segment>
+                 {/*  <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                  
+                    <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup1"
+                      label="DEP 2024"
+                    />
+                      {values.studentCalendarDistanceGroup1 && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup1Mandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                   
+                    </Segment>
+                      */}
+                    <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                    <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup2"
+                      label="DEP 2025"
+                    />
+                      {values.studentCalendarDistanceGroup2 && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup2Mandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                     }
+                    </Segment>
+                    <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                    <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup3"
+                      label="DEP 2026"
+                    />
+                      {values.studentCalendarDistanceGroup3 && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup3Mandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                     }
+                    </Segment>
+
+                    <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                    <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup4"
+                      label="DEP 2027"
+                    />
+                      {values.studentCalendarDistanceGroup4 && 
+                    <div>
+                       <MySemanticCheckBox
+                      name="studentCalendarDistanceGroup4Mandatory"
+                      label="Attendance is Mandatory"
+                    />
+                    </div>
+                     }
+                    </Segment>
+                    
+                  </Segment.Group>
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
