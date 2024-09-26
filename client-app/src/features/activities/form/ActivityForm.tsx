@@ -139,10 +139,13 @@ export default observer(function ActivityForm() {
   const {user, isLoggedIn} = userStore
   const {getBackToCalendarInfoRecord} = backToCalendarStore;
   const [armyTeamLink, setArmyTeamLink] = useState('');
+  const [hyperlinkEDUTeams, setHyperlinkEDUTeams] = useState('');
   const [teamOwner, setTeamOwner] = useState('')
   const [teamOwnerChangeIsDisabled, setTeamOwnerChangeIsDisabled] = useState(false);
   const [armyTeamLinkWarning, setArmyTeamLinkWarning ] = useState(false);
+  const [hyperLinkEDUTeamsWarning, setHyperLinkEDUTeamsWarning] = useState(false);
   const updateArmyTeamLink  = (newArmyTeamLink: string) => {setArmyTeamLink(newArmyTeamLink)};
+  const updateHyperlinkEDUTeams = (newHyperlinkEDUTeams: string) => {setHyperlinkEDUTeams(newHyperlinkEDUTeams)}
   const [enlistedAidAdmin, setEnlistedAidAdmin] = useState(false);
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
@@ -613,6 +616,10 @@ export default observer(function ActivityForm() {
           setArmyTeamLink(response.armyTeamLink);
           setArmyTeamLinkWarning(true);
         }
+        if(response && response.hyperlinkEDUTeams){
+          setHyperlinkEDUTeams(response.hyperlinkEDUTeams);
+          setHyperLinkEDUTeamsWarning(true);
+        }
 
        
         setActivity(new ActivityFormValues(response));
@@ -992,6 +999,7 @@ export default observer(function ActivityForm() {
       activity.organization = organization;
       activity.teamInvites = attendees;
       activity.armyTeamLink = armyTeamLink;
+      activity.hyperlinkEDUTeams = hyperlinkEDUTeams;
       if(!activity.teamLink && makeTeamMeeting) activity.makeTeamMeeting = true;
       if(teamIsDeleted) {
         activity.teamInvites = [];
@@ -1284,6 +1292,17 @@ export default observer(function ActivityForm() {
            <div className="ui yellow message">
            <div className="header">
              This Event has an associated Army Teams Meeting.
+           <span style={{ paddingRight: "10px" }}>
+             If you make changes to this event make sure you also update the Team Meeting in Outlook.{" "}
+           </span>
+           </div>
+         </div>
+      }
+
+     {hyperLinkEDUTeamsWarning &&
+           <div className="ui yellow message">
+           <div className="header">
+             This Event has an associated EDU Teams Meeting.
            <span style={{ paddingRight: "10px" }}>
              If you make changes to this event make sure you also update the Team Meeting in Outlook.{" "}
            </span>
@@ -1778,6 +1797,9 @@ export default observer(function ActivityForm() {
                     teamOwner={teamOwner}
                     setTeamOwner={handleSetTeamOwner}
                     teamOwnerChangeIsDisabled={teamOwnerChangeIsDisabled}
+                    title={values.title}
+                    hyperlinkEDUTeams={hyperlinkEDUTeams}
+                    updateHyperlinkEDUTeams={updateHyperlinkEDUTeams}
                   />
             </SemanticForm.Field>
             <SemanticForm.Field>

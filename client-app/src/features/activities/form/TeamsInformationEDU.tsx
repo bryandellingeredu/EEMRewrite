@@ -1,4 +1,4 @@
-import { Button, Divider, Header, Icon, Image, Segment, Search, SegmentGroup, Message, Confirm, ButtonGroup, Loader, Dimmer, Input, Grid } from "semantic-ui-react";
+import { Button, Divider, Header, Icon, Image, Segment, Search, SegmentGroup, Message, Confirm, ButtonGroup, Loader, Dimmer, Input, Grid, TextArea } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import { useState, useEffect, Fragment} from "react";
 import { UserEmail } from "../../../app/models/userEmail"
@@ -7,6 +7,7 @@ import { SearchProps } from "semantic-ui-react";
 import { v4 as uuid } from "uuid";
 import { toast } from "react-toastify";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { setMaxListeners } from "events";
 
 interface Props{
     attendees: UserEmail[];
@@ -20,14 +21,18 @@ interface Props{
     teamOwner: string;
     setTeamOwner: (newTeamOwner: string) => void;
     teamOwnerChangeIsDisabled: boolean;
+    title: string
+    hyperlinkEDUTeams: string
+    updateHyperlinkEDUTeams: (newHyperlinkEDUTeams: string) => void;
+
   }
 
 export default function TeamsInformationEDU(
   {attendees, setAttendees,  setTeamMeeting, teamLink, teamLookup, deleteTeamMeeting, id, manageSeries,
-     teamOwner, setTeamOwner, teamOwnerChangeIsDisabled} : Props)
+     teamOwner, setTeamOwner, teamOwnerChangeIsDisabled, title, hyperlinkEDUTeams, updateHyperlinkEDUTeams} : Props)
 {
     const {modalStore} = useStore();
-    const [section, setSection] = useState(teamLink ? 'showMeeting' : 'addMeeting');
+    const [section, setSection] = useState((teamLink || hyperlinkEDUTeams) ? 'showMeeting' : 'addMeeting');
     const [loadingEmails, setLoadingEmails] = useState(true);
     const [emails, setEmails] = useState<UserEmail[]>([]);
     const [attendeesCopy, setAttendeesCopy] = useState<UserEmail[]>([]);  // attendees is not causing modal to re render
@@ -35,6 +40,8 @@ export default function TeamsInformationEDU(
     const [searchTerm2, setSearchTerm2] = useState('');
     const [openConfirm, setOpenConfirm] = useState(false);
     const [userToDelete, setUserToDelete] = useState<UserEmail>({displayName: '', email: ''});
+    const [error, setError] = useState(false);
+    const [localHyperlinkEDUTeams, setLocalHyperlinkEDUTeams] = useState(hyperlinkEDUTeams);
 
 
     const uniqueDisplayName = new Set();
@@ -126,11 +133,12 @@ useEffect(() => {
 
       const handleDeleteButton = (user: UserEmail) => {
         setOpenConfirm(true);
-        setUserToDelete(user);
+        if(teamLink) setUserToDelete(user);
     }
 
     const handleDeleteTeamConfirmClick = () =>{
-      deleteTeamMeeting();
+      if(teamLink) deleteTeamMeeting();
+      if(hyperlinkEDUTeams || localHyperlinkEDUTeams) updateHyperlinkEDUTeams('');
       modalStore.closeModal();
     }
 
@@ -147,9 +155,22 @@ useEffect(() => {
       };
 
       const handleGoToTeamsClick = () => {
-         window.open(teamLink, "_blank");
+         window.open(teamLink || hyperlinkEDUTeams, "_blank");
          modalStore.closeModal();
       }
+
+      const handleSaveHyperlinkEDUTeams = () => {
+        if (!localHyperlinkEDUTeams) {
+            setError(true);
+        } else {
+            setError(false);
+            updateHyperlinkEDUTeams(localHyperlinkEDUTeams);
+            toast.success('Team Link copied to the EEM', {
+              position: toast.POSITION.TOP_CENTER
+            });
+            modalStore.closeModal();
+        }
+    };
 
 
     return(
@@ -166,14 +187,14 @@ useEffect(() => {
       </Button>
       <Header as="h2">
       <Image  src={`${process.env.PUBLIC_URL}/assets/teams.svg`}  />
-      {!teamLink && 
+      {!teamLink && !hyperlinkEDUTeams &&
         <Header.Content>
           Add an EDU Teams Meeting to this Event.
           <Header.Subheader>This will create an EDU Teams Meeting
           </Header.Subheader>
         </Header.Content>
       }
-        {teamLink && 
+        {(teamLink || hyperlinkEDUTeams) && 
         <Header.Content>
           EDU Teams Meeting
           <Header.Subheader>View and Edit this Teams Meeting</Header.Subheader>
@@ -205,7 +226,7 @@ useEffect(() => {
            Join Team Meeting
          </Button>
          <Button secondary onClick={() => {
-  navigator.clipboard.writeText(teamLink)
+  navigator.clipboard.writeText(teamLink || hyperlinkEDUTeams)
     .then(() => {
       toast.success('Team Link copied to clipboard', {
         position: toast.POSITION.TOP_CENTER
@@ -218,29 +239,90 @@ useEffect(() => {
     });
 }}>
   Copy Team Link
+  
 </Button>
+
+      {teamLink && 
          <Button color='teal'
          onClick={() => setSection('addAttendees')}
          >
            View / Edit Team Invites
          </Button>
+      }
+  
          <Button color='red' onClick={() => setSection('deleteMeeting')}>
            Delete
          </Button>
        </ButtonGroup>
         </Segment>
-      }
+  }
       {section === 'addMeeting' && 
       <Segment textAlign="center">
       <Button.Group size="massive">
     <Button
      positive
-     onClick={() => setSection('addOwner')}
+     onClick={() => setSection('typeOfMeeting')}
     >I Want to Add an EDU Teams Meeting</Button>
     <Button.Or />
     <Button  onClick={() => modalStore.closeModal()}>Cancel</Button>
   </Button.Group>
 </Segment>
+   }
+
+   {section === 'typeOfMeeting' && 
+     <Segment textAlign="center">
+        <Button.Group size="massive">
+        <Button.Group size="massive">
+         <Button
+           positive
+     onClick={() => setSection('addOwner')}
+    >Auto Create Teams Meeting</Button>
+    <Button.Or />
+    <Button  onClick={() => setSection('addHyperlink')}>
+    Add Existing Teams Link
+      </Button>
+  </Button.Group>
+        </Button.Group>
+     </Segment>
+   }
+
+   {section === 'addHyperlink' &&
+     <SegmentGroup>
+     <Segment textAlign="center" color="teal">
+     <Header icon color="teal">
+       <Icon name="paste" />
+            Paste an EDU Teams Join Link
+       </Header>
+       <Message info>
+        <h3>
+        After manually creating an EDU Teams Meeting for <span>{title}</span> in EDU Teams, or EDU Outlook,  copy and paste 
+        the Join Link into the Team Link Input Box.
+        </h3>       
+       </Message>
+     </Segment>
+     <Segment textAlign="center" color="teal">
+       <Header icon color="teal">
+       <Icon name="paperclip" />
+       Paste Team Link
+       </Header>
+       <Message info>
+        <h3>
+         Paste the EDU Teams Join Link
+        </h3>    
+       </Message>
+       <TextArea 
+    placeholder='Paste the team link here' 
+    rows={4} 
+    style={{ width: '100%', borderColor: error ? 'red' : undefined }} 
+    value={localHyperlinkEDUTeams}
+    onChange={(e, { value }) => setLocalHyperlinkEDUTeams(String(value))} // Explicitly convert value to string
+/>
+{error && <div style={{ color: 'red' }}>Please enter a team link.</div>}
+       </Segment>
+       <Segment clearing>
+        <Button floated="right" type="button" primary onClick={handleSaveHyperlinkEDUTeams} size='large'content='Save and Close'/>
+      </Segment>
+     </SegmentGroup>
    }
 
 

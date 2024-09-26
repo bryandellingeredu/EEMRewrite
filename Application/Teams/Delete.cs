@@ -57,6 +57,7 @@ namespace Application.Teams
                         activity.TeamRequester = null;
                         activity.TeamLink = null;
                         activity.TeamOwner = null;
+                        activity.HyperlinkEDUTeams = null;
                         await _context.SaveChangesAsync(cancellationToken);
                     }
 

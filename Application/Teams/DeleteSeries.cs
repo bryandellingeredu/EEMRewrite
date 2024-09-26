@@ -59,7 +59,8 @@ namespace Application.Teams
                             }
                             activity.TeamRequester = null;
                             activity.TeamLookup= null;
-                            activity.TeamLink= null;    
+                            activity.TeamLink= null;   
+                            activity.HyperlinkEDUTeams=null; 
                      
                         }
                         var result = await _context.SaveChangesAsync() > 0;

@@ -18,6 +18,9 @@ interface Props{
   teamOwner: string;
   setTeamOwner: (newTeamOwner: string) => void;
   teamOwnerChangeIsDisabled: boolean;
+  title: string;
+  hyperlinkEDUTeams: string;
+  updateHyperlinkEDUTeams: (newHyperlinkEDUTeams: string) => void;
 }
 
 
@@ -25,7 +28,9 @@ export default function TeamsButtonEDU(
   {attendees, setAttendees, setTeamMeeting,
    makeTeamMeeting, teamLink,  teamLookup, teamIsDeleted,
     deleteTeamMeeting, teamAttendeesLoading, id, manageSeries,
-    teamOwner, setTeamOwner,  teamOwnerChangeIsDisabled } : Props){
+    teamOwner, setTeamOwner,  teamOwnerChangeIsDisabled, title, hyperlinkEDUTeams,
+    updateHyperlinkEDUTeams
+  } : Props){
     const {modalStore} = useStore();
     const {openModal} = modalStore;
     return(
@@ -50,13 +55,17 @@ export default function TeamsButtonEDU(
               teamOwner={teamOwner}
               setTeamOwner={setTeamOwner}
               teamOwnerChangeIsDisabled={teamOwnerChangeIsDisabled}
+              title={title}
+              hyperlinkEDUTeams={hyperlinkEDUTeams}
+              updateHyperlinkEDUTeams={updateHyperlinkEDUTeams}
+
               />, 'large'
             )
           }
        >
          EDU Teams Meeting  
          {teamIsDeleted ? (<Icon name="square outline" />) : (
-            (makeTeamMeeting || teamLink) ?
+            (makeTeamMeeting || teamLink || hyperlinkEDUTeams) ?
              <Icon name="check square outline" size="large"/> :
              <Icon name="square outline" size="large" />
           )}

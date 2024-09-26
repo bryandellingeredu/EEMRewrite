@@ -484,9 +484,9 @@ namespace API.BackgroundJobs
                     {
                         description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
                     }
-                    if (!string.IsNullOrEmpty(activity.TeamLink))
+                    if (!string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams))
                     {
-                        description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink}";
+                        description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink ?? activity.HyperlinkEDUTeams}";
                     }
                     if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
                     {
@@ -761,9 +761,9 @@ namespace API.BackgroundJobs
             {
                 description = description + $"---HYPERLINK--- go to {activity.HyperlinkDescription} at {activity.Hyperlink} ";
             }
-            if (!string.IsNullOrEmpty(activity.TeamLink))
+            if (!string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams))
             {
-                description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink}";
+                description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink ?? activity.HyperlinkEDUTeams}";
             }
             if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
             {
@@ -789,9 +789,9 @@ namespace API.BackgroundJobs
             writer.WriteLine($"UID:{activity.Id}");
             writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:BUSY");
             // Conditionally add Teams or EDU links as their own sections in the calendar
-            if (!string.IsNullOrEmpty(activity.TeamLink))
+            if (!string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams))
             {
-                writer.WriteLine($"URL:{activity.TeamLink}");
+                writer.WriteLine($"URL:{activity.TeamLink ?? activity.HyperlinkEDUTeams}");
             }
             if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
             {
