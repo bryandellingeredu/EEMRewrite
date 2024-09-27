@@ -118,7 +118,7 @@ namespace Application.Activities
                     EventPlanningStatus = activity.EventPlanningStatus,
                     EventClearanceLevel = activity.EventClearanceLevel,
                     TeamInd = !string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.ArmyTeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams),
-                    TeamLink = activity.TeamLink ?? activity.HyperlinkEDUTeams,
+                    TeamLink = activity.TeamLink.CoalesceWhitespace(activity.HyperlinkEDUTeams),
                     CopiedTosymposiumAndConferences = activity.CopiedTosymposiumAndConferences,
                     SymposiumLinkInd = activity.SymposiumLinkInd,
                     SymposiumLink = activity.SymposiumLink,
