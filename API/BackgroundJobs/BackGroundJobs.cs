@@ -3,6 +3,7 @@ using Application.Activities;
 using Application.GraphSchedules;
 using Domain;
 using Hangfire;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
@@ -486,7 +487,7 @@ namespace API.BackgroundJobs
                     }
                     if (!string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams))
                     {
-                        description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink ?? activity.HyperlinkEDUTeams}";
+                        description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink.CoalesceWhitespace(activity.HyperlinkEDUTeams)}";
                     }
                     if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
                     {
@@ -506,7 +507,8 @@ namespace API.BackgroundJobs
                         writer.WriteLine($"DTSTART;TZID=America/New_York:{activity.Start.ToString("yyyyMMddTHHmmss")}");
                         writer.WriteLine($"DTEND;TZID=America/New_York:{activity.End.ToString("yyyyMMddTHHmmss")}");
                     }
-                    WriteLineWithEllipsis(writer, $"LOCATION:{await GetLocation(activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms)}");
+                    WriteLineWithEllipsis(writer, $"LOCATION:{await GetLocation(
+                        activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms, activity.LastUpdatedBy, activity.CreatedBy,  activity.EventLookupCalendar, activity.EventLookupCalendarEmail)}");
                     writer.WriteLine("SEQUENCE:0");
                     WriteLineWithEllipsis(writer, $"SUMMARY:{activity.Title.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
                     WriteLineWithEllipsis(writer, $"DESCRIPTION:{description.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
@@ -763,7 +765,7 @@ namespace API.BackgroundJobs
             }
             if (!string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams))
             {
-                description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink ?? activity.HyperlinkEDUTeams}";
+                description = description + $"---EDU TEAM MEETING LINK--- {activity.TeamLink.CoalesceWhitespace(activity.HyperlinkEDUTeams)}";
             }
             if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
             {
@@ -781,7 +783,10 @@ namespace API.BackgroundJobs
                 writer.WriteLine($"DTSTART;TZID=America/New_York:{activity.Start.ToString("yyyyMMddTHHmmss")}");
                 writer.WriteLine($"DTEND;TZID=America/New_York:{activity.End.ToString("yyyyMMddTHHmmss")}");
             }
-            WriteLineWithEllipsis(writer, $"LOCATION:{await GetLocation(activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms)}");
+      
+            WriteLineWithEllipsis(writer, $"LOCATION:{await GetLocation(
+                activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms,
+                activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail)}");
             writer.WriteLine("SEQUENCE:0");
             WriteLineWithEllipsis(writer, $"SUMMARY:{activity.Title.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
             WriteLineWithEllipsis(writer, $"DESCRIPTION:{description.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ")}");
@@ -791,7 +796,7 @@ namespace API.BackgroundJobs
             // Conditionally add Teams or EDU links as their own sections in the calendar
             if (!string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams))
             {
-                writer.WriteLine($"URL:{activity.TeamLink ?? activity.HyperlinkEDUTeams}");
+                writer.WriteLine($"URL:{activity.TeamLink.CoalesceWhitespace(activity.HyperlinkEDUTeams)}");
             }
             if (!string.IsNullOrEmpty(activity.ArmyTeamLink))
             {
@@ -836,7 +841,9 @@ namespace API.BackgroundJobs
             }
         }
 
-        private async Task<string> GetLocation(string eventLookup, string primaryLocation, string activityCoordinatorEmail, IGraphServicePlacesCollectionPage allrooms)
+        private async Task<string> GetLocation(
+            string eventLookup, string primaryLocation, string activityCoordinatorEmail, IGraphServicePlacesCollectionPage allrooms,
+            string lastUpdatedBy , string createdBy , string eventCalendarId, string eventCalendarEmail)
         {
           
             string location = primaryLocation;
@@ -849,7 +856,9 @@ namespace API.BackgroundJobs
             Event evt;
             try
             {
-                evt = await GraphHelper.GetEventAsync(activityCoordinatorEmail, eventLookup, null, null, null, null );
+                evt = await GraphHelper.GetEventAsync(activityCoordinatorEmail, eventLookup, lastUpdatedBy, createdBy, eventCalendarId, eventCalendarEmail);
+           
+
             }
             catch (Exception)
             {
