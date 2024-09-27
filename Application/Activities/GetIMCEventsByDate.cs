@@ -69,7 +69,7 @@ namespace Application.Activities
                         EventLookup = activity.EventLookup,
                         CoordinatorEmail = activity.CoordinatorEmail,
                         Recurring = activity.RecurrenceInd,
-                        TeamInd = !string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.ArmyTeamLink),
+                        TeamInd = !string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.ArmyTeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams),
                         CopiedTosymposiumAndConferences = activity.CopiedTosymposiumAndConferences,
                         SymposiumLinkInd = activity.SymposiumLinkInd,
                         SymposiumLink = activity.SymposiumLink

@@ -77,7 +77,7 @@ namespace Application.Activities
                         SeniorAttendeeNameRank = activity.SeniorAttendeeNameRank,
                         AdditionalVTCInfo = activity.AdditionalVTCInfo,
                         VTCStatus = activity.VTCStatus,
-                        TeamInd = !string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.ArmyTeamLink),
+                        TeamInd = !string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.ArmyTeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams),
                     };
 
                     fullCalendarEventDTOs.Add(fullCalendarEventDTO);

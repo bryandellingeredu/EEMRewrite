@@ -380,7 +380,7 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
    
      }
 
-     {(activity.teamLink || activity.armyTeamLink) &&
+     {(activity.teamLink || activity.armyTeamLink || activity.hyperlinkEDUTeams) &&
       <Segment>
         <Grid>
             <Grid.Column width={1}>
@@ -391,16 +391,16 @@ export default observer(function ActivityDetailedHeader({ activity, setReloadTri
         </Grid.Column>
         <Grid.Column width={10}>
         <ButtonGroup  floated='right' fluid >
-        {activity.teamLink && 
+        {(activity.teamLink || activity.hyperlinkEDUTeams)  && 
         <>
         <Button color='black' 
-        onClick = {() => {window.open(activity.teamLink, "_blank");}}
+        onClick = {() => {window.open(activity.teamLink || activity.hyperlinkEDUTeams, "_blank");}}
         >
             Join EDU Teams Meeting
         </Button>
         <Button color='brown' 
         onClick={() => {
-            navigator.clipboard.writeText(activity.teamLink)
+            navigator.clipboard.writeText(activity.teamLink || activity.hyperlinkEDUTeams )
               .then(() => {
                 toast.success('Team Link copied to clipboard', {
                   position: toast.POSITION.TOP_CENTER

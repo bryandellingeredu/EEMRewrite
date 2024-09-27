@@ -573,6 +573,7 @@ export default class ActivityStore {
       g5Organization: '',
       hyperlink: '',
       hyperlinkDescription: '',
+      hyperlinkEDUTeams: '',
       eventClearanceLevel : '',
       eventClearanceLevelNotificationSent : false,
       communityEvent: false,
@@ -953,8 +954,8 @@ getICSDescription = (activity : Activity) => {
   if (activity.hyperlink && activity.hyperlinkDescription) {
       description += `---HYPERLINK--- go to ${escapeAndCleanText(activity.hyperlinkDescription)} at ${escapeAndCleanText(activity.hyperlink)}`;
   }
-  if (activity.teamLink) {
-      description += `---EDU TEAM MEETING LINK--- ${escapeAndCleanText(activity.teamLink)}`;
+  if (activity.teamLink || activity.hyperlinkEDUTeams) {
+      description += `---EDU TEAM MEETING LINK--- ${escapeAndCleanText(activity.teamLink ?? activity.hyperlinkEDUTeams)}`;
   }
   if (activity.armyTeamLink) {
       description += `---ARMY TEAM MEETING LINK--- ${escapeAndCleanText(activity.armyTeamLink)}`;

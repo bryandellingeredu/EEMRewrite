@@ -106,6 +106,7 @@ namespace Application.Activities
                 activity.TeamLookup= null;  
                 activity.TeamRequester = null;
                 activity.TeamLink= null;    
+                activity.HyperlinkEDUTeams = null;
                 activity.LogicalDeleteInd = true;
                 activity.DeletedBy = user.Email;
                 activity.DeletedAt = DateTime.Now;

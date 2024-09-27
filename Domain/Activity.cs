@@ -82,6 +82,7 @@ namespace Domain
         public string G5Organization { get; set; }
         public string  Hyperlink { get; set; }
         public string HyperlinkDescription { get; set; }
+        public string HyperlinkEDUTeams { get; set; }   
         public string EventClearanceLevel { get; set; }
         public bool EventClearanceLevelNotificationSent {get; set;}
         public bool CommunityEvent { get; set; }

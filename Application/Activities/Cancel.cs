@@ -113,6 +113,7 @@ namespace Application.Activities
                 activity.TeamLookup = null;
                 activity.TeamRequester = null;
                 activity.TeamLink = null;
+                activity.HyperlinkEDUTeams = null;
                 activity.CancelledBy = user.Email;
                 activity.CancelledAt = DateTime.Now;
                 activity.Cancelled = true;

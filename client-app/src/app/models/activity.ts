@@ -56,6 +56,7 @@ export interface Activity{
     g5Organization: string
     hyperlink : string
     hyperlinkDescription : string
+    hyperlinkEDUTeams: string
     eventClearanceLevel : string
     eventClearanceLevelNotificationSent : boolean
     communityEvent: boolean
@@ -336,6 +337,7 @@ export class ActivityFormValues{
     g5Organization: string = ''
     hyperlink : string = '';
     hyperlinkDescription : string = '';
+    hyperlinkEDUTeams : string = '';
     eventClearanceLevel : string = '';
     eventClearanceLevelNotificationSent : boolean = false;
     communityEvent : boolean = false;
@@ -610,6 +612,7 @@ export class ActivityFormValues{
         this.g5Organization = activity.g5Organization
         this.hyperlink = activity.hyperlink
         this.hyperlinkDescription  = activity.hyperlinkDescription
+        this.hyperlinkEDUTeams = activity. hyperlinkEDUTeams
         this.eventClearanceLevel = activity.eventClearanceLevel
         this.eventClearanceLevelNotificationSent = activity.eventClearanceLevelNotificationSent
         this.communityEvent = activity.communityEvent
