@@ -16,7 +16,11 @@ import { Button, Divider, Header, Icon, Input, Label, Loader } from "semantic-ui
 import SyncCalendarInformation from "./SyncCalendarInformation"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCalendarPlus, faGlobe } from "@fortawesome/free-solid-svg-icons"
-import ResidentAndDistanceAndStaffFellowsCalendarComponent from "./ResidentAndDistanceAndStaffFellowsCalendarCategoryComponent"
+import ResidentAndDistanceAndStaffFellowsCalendarComponent from "./ResidentAndDistanceAndStaffFellowsCalendarCategoryComponent";
+import Pikaday from "pikaday";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
 interface ResidentAndDistanceAndStaffFellowsCategory{
     id: number
@@ -41,6 +45,8 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
     const calendarRef = useRef<FullCalendar>(null);
     const calendarDivRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [view, setView] = useState(localStorage.getItem("residentAndDistanceAndFacultyFellowsCalendarView") || "timeGridWeek");
     useEffect(() => {
         if(!categoryStore.categories.length) categoryStore.loadCategories();
        }, [categoryStore.categories.length])
@@ -200,35 +206,38 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
     }
 
     const  handleMouseEnter = async (arg : any) =>{
-        var content = `<p> ${ getTime(arg)}</p>              
-        <p> <strong>Title: </strong> ${arg.event.title} </p>
-        <p> <strong>Student Category: </strong> ${arg.event.extendedProps.studentType} </p>
-        ${arg.event.extendedProps.description ?'<p><strong>Description: <strong>' + arg.event.extendedProps.description + '</p>' : '' }
-        ${arg.event.extendedProps.primaryLocation ? '<p><strong>Location: <strong>' + arg.event.extendedProps.primaryLocation + '</p>' : '' }
-        ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: <strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
-        ${arg.event.extendedProps.actionOfficer ? '<p><strong>Action Officer: <strong>' + arg.event.extendedProps.actionOfficer + '</p>' : ''}
-        ${arg.event.extendedProps.actionOfficerPhone ?'<p><strong>Action Officer Phone: <strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
-        ${arg.event.extendedProps.copiedTosymposiumAndConferences && arg.event.extendedProps.symposiumLinkInd && arg.event.extendedProps.symposiumLink?'<p><strong>Click to view registration link<strong></p>' : ''}
-        <p><strong>Student Program/s: ' + getStudentPrograms(arg.event.extendedProps) + '</strong></p>
-        <p><strong>Attendance is : <strong>  ${arg.event.extendedProps.studentCalendarMandatory ? 'Mandatory' : 'Optional'} </p>
-        ${arg.event.extendedProps.studentCalendarPresenter?'<p><strong>Presenter: <strong>' + arg.event.extendedProps.studentCalendarPresenter + '</p>' : ''}
-        ${arg.event.extendedProps.studentCalendarUniform
-        ? '<p><strong>Uniform: <strong>' 
-            + (arg.event.extendedProps.studentCalendarUniform.length > 100 
-                ? arg.event.extendedProps.studentCalendarUniform.slice(0, 100) + '...' 
-                : arg.event.extendedProps.studentCalendarUniform) 
-            + '</p>' 
-        : ''
+      var content = `<p> ${ getTime(arg)}</p>              
+      <p> <strong>Title: </strong> ${arg.event.title} </p>
+      <p> <strong>Student Category: </strong> ${arg.event.extendedProps.studentType} </p>
+      ${arg.event.extendedProps.description ? '<p><strong>Description: </strong>' + arg.event.extendedProps.description + '</p>' : '' }
+      ${arg.event.extendedProps.primaryLocation ? '<p><strong>Location: </strong>' + arg.event.extendedProps.primaryLocation + '</p>' : '' }
+      ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: </strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
+      ${arg.event.extendedProps.actionOfficer ? '<p><strong>Action Officer: </strong>' + arg.event.extendedProps.actionOfficer + '</p>' : ''}
+      ${arg.event.extendedProps.actionOfficerPhone ? '<p><strong>Action Officer Phone: </strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
+      ${arg.event.extendedProps.copiedTosymposiumAndConferences && arg.event.extendedProps.symposiumLinkInd && arg.event.extendedProps.symposiumLink ? '<p><strong>Click to view registration link</strong></p>' : '' }
+      <p><strong>Event Type:  ${getStudentPrograms(arg.event.extendedProps)}  </strong></p>
+      ${!arg.event.extendedProps.internationalFellowsStaffEvent 
+          ? '<p><strong>Attendance is: </strong>' + (arg.event.extendedProps.studentCalendarMandatory ? 'Mandatory' : 'Optional') + '</p>' 
+          : ''
       }
-      ${arg.event.extendedProps.studentCalendarNotes
-        ? '<p><strong>Notes: <strong>' 
-            + (arg.event.extendedProps.studentCalendarNotes.length > 100 
-                ? arg.event.extendedProps.studentCalendarNotes.slice(0, 100) + '...' 
-                : arg.event.extendedProps.studentCalendarNotes) 
-            + '</p>' 
-        : ''
+      ${arg.event.extendedProps.studentCalendarPresenter ? '<p><strong>Presenter: </strong>' + arg.event.extendedProps.studentCalendarPresenter + '</p>' : ''}
+      ${arg.event.extendedProps.studentCalendarUniform 
+          ? '<p><strong>Uniform: </strong>' 
+              + (arg.event.extendedProps.studentCalendarUniform.length > 100 
+                  ? arg.event.extendedProps.studentCalendarUniform.slice(0, 100) + '...' 
+                  : arg.event.extendedProps.studentCalendarUniform) 
+              + '</p>' 
+          : ''
       }
-         `;
+      ${arg.event.extendedProps.studentCalendarNotes 
+          ? '<p><strong>Notes: </strong>' 
+              + (arg.event.extendedProps.studentCalendarNotes.length > 100 
+                  ? arg.event.extendedProps.studentCalendarNotes.slice(0, 100) + '...' 
+                  : arg.event.extendedProps.studentCalendarNotes) 
+              + '</p>' 
+          : ''
+      }
+  `;
        var tooltip : any = tippy(arg.el, {     
           content,
           allowHTML: true,
@@ -424,7 +433,140 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
                   highlightMatchingEvents(e.target.value);
               }} 
           />
-            </div> 
+      </div> 
+      <div ref={calendarDivRef}>
+
+      <FullCalendar
+      initialDate={initialDate || new Date()}
+      ref={calendarRef}
+      height="auto"
+      key={studentCategories.map(category => category.isSelected).join(',')}
+      initialView={view}
+      headerToolbar={{
+        left: "prev,next",
+        center: "title",
+        right: "datepicker,dayGridMonth,timeGridWeek,timeGridDay,screenShot",
+      }}
+      customButtons={{
+        datepicker: {
+          text: "go to date",
+          click: function() {
+            // Initialize Pikaday
+            const picker = new Pikaday({
+              field: document.querySelector(".fc-datepicker-button") as HTMLElement,
+              format: "YYYY-MM-DD",
+              onSelect: function (dateString) { 
+                const calendarApi = calendarRef.current?.getApi();
+                if (calendarApi) {
+                  picker.gotoDate(new Date(dateString));
+                  calendarApi.gotoDate(new Date(dateString));
+                }
+              },
+            });
+            // Show the Pikaday date picker
+            picker.show();
+          },
+        },
+        screenShot: {
+          text: "screenshot",
+          click: takeScreenshot,
+        },
+      }}
+      datesSet={(arg) => {
+        // Save the user's view selection
+        localStorage.setItem("residentAndDistanceAndFacultyFellowsCalendarView", arg.view.type);
+        setView(arg.view.type);
+      }}
+      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+      events={`${process.env.REACT_APP_API_URL}/activities/GetInternationalFellowsCalendarEventsByDate`}
+      eventClick={handleEventClick}
+      dateClick={handleDateClick}
+      eventMouseEnter={handleMouseEnter} 
+      slotMinTime={"07:00:00"}
+      slotMaxTime={"21:00:00"}
+      loading={(isLoading) => setIsLoading(isLoading)}
+
+      
+
+      eventDidMount={(info: any) => {
+        const selectedstudentCategories = studentCategories.filter(category => category.isSelected && category.visible)
+  
+        let shouldDisplayEvent = (
+            (selectedstudentCategories.some(category => category.id === 2) && info.event.extendedProps.internationalFellowsStaffEvent) ||
+            (selectedstudentCategories.some(category => category.id === 3) && info.event.extendedProps.studentCalendarResident) ||
+            (selectedstudentCategories.some(category => category.id === 4) && info.event.extendedProps.studentCalendarDistanceGroup1) ||
+            (selectedstudentCategories.some(category => category.id === 5) && info.event.extendedProps.studentCalendarDistanceGroup2) ||
+            (selectedstudentCategories.some(category => category.id === 6) && info.event.extendedProps.studentCalendarDistanceGroup3) ||
+            (selectedstudentCategories.some(category => category.id === 7) && info.event.extendedProps.studentCalendarDistanceGroup4) ||
+            (
+              selectedstudentCategories.some(category => category.id === 3) &&
+               (!info.event.extendedProps.studentCalendarResident &&
+                !info.event.extendedProps.studentCalendarDistanceGroup1 &&
+                !info.event.extendedProps.studentCalendarDistanceGroup2 &&
+                !info.event.extendedProps.studentCalendarDistanceGroup3 &&
+                !info.event.extendedProps.studentCalendarDistanceGroup4
+              )
+            )
+        );
+
+        if (selectedstudentCategories.some(category => category.id === 1)) {
+          shouldDisplayEvent = true;
+        }
+
+        if (selectedstudentCategories.length < 1) {
+          shouldDisplayEvent = true;
+        }
+
+    
+        if (!shouldDisplayEvent || !checkCategoryVisibility(info.event.extendedProps.studentType)) {
+            info.el.style.display = 'none';
+        } else {
+            const eventColor = info.event.backgroundColor;
+            const eventDot = info.el.querySelector('.fc-daygrid-event-dot');
+            if (eventDot) {
+                eventDot.style.borderColor = eventColor;
+            }
+            if (info.event.extendedProps.studentCalendarMandatory) {
+              const eventContent = info.el.querySelector('.fc-event-title');
+              if (eventContent) {
+                const icon = document.createElement('i');
+                icon.className = 'exclamation triangle icon'; // The Semantic UI class for the exclamation triangle icon
+                
+                // Add custom styles to make the icon larger and bright orange
+                icon.style.fontSize = '1.5em'; // Increase size of the icon (adjust as needed)
+                icon.style.color = 'orange'; // Set the color to bright orange
+                
+                eventContent.prepend(icon); // Prepend the icon to the event content
+              }
+            }
+    
+            // Style for recurring events
+            if (info.event.extendedProps.recurring) {
+                const eventContent = info.el.querySelector('.fc-event-title');
+                if (eventContent) {
+                    const icon = document.createElement('i');
+                    icon.className = 'redo alternate icon'; // The Semantic UI class for the repeating icon
+                    eventContent.prepend(icon);
+                }
+            }
+    
+            // Style for teamInd events
+            if (info.event.extendedProps.teamInd) {
+                const eventContent = info.el.querySelector('.fc-event-title');
+                if (eventContent) {
+                    const icon = document.createElement('i');
+                    icon.className = 'tv icon'; // The Semantic UI class for the team indicator icon
+                    eventContent.prepend(icon);
+                }
+            }
+            if(searchQuery){
+              highlightMatchingEvents(searchQuery)
+            }
+        }
+    }}
+    />
+
+      </div>
               </>
            }
         </>

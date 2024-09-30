@@ -172,6 +172,15 @@ HandleResult(await Mediator.Send(
         }
 
         [AllowAnonymous]
+        [HttpGet("GetInternationalFellowsCalendarEventsByDate")]
+        public async Task<ActionResult> GetInternationalFellowsCalendarRoomEvents()
+        {
+            string start = Request.Query["start"];
+            string end = Request.Query["end"];
+            return HandleResult(await Mediator.Send(new GetInternationalFellowsCalendarEventsByDate.Query { Start = start, End = end }));
+        }
+
+        [AllowAnonymous]
         [HttpGet("GetEventsByDate/{routeName}")]
         public async Task<ActionResult> GetRoomEvents(string routeName)
         {
