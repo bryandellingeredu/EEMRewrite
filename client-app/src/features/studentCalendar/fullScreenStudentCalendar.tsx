@@ -79,8 +79,12 @@ export default observer( function FullScreenStudentCalendar (){
     const [studentCategories, setStudentCategories] = useState<ResidentAndDistanceStudentCalendarCategory[]>([]);
     const [showLabels, setShowLabels] = useState(false);
     const [initialDate, setInitialDate] = useState<Date | null>(null);
+    const [canViewIFCalendarEvents, setCanViewIFCalendarEvents] = useState(false);
 
-
+    useEffect(() => {
+      if (user && user.roles && user.roles.includes("ifCalendarAdmin") ) setCanViewIFCalendarEvents(true);
+      if (user && user.userName && user.userName.toLowerCase().endsWith('.fm@armywarcollege.edu')) setCanViewIFCalendarEvents(true);
+    }, [user]);
 
     useEffect(() => {
       if (user) {
@@ -375,6 +379,8 @@ if (selectedstudentCategories.length < 1) {
   shouldDisplayEvent = true;
 }
 
+if (!canViewIFCalendarEvents && info.event.extendedProps.internationalFellowsOnly)  shouldDisplayEvent = false;
+
 if (!shouldDisplayEvent || !checkCategoryVisibility(info.event.extendedProps.studentType)) {
   info.el.style.display = 'none';
 } else {
@@ -413,6 +419,20 @@ if (!shouldDisplayEvent || !checkCategoryVisibility(info.event.extendedProps.stu
         // Add custom styles to make the icon larger and bright orange
         icon.style.fontSize = '1.5em'; // Increase size of the icon (adjust as needed)
         icon.style.color = 'orange'; // Set the color to bright orange
+        
+        eventContent.prepend(icon); // Prepend the icon to the event content
+      }
+    }
+
+    if (info.event.extendedProps.internationalFellowsOnly) {
+      const eventContent = info.el.querySelector('.fc-event-title');
+      if (eventContent) {
+        const icon = document.createElement('i');
+        icon.className = 'globe icon'; // Add the Semantic UI class for spinning animation
+        
+        // Add custom styles to make the icon larger and bright orange
+        icon.style.fontSize = '1.5em'; // Increase size of the icon (adjust as needed)
+        icon.style.color = 'goldenrod'; // Set the color to bright orange
         
         eventContent.prepend(icon); // Prepend the icon to the event content
       }
@@ -523,6 +543,11 @@ if (!shouldDisplayEvent || !checkCategoryVisibility(info.event.extendedProps.stu
                  <Label size='large'  color='teal'>
               <Icon name='exclamation triangle'/> Mandatory
             </Label>
+            {canViewIFCalendarEvents && 
+      <Label size='large'  color='teal'>
+          <Icon name='globe'/> International Fellows Only
+      </Label>
+     }
               </div>
               </>
         }

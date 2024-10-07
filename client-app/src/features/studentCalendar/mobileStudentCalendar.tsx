@@ -80,6 +80,13 @@ export default observer(function MobileStudentCalendar (){
         setShowDetails(false);
       }
 
+      const [canViewIFCalendarEvents, setCanViewIFCalendarEvents] = useState(false);
+
+      useEffect(() => {
+        if (user && user.roles && user.roles.includes("ifCalendarAdmin") ) setCanViewIFCalendarEvents(true);
+        if (user && user.userName && user.userName.toLowerCase().endsWith('.fm@armywarcollege.edu')) setCanViewIFCalendarEvents(true);
+      }, [user]);
+
       
       const checkCategoryVisibility = (studentType: string): boolean => {
         // Map studentType to category IDs directly
@@ -140,6 +147,8 @@ export default observer(function MobileStudentCalendar (){
     if (selectedstudentCategories.length < 1) {
       shouldDisplayEvent = true;
     }
+
+    if (!canViewIFCalendarEvents && info.event.extendedProps.internationalFellowsOnly)  shouldDisplayEvent = false;
      
     if (!shouldDisplayEvent || !checkCategoryVisibility(info.event.extendedProps.studentType)) {
       info.el.style.display = 'none';
@@ -155,8 +164,23 @@ export default observer(function MobileStudentCalendar (){
           const eventContent = info.el.querySelector('.fc-list-event-title');
           if (eventContent) {
               const icon = document.createElement('i');
+              icon.style.fontSize = '1.5em'; // Increase size of the icon (adjust as needed)
+              icon.style.color = 'orange';
               icon.className = 'exclamation triangle icon'; // The Semantic UI class for the exclamation triangle icon
               eventContent.prepend(icon);
+          }
+        }
+        if (info.event.extendedProps.internationalFellowsOnly) {
+          const eventContent = info.el.querySelector('.fc-list-event-title');
+          if (eventContent) {
+            const icon = document.createElement('i');
+            icon.className = 'globe icon'; // The Semantic UI class for the exclamation triangle icon
+            
+            // Add custom styles to make the icon larger and bright orange
+            icon.style.fontSize = '1.5em'; // Increase size of the icon (adjust as needed)
+            icon.style.color = 'orange'; // Set the color to bright orange
+            
+            eventContent.prepend(icon); // Prepend the icon to the event content
           }
         }
       }
@@ -393,6 +417,11 @@ export default observer(function MobileStudentCalendar (){
                  <Label size='large'  color='teal'>
               <Icon name='exclamation triangle'/> Mandatory
             </Label>
+            {canViewIFCalendarEvents && 
+      <Label size='large'  color='teal'>
+          <Icon name='globe'/> International Fellows Only
+      </Label>
+     }
               </div>
               </>
         }
