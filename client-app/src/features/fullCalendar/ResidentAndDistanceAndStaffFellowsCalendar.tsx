@@ -517,16 +517,7 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
             (selectedstudentCategories.some(category => category.id === 4) && info.event.extendedProps.studentCalendarDistanceGroup1) ||
             (selectedstudentCategories.some(category => category.id === 5) && info.event.extendedProps.studentCalendarDistanceGroup2) ||
             (selectedstudentCategories.some(category => category.id === 6) && info.event.extendedProps.studentCalendarDistanceGroup3) ||
-            (selectedstudentCategories.some(category => category.id === 7) && info.event.extendedProps.studentCalendarDistanceGroup4) ||
-            (
-              selectedstudentCategories.some(category => category.id === 3) &&
-               (!info.event.extendedProps.studentCalendarResident &&
-                !info.event.extendedProps.studentCalendarDistanceGroup1 &&
-                !info.event.extendedProps.studentCalendarDistanceGroup2 &&
-                !info.event.extendedProps.studentCalendarDistanceGroup3 &&
-                !info.event.extendedProps.studentCalendarDistanceGroup4
-              )
-            )
+            (selectedstudentCategories.some(category => category.id === 7) && info.event.extendedProps.studentCalendarDistanceGroup4) 
         );
 
         if (selectedstudentCategories.some(category => category.id === 1)) {
