@@ -579,6 +579,23 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
                     eventContent.prepend(icon);
                 }
             }
+
+            if (info.event.extendedProps.fromExternalCalendarInd){
+              const eventContent = info.el.querySelector('.fc-event-title');
+        
+            // Create a container for the FontAwesome icon
+            const iconContainer = document.createElement('span');
+        
+            // Use React to render the FontAwesomeIcon into the container
+            ReactDOM.render(
+              <FontAwesomeIcon icon={faCalendarPlus} className="fa-calendar-plus"  style={{ marginRight: '8px' }} />,
+              iconContainer
+            );
+        
+            // Prepend the rendered icon container to the event content
+            eventContent.prepend(iconContainer);
+            }
+
             if(searchQuery){
               highlightMatchingEvents(searchQuery)
             }

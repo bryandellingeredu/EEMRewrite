@@ -48,7 +48,7 @@ namespace Application.Activities
                                                (x.Start <= end && x.End >= end) ||
                                                (x.Start <= start && x.End >= end)
                                       )
-                           .Where(x => x.CopiedTostudentCalendar || x.CopiedTointernationalfellows)
+                           .Where(x => x.CopiedTostudentCalendar || (x.CopiedTointernationalfellows && x.InternationalFellowsStudentEvent))
                            .Where(x => !x.LogicalDeleteInd && !x.InternationalFellowsStaffEventPrivate)
                            .ToListAsync();
 

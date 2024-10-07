@@ -51,6 +51,12 @@ const calendarDivRef = useRef<HTMLDivElement>(null);
 const [height, setHeight] = useState(window.innerHeight - 200);
 const [view, setView] = useState(localStorage.getItem("residentAndDistanceStudentCalendarView") || "timeGridWeek");
 const [isLoading, setIsLoading] = useState(true);
+const [canViewIFCalendarEvents, setCanViewIFCalendarEvents] = useState(false);
+
+useEffect(() => {
+  if (user && user.roles && user.roles.includes("ifCalendarAdmin") ) setCanViewIFCalendarEvents(true);
+  if (user && user.userName && user.userName.toLowerCase().endsWith('.fm@armywarcollege.edu')) setCanViewIFCalendarEvents(true);
+}, [user]);
 
 useEffect(() => {
   if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=residentAndDistanceStudentCalendar`;
@@ -447,9 +453,11 @@ return(
        <Label size='large'  color='teal'>
           <Icon name='exclamation triangle'/> Mandatory
       </Label>
+      {canViewIFCalendarEvents && 
       <Label size='large'  color='teal'>
           <Icon name='globe'/> International Fellows Only
       </Label>
+     }
     </div>
    }
 
@@ -545,6 +553,8 @@ return(
         if (selectedstudentCategories.length < 1) {
           shouldDisplayEvent = true;
         }
+
+        if (!canViewIFCalendarEvents && info.event.extendedProps.internationalFellowsOnly)  shouldDisplayEvent = false;
 
     
         if (!shouldDisplayEvent || !checkCategoryVisibility(info.event.extendedProps.studentType)) {
