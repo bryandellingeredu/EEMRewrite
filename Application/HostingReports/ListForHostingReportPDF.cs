@@ -44,6 +44,7 @@ namespace Application.HostingReports
                     .Include(o => o.Organization)
                     .Where(x => x.Start >= start)
                     .Where(x => !x.LogicalDeleteInd)
+                    .Where(x => !x.InternationalFellowsStaffEventPrivate)
                     .Where(x => x.HostingReport != null)
                     .ToListAsync(cancellationToken); 
 

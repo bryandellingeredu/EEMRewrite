@@ -25,6 +25,7 @@ namespace Application.HostingReports
                         (hr, a) => new { HostingReport = hr, Activity = a })
                      .Where(joined => joined.Activity.Report == "Hosting Report")
                      .Where(joined => joined.Activity.LogicalDeleteInd == false)
+                      .Where(joined => joined.Activity.InternationalFellowsStaffEventPrivate == false)
                     .Select(joined => joined.HostingReport)
                     .ToListAsync(cancellationToken);
 

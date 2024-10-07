@@ -180,6 +180,7 @@ namespace Domain
         public string USAHECCalendarCategory {get; set;}
         public string SpouseCategory {get; set;}
         public string ExecCategory {get; set;}
+        public string InternationalFellowsStaffEventCategory {get; set;}
         public string USAHECFacilityReservationType {get; set;}
          public string USAHECContract {get; set;}
         public bool CopyToUSAHECCalendar {get; set;}
@@ -311,5 +312,6 @@ namespace Domain
         public string RoomResourceOtherText {get; set;}
         public bool InternationalFellowsStaffEvent {get; set;}
         public bool InternationalFellowsStudentEvent {get; set;}
+        public bool InternationalFellowsStaffEventPrivate {get; set;}
     }
 }

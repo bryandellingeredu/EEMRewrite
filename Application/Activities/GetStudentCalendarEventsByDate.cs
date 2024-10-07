@@ -48,8 +48,8 @@ namespace Application.Activities
                                                (x.Start <= end && x.End >= end) ||
                                                (x.Start <= start && x.End >= end)
                                       )
-                           .Where(x => x.CopiedTostudentCalendar)
-                           .Where(x => !x.LogicalDeleteInd)
+                           .Where(x => x.CopiedTostudentCalendar || x.CopiedTointernationalfellows)
+                           .Where(x => !x.LogicalDeleteInd && !x.InternationalFellowsStaffEventPrivate)
                            .ToListAsync();
 
                 List<FullCalendarEventDTO> fullCalendarEventDTOs = new List<FullCalendarEventDTO>();
@@ -128,6 +128,7 @@ namespace Application.Activities
                     StudentCalendarDistanceGroup3 = studentCalendarInfo.StudentCalendarDistanceGroup3,
                     StudentCalendarDistanceGroup4 = studentCalendarInfo.StudentCalendarDistanceGroup4,
                     StudentType = studentCalendarInfo.StudentType,
+                    InternationalFellowsOnly = activity.CopiedTointernationalfellows &&  !activity.CopiedTostudentCalendar && activity.InternationalFellowsStudentEvent
                 };
             }
         }

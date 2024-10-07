@@ -56,6 +56,7 @@ namespace Application.Activities
                                 .Include(x => x.Organization)
                                 .Include(x => x.Category)
                                 .Where(x => !x.LogicalDeleteInd)
+                                .Where(x =>!x.InternationalFellowsStaffEventPrivate)
                                 .Where(x => !string.IsNullOrWhiteSpace(x.EventLookup))
                                 .Where(x => x.Title.Trim().ToLower() == request.Title.Trim().ToLower())
                                 .ToListAsync();
@@ -66,6 +67,7 @@ namespace Application.Activities
                                 .Include(x => x.Organization)
                                 .Include(x => x.Category)
                                 .Where(x => !x.LogicalDeleteInd)
+                                .Where(x =>!x.InternationalFellowsStaffEventPrivate)
                                 .Where(x => !string.IsNullOrWhiteSpace(x.EventLookup))
                                 .Where(x => x.Start.Date >= startDate)
                                 .Where(x => x.End.Date <= endDate)

@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Application.GraphSchedules;
 using Domain;
 using Azure.Core;
+using System.Security.Claims;
+using Application.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Activities
 {
@@ -15,6 +18,7 @@ namespace Application.Activities
         {
             public string Start { get; set; }
             public string End { get; set; }
+            public string IFCalendarAdmin { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Result<List<FullCalendarEventDTO>>>
@@ -24,10 +28,16 @@ namespace Application.Activities
             public Handler(DataContext context, IConfiguration config)
             {
                 _context = context;
+             
             }
 
             public async Task<Result<List<FullCalendarEventDTO>>> Handle(Query request, CancellationToken cancellationToken)
             {
+
+                bool isCalendarAdmin = false;
+                if (request.IFCalendarAdmin == "true") isCalendarAdmin = true;
+
+
                 DateTime start = Helper.GetDateTimeFromRequest(request.Start);
                 DateTime end = Helper.GetDateTimeFromRequest(request.End);
 
@@ -41,38 +51,81 @@ namespace Application.Activities
                 new InternationalFellowCalendarInfo{InternationalFellowType = "Staff", Color = "#708090", InternationalFellowCalendarResident = false, InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = false, InternationalFellowCalendarDistanceGroup3 = false,InternationalFellowCalendarDistanceGroup4 = false , InternationalFellowsStaffEvent = true},
         };
 
-                var activities = await _context.Activities.Include(x => x.Organization)
-                           .Where(
-                                            x =>
-                                               (x.Start <= start && x.End <= end) ||
-                                               (x.Start >= start && x.End <= end) ||
-                                               (x.Start <= end && x.End >= end) ||
-                                               (x.Start <= start && x.End >= end)
-                                      )
-                           .Where(x => x.CopiedTointernationalfellows)
-                           .Where(x => !x.LogicalDeleteInd)
-                           .ToListAsync();
+                IQueryable<Activity> query = _context.Activities.Include(x => x.Organization)
+                .Where(x =>
+                        (x.Start <= start && x.End <= end) ||
+                        (x.Start >= start && x.End <= end) ||
+                        (x.Start <= end && x.End >= end) ||
+                        (x.Start <= start && x.End >= end)
+                       )
+                .Where(x => x.CopiedTointernationalfellows)
+                .Where(x => !x.LogicalDeleteInd);
+
+                if (!isCalendarAdmin)
+                {
+                    query = query.Where(x => !x.InternationalFellowsStaffEventPrivate);
+                }
+
+                var activities = await query.ToListAsync();
+
 
                 List<FullCalendarEventDTO> fullCalendarEventDTOs = new List<FullCalendarEventDTO>();
 
                 foreach (var activity in activities)
                 {
+                     bool putInCategory = false;
                     foreach (var internationalFellowCalendarInfo in internationalFellowInfoList)
                     {
-                        if (internationalFellowCalendarInfo.InternationalFellowCalendarResident &&
-                            (activity.StudentCalendarResident ||
-                                (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3 && !activity.StudentCalendarDistanceGroup4 && !activity.InternationalFellowsStaffEvent )
-                            )
-                          )
-                        {
+                        
+                        if (internationalFellowCalendarInfo.InternationalFellowCalendarResident && activity.StudentCalendarResident){
+                            putInCategory = true;   
+                        } 
+                        if (internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup1){
                             fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
+                            putInCategory = true;  
                         }
-                        if (internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup1) fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
-                        if (internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup2) fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
-                        if (internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup3) fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
-                        if (internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup4 && activity.StudentCalendarDistanceGroup4) fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
-                        if (internationalFellowCalendarInfo.InternationalFellowsStaffEvent && activity.InternationalFellowsStaffEvent) fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
+                        if (internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup2){
+                        fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
+                        putInCategory = true; 
+                        }
+                        if (internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup3){
+                            fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
+                            putInCategory = true; 
+                        }
+                        if (internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup4 && activity.StudentCalendarDistanceGroup4){
+                            fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
+                             putInCategory = true;
+                        } 
+                        if (internationalFellowCalendarInfo.InternationalFellowsStaffEvent && activity.InternationalFellowsStaffEvent){
+                             fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo));
+                              putInCategory = true;
+                        }
+                       
                     }
+                     if(!putInCategory){
+                          if(activity.StudentCalendarMandatory || 
+                            !string.IsNullOrEmpty(activity.StudentCalendarNotes) ||
+                            !string.IsNullOrEmpty(activity.StudentCalendarPresenter) ||
+                            !string.IsNullOrEmpty(activity.StudentCalendarUniform) ||
+                            activity.CopiedTostudentCalendar
+                             ){
+                                activity.InternationalFellowsStudentEvent=true;
+                                fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, 
+                                new   InternationalFellowCalendarInfo
+                                {InternationalFellowType = "Resident", Color = "#006400", InternationalFellowCalendarResident = true,
+                                 InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = false,
+                                InternationalFellowCalendarDistanceGroup3 = false, InternationalFellowCalendarDistanceGroup4 = false,
+                                InternationalFellowsStaffEvent = false}));
+                             }else{
+                                activity.InternationalFellowsStaffEvent=true;
+                                  fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, 
+                                 new InternationalFellowCalendarInfo{
+                                    InternationalFellowType = "Staff", Color = "#708090", InternationalFellowCalendarResident = false,
+                                    InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = false,
+                                    InternationalFellowCalendarDistanceGroup3 = false,InternationalFellowCalendarDistanceGroup4 = false ,
+                                    InternationalFellowsStaffEvent = true}));
+                             }
+                        }
                 }
                 return Result<List<FullCalendarEventDTO>>.Success(fullCalendarEventDTOs);
             }
@@ -85,7 +138,9 @@ namespace Application.Activities
                     Title = activity.Title,
                     Start = Helper.GetStringFromDateTime(activity.Start, activity.AllDayEvent),
                     End = Helper.GetStringFromDateTime(activity.AllDayEvent ? activity.End.AddDays(1) : activity.End, activity.AllDayEvent),
-                    Color = internationalFellowCalendarInfo.Color,
+                    Color = (internationalFellowCalendarInfo.InternationalFellowType == "Staff" && !string.IsNullOrEmpty(activity.InternationalFellowsStaffEventCategory)) 
+                    ? GetStaffColor(activity.InternationalFellowsStaffEventCategory)
+                    : internationalFellowCalendarInfo.Color,
                     BorderColor = (
                         (activity.StudentCalendarMandatory  && internationalFellowCalendarInfo.InternationalFellowCalendarResident) ||
                         (activity.StudentCalendarDistanceGroup1Mandatory  && internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup1) ||
@@ -133,6 +188,28 @@ namespace Application.Activities
                     InternationalFellowsStaffEvent = activity.InternationalFellowsStaffEvent && internationalFellowCalendarInfo.InternationalFellowsStaffEvent,
                 };
             }
+
+           private string GetStaffColor(string internationalFellowsStaffEventCategory)
+{
+    switch (internationalFellowsStaffEventCategory)
+    {
+        case "Leave/TDY":
+            return "#000000";
+        case "FSP":
+            return "#D87093";
+        case "MTGS":
+            return "#B8860B";
+        case "Office Birthday":
+            return "#654321";
+        case "IF Birthday":
+            return "#008080";
+        case "IF Holiday":
+            return "#808000";
+        default:
+            // Return a default color if the category is not found
+            return "#708090";
+    }
+}
         }
     }
 

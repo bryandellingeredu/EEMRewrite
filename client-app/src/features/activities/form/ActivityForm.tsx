@@ -148,11 +148,13 @@ export default observer(function ActivityForm() {
   const updateHyperlinkEDUTeams = (newHyperlinkEDUTeams: string) => {setHyperlinkEDUTeams(newHyperlinkEDUTeams)}
   const [enlistedAidAdmin, setEnlistedAidAdmin] = useState(false);
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
+  const [ifCalendarAdmin, setIFCalendarAdmin] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
   const [memberOfExecServices, setMemberOfExecServices] = useState(false);
   const [svtcSchedule, setSvtcSchedule] = useState<GraphScheduleResponse[]>([]);
   const handleSetSvtcSchedule = (newSchedule : GraphScheduleResponse[] ) => setSvtcSchedule(newSchedule);
   useEffect(() => {
+    setIFCalendarAdmin((user && user.roles && user.roles.includes("ifCalendarAdmin")) || false);
     setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
     setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
     setCIOEventPlanningAdmin((user && user.roles && user.roles.includes("CIOEventPlanningAdmin")) || false);
@@ -1119,7 +1121,7 @@ export default observer(function ActivityForm() {
   }
 
   const FormObserver: React.FC = () => {
-    const { values, setFieldValue } = useFormikContext();
+    const { values, setFieldValue, touched, setTouched } = useFormikContext();
     const v = values as ActivityFormValues;
     const oneDayInMs = 24 * 60 * 60 * 1000;
     const fiftyNineDaysInMs = 59 * oneDayInMs;
@@ -1145,6 +1147,7 @@ export default observer(function ActivityForm() {
       } else if ((v.end && v.start) && v.end.getTime() - v.start.getTime() > fiftyNineDaysInMs) {
         setFieldValue("end", new Date(v.start.getTime() + fiftyNineDaysInMs));
       }
+      
 
       if (currentCategoryId !== v.categoryId) {
         const isIncludedInIMC = categories
@@ -1217,7 +1220,20 @@ export default observer(function ActivityForm() {
 
       if (currentCategoryId !== v.categoryId)
         setCurrentCategoryId(v.categoryId);
-    }, [values, setFieldValue]);
+      
+      if (v.internationalFellowsStaffEvent && !(touched as any).internationalFellowsStaffEventPrivate) {
+        setFieldValue("internationalFellowsStaffEventPrivate", true);
+        setTouched({
+          ...touched,
+          internationalFellowsStaffEventPrivate: true,
+        });
+      }
+
+      if(v.internationalFellowsStudentEvent)  setFieldValue("internationalFellowsStaffEventPrivate", false);
+
+      if(roomEmails.length > 0) setFieldValue("internationalFellowsStaffEventPrivate", false);
+      
+    }, [values, setFieldValue, touched, setTouched]);
     return null;
   };
 
@@ -2215,7 +2231,24 @@ export default observer(function ActivityForm() {
               </Grid>
             </Segment>
 
-            {!studentCalendarAdmin && !memberOfExecServices
+            {!ifCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFAF3',
+    color: '#9F6000',
+    padding: '1em',
+    borderRadius: '5px',
+    margin: '1em',
+    border: '1px solid #9F6000',
+  }}>
+    <h2>You are not authorized to create or update an International Fellows Event</h2>
+    <p>You do not have the necessary permissions to save events to the "International Fellows Calendar".</p>
+  </div>
+}
+     {!studentCalendarAdmin && !memberOfExecServices
              &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
   <div style={{
     display: 'flex',
@@ -2311,7 +2344,45 @@ export default observer(function ActivityForm() {
                     />
                 </Segment>
               </Segment.Group>
+             {values.internationalFellowsStaffEvent && 
+              <Segment style={{ backgroundColor: "#d7f5f3" }}>
+              <MySelectInput
+                  options={[
+                    { text: "", value: "" },
+                    { text: "FSP", value: "FSP" },
+                    { text: "IF Birthday", value: "IF Birthday" },
+                    { text: "IF Holiday", value: "IF Holiday" },
+                    { text: "Leave/TDY", value: "Leave/TDY" },
+                    { text: "MTGS", value: "MTGS" },
+                    { text: "Office Birthday", value: "Office Birthday" },
+                  ]}
+                  placeholder="Staff Category"
+                  name="internationalFellowsStaffEventCategory"
+                  label="Staff Category:"
+                />
+              </Segment>
+             }
 
+         {values.internationalFellowsStaffEvent && 
+              <Segment.Group horizontal >
+              <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                    <strong>Private International Fellows Staff Event</strong>
+                </Segment>
+                <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                <MySemanticCheckBox
+                      name="internationalFellowsStaffEventPrivate"
+                      label="Private"
+                    />
+                </Segment>
+                <Segment style={{ backgroundColor: "#d7f5f3" }}>
+                <i>A private staff event will only be visible to International Fellows Staff.
+                   This option is not allowed when reserving a room.
+                   This option is not allowed when International Fellows Student Event is selected. </i>
+                </Segment>
+              </Segment.Group>
+            }
+
+          {values.internationalFellowsStudentEvent &&
               <Segment.Group horizontal>
                   <Segment style={{ backgroundColor: "#d7f5f3" }}>
                     <strong>Student Type:</strong>
@@ -2330,6 +2401,7 @@ export default observer(function ActivityForm() {
                     </div>
                      }
                     </Segment>
+                
                  {/*  <Segment style={{ backgroundColor: "#f4e9f7" }}>
                   
                     <MySemanticCheckBox
@@ -2391,13 +2463,16 @@ export default observer(function ActivityForm() {
                     </Segment>
                     
                   </Segment.Group>
-                          </Grid.Column>
-                        </Grid.Row>
+                }
+                </Grid.Column>
+                    </Grid.Row>
                       </Grid>
                       <Divider />
-      
+              {values.internationalFellowsStudentEvent &&
                   <MyTextInput name="studentCalendarPresenter" placeholder="Presenter" label="Presenter:" />
+              }
                  
+             {values.internationalFellowsStudentEvent &&
                  <MyTextAreaWithTypeahead
                    rows={3}
                    placeholder="Uniform: "
@@ -2418,18 +2493,22 @@ export default observer(function ActivityForm() {
                     'Meet in accordance with instructions in Electives syllabi and previously issued course and classroom assignment instructions.',
                   ]}
                  />
-
-
-         
-
+                }
+                  {values.internationalFellowsStudentEvent &&
                    <MyTextArea
                       rows={3}
                       placeholder="Notes: "
                       name="studentCalendarNotes"
                       label="Notes:"
                     />
+                  }
+                
+
+               
      </Segment>
+     
 }
+
 
 
             {(categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" || values.copiedTostudentCalendar ) &&
@@ -3596,7 +3675,7 @@ label="USAHEC Contract:"
                          <MySemanticCheckBox
                             name="copiedTointernationalfellows"
                             label="International Fellows"
-                            disabled={categories
+                            disabled={!ifCalendarAdmin || categories
                               .filter((x) => x.routeName === "internationalfellows")
                               .map((x) => x.id)
                               .includes(currentCategoryId)}
@@ -5088,7 +5167,9 @@ label="USAHEC Contract:"
                           <Divider color="black" />
             <Button
               disabled={submitting || 
-                 (!studentCalendarAdmin && !memberOfExecServices && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar")}
+                 (!studentCalendarAdmin && !memberOfExecServices && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar") ||
+                 (!ifCalendarAdmin  && categories.find((x) => x.id === values.categoryId)?.name ==="International Fellows")
+                }
               loading={submitting}
               floated="right"
               positive
@@ -5101,6 +5182,24 @@ label="USAHEC Contract:"
               type="button"
               content="Cancel"
             />
+
+{!ifCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="International Fellows" &&
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFAF3',
+    color: '#9F6000',
+    padding: '1em',
+    borderRadius: '5px',
+    margin: '1em',
+    border: '1px solid #9F6000',
+  }}>
+    <h2>You are not authorized!</h2>
+    <p>You do not have the necessary permissions to save events to the "International Fellows Calendar".</p>
+  </div>
+}
       
       {!studentCalendarAdmin &&  !memberOfExecServices  && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
   <div style={{

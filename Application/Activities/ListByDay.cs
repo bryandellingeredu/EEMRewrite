@@ -55,6 +55,7 @@ namespace Application.Activities
                            .Include(r => r.Recurrence)
                            .Where(a => request.Day.Date >= a.Start.Date && request.Day.Date <= a.End.Date)
                            .Where(x => !x.LogicalDeleteInd)
+                           .Where(x => !x.InternationalFellowsStaffEventPrivate)
                           .ToListAsync(cancellationToken);
 
                         foreach (var activity in activities)

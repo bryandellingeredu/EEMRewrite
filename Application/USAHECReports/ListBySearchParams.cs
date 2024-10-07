@@ -35,6 +35,7 @@ using Microsoft.Graph;
                    .Include(c => c.Category)
                    .Where(x => x.CopiedTousahecFacilitiesUsage)
                    .Where(x => !x.LogicalDeleteInd)
+                    .Where(x => !x.InternationalFellowsStaffEventPrivate)
                    .Where(x => !string.IsNullOrEmpty(x.EventLookup))
                    .Where(x => !string.IsNullOrEmpty(x.CoordinatorEmail))
                    .AsQueryable();

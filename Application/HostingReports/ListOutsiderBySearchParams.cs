@@ -43,6 +43,7 @@ namespace Application.HostingReports
                    .Include(o => o.Organization)
                    .Include(h => h.HostingReport)
                    .Where(x => !x.LogicalDeleteInd)
+                    .Where(x => !x.InternationalFellowsStaffEventPrivate)
                    .Where(h => h.HostingReport != null)
 
                    .AsQueryable();

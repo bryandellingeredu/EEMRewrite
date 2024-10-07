@@ -799,7 +799,9 @@ export default class ActivityStore {
     cioRepsNotificationSent: false,
     copiedToexec: false,
     internationalFellowsStaffEvent: false,
-    internationalFellowsStudentEvent: false
+    internationalFellowsStudentEvent: false,
+    internationalFellowsStaffEventCategory: '',
+    internationalFellowsStaffEventPrivate: false
     }
     return activity;
   }

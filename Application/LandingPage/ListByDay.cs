@@ -41,6 +41,7 @@ namespace Application.LandingPage
                     .Where(x => x.Start < request.Day.Date.AddDays(1) && x.End >= request.Day.Date)
                     .Where(x => x.IMC == true)
                    . Where(x => !x.LogicalDeleteInd)
+                    . Where(x => !x.InternationalFellowsStaffEventPrivate)
                     .ToListAsync();
 
                 foreach (var activity in activities) {

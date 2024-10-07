@@ -243,6 +243,7 @@ const  handleMouseEnter = async (arg : any) =>{
   var content = `<p> ${ getTime(arg)}</p>              
   <p> <strong>Title: </strong> ${arg.event.title} </p>
   <p> <strong>Student Category: </strong> ${arg.event.extendedProps.studentType} </p>
+  ${arg.event.extendedProps.internationalFellowsOnly ? '<p><strong>INTERNATIONAL FELLOWS ONLY</strong></p>' : ''}
   ${arg.event.extendedProps.description ?'<p><strong>Description: <strong>' + arg.event.extendedProps.description + '</p>' : '' }
   ${arg.event.extendedProps.primaryLocation ? '<p><strong>Location: <strong>' + arg.event.extendedProps.primaryLocation + '</p>' : '' }
   ${arg.event.extendedProps.leadOrg ? '<p><strong>Lead Org: <strong>' + arg.event.extendedProps.leadOrg + '</p>' : '' }
@@ -446,8 +447,12 @@ return(
        <Label size='large'  color='teal'>
           <Icon name='exclamation triangle'/> Mandatory
       </Label>
+      <Label size='large'  color='teal'>
+          <Icon name='globe'/> International Fellows Only
+      </Label>
     </div>
    }
+
 
     <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
           <Input
@@ -557,8 +562,22 @@ return(
                 icon.className = 'exclamation triangle icon'; // The Semantic UI class for the exclamation triangle icon
                 
                 // Add custom styles to make the icon larger and bright orange
-                icon.style.fontSize = '1.5em'; // Increase size of the icon (adjust as needed)
+                icon.style.fontSize = '1.6em'; // Increase size of the icon (adjust as needed)
                 icon.style.color = 'orange'; // Set the color to bright orange
+                
+                eventContent.prepend(icon); // Prepend the icon to the event content
+              }
+            }
+
+            if (info.event.extendedProps.internationalFellowsOnly) {
+              const eventContent = info.el.querySelector('.fc-event-title');
+              if (eventContent) {
+                const icon = document.createElement('i');
+                icon.className = 'globe icon'; // Add the Semantic UI class for spinning animation
+                
+                // Add custom styles to make the icon larger and bright orange
+                icon.style.fontSize = '1.6em'; // Increase size of the icon (adjust as needed)
+                icon.style.color = 'goldenrod'; // Set the color to bright orange
                 
                 eventContent.prepend(icon); // Prepend the icon to the event content
               }

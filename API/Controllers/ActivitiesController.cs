@@ -172,12 +172,13 @@ HandleResult(await Mediator.Send(
         }
 
         [AllowAnonymous]
-        [HttpGet("GetInternationalFellowsCalendarEventsByDate")]
-        public async Task<ActionResult> GetInternationalFellowsCalendarRoomEvents()
+        [HttpGet("GetInternationalFellowsCalendarEventsByDate/{ifCalendarAdmin}")]
+        public async Task<ActionResult> GetInternationalFellowsCalendarRoomEvents(string ifCalendarAdmin)
         {
             string start = Request.Query["start"];
             string end = Request.Query["end"];
-            return HandleResult(await Mediator.Send(new GetInternationalFellowsCalendarEventsByDate.Query { Start = start, End = end }));
+            return HandleResult(await Mediator.Send(
+                new GetInternationalFellowsCalendarEventsByDate.Query { IFCalendarAdmin = ifCalendarAdmin, Start = start, End = end }));
         }
 
         [AllowAnonymous]

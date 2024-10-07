@@ -77,6 +77,7 @@ namespace Application.GraphSchedules
          public string ResourceId { get; set; }
         public bool FromExternalCalendarInd { get; set; }
         public bool InternationalFellowsStaffEvent { get; set; }
+        public bool InternationalFellowsOnly { get; set; }
 
     }
 }

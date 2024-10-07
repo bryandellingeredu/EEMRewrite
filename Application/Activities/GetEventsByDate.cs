@@ -73,7 +73,8 @@ namespace Application.Activities
                                       (category.RouteName == "cio" && x.CopiedTocio) ||
                                       (category.RouteName == "spouse" && x.CopiedTospouse) ||
                                       (category.RouteName == "militaryFamilyAndSpouseProgram" && x.MFP))).
-                          Where(x => !x.LogicalDeleteInd)
+                          Where(x => !x.LogicalDeleteInd && !x.InternationalFellowsStaffEventPrivate)
+
                           .ToListAsync();
 
                 var cslLegend = await _context.CSLCalendarLegends.ToListAsync();

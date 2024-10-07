@@ -43,6 +43,7 @@ namespace Application.HostingReports
                 (hr, a) => new { HostingReport = hr, Activity = a })
             .Where(joined => joined.HostingReport.ParkingRequirements == true)
             .Where(joined => joined.Activity.LogicalDeleteInd == false)
+            .Where(joined => joined.Activity.InternationalFellowsStaffEventPrivate == false)
             .Where(joined => request.Direction == "forward" ?
                 (joined.Activity.Start.Month == request.Month && joined.Activity.Start.Year >= currentYear) :
                 (joined.Activity.Start.Month == request.Month && joined.Activity.Start.Year <= currentYear))

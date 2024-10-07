@@ -43,7 +43,7 @@ namespace Application.Activities
                                             (x.Start <= start && x.End >= end)
                                    ).
                     Where(x => x.VTC == true).
-                    Where(x => !x.LogicalDeleteInd)
+                    Where(x => !x.LogicalDeleteInd && !x.InternationalFellowsStaffEventPrivate)
                     .ToListAsync();
 
                 List<FullCalendarEventDTO> fullCalendarEventDTOs = new List<FullCalendarEventDTO>();

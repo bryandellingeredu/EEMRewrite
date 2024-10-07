@@ -33,9 +33,10 @@ interface ResidentAndDistanceAndStaffFellowsCategory{
 
 export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
     const history = useHistory();
-    const { backToCalendarStore, categoryStore, activityStore, modalStore} = useStore();
+    const { backToCalendarStore, categoryStore, activityStore, modalStore, userStore} = useStore();
     const {openModal} = modalStore;
     const {addCalendarEventParameters} = activityStore;
+    const {user} = userStore
     const [studentCategories, setStudentCategories] = useState<ResidentAndDistanceAndStaffFellowsCategory[]>([]);
     const [height, setHeight] = useState(window.innerHeight - 200);
     const { backToCalendarId } = useParams<{ backToCalendarId?: string }>();
@@ -46,7 +47,13 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
     const calendarDivRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
+    const [ifCalendarAdmin, setIFCalendarAdmin] = useState(false);
     const [view, setView] = useState(localStorage.getItem("residentAndDistanceAndFacultyFellowsCalendarView") || "timeGridWeek");
+
+    useEffect(() => {
+      setIFCalendarAdmin((user && user.roles && user.roles.includes("ifCalendarAdmin")) || false);
+    }, [user]);
+
     useEffect(() => {
         if(!categoryStore.categories.length) categoryStore.loadCategories();
        }, [categoryStore.categories.length])
@@ -62,7 +69,6 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
                 { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false },
                 { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true },
                 { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true },
-                { id: 7, isSelected: false, group: 'studentCalendarDistanceGroup4', title: 'DEP 2027', color: '#B22222', visible: true  },
             ]);
         }
     }, []);
@@ -360,8 +366,8 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
 
       return(
         <>
-           {categoryStore.loadingInitial && <LoadingComponent content='Loading Calendar' />}
-           {!categoryStore.loadingInitial &&
+           {(categoryStore.loadingInitial || !user) && <LoadingComponent content='Loading Calendar' />}
+           {!categoryStore.loadingInitial && user &&
               <>
                  <Button icon  floated="right" color='black' size='tiny'
                     onClick={() =>
@@ -423,6 +429,20 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
       <FontAwesomeIcon icon={faCalendarPlus} className="fa-calendar-plus"  style={{ marginRight: '8px' }} />From Other Calendar
       </Label>
     </div>
+       
+     <div>
+      <Divider />
+     <Header as='h3' textAlign="center">
+            International Fellows Calendar Staff Event Legend
+      </Header>
+      <Label size='large'  style={{backgroundColor: '#000000', color: 'white', marginBottom: '5px'}} content='Leave / TDY' />
+      <Label size='large'  style={{backgroundColor: '#D87093', color: 'white', marginBottom: '5px'}} content='FSP' />
+      <Label size='large'  style={{backgroundColor: '#B8860B', color: 'white', marginBottom: '5px'}} content='MTGS' />
+      <Label size='large'  style={{backgroundColor: '#654321', color: 'white', marginBottom: '5px'}} content='Office Birthday' />
+      <Label size='large'  style={{backgroundColor: '#008080', color: 'white', marginBottom: '5px'}} content='IF Birthday' />
+      <Label size='large'  style={{backgroundColor: '#808000', color: 'white', marginBottom: '5px'}} content='IF Holiday' />
+     </div>
+
     <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
           <Input
               icon='search' 
@@ -478,7 +498,7 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
         setView(arg.view.type);
       }}
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-      events={`${process.env.REACT_APP_API_URL}/activities/GetInternationalFellowsCalendarEventsByDate`}
+      events={`${process.env.REACT_APP_API_URL}/activities/GetInternationalFellowsCalendarEventsByDate/${ifCalendarAdmin?'true':'false'}`}
       eventClick={handleEventClick}
       dateClick={handleDateClick}
       eventMouseEnter={handleMouseEnter} 

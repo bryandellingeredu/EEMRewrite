@@ -42,6 +42,7 @@ namespace Application.Activities
                    .Include(c => c.Category)
                    .Include(o => o.Organization)
                    .Where(x => !x.LogicalDeleteInd)
+                   .Where(x => !x.InternationalFellowsStaffEventPrivate)
                    .AsQueryable();
 
                 if (!string.IsNullOrEmpty(request.Title))

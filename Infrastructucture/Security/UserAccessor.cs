@@ -1,8 +1,10 @@
 ﻿using System.Security.Claims;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Persistence.Migrations;
 
 namespace Infrastructucture.Security
 {
@@ -49,5 +51,6 @@ namespace Infrastructucture.Security
         {
             return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
         }
+    
     }
 }

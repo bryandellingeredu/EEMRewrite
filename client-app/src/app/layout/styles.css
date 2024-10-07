@@ -179,4 +179,17 @@ mgt-login {
   border-color: #0056b3 !important;
 }
 
+@keyframes spin-vertical {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg); /* Spin around the vertical axis */
+  }
+}
+
+.spinning-globe {
+  animation: spin-vertical 2s linear infinite; /* Adjust duration as needed */
+}
+
 

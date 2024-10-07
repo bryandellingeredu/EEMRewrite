@@ -35,6 +35,7 @@ namespace Application.Calendars
                 var query = _context.Activities
                    .Include(o => o.Organization)
                    .Where(x => !x.LogicalDeleteInd)
+                   .Where(x => !x.InternationalFellowsStaffEventPrivate)
                    .AsQueryable();
 
                 if (!string.IsNullOrEmpty(request.searchParams.Title))

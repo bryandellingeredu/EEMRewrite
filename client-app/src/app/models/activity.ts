@@ -278,11 +278,13 @@ export interface Activity{
     roomResourceNotificationSent : boolean
     spouseCategory : string
     execCategory: string
+    internationalFellowsStaffEventCategory: string
     svtcNotificationSent: boolean
     secretNotificationSent: boolean
     cioRepsNotificationSent: boolean
     internationalFellowsStaffEvent : boolean
     internationalFellowsStudentEvent : boolean
+    internationalFellowsStaffEventPrivate : boolean
 }
 
 export class Activity implements Activity{
@@ -559,11 +561,13 @@ export class ActivityFormValues{
     roomResourceNotificationSent : boolean = false
     spouseCategory : string = ''
     execCategory : string = ''
+    internationalFellowsStaffEventCategory : string = ''
     svtcNotificationSent : boolean = false
     secretNotificationSent: boolean = false
     cioRepsNotificationSent: boolean = false
     internationalFellowsStaffEvent : boolean = false
     internationalFellowsStudentEvent : boolean = false
+    internationalFellowsStaffEventPrivate : boolean = false
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -833,11 +837,13 @@ export class ActivityFormValues{
     this.roomResourceNotificationSent = activity.roomResourceNotificationSent
     this.spouseCategory = activity.spouseCategory
     this.execCategory = activity.execCategory
+    this.internationalFellowsStaffEventCategory = activity.internationalFellowsStaffEventCategory
     this.svtcNotificationSent = activity.svtcNotificationSent
     this.secretNotificationSent = activity.secretNotificationSent
     this.cioRepsNotificationSent = activity.cioRepsNotificationSent
     this.internationalFellowsStaffEvent = activity.internationalFellowsStaffEvent
     this.internationalFellowsStudentEvent = activity.internationalFellowsStudentEvent
+    this.internationalFellowsStaffEventPrivate = activity.internationalFellowsStaffEventPrivate
        } 
     }
 }
