@@ -80,7 +80,8 @@ namespace Application.Activities
                     {
                         
                         if (internationalFellowCalendarInfo.InternationalFellowCalendarResident && activity.StudentCalendarResident){
-                            putInCategory = true;   
+                            putInCategory = true;
+                            fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo, category));
                         } 
                         if (internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup1){
                             fullCalendarEventDTOs.Add(GetFullCalendarEventDTO(activity, internationalFellowCalendarInfo, category));
