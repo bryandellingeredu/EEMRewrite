@@ -211,6 +211,7 @@ export default observer(function ActivityForm() {
   const [noRegistrationSiteError, setNoRegistrationSiteError] = useState(false);
   const [vtcSchedulingError, setVtcSchedulingError] = useState(false);
   const [noLeaderDateError, setNoLeaderDateError] = useState(false);
+  const [internationalFellowsStaffEventPrivateError, setInternationalFellowsStaffEventPrivateError] = useState(false);
   const [recurrenceInd, setRecurrenceInd] = useState<boolean>(false);
   const [recurrenceDisabled, setRecurrenceDisabled] = useState<boolean>(false);
   const [roomRequired, setRoomRequired] = useState<boolean>(false);
@@ -729,6 +730,7 @@ export default observer(function ActivityForm() {
     let roomResourceErrorIndicator = false;
     let roomResourceOtherErrorIndicator = false;
     let flagRoomOtherErrorIndicator = false;
+    let internationalFellowsStaffEventPrivateErrorIndicator = false;
     setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
@@ -741,6 +743,24 @@ export default observer(function ActivityForm() {
     setRoomResourceError(false);
     setRoomResourceOtherError(false);
     setFlagRoomOtherError(false);
+    setInternationalFellowsStaffEventPrivateError(false)
+
+    if(activity.internationalFellowsStaffEventPrivate && activity.copiedTointernationalfellows && activity.internationalFellowsStaffEvent){
+      if(activity.internationalFellowsStudentEvent || activity.imc || (roomEmails && roomEmails.length > 0 )) {
+        setInternationalFellowsStaffEventPrivateError(true);
+        internationalFellowsStaffEventPrivateErrorIndicator = true;
+      }
+    }
+
+    if(internationalFellowsStaffEventPrivateErrorIndicator){
+      const internationalFellowsStaffEventPrivateAnchor = document.getElementById("internationalFellowsStaffEventPrivateAnchor");
+      if(internationalFellowsStaffEventPrivateAnchor){
+        internationalFellowsStaffEventPrivateAnchor.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
 
     if(roomEmails && roomEmails.length > 0 && includesAny(roomEmails, devicesRequiredRooms)){
       if(!activity.roomResourceNotApplicable && !activity.roomResourceNtg && !activity.roomResourceNts && !activity.roomResourceOther && !activity.roomResourceRen 
@@ -930,7 +950,7 @@ export default observer(function ActivityForm() {
     }
     if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator &&
        !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator && !vtcSchedulingErrorIndicator && !roomResourceErrorIndicator &&
-        !roomResourceOtherErrorIndicator && !flagRoomOtherErrorIndicator) {
+        !roomResourceOtherErrorIndicator && !flagRoomOtherErrorIndicator && !internationalFellowsStaffEventPrivateErrorIndicator) {
       setSubmitting(true);
       if(activity.title) activity.title = activity.title.replace(/#[\w-]+/g, '').trim();
       if(activity.description) activity.description = activity.description.replace(/#[\w-]+/g, '').trim();
@@ -1121,7 +1141,7 @@ export default observer(function ActivityForm() {
   }
 
   const FormObserver: React.FC = () => {
-    const { values, setFieldValue, touched, setTouched } = useFormikContext();
+    const { values, setFieldValue } = useFormikContext();
     const v = values as ActivityFormValues;
     const oneDayInMs = 24 * 60 * 60 * 1000;
     const fiftyNineDaysInMs = 59 * oneDayInMs;
@@ -1221,19 +1241,7 @@ export default observer(function ActivityForm() {
       if (currentCategoryId !== v.categoryId)
         setCurrentCategoryId(v.categoryId);
       
-      if (v.internationalFellowsStaffEvent && !(touched as any).internationalFellowsStaffEventPrivate) {
-        setFieldValue("internationalFellowsStaffEventPrivate", true);
-        setTouched({
-          ...touched,
-          internationalFellowsStaffEventPrivate: true,
-        });
-      }
-
-      if(v.internationalFellowsStudentEvent)  setFieldValue("internationalFellowsStaffEventPrivate", false);
-
-      if(roomEmails.length > 0) setFieldValue("internationalFellowsStaffEventPrivate", false);
-      
-    }, [values, setFieldValue, touched, setTouched]);
+    }, [values, setFieldValue]);
     return null;
   };
 
@@ -2366,7 +2374,14 @@ export default observer(function ActivityForm() {
          {values.internationalFellowsStaffEvent && 
               <Segment.Group horizontal >
               <Segment style={{ backgroundColor: "#d7f5f3" }}>
-                    <strong>Private International Fellows Staff Event</strong>
+                    <strong id="internationalFellowsStaffEventPrivateAnchor">Private International Fellows Staff Event</strong>
+                    {internationalFellowsStaffEventPrivateError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      private staff event not allowed
+                                    </Label>
+                                  </p>
+                           )}
                 </Segment>
                 <Segment style={{ backgroundColor: "#d7f5f3" }}>
                 <MySemanticCheckBox
