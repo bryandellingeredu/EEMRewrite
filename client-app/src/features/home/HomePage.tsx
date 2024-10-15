@@ -50,37 +50,13 @@ export default observer(function HomePage(){
 
       useEffect(() => {
         if (userStore.isLoggedIn && (armyProfile || isEduSignedIn)) {
-          history.push(`${process.env.PUBLIC_URL}/activityTable`);
+          history.push(`${process.env.PUBLIC_URL}/internationfellowscalendar`);
         }
       }, [userStore.isLoggedIn, armyProfile, isEduSignedIn, history]);
 
-      useEffect(() => {
-        if(navbarType === 'studentCalendar'){
-          history.push(`${process.env.PUBLIC_URL}/studentcalendar`)
-        }
-        if(navbarType === 'msfp'){
-          history.push(`${process.env.PUBLIC_URL}/msfpcalendar`)
-        }
-      }, [navbarType ])
 
-      useEffect(() => {
-        if(redirectToPage && userStore.isLoggedIn){
-          history.push(`${process.env.PUBLIC_URL}/${redirectToPage}`)
-        } else if (userStore.isLoggedIn && armyProfile){
-          history.push(`${process.env.PUBLIC_URL}/${redirectToPage}`)
-        } 
-      }, [redirectToPage, userStore.isLoggedIn, armyProfile ])
-
-      useEffect(() => {
-        if(redirectId && redirectCategoryId && userStore.isLoggedIn){
-          history.push(`${process.env.PUBLIC_URL}/activities/${redirectId}/${redirectCategoryId}`)
-        } else if (userStore.isLoggedIn && armyProfile){
-          history.push(`${process.env.PUBLIC_URL}/activityTable`)
-        } 
-      }, [redirectId, redirectCategoryId, userStore.isLoggedIn, armyProfile ])
 
       const handleLoginInitiated = () =>{
-        toast('Sign in with your edu account NOT your army account');
         setLoading(true)
       }
 
@@ -90,21 +66,21 @@ export default observer(function HomePage(){
       {navbarType === 'eem' && 
         <Segment inverted textAlign='center' vertical className='masthead'>
     <Container text>
-    <Header as='h1' inverted>
-                    <Image size='massive' src={`${process.env.PUBLIC_URL}/assets/logo.png`} alt='logo' style={{ marginBottom: 12 }} />
-                   The EEM
-                </Header>
-    <Header as ='h2' inverted content = 'Welcome to the Enterprise Event Manager '/>
+    <Header as='h4' inverted>
+        <Image size='small' src={`${process.env.PUBLIC_URL}/assets/logo2.png`} alt='logo' style={{ marginBottom: 12 }} />
+                   International Fellows Calendar
+      </Header>
+
 
     {userStore.isLoggedIn && armyProfile && 
         
-        <Button as={Link} to={`${process.env.PUBLIC_URL}/activityTable`} size='huge' inverted>
+        <Button as={Link} to={`${process.env.PUBLIC_URL}/internationfellowscalendar`} size='huge' inverted>
         Go to Events
     </Button>
      }
 
      {userStore.isLoggedIn && !armyProfile && isEduSignedIn &&
-      <Button as={Link} to={`${process.env.PUBLIC_URL}/activityTable`} size='huge' inverted>
+      <Button as={Link} to={`${process.env.PUBLIC_URL}/internationfellowscalendar`} size='huge' inverted>
         Go to Events
     </Button>
      }
@@ -119,37 +95,11 @@ export default observer(function HomePage(){
 
           <Grid columns={2} divided >
           <Grid.Row>
-            {/*
             <Grid.Column>
-            <Header as='h2' icon>
-              <Grid columns={2}>
-                 <Grid.Column>
-                 <Icon name='id badge' style={{color: 'white'}} />
-                 </Grid.Column>
-                 <Grid.Column>
-                 <Icon name='graduation cap' style={{color: 'white'}} />
-                 </Grid.Column>
-              </Grid>                       
-                <span style={{color: 'white'}}>Login With Both</span>
-                <Header.Subheader>
-                 <span style={{color: 'orange'}}>I have a CAC and an EDU.</span>
-                </Header.Subheader>          
-                </Header>
-                <Button style={{backgroundColor: '#004080', color:'white'}}
-                 size='big' as={Link} to={`${process.env.PUBLIC_URL}/loginBoth`}
-                  type='button'>
-                  <Icon name='user outline' style={{color: 'white'}}/>
-                  Sign In 
-                </Button>
-            </Grid.Column>
-      */}
-            <Grid.Column>
-            <Header as='h2' icon>
+            <Header as='h4' icon>
             <Icon name='graduation cap' style={{color: 'white'}} />
             <span style={{color: 'white'}}>Login EDU</span>
-            <Header.Subheader>
-            <span style={{color: 'orange'}}>Login with your edu account.</span>
-            </Header.Subheader>
+         
             </Header>
             {loading && <LoadingComponent content="logging in..." /> }
               {!loading && navbarType === 'eem' &&
@@ -159,15 +109,13 @@ export default observer(function HomePage(){
               />}
             </Grid.Column>
             <Grid.Column>
-            <Header as='h2' icon  style={{paddingTop: '3px'}}>
+            <Header as='h4' icon  style={{paddingTop: '3px'}}>
             <Icon name='id badge' style={{color: 'white'}} />
             <span style={{color: 'white'}}>Login Army 365</span>
-            <Header.Subheader>
-            <span style={{color: 'orange'}}>login with your CAC.</span>
-            </Header.Subheader>
+         
             </Header>
             <div>
-            <Button style={{backgroundColor: '#004080', color:'white'}} size='big' onClick={signInArmyUser} type='button'>
+            <Button style={{backgroundColor: '#004080', color:'white', paddingTop: '18px', paddingBottom: '18px'}} size='medium' onClick={signInArmyUser} type='button'>
                   <Icon name='user outline' style={{color: 'white'}}/>
                   Sign In 
                 </Button>

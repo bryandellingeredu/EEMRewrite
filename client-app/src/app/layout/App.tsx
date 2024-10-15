@@ -55,6 +55,7 @@ import enlistedAideChecklistForm from '../../features/enlistedaide/enlistedAideC
 import FullScreenEnlistedAideCalendar from '../../features/enlistedaide/fullScreenEnlistedAideCalendar';
 import EnlistedAideCalendarWrapper from '../../features/enlistedaide/enlistedAideCalendarWrapper';
 import StudentCalendarWrapper from '../../features/studentCalendar/studentCalendarWrapper';
+import InternationFellowsCalendar from '../../features/internationalFellowsCalendar/internationalFellowsCalendar';
 import MSFPCalendarWrapper from '../../features/msfp/msfpCalendarWrapper';
 import CommunityCalendarWrapper from '../../features/community/communityCalendarWrapper';
 import AddToMyCalendar from '../../features/activities/details/AddToMyCalendar';
@@ -132,6 +133,7 @@ function App() {
                 <Route exact path={`${process.env.PUBLIC_URL}/imccalendar/:backToCalendarId`} component={IMCCalendarDashboard}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper/:backToCalendarId`} component={EnlistedAideCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/enlistedAideCalendarWrapper`} component={EnlistedAideCalendarWrapper}/>
+                <Route exact path={`${process.env.PUBLIC_URL}/internationfellowscalendar`} component={InternationFellowsCalendar}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/studentcalendar`} component={StudentCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/spousecalendar`} component={spouseCalendarWrapper}/>
                 <Route exact path={`${process.env.PUBLIC_URL}/msfp`} component={MSFPCalendarWrapper}/>

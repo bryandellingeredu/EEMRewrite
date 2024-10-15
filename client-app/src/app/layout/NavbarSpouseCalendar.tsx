@@ -48,8 +48,7 @@ useEffect(() => {
         <Menu inverted fixed='top'>
         <Container fluid>
           <Menu.Item header  >  
-         { isMobile && <h3>USAWC <br /> Spouse Calendar </h3> }
-         { !isMobile && <h3>United States Army War College Spouse Calendar</h3> }
+        <h3>USAWC <br /> International Fellows Calendar </h3> 
               
           </Menu.Item>
           <Menu.Item position="right" >

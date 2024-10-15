@@ -187,9 +187,9 @@ namespace Application.Activities
                     StudentCalendarDistanceGroup2 = internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup2,
                     StudentCalendarDistanceGroup3 = internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup3,
                     StudentCalendarDistanceGroup4 = internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup4,
-                    StudentType = internationalFellowCalendarInfo.InternationalFellowType,
+                    StudentType = activity.InternationalFellowsStaffEvent && internationalFellowCalendarInfo.InternationalFellowsStaffEvent && !string.IsNullOrEmpty(activity.InternationalFellowsStaffEventCategory) ?activity.InternationalFellowsStaffEventCategory :internationalFellowCalendarInfo.InternationalFellowType,
                     InternationalFellowsStaffEvent = activity.InternationalFellowsStaffEvent && internationalFellowCalendarInfo.InternationalFellowsStaffEvent,
-                    FromExternalCalendarInd = activity.CategoryId != category.Id
+                    FromExternalCalendarInd = activity.CategoryId != category.Id,
                 };
             }
 

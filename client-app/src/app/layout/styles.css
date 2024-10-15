@@ -4,7 +4,9 @@ body{
 
 .ui.inverted.top.fixed.menu{
   background-image: linear-gradient(135deg
-  , rgb(24,42,115) 0%, rgb(33,138,174) 69%, rgb(32,167,172) 89%) !important
+  ,  rgb(34, 31, 32) 0%,
+  rgb(47, 55, 47) 69%,
+  rgb(51, 63, 80) 89%) !important
 }
 
 .react-calendar{
@@ -18,9 +20,9 @@ body{
   align-items: center;
   background-image: linear-gradient(
           135deg,
-          rgb(24, 42, 115) 0%,
-          rgb(33, 138, 174) 69%,
-          rgb(32, 167, 172) 89%
+          rgb(34, 31, 32) 0%,
+          rgb(47, 55, 47) 69%,
+          rgb(51, 63, 80) 89%
   ) !important;
   height: 100vh;
 }
@@ -178,18 +180,3 @@ mgt-login {
   background-color: #0056b3 !important;
   border-color: #0056b3 !important;
 }
-
-@keyframes spin-vertical {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg); /* Spin around the vertical axis */
-  }
-}
-
-.spinning-globe {
-  animation: spin-vertical 2s linear infinite; /* Adjust duration as needed */
-}
-
-
