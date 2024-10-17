@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import agent from "../../app/api/agent";
 import ResidentAndDistanceAndStaffFellowsCalendarComponent from "../fullCalendar/ResidentAndDistanceAndStaffFellowsCalendarCategoryComponent";
 import InternationalFellowsEventDetails from "./internationalFellowsEventDetails";
+import InternationalFellowsAddEvent from "./internationalFellowsAddEvent";
 
 
 interface EventInfo{
@@ -45,6 +46,7 @@ export default  function InternationalFellowsCalendar(){
     const [ifCalendarAdmin, setIFCalendarAdmin] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
+    const [showForm, setShowForm] = useState(false);
     const [studentCategories, setStudentCategories] = useState<ResidentAndDistanceAndStaffFellowsCategory[]>([]);
     const [view, setView] = useState(localStorage.getItem("calendarViewSCM") || "listWeek");
     const [initialDate, setInitialDate] = useState<Date | null>(null);
@@ -57,6 +59,10 @@ export default  function InternationalFellowsCalendar(){
 
     const setShowDetailFalse = () =>{
         setShowDetails(false);
+      }
+
+      const setShowFormFalse = () =>{
+        setShowForm(false);
       }
 
     useEffect(() => {
@@ -338,7 +344,7 @@ export default  function InternationalFellowsCalendar(){
     return (
       <>
      <Button icon="bars" size='small' inverted onClick={() => setSidebarVisible(!sidebarVisible)} style={{ position: 'fixed', top: '70px', left: '15px', zIndex: 1000 }} />
-      <Sidebar.Pushable as={Segment}>
+      <Sidebar.Pushable  style={{backgroundColor: '#eaeaea', minHeight: '80vh'}} >
         <Sidebar
           as={Menu}
           animation='overlay'
@@ -389,8 +395,8 @@ export default  function InternationalFellowsCalendar(){
           <Label size='large' style={{ backgroundColor: '#808000', color: 'white', marginBottom: '5px' }} content='IF Holiday' />
         </Sidebar>
         <Sidebar.Pusher>
-          <Segment basic>
-            <div style={{ display: showDetails ? 'none' : 'block' }}>
+          <Segment basic >
+            <div style={{ display: showDetails || showForm ? 'none' : 'block' }}>
             {isLoading && (
          <Loader active size='large' style={{marginTop: '100px'}}>
            Loading events...
@@ -444,7 +450,7 @@ export default  function InternationalFellowsCalendar(){
                   customBookARoom: {
                     text: "Add Event",
                     click: () => {
-                      // setPage("bookRoom");
+                       setShowForm(true);
                     }
                   },
                 }}
@@ -473,6 +479,7 @@ export default  function InternationalFellowsCalendar(){
             </div>
             {loadingEvent &&  <Loader size='small' active inline>Loading ...</Loader> }
             {showDetails && !loadingEvent && <InternationalFellowsEventDetails eventInfo={eventInfo} setShowDetailsFalse = {setShowDetailFalse} /> }
+            {showForm &&  <InternationalFellowsAddEvent  setShowFormFalse = {setShowFormFalse} /> }
           </Segment>
         </Sidebar.Pusher>
       </Sidebar.Pushable>

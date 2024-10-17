@@ -36,6 +36,7 @@ import { UserEmail } from '../models/userEmail';
 import { RoomReport } from '../models/roomReport';
 import { RoomReportEventsResponseDTO } from '../models/roomReportEventsResponseDTO';
 import { Person } from '../models/person';
+import { IFAddEventRequest } from '../models/ifAddEventRequest';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -358,6 +359,10 @@ const PocketCalendar = {
      axiosRequest.post<void>('pocketcalendar',{start, end, title, description, roomEmail })
 }
 
+const IFCalendar = {
+    addEvent: (request: IFAddEventRequest) => axiosRequest.post<void>('ifcalendar', request)
+}
+
 const RoomReports = {
     list:(start: Date, end: Date) => axiosRequest.post<RoomReport[]>('roomReport',{start, end}),
     details: (start: Date, end: Date, email: string) =>
@@ -406,7 +411,8 @@ const agent = {
     PocketCalendar,
     RoomReports,
     Tickets,
-    Persons
+    Persons,
+    IFCalendar
 }
 
 export default agent;

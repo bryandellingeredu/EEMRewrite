@@ -180,3 +180,9 @@ mgt-login {
   background-color: #0056b3 !important;
   border-color: #0056b3 !important;
 }
+
+.custom-dropdown .menu {
+  min-height: 200px; /* Set your desired minimum height */
+  max-height: 300px; /* You can also control the max height */
+  overflow-y: auto;  /* Add scroll if options exceed max height */
+}
