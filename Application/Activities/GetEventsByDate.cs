@@ -179,6 +179,14 @@ namespace Application.Activities
                      return "#8B0000";
                     case "USAWC":
                      return "#006400";
+                    case "AHEC":
+                        return "#008080";
+                    case "Carlisle Community":
+                        return "#A179C4";
+                    case "USAG":
+                        return "#B8860B";
+                    case "Holiday":
+                        return "#9495FC";
                      default:
                       return "#00008B";
                    }

@@ -10,7 +10,7 @@ export default observer(function USAHECFacilitiesUsageLegend() {
   const { usahecFacilitiesUsageLegendStore } = useStore();
   const { legend, loadingInitial, loadLegend } = usahecFacilitiesUsageLegendStore;
   const allowedNames = 
-  ["AHEC", "AHCF", "Holiday", "Public Event", "Billable Event", "AWC/CBKS Tenant", "AHEC Highlight",
+  ["AHEC", "AHCF", "Holiday", "Public Event",  "AWC/CBKS Tenant", 
     "AWC Event", "Tour", "Self Setup / Standard Setup", "Paying for Setup"];
 
   useEffect(() => {

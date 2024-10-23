@@ -2803,16 +2803,16 @@ export default observer(function ActivityForm() {
 
 options={[
   { text: "", value: "" },
-  {
-    text: "Chapel",
-    value: "Chapel",
-  },
   { text: "ACS", value: "ACS" },
+  { text: "AHEC", value: "AHEC" },
+  { text: "Carlisle Community", value: "Carlisle Community" },
   { text: "Chapel", value: "Chapel" },
   { text: "Dunham", value: "Dunham" },
   { text: "Fitness", value: "Fitness" },
+  { text: "Holiday", value: "Holiday" },
   { text: "MSFP", value: "MSFP" },
   { text: "MWR", value: "MWR" },
+  { text: "USAG", value: "USAG" },
   { text: "USAWC", value: "USAWC" },
 ]}
 placeholder="Spouse Category"
@@ -2940,10 +2940,8 @@ label="Executive Services Category:"
                     { text: "", value: "" },
                     { text: "AHCF", value: "AHCF" },
                     { text: "AHEC", value: "AHEC"},
-                    { text: "AHEC Highlight", value: "AHEC Highlight" },
                     { text: "AWC/CBKS Tenant", value: "AWC/CBKS Tenant" },
                     { text: "AWC Event", value: "AWC Event" },
-                    { text: "Billable Event", value: "Billable Event" },
                     { text: "Government", value: "Government" },
                     { text: "Holiday", value: "Holiday" },
                     { text: "Paying for Setup", value: "Paying for Setup" },

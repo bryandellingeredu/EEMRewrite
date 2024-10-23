@@ -208,7 +208,13 @@
                     Event @event = await _appClient.Users[eventCalendarEmail].Calendars[eventCalendarId].Events[eventLookup].Request().GetAsync();
                     if (@event != null)
                     {
-                        return @event;
+                         var filteredAttendees = @event.Attendees
+                                 .Where(attendee => attendee.Status.Response != ResponseType.Declined)
+                                 .ToList();
+
+                            @event.Attendees = filteredAttendees;
+                            return @event;
+                       
                     }
                 }
                 catch
@@ -229,6 +235,11 @@
                         Event @event = await _appClient.Users[mail].Events[eventLookup].Request().GetAsync();
                         if (@event != null)
                         {
+                             var filteredAttendees = @event.Attendees
+                                 .Where(attendee => attendee.Status.Response != ResponseType.Declined)
+                                 .ToList();
+
+                            @event.Attendees = filteredAttendees;
                             return @event;
                         }
                     }

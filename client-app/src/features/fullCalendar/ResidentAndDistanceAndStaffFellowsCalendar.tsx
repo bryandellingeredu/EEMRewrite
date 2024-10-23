@@ -64,14 +64,21 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
         }else{
             setStudentCategories([
                 { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B', visible: true },
-                { id: 2, isSelected: false, group: 'staff', title: 'IF Staff Event', color: '#708090', visible: true},
                 { id: 3, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true },
                 { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false },
                 { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true },
                 { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true },
+                { id: 7, isSelected: false, group: 'Leave / TDY', title: 'Leave / TDY', color: '#000000', visible: true },
+                { id: 8, isSelected: false, group: 'FSP', title: 'FSP', color: '#D87093', visible: true },
+                { id: 9, isSelected: false, group: 'MTGS', title: 'MTGS', color: '#B8860B', visible: true },
+                { id: 10, isSelected: false, group: 'Office Birthday', title: 'Office Birthday', color: '#654321', visible: true },
+                { id: 11, isSelected: false, group: 'IF Birthday', title: 'IF Birthday', color: '#008080', visible: true },
+                { id: 12, isSelected: false, group: 'IF Holiday', title: 'IF Holiday', color: '#808000', visible: true },
+                { id: 2, isSelected: false, group: 'staff', title: 'IF Staff Event', color: '#708090', visible: true},
             ]);
         }
     }, []);
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -222,6 +229,7 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
       ${arg.event.extendedProps.actionOfficerPhone ? '<p><strong>Action Officer Phone: </strong>' + arg.event.extendedProps.actionOfficerPhone + '</p>' : ''}
       ${arg.event.extendedProps.copiedTosymposiumAndConferences && arg.event.extendedProps.symposiumLinkInd && arg.event.extendedProps.symposiumLink ? '<p><strong>Click to view registration link</strong></p>' : '' }
       <p><strong>Event Type:  ${getStudentPrograms(arg.event.extendedProps)}  </strong></p>
+        ${arg.event.extendedProps.internationalFellowsStaffEventCategory ? '<p><strong>Staff Category: </strong>' + arg.event.extendedProps.internationalFellowsStaffEventCategory + '</p>' : ''}
       ${!arg.event.extendedProps.internationalFellowsStaffEvent 
           ? '<p><strong>Attendance is: </strong>' + (arg.event.extendedProps.studentCalendarMandatory ? 'Mandatory' : 'Optional') + '</p>' 
           : ''
@@ -430,18 +438,6 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
       </Label>
     </div>
        
-     <div>
-      <Divider />
-     <Header as='h3' textAlign="center">
-            International Fellows Calendar Staff Event Legend
-      </Header>
-      <Label size='large'  style={{backgroundColor: '#000000', color: 'white', marginBottom: '5px'}} content='Leave / TDY' />
-      <Label size='large'  style={{backgroundColor: '#D87093', color: 'white', marginBottom: '5px'}} content='FSP' />
-      <Label size='large'  style={{backgroundColor: '#B8860B', color: 'white', marginBottom: '5px'}} content='MTGS' />
-      <Label size='large'  style={{backgroundColor: '#654321', color: 'white', marginBottom: '5px'}} content='Office Birthday' />
-      <Label size='large'  style={{backgroundColor: '#008080', color: 'white', marginBottom: '5px'}} content='IF Birthday' />
-      <Label size='large'  style={{backgroundColor: '#808000', color: 'white', marginBottom: '5px'}} content='IF Holiday' />
-     </div>
 
     <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
           <Input
@@ -512,7 +508,13 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
         const selectedstudentCategories = studentCategories.filter(category => category.isSelected && category.visible)
   
         let shouldDisplayEvent = (
-            (selectedstudentCategories.some(category => category.id === 2) && info.event.extendedProps.internationalFellowsStaffEvent) ||
+            (selectedstudentCategories.some(category => category.id === 2) && (info.event.extendedProps.internationalFellowsStaffEvent && ! info.event.extendedProps.internationalFellowsStaffEventCategory)) ||
+            (selectedstudentCategories.some(category => category.id === 7) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'Leave/TDY')) ||
+            (selectedstudentCategories.some(category => category.id === 8) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'FSP')) ||
+            (selectedstudentCategories.some(category => category.id === 9) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'MTGS')) ||
+            (selectedstudentCategories.some(category => category.id === 10) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'Office Birthday')) ||
+            (selectedstudentCategories.some(category => category.id === 11) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'IF Birthday')) ||
+            (selectedstudentCategories.some(category => category.id === 12) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'IF Holiday')) ||
             (selectedstudentCategories.some(category => category.id === 3) && info.event.extendedProps.studentCalendarResident) ||
             (selectedstudentCategories.some(category => category.id === 4) && info.event.extendedProps.studentCalendarDistanceGroup1) ||
             (selectedstudentCategories.some(category => category.id === 5) && info.event.extendedProps.studentCalendarDistanceGroup2) ||
@@ -602,3 +604,4 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
      
 
 });
+

@@ -78,6 +78,7 @@ namespace Application.GraphSchedules
         public bool FromExternalCalendarInd { get; set; }
         public bool InternationalFellowsStaffEvent { get; set; }
         public bool InternationalFellowsOnly { get; set; }
+        public string InternationalFellowsStaffEventCategory {get; set;}
 
     }
 }
