@@ -53,13 +53,17 @@ interface EventInfo{
         useEffect(() => {
           setSpouseCategories([
             { id: 1, isSelected: true, title: 'Show All', color: '#00008B' },
-            { id: 2, isSelected: false, title: 'ACS', color: '#8A3324' },
-            { id: 3, isSelected: false, title: 'Chapel', color: '#C2B280' },
-            { id: 4, isSelected: false, title: 'Dunham', color: '#FF8C00', },
-            { id: 5, isSelected: false, title: 'Fitness', color: '#301934', },
-            { id: 6, isSelected: false, title: 'MSFP', color: '#E75480', },
-            { id: 7, isSelected: false, title: 'MWR', color: '#8B0000', },
-            { id: 8, isSelected: false, title: 'USAWC', color: '#006400', },
+          { id: 2, isSelected: false, title: 'ACS', color: '#8A3324' },
+          {id: 9, isSelected: false,  color:  '#008080', title: 'AHEC'}, 
+          {id: 10, isSelected: false,  color:  '#A179C4', title: 'Carlisle Community'}, 
+          { id: 3, isSelected: false, title: 'Chapel', color: '#C2B280' },
+          { id: 4, isSelected: false, title: 'Dunham', color: '#FF8C00', },
+          { id: 5, isSelected: false, title: 'Fitness', color: '#301934', },
+          { id: 11, isSelected: false, title: 'Holiday', color: '#9495FC', },
+          { id: 6, isSelected: false, title: 'MSFP', color: '#E75480', },
+          { id: 7, isSelected: false, title: 'MWR', color: '#8B0000', },
+          { id: 12, isSelected: false, title: 'USAG', color: '#B8860B', },
+          { id: 8, isSelected: false, title: 'USAWC', color: '#006400', },
           ])
         }, [])
 
