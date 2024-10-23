@@ -2942,7 +2942,6 @@ label="Executive Services Category:"
                     { text: "AHEC", value: "AHEC"},
                     { text: "AWC/CBKS Tenant", value: "AWC/CBKS Tenant" },
                     { text: "AWC Event", value: "AWC Event" },
-                    { text: "Government", value: "Government" },
                     { text: "Holiday", value: "Holiday" },
                     { text: "Paying for Setup", value: "Paying for Setup" },
                     { text: "Public Event", value: "Public Event" },
