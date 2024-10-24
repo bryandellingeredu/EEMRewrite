@@ -1,10 +1,13 @@
-﻿using Application.Core;
+﻿using Application.Activities;
+using Application.Core;
 using Application.Interfaces;
 using Application.PocketCalendar;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Graph;
+using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using System;
 using System.Collections.Generic;
@@ -80,7 +83,34 @@ namespace Application.IFCalendar
                     }
                 }
 
+                if(request.IFAddEventRequest.NeedRoom && !string.IsNullOrEmpty(request.IFAddEventRequest.SelectedRoomEmail))
+                {
+                    Settings s = new Settings();
+                    var settings = s.LoadSettings(_config);
+                    GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
+                    activity.RoomEmails = new string[] { request.IFAddEventRequest.SelectedRoomEmail };
+                    GraphEventDTO graphEventDTO = new GraphEventDTO
+                    {
+                        EventTitle = activity.Title,
+                        EventDescription = activity.Description,
+                        Start = activity.StartDateAsString,
+                        End = activity.EndDateAsString,
+                        RequesterEmail = GraphHelper.GetEEMServiceAccount(),
+                        RequesterFirstName = GraphHelper.GetEEMServiceAccount(),
+                        RequesterLastName = GraphHelper.GetEEMServiceAccount(),
+                        UserEmail = user.Email
+                    };
+                    Event evt = await GraphHelper.CreateEvent(graphEventDTO);
+                    activity.EventLookup = evt.Id;
+                    activity.EventLookupCalendar = evt.Calendar.Id;
+
+                }
+
+                _context.Activities.Add(activity);
+                var result = await _context.SaveChangesAsync() > 0;
+                if (!result) return Result<Unit>.Failure("Failed to Create Activity");
                 return Result<Unit>.Success(Unit.Value);
+
             }
         }
     }

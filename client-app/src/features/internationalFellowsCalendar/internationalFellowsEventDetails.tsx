@@ -15,7 +15,8 @@ interface EventInfo{
     hyperLink: string
     hyperLinkDescription: string
     teamLink: string
-    studentType: string
+    studentType: string,
+    internationalFellowsStaffEventCategory: string
   }
 
   interface Props {
@@ -72,6 +73,7 @@ export default function InternationalFellowsEventDetails({eventInfo, setShowDeta
         {eventInfo.presenter && <Segment><strong>Presenter: </strong>{eventInfo.presenter}</Segment>}
         {eventInfo.uniform && <Segment><strong>Uniform: </strong>{eventInfo.uniform}</Segment>}
         {eventInfo.notes && <Segment><strong>Notes: </strong>{eventInfo.notes}</Segment>}
+        {eventInfo.internationalFellowsStaffEventCategory && <Segment><strong>Staff Category: </strong>{eventInfo.internationalFellowsStaffEventCategory}</Segment>}
         <Segment>
        <Button basic color="teal" onClick={setShowDetailsFalse} type='button' >
                         <Icon name="arrow left" /> Back To Calendar

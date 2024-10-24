@@ -1,4 +1,4 @@
-﻿using Application.Core;
+﻿﻿using Application.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -178,7 +178,7 @@ namespace Application.Activities
                     EventPlanningStatus = activity.EventPlanningStatus,
                     EventClearanceLevel = activity.EventClearanceLevel,
                     TeamInd = !string.IsNullOrEmpty(activity.TeamLink) || !string.IsNullOrEmpty(activity.ArmyTeamLink) || !string.IsNullOrEmpty(activity.HyperlinkEDUTeams),
-                    TeamLink = !string.IsNullOrEmpty(activity.ArmyTeamLink) ? activity.ArmyTeamLink : activity.TeamLink.CoalesceWhitespace(activity.HyperlinkEDUTeams) ,
+                    TeamLink = activity.TeamLink.CoalesceWhitespace(activity.HyperlinkEDUTeams),
                     CopiedTosymposiumAndConferences = activity.CopiedTosymposiumAndConferences,
                     SymposiumLinkInd = activity.SymposiumLinkInd,
                     SymposiumLink = activity.SymposiumLink,
@@ -187,9 +187,10 @@ namespace Application.Activities
                     StudentCalendarDistanceGroup2 = internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup2,
                     StudentCalendarDistanceGroup3 = internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup3,
                     StudentCalendarDistanceGroup4 = internationalFellowCalendarInfo.InternationalFellowCalendarDistanceGroup4,
-                    StudentType = activity.InternationalFellowsStaffEvent && internationalFellowCalendarInfo.InternationalFellowsStaffEvent && !string.IsNullOrEmpty(activity.InternationalFellowsStaffEventCategory) ?activity.InternationalFellowsStaffEventCategory :internationalFellowCalendarInfo.InternationalFellowType,
+                    StudentType = internationalFellowCalendarInfo.InternationalFellowType,
                     InternationalFellowsStaffEvent = activity.InternationalFellowsStaffEvent && internationalFellowCalendarInfo.InternationalFellowsStaffEvent,
                     FromExternalCalendarInd = activity.CategoryId != category.Id,
+                    InternationalFellowsStaffEventCategory = activity.InternationalFellowsStaffEventCategory
                 };
             }
 
