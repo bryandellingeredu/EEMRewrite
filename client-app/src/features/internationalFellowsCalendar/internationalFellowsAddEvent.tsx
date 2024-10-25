@@ -26,6 +26,7 @@ const uniforms = [
 
 interface Props {
     setShowFormFalse: () => void;
+    refreshData: () => void;
 }
 const roundToNext15Min = (date : Date) => {
     const minutes = 15;
@@ -39,7 +40,7 @@ const roundToNext15Min = (date : Date) => {
            date.getMonth() === today.getMonth() &&
            date.getFullYear() === today.getFullYear();
 }
-export default observer (function InternationalFellowsAddEvent({setShowFormFalse} : Props){
+export default observer (function InternationalFellowsAddEvent({setShowFormFalse, refreshData} : Props){
     const {graphRoomStore, availabilityStore} = useStore();
     const { loadGraphRooms, graphRooms } = graphRoomStore;
     const [isDirty1, setIsDirty1] = useState(false);
@@ -110,6 +111,9 @@ export default observer (function InternationalFellowsAddEvent({setShowFormFalse
       try{
         await agent.IFCalendar.addEvent(request);
         setSaving(false);
+        clearAttributes();
+        setShowFormFalse();
+        refreshData();
       }catch(error){
           setSaving(false);
           console.log(error);

@@ -98,11 +98,16 @@ namespace Application.IFCalendar
                         RequesterEmail = GraphHelper.GetEEMServiceAccount(),
                         RequesterFirstName = GraphHelper.GetEEMServiceAccount(),
                         RequesterLastName = GraphHelper.GetEEMServiceAccount(),
+                        RoomEmails = activity.RoomEmails,
                         UserEmail = user.Email
                     };
                     Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                     activity.EventLookup = evt.Id;
                     activity.EventLookupCalendar = evt.Calendar.Id;
+                    activity.EventLookupCalendarEmail = evt.Organizer.EmailAddress.Address;
+                    var allrooms = await GraphHelper.GetRoomsAsync();
+                    var room = allrooms.Where(x => x.AdditionalData["emailAddress"].ToString() == request.IFAddEventRequest.SelectedRoomEmail).FirstOrDefault();
+                    activity.PrimaryLocation = room.DisplayName;
 
                 }
 

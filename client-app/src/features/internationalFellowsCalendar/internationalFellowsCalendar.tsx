@@ -11,6 +11,7 @@ import agent from "../../app/api/agent";
 import ResidentAndDistanceAndStaffFellowsCalendarComponent from "../fullCalendar/ResidentAndDistanceAndStaffFellowsCalendarCategoryComponent";
 import InternationalFellowsEventDetails from "./internationalFellowsEventDetails";
 import InternationalFellowsAddEvent from "./internationalFellowsAddEvent";
+import { createRoot } from "react-dom/client";
 
 
 interface EventInfo{
@@ -212,21 +213,21 @@ export default  function InternationalFellowsCalendar(){
                     }
                 }
               
-                if (info.event.extendedProps.fromExternalCalendarInd){
-                    const eventContent = info.el.querySelector('.fc-list-event-title');
-              
+                if (info.event.extendedProps.fromExternalCalendarInd) {
+                  const eventContent = info.el.querySelector('.fc-list-event-title');
+                
                   // Create a container for the FontAwesome icon
                   const iconContainer = document.createElement('span');
-              
-                  // Use React to render the FontAwesomeIcon into the container
-                  ReactDOM.render(
-                    <FontAwesomeIcon icon={faCalendarPlus} className="fa-calendar-plus"  style={{ marginRight: '8px' }} />,
-                    iconContainer
+                
+                  // Use React to render the FontAwesomeIcon into the container with createRoot
+                  const root = createRoot(iconContainer);
+                  root.render(
+                      <FontAwesomeIcon icon={faCalendarPlus} className="fa-calendar-plus" style={{ marginRight: '8px' }} />
                   );
-              
+                
                   // Prepend the rendered icon container to the event content
                   eventContent.prepend(iconContainer);
-                  }
+              }
 
             }
           };
@@ -338,6 +339,7 @@ export default  function InternationalFellowsCalendar(){
               }else{
                 setEventInfo(evt);
                 setShowDetails(true);
+                setLoadingEvent(false);
               }
     
 
@@ -355,6 +357,10 @@ export default  function InternationalFellowsCalendar(){
             Loading events...
           </Loader>)*/
 
+          const refreshData = () => {
+            const calendarApi = calendarRef.current?.getApi();
+            if(calendarApi) calendarApi.refetchEvents();
+          }
 
     return (
       <>
@@ -370,8 +376,7 @@ export default  function InternationalFellowsCalendar(){
           visible={sidebarVisible}
           width='wide'
         >
-         <Divider inverted/>
-          <Header as='h3' textAlign="center" inverted>
+          <Header as='h3' textAlign="center" inverted style={{paddingTop: '20px'}}>
             Check or Uncheck Which Categories Should Appear on The Calendar
           </Header>
           <div>
@@ -484,7 +489,7 @@ export default  function InternationalFellowsCalendar(){
             </div>
             {loadingEvent &&  <Loader size='small' active inline>Loading ...</Loader> }
             {showDetails && !loadingEvent && <InternationalFellowsEventDetails eventInfo={eventInfo} setShowDetailsFalse = {setShowDetailFalse} /> }
-            {showForm &&  <InternationalFellowsAddEvent  setShowFormFalse = {setShowFormFalse} /> }
+            {showForm &&  <InternationalFellowsAddEvent  setShowFormFalse = {setShowFormFalse} refreshData = {refreshData}  /> }
           </Segment>
         </Sidebar.Pusher>
       </Sidebar.Pushable>

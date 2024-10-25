@@ -25,10 +25,12 @@ namespace Application.Activities
         {
 
             private readonly IConfiguration _config;
+            private readonly DataContext _context;
 
-            public Handler(IConfiguration config)
+            public Handler(IConfiguration config, DataContext context)
             {
                 _config = config;
+                _context = context;
             }
 
             public async Task<Result<string>> Handle(Query request, CancellationToken cancellationToken)
@@ -38,12 +40,14 @@ namespace Application.Activities
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                 var allrooms = await GraphHelper.GetRoomsAsync();
 
-                string coordinatorEmail = request.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
-                            ? request.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
+                var activity = await _context.Activities.FirstOrDefaultAsync(x => x.EventLookup == request.EventLookup); 
+                
+
+                string coordinatorEmail =  GraphHelper.GetEEMServiceAccount();
                 Event evt;
                 try
                 {
-                    evt = await GraphHelper.GetEventAsync(coordinatorEmail, request.EventLookup, null, null, null, null);
+                    evt = await GraphHelper.GetEventAsync(coordinatorEmail, request.EventLookup, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail);
                 }
                 catch (Exception)
                 {
