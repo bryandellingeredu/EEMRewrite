@@ -35,7 +35,7 @@ namespace API.Extensions
                     .AllowAnyHeader()
                     .AllowCredentials()
                     .WithExposedHeaders("WWW-Authenticate", "Pagination")
-                    .WithOrigins("http://localhost:3000", "https://localhost:7285", "https://apps.armywarcollege.edu/eem", "https://apps-dev.armywarcollege.edu/eem");
+                    .WithOrigins("http://localhost:3000", "https://localhost:7285", "https://apps.armywarcollege.edu/ifcalendar", "https://apps-dev.armywarcollege.edu/ifcalendar");
                 });
             });
 

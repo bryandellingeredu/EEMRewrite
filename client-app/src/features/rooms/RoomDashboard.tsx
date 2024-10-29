@@ -13,7 +13,7 @@ export default observer(function RoomDashboard(){
   } = useStore()
 
   useEffect(() => {
-    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=rooms`;
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar`;
    }, [isLoggedIn] )
 
   useEffect(() => {

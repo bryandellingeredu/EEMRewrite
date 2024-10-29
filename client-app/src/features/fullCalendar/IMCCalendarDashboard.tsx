@@ -22,7 +22,7 @@ export default observer(function IMCCalendarDashboard(){
   const {openModal} = modalStore;
 
   useEffect(() => {
-    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=imccalendar`;
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar?redirecttopage=imccalendar`;
    }, [isLoggedIn] )
     return(
           <>   

@@ -310,7 +310,6 @@ export default observer(function CampusLocator(){
 
     useEffect(() => {
         if (clickedRoom && graphRooms && graphRooms.length > 0) {
-            debugger;
             // need the building number as well
             setArrayOfPersons([]);
             setPersonValue("");

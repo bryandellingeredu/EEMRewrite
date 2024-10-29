@@ -58,7 +58,7 @@ namespace Application.LandingPage
                         Start = formattedStart,    
                         End = formattedEnd,
                         Location = location,
-                        Link =  $"https://apps.armywarcollege.edu/eem?id={activity.Id}&categoryid={activity.CategoryId}"
+                        Link =  $"https://apps.armywarcollege.edu/ifcalendar?id={activity.Id}&categoryid={activity.CategoryId}"
                     });
                 }
 

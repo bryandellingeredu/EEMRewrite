@@ -21,7 +21,7 @@ export default observer (function SpouseCalendarWrapper(){
        }, [])
 
        useEffect(() => {
-        if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=spousecalendar`;
+        if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar`;
        }, [isLoggedIn] )
 
        useEffect(() => {

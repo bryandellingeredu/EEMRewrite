@@ -81,7 +81,7 @@ export default function Bldg651Calendar (){
     
      
     useEffect(() => {
-      if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=studentcalendar`;
+      if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar?redirecttopage=ifcalendar`;
      }, [isLoggedIn] )
 
     useEffect(() => {
@@ -278,7 +278,6 @@ export default function Bldg651Calendar (){
       const handleExportToExcel = () => {
         const calendarApi = calendarRef.current?.getApi();
         if (!calendarApi) return;
-        debugger;
         const events = calendarApi.getEvents().filter(x => x.title);
         let csv = 'Title,Room,Start,End\n';
     

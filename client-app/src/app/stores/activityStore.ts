@@ -845,7 +845,6 @@ export default class ActivityStore {
   uploadActivityDocument = async (file: any, activityAttachmentGroupId: string, activityAttachmentId: string, execServices: boolean = false) => {
     this.uploading = true;
     try{
-      debugger;
       const response = await agent.Uploads.uploadActivityDocument(file, activityAttachmentGroupId, activityAttachmentId, execServices );
       runInAction(() => {
         this.uploading = false;
@@ -902,7 +901,7 @@ export default class ActivityStore {
     const url = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//United States Army War College//EEM//EN',
+        'PRODID:-//United States Army War College//ifcalendar//EN',
         'BEGIN:VTIMEZONE',
         'TZID:America/New_York',
         'BEGIN:DAYLIGHT',

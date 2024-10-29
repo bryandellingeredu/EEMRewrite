@@ -66,7 +66,7 @@ export default observer(function customCalendar() {
   } = useStore()
 
   useEffect(() => {
-    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=customcalendar`;
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar?redirecttopage=customcalendar`;
    }, [isLoggedIn] )
 
   useEffect(() => {

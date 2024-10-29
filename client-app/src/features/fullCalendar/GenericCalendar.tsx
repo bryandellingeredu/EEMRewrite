@@ -48,7 +48,7 @@ export default observer(function GenericCalendar() {
 
 useEffect(() => {
   if(!isLoggedIn) {
-      window.location.href = `${window.location.origin}/eem?redirecttopage=genericcalendar/${id}`;
+      window.location.href = `${window.location.origin}/ifcalendar?redirecttopage=genericcalendar/${id}`;
   }
  }, [isLoggedIn] )
 

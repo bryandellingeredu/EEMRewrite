@@ -24,7 +24,7 @@ export default observer (function StudentCalendarWrapper(){
     }, [])
 
     useEffect(() => {
-     if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=studentcalendar`;
+     if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar`;
     }, [isLoggedIn] )
 
     useEffect(() => {

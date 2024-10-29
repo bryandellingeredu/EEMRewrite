@@ -186,3 +186,27 @@ mgt-login {
   max-height: 300px; /* You can also control the max height */
   overflow-y: auto;  /* Add scroll if options exceed max height */
 }
+
+.loading-event {
+  position: relative;
+  opacity: 0.6; /* Reduce opacity to indicate loading state */
+}
+
+.loading-event::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}

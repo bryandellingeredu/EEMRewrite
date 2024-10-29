@@ -66,7 +66,7 @@ export default observer(function RoomCalendarLinks() {
   } = useStore()
 
   useEffect(() => {
-    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=roomCalendarLinks`;
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar`;
    }, [isLoggedIn] )
 
   useEffect(() => {

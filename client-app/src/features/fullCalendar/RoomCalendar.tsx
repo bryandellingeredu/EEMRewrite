@@ -190,7 +190,7 @@ picURL: '',
   } = useStore()
 
   useEffect(() => {
-    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=roomcalendar/${id}`;
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar`;
    }, [isLoggedIn] )
 
   useEffect(() => {

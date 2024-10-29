@@ -59,7 +59,7 @@ useEffect(() => {
 }, [user]);
 
 useEffect(() => {
-  if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=residentAndDistanceStudentCalendar`;
+  if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar?redirecttopage=ifcalendar`;
  }, [isLoggedIn] )
 
 useEffect(() => {
@@ -365,7 +365,6 @@ ${arg.event.extendedProps.studentCalendarNotes
   const checkCategoryVisibility = (studentType: string): boolean => {
     // Map studentType to category IDs directly
     let categoryId: number | null = null;
-    debugger;
     switch (studentType) {
       case "Resident":
         categoryId = 2;

@@ -91,7 +91,6 @@ export default observer(function MobileStudentCalendar (){
       const checkCategoryVisibility = (studentType: string): boolean => {
         // Map studentType to category IDs directly
         let categoryId: number | null = null;
-        debugger;
         switch (studentType) {
           case "Resident":
             categoryId = 2;

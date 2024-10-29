@@ -21,7 +21,7 @@ export default observer (function ActivityDetails() {
     const handleReloadTrigger = () => setReloadTrigger(true);
 
     useEffect(() => {
-      if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=activities/${id}/${categoryId}`;
+      if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar?redirecttopage=activities/${id}/${categoryId}`;
      }, [isLoggedIn] )
 
     useEffect(() => {

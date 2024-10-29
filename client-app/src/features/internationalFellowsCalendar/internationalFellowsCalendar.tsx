@@ -298,7 +298,13 @@ export default  function InternationalFellowsCalendar(){
 
           const handleEventClick = (clickInfo: EventClickArg) => {
             setShowDetails(false);
-    
+            const eventElement = clickInfo.el; // Directly access the event element
+            if (eventElement) {
+                eventElement.classList.add('loading-event');
+            }
+            if (eventElement ) {
+                eventElement.classList.add('loading-event');
+            }
             const evt = {
                 title: clickInfo.event.title,
                 time: getTime(clickInfo),
@@ -329,17 +335,32 @@ export default  function InternationalFellowsCalendar(){
                   setEventInfo(evt);
                   setLoadingEvent(false);
                   setShowDetails(true);
+                  // Remove loading class from clicked event
+                  const eventElement = clickInfo.el;
+                  if (eventElement) {
+                      eventElement.classList.remove('loading-event');
+                  }
                 }).catch(error => {
                   console.error("An error occurred: ", error);
                   setLoadingEvent(false);
                   setEventInfo(evt);
                   setShowDetails(true);
+                  // Remove loading class from clicked event
+                  const eventElement = clickInfo.el;
+                  if (eventElement) {
+                      eventElement.classList.remove('loading-event');
+                  }
                 });
             
               }else{
                 setEventInfo(evt);
                 setShowDetails(true);
                 setLoadingEvent(false);
+                // Remove loading class from clicked event
+                const eventElement = document.querySelector(`[data-event-id="${clickInfo.event.id}"]`);
+                if (eventElement) {
+                    eventElement.classList.remove('loading-event');
+                }
               }
     
 

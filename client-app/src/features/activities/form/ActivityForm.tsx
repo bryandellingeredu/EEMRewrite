@@ -524,7 +524,7 @@ export default observer(function ActivityForm() {
   });
 
   useEffect(() => {
-    if(!isLoggedIn)  window.location.href = `${window.location.origin}/eem?redirecttopage=manage/${id}/${categoryId}`;
+    if(!isLoggedIn)  window.location.href = `${window.location.origin}/ifcalendar?redirecttopage=manage/${id}/${categoryId}`;
    }, [isLoggedIn] )
 
    useEffect(() => {

@@ -11,23 +11,23 @@ export default class NavbarStore{
     }
 
     setNavbarTypeFromUrl = (url: string) => {
-        if(url.toLowerCase().endsWith('eem/studentcalendar') ){
+        if(url.toLowerCase().endsWith('ifcalendar/studentcalendar') ){
             this.setNavbarType('studentCalendar');
-            this.setICALUrl('https://apps.armywarcollege.edu/eem/api/SyncCalendar/studentCalendar');
+            this.setICALUrl('https://apps.armywarcollege.edu/ifcalendar/api/SyncCalendar/studentCalendar');
             this.setCalendarName('Student Calendar');
         } else if(url.toLowerCase().endsWith('eem/msfp')){
             this.setNavbarType('msfp');
-            this.setICALUrl('https://apps.armywarcollege.edu/eem/api/SyncCalendar/militaryFamilyAndSpouseProgram');
+            this.setICALUrl('https://apps.armywarcollege.edu/ifcalendar/api/SyncCalendar/militaryFamilyAndSpouseProgram');
             this.setCalendarName('Military Spouse and Family Program Calendar');
         }
         else if(url.toLowerCase().endsWith('eem/community')){
             this.setNavbarType('community');
-            this.setICALUrl('https://apps.armywarcollege.edu/eem/api/SyncCalendar/community');
+            this.setICALUrl('https://apps.armywarcollege.edu/ifcalendar/api/SyncCalendar/community');
             this.setCalendarName('Community Calendar');
         }
         else if(url.toLowerCase().endsWith('eem/spousecalendar')){
             this.setNavbarType('spouseCalendar');
-            this.setICALUrl('https://apps.armywarcollege.edu/eem/api/SyncCalendar/spouse');
+            this.setICALUrl('https://apps.armywarcollege.edu/ifcalendar/api/SyncCalendar/spouse');
             this.setCalendarName('Spouse Calendar');
         }
          else{
