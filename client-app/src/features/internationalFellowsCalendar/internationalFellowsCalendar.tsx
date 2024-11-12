@@ -12,6 +12,7 @@ import ResidentAndDistanceAndStaffFellowsCalendarComponent from "../fullCalendar
 import InternationalFellowsEventDetails from "./internationalFellowsEventDetails";
 import InternationalFellowsAddEvent from "./internationalFellowsAddEvent";
 import { createRoot } from "react-dom/client";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 
 interface EventInfo{
@@ -366,6 +367,7 @@ export default  function InternationalFellowsCalendar(){
 
           }
         
+          if(!user) return (<LoadingComponent />);
 
         if(user && !ifCalendarAdmin) return  ( 
         <Segment textAlign='center' color='yellow' inverted>
