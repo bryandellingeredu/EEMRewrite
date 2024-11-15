@@ -18,5 +18,7 @@ videoDeviceName: string,
 displayDeviceName: string,
 isWheelChairAccessible: string,
 thumbURL: string,
-picURL: string
+picURL: string,
+floorPlanThumbURL: string,
+floorPlanURL: string
 }

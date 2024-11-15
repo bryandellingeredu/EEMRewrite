@@ -9,6 +9,7 @@ import RoomPictureModal from "./RoomPictureModal";
 import { NavLink } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import RoomLocationModal from "../locator/roomLocationModal";
+import { overflow } from "html2canvas/dist/types/css/property-descriptors/overflow";
 
 interface Props{
     room: GraphRoom
@@ -48,16 +49,34 @@ export default observer (function RoomListItem(
               Capacity: {room.capacity}
             </Label>
               <Card.Header style={{marginTop: '5px'}}>
-              {room.thumbURL && <Image  style={{paddingBottom: '10px'}} floated='left' size='small' src={room.thumbURL} className="clickable-image"
-               onClick={() => openModal(<RoomPictureModal url={room.picURL}/>, 'large')}
-              />}    
+               
               {room.displayName}
               </Card.Header>
+        
               {room.address &&
               <Card.Meta>
                 {room.address.street} {room.address.city} 
+                <Divider />
               </Card.Meta>
               }
+           <Card.Header style={{ marginTop: '5px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', overflow: 'hidden' }}>
+  {room.thumbURL && (
+    <Image
+      style={{ paddingBottom: '10px' }}
+      src={room.thumbURL}
+      className="clickable-image"
+      onClick={() => openModal(<RoomPictureModal url={room.picURL} />, 'large')}
+    />
+  )}
+  {room.floorPlanThumbURL && (
+    <Image
+      style={{ paddingBottom: '10px' }}
+      src={room.floorPlanThumbURL}
+      className="clickable-image"
+      onClick={() => openModal(<RoomPictureModal url={room.floorPlanURL} />, 'large')}
+    />
+  )}
+</Card.Header>
               <Card.Description>
               <Card.Content extra>
            <ButtonGroup fluid>
@@ -215,6 +234,6 @@ export default observer (function RoomListItem(
         </Card.Description>
             </Card.Content>
            
-          </Card>         
+          </Card>           
 
      )})

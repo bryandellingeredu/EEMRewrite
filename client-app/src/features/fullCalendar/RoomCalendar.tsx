@@ -66,6 +66,8 @@ displayDeviceName: '',
 isWheelChairAccessible: '',
 thumbURL: '',
 picURL: '',
+floorPlanURL: '',
+floorPlanThumbURL: ''
     });
 
     const handleDateClick = useCallback((info : any) => {

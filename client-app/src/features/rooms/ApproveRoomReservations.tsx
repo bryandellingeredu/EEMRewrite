@@ -69,7 +69,9 @@ export default observer(function ApproveRoomReservations() {
             displayDeviceName: '',
             isWheelChairAccessible: '',
             thumbURL: '',
-            picURL: ''
+            picURL: '',
+            floorPlanURL: '',
+            floorPlanThumbURL: ''
             }
     );
     useEffect(() => {

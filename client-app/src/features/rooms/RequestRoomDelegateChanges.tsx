@@ -43,7 +43,9 @@ const emptyGraphRoom : GraphRoom = {
     displayDeviceName: '',
     isWheelChairAccessible: '',
     thumbURL: '',
-    picURL: ''
+    picURL: '',
+    floorPlanURL: '',
+    floorPlanThumbURL: ''
     };
 
 export default observer( function RequestRoomDelegateChanges () {
