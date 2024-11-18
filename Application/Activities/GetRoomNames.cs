@@ -25,10 +25,12 @@ namespace Application.Activities
         {
 
             private readonly IConfiguration _config;
+            private readonly DataContext _context;
 
-            public Handler(IConfiguration config)
+            public Handler(IConfiguration config, DataContext context)
             {
                 _config = config;
+                _context = context;
             }
 
             public async Task<Result<string>> Handle(Query request, CancellationToken cancellationToken)
@@ -38,12 +40,37 @@ namespace Application.Activities
                 GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
                 var allrooms = await GraphHelper.GetRoomsAsync();
 
+                var activity = await _context.Activities.FirstOrDefaultAsync(x => x.EventLookup == request.EventLookup);
+                string lastUpdatedBy = null;
+                string createdBy = null;
+                string eventCalendarId = null;
+                string eventCalendarEmail = null;
+                if (activity != null)
+                {
+                    if(activity.LastUpdatedBy != null)
+                    {
+                        lastUpdatedBy = activity.LastUpdatedBy;
+                    }
+                    if (activity.CreatedBy != null)
+                    {
+                        createdBy = activity.CreatedBy;
+                    }
+                    if (activity.EventLookupCalendar != null)
+                    {
+                        eventCalendarId = activity.EventLookupCalendar;
+                    }
+                    if (activity.EventLookupCalendarEmail != null)
+                    {
+                        eventCalendarEmail = activity.EventLookupCalendarEmail;
+                    }
+                }
+
                 string coordinatorEmail = request.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1])
                             ? request.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
                 Event evt;
                 try
                 {
-                    evt = await GraphHelper.GetEventAsync(coordinatorEmail, request.EventLookup, null, null, null, null);
+                    evt = await GraphHelper.GetEventAsync(coordinatorEmail, request.EventLookup, lastUpdatedBy, createdBy, eventCalendarId, eventCalendarEmail);
                 }
                 catch (Exception)
                 {

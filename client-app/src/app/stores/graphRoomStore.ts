@@ -92,92 +92,104 @@ constructor() {
     'Bldg650CollinsHall18thInfConferenceRoom@armywarcollege.edu':{
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/EighteenInfConfRoom.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/EighteenInfConfRoomThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/EighteenInfConfRoomRoomLayout.jpg`,
+      floorPlanThumbURL:  `${process.env.PUBLIC_URL}/assets/rooms/EighteenInfConfRoomRoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHall22ndInfConferenceRoomSVTC@armywarcollege.edu':{
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/TwentyTwoInfConfRoom.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/TwentyTwoInfConfRoomThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/EighteenInfConfRoomRoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/EighteenInfConfRoomRoomLayoutThumb.jpg`,
     },
     'Bldg650CollinsHallAachenRoomSVTC@armywarcollege.edu':{
     picURL: `${process.env.PUBLIC_URL}/assets/rooms/AachenRoom.png`,
     thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/AachenRoomThumb.png`,
-    floorPlanURL: '',
-    floorPlanThumbURL: ''
+    floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/AachenRoomRoomLayout.jpg`,
+    floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/AachenRoomRoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallArdennesRoomCafeteria@armywarcollege.edu':{
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/ArdennesRoom.png`,
     thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/ArdennesRoomThumb.png`,
-    floorPlanURL: '',
-    floorPlanThumbURL: ''
+    floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/ArdennesRoomRoomLayout.jpg`,
+    floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/ArdennesRoomRoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallB030@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/B030.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/B030Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL:  `${process.env.PUBLIC_URL}/assets/rooms/B030RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/B030RoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallB033ASVTC@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/B033A.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/B033AThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/B033ARoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/B033ARoomLayoutThumb.jpg`
     },
-    'Bldg650CollinsHallB037SVTC@armywarcollege.edu' : {
+    'Bldg650CollinsHallB037SVTC@armywarcollege.edu' : { 
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/B037.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/B037Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/B037RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/B037RoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallCherbourgRoomRm1015@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/CherbourgRoom.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/CherbourgRoomThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/CherbourgRoomRoomLayout.jpg`,
+      floorPlanThumbURL:  `${process.env.PUBLIC_URL}/assets/rooms/CherbourgRoomRoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallGuadalcanalRoomRm3013@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/GuadalcanalRoom.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/GuadalcanalRoomThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/GuadalcanalRoomRoomLayout.jpg`,
+      floorPlanThumbURL:  `${process.env.PUBLIC_URL}/assets/rooms/GuadalcanalRoomRoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallJayhawkLoungeRm1028@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/JayhawkLounge.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/JayhawkLoungeThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/JayhawkLoungeRoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/JayhawkLoungeRoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallMediaRoom@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/MediaRoom.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/MediaRoomThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/MediaRoomRoomLayout.jpg`,
+      floorPlanThumbURL:`${process.env.PUBLIC_URL}/assets/rooms/MediaRoomRoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallNormandyConferenceRoomSVTC@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/NormandyConferenceRoom.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/NormandyConferenceRoomThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL:  `${process.env.PUBLIC_URL}/assets/rooms/NormandyConferenceRoomRoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/NormandyConferenceRoomRoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallStLoRoomRm3006@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/StLoRoom.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/StLoRoomThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/StLoRoomRoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/StLoRoomRoomLayoutThumb.jpg`
     },
     'Bldg650CollinsHallToyRoomRm1018@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/ToyRoom.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/ToyRoomThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/ToyRoomRoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/ToyRoomRoomLayoutThumb.jpg`
     },
-    'Bldg650CollinsHallTriangleRoomSVTC@armywarcollege.edu' : {
+    'Bldg650CollinsHallTriangleRoomSVTCRmB034@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/TriangleRoom.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/TriangleRoomThumb.png`,
       floorPlanURL: '',
       floorPlanThumbURL: ''
+    },
+    'Bldg650CollinsHallCIOConferenceRoomRmB086@armywarcollege.edu' : {
+      picURL: '',
+      thumbURL: '',
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/CIOConferenceRoomRoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/CIOConferenceRoomRoomLayoutThumb.jpg`
+    },
+    'Bldg650CollinsHallBSAPConferenceRoomSVTC@armywarcollege.edu' : {
+      picURL: '',
+      thumbURL: '',
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/BSAPConferenceRoomRoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/BSAPConferenceRoomRoomLayoutThumb.jpg`
     },
     'Bldg22UptonHallBradleyAuditoriumRm101@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/BradleyAuditorium.png`,
@@ -254,62 +266,62 @@ constructor() {
     'Bldg6512ndFloorCentralCommonsRm2067@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2067.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2067Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2067RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2067RoomLayoutThumb.jpg`
     },
     'Bldg6512ndFloorEastCommonsRm2029@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/EastCommons.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/EastCommonsThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2029RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2029RoomLayoutThumb.jpg`
     },
     'Bldg6512ndFloorLargeConferenceRoomRm2086@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/SecondFloorLargeConference.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/SecondFloorLargeConferenceThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2086RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2086RoomLayoutThumb.jpg`
     },
     'Bldg6512ndFloorWestCommonsRm2091@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/SecondFloorWestCommons.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/SecondFloorWestCommonsThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2091RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2091RoomLayoutThumb.jpg`
     },
     'Bldg6513ndFloorCentralCommonsStudyRm3003@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/ThirdFloorCentralCommonsStudy.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/ThirdFloorCentralCommonsStudyThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3003RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3003RoomLayoutThumb.jpg`
     },
     'Bldg6513rdFloorCentralCommonsRm3063@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/ThirdFloorCentralCommons.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/ThirdFloorCentralCommonsThumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3063RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3063RoomLayoutThumb.jpg`
     },
     'Bldg6513rdFloorEastCommonsRm3022@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3022.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3022Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3022RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3022RoomLayoutThumb.jpg`
     },
     'Bldg6513rdFloorLargeConfRoomRm3085@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3085.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3085Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3085RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3085RoomLayoutThumb.jpg`
     },
     'Bldg6513rdFloorMediumConferenceRoom3002@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3002.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3002Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3002RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3002RoomLayoutThumb.jpg`
     },
     'Bldg6513rdFloorWestCommonsRm3087@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3087.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3087Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3087RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3087RoomLayoutThumb.jpg`
     },
     'Bldg651BlissAuditoriumRm146@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1146.png`,
@@ -338,68 +350,68 @@ constructor() {
     'Bldg651CentralMediumCollabRmRm2064@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2064.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2064Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2064RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2064RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab2069@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2069.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2069Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2069RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2069RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab2071@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2071.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2071Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2071RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2071RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab2073@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2073.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2073Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2073RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2073RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab3064@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3064.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3064Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3064RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3064RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab3067@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3067.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3067Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3067RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3067RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab3069@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3069.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3069Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3069RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3069RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab3100@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3100.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3100Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3100RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3100RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab3102@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3102.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3102Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3102RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3102RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab3104@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3104.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3104Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3104RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3104RoomLayoutThumb.jpg`
     },
     'Bldg651CoLab3106@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3106.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3106Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3106RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3106RoomLayoutThumb.jpg`
     },
     'Bldg651CommandConferenceRoomCCR@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/RmT059.png`,
@@ -476,146 +488,146 @@ constructor() {
     'Bldg651SeminarRoom2026@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2026.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2026Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2026RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2026RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoomDoubleRm2031@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2031.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2031Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2031RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2031RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoomDoubleRm2032@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2032.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2032Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2032RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2032RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom2057@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2057.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2057Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2057RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2057RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom2060@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2060.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2060Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2060RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2060RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom2062@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2062.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2062Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2062RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2062RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom2066@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2066.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2066Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2066RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2066RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom2084@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2084.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2084Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2084RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2084RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoomDoubleRm2089@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2089.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2089Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2089RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2089RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoomDoubleRm2090@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2090.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2090Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2090RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2090RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom2099@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2099.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2099Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2099RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2099RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom2107@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2107.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2107Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2107RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2107RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom3018@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3018.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3018Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3018RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3018RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoomDoubleRm3024@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3024.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3024Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3024RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3024RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoomDoubleRm3025@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3025.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3025Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3025RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3025RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom3048@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3048.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3048Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3048RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3048RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom3051@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3051.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3051Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3051RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3051RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom3053@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3053.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3053Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3053RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3053RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom3062@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3062.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3062Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3062RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3062RoomLayoutThumb.jpg`
     },
     'Bldg651Seminar20Rm3083@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3083.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3083Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3083RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3083RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoomDoubleRm3086@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3086.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3086Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2086RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2086RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom3080@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3080.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3080Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3080RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3080RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom3095@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3095.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3095Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3095RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3095RoomLayoutThumb.jpg`
     },
     'Bldg651SeminarRoom3107@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3107.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3107Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3107RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm3107RoomLayoutThumb.jpg`
     },
     'Bldg651SkyBoxNorthRm142@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm1142.png`,
@@ -716,8 +728,8 @@ constructor() {
     'Bldg651CentralColLabHallRm2065@armywarcollege.edu' : {
       picURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2065.png`,
       thumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2065Thumb.png`,
-      floorPlanURL: '',
-      floorPlanThumbURL: ''
+      floorPlanURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2065RoomLayout.jpg`,
+      floorPlanThumbURL: `${process.env.PUBLIC_URL}/assets/rooms/Rm2065RoomLayoutThumb.jpg`
     },
   };
 

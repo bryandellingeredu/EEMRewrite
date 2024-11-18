@@ -48,7 +48,9 @@ namespace Application.LandingPage
                     string formatString = activity.AllDayEvent ? "MM-dd-yyyy" : "MM-dd-yyyy hh:mm tt";
                     string formattedStart = activity.Start.ToString(formatString);
                     string formattedEnd = activity.End.ToString(formatString);
-                    string location = string.IsNullOrEmpty(activity.EventLookup) ? activity.PrimaryLocation : await GetLocation(activity.EventLookup, activity .PrimaryLocation, activity.CoordinatorEmail, allrooms);
+                    string location = string.IsNullOrEmpty(activity.EventLookup) ? activity.PrimaryLocation : await GetLocation(
+                        activity.EventLookup, activity.PrimaryLocation, activity.CoordinatorEmail, allrooms, activity.LastUpdatedBy, activity.CreatedBy,
+                        activity.EventLookupCalendar, activity.EventLookupCalendarEmail);
 
                     events.Add(new LandingPageEventDTO
                     {
@@ -65,12 +67,14 @@ namespace Application.LandingPage
                 return Result<List<LandingPageEventDTO>>.Success(events);
             }
 
-            private async Task<string> GetLocation(string eventLookup, string primaryLocation, string coordinator, IGraphServicePlacesCollectionPage allrooms)
+            private async Task<string> GetLocation(
+                string eventLookup, string primaryLocation, string coordinator, IGraphServicePlacesCollectionPage allrooms,
+                string lastUpdatedBy,string createdBy, string eventCalendarId, string eventCalendarEmail)
             {
                 Event evt;
                 try
                 {
-                    evt = await GraphHelper.GetEventAsync(coordinator, eventLookup, null, null, null, null );
+                    evt = await GraphHelper.GetEventAsync(coordinator, eventLookup, lastUpdatedBy, createdBy, eventCalendarId, eventCalendarEmail);
                 }
                 catch (Exception)
                 {

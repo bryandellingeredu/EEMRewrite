@@ -30,8 +30,9 @@ export default function SelectRoomWizardItem({room, unavailable,setRoomEmails, r
     const unavailableStyle = unavailable ? { opacity: 0.5, filter: 'grayscale(100%)' } : {};
     return(
         <Card style={{...cardStyle, ...unavailableStyle}}>
+        
         <Card.Content>
-        {room.thumbURL &&
+        {/*room.thumbURL &&
           <Image
           className="clickable-image"
             floated='right'
@@ -39,7 +40,7 @@ export default function SelectRoomWizardItem({room, unavailable,setRoomEmails, r
             src={room.thumbURL}
             onClick={() => openModal(<RoomPictureModal url={room.picURL}/>, 'large')}
           />
-        }
+        */}
           <Card.Header> {room.displayName}</Card.Header>
           <Card.Meta><strong>Capacity: {room.capacity}</strong></Card.Meta>
           {room.address &&
@@ -47,6 +48,26 @@ export default function SelectRoomWizardItem({room, unavailable,setRoomEmails, r
            {room.address.street} {room.address.city} 
           </Card.Description>
          }
+
+<Card.Header style={{ marginTop: '5px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', overflow: 'hidden' }}>
+  {room.thumbURL && (
+    <Image
+      style={{ paddingBottom: '10px' }}
+      src={room.thumbURL}
+      className="clickable-image"
+      onClick={() => openModal(<RoomPictureModal url={room.picURL} />, 'large')}
+    />
+  )}
+  {room.floorPlanThumbURL && (
+    <Image
+      style={{ paddingBottom: '10px' }}
+      src={room.floorPlanThumbURL}
+      className="clickable-image"
+      onClick={() => openModal(<RoomPictureModal url={room.floorPlanURL} />, 'large')}
+    />
+    
+  )}
+</Card.Header>
 
                {
                   (room.building === 'Bldg 651' || room.building === 'Collins Hall, Bldg 650' ) &&
