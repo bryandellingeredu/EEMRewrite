@@ -603,7 +603,7 @@ namespace API.BackgroundJobs
                              (studentType == "notastudent" || studentType == "Resident") &&
                               studentCalendarInfo.StudentCalendarResident &&
                               (activity.StudentCalendarResident ||
-                                (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup4 )
+                                (!activity.StudentCalendarDistanceGroup1 && !activity.StudentCalendarDistanceGroup2 && !activity.StudentCalendarDistanceGroup3 && !activity.StudentCalendarDistanceGroup4 )
                               )
                             )
                         {
