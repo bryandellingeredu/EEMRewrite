@@ -416,7 +416,7 @@ export default observer (function InternationalFellowsAddEvent({setShowFormFalse
                   value={internationalFellowsStaffEventCategory}  // Controlled value (emailAddress)
                   onChange={handleStaffCategoryChange} 
                   options=
-                  {['FSP','IF Birthday', 'IF Holiday', 'Leave/TDY', 'MTGS', 'Office Birthday']
+                  {['FSP','IF Birthday', 'IF Holiday', 'Leave/TDY', 'MTGS', 'Office Birthday', 'TDY']
                     .map(x => ({key: x,text: x,value: x}))}
         />
             </FormField>

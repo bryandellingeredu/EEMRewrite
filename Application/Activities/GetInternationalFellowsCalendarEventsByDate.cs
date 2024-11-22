@@ -200,6 +200,8 @@ namespace Application.Activities
     {
         case "Leave/TDY":
             return "#000000";
+        case "TDY":
+            return "#B22222";
         case "FSP":
             return "#D87093";
         case "MTGS":

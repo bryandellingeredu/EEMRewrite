@@ -24,7 +24,7 @@ export default function ResidentAndDistanceAndStaffFellowsCalendarComponent({stu
     onClick={() => handleLabelClick(studentCategory)}
   >
     <Icon name={studentCategory.isSelected ? 'check square outline' : 'square outline'} size="large" />
-    {studentCategory.title}
+    {studentCategory.title === 'Leave / TDY' ? 'Leave' : studentCategory.title}
   </Label>
   }
   </>

@@ -92,8 +92,8 @@ export default  function InternationalFellowsCalendar(){
         });
 
         useEffect(() => {
-            if (localStorage.getItem("internationalFellowsCategories")) {
-                setStudentCategories(JSON.parse(localStorage.getItem("internationalFellowsCategories") || '{}'));
+            if (localStorage.getItem("internationalFellowsCategories7")) {
+                setStudentCategories(JSON.parse(localStorage.getItem("internationalFellowsCategories7") || '{}'));
             }else{
                 setStudentCategories([
                   { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B', visible: true },
@@ -108,6 +108,7 @@ export default  function InternationalFellowsCalendar(){
                   { id: 11, isSelected: false, group: 'IF Birthday', title: 'IF Birthday', color: '#008080', visible: true },
                   { id: 12, isSelected: false, group: 'IF Holiday', title: 'IF Holiday', color: '#808000', visible: true },
                   { id: 2, isSelected: false, group: 'staff', title: 'IF Staff Event', color: '#708090', visible: true},
+                  { id: 13, isSelected: false, group: 'TDY', title: 'TDY', color: '#B22222', visible: true },
                 ]);
             }
         }, []);
@@ -152,6 +153,7 @@ export default  function InternationalFellowsCalendar(){
             let shouldDisplayEvent = (
               (selectedstudentCategories.some(category => category.id === 2) && (info.event.extendedProps.internationalFellowsStaffEvent && ! info.event.extendedProps.internationalFellowsStaffEventCategory)) ||
               (selectedstudentCategories.some(category => category.id === 7) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'Leave/TDY')) ||
+              (selectedstudentCategories.some(category => category.id === 13) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'TDY')) ||
               (selectedstudentCategories.some(category => category.id === 8) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'FSP')) ||
               (selectedstudentCategories.some(category => category.id === 9) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'MTGS')) ||
               (selectedstudentCategories.some(category => category.id === 10) && (info.event.extendedProps.internationalFellowsStaffEvent &&  info.event.extendedProps.internationalFellowsStaffEventCategory === 'Office Birthday')) ||
@@ -266,7 +268,7 @@ export default  function InternationalFellowsCalendar(){
               setStudentCategories(updatedCategories);
           
               // Update localStorage
-              localStorage.setItem("internationalFellowsCategories", JSON.stringify(updatedCategories));
+              localStorage.setItem("internationalFellowsCategories7", JSON.stringify(updatedCategories));
           };
 
           const handleButtonClick = () => {
@@ -302,9 +304,9 @@ export default  function InternationalFellowsCalendar(){
             const eventElement = clickInfo.el; // Directly access the event element
             if (eventElement) {
                 eventElement.classList.add('loading-event');
-            }
-            if (eventElement ) {
-                eventElement.classList.add('loading-event');
+                setTimeout(() => {
+                  eventElement.classList.remove('loading-event');
+              }, 2000);
             }
             const evt = {
                 title: clickInfo.event.title,

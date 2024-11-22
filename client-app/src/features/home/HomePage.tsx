@@ -64,7 +64,15 @@ export default observer(function HomePage(){
       <>
       {navbarType !== 'eem' && <LoadingComponent content='Loading...'/>}
       {navbarType === 'eem' && 
-        <Segment inverted textAlign='center' vertical className='masthead'>
+        <Segment inverted textAlign='center' vertical className='masthead'
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh', // Ensures full viewport height
+        }}
+        >
     <Container text>
     <Header as='h4' inverted>
         <Image size='small' src={`${process.env.PUBLIC_URL}/assets/logo2.png`} alt='logo' style={{ marginBottom: 12 }} />
