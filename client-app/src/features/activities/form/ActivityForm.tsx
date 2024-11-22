@@ -2360,9 +2360,10 @@ export default observer(function ActivityForm() {
                     { text: "FSP", value: "FSP" },
                     { text: "IF Birthday", value: "IF Birthday" },
                     { text: "IF Holiday", value: "IF Holiday" },
-                    { text: "Leave/TDY", value: "Leave/TDY" },
+                    { text: "Leave", value: "Leave/TDY" },
                     { text: "MTGS", value: "MTGS" },
                     { text: "Office Birthday", value: "Office Birthday" },
+                    { text: "TDY", value: "TDY" },
                   ]}
                   placeholder="Staff Category"
                   name="internationalFellowsStaffEventCategory"

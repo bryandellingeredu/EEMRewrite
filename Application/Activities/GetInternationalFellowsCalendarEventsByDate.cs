@@ -210,6 +210,8 @@ namespace Application.Activities
             return "#008080";
         case "IF Holiday":
             return "#808000";
+        case "TDY":
+            return "#B22222";
         default:
             // Return a default color if the category is not found
             return "#708090";
