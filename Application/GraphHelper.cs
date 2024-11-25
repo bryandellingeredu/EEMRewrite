@@ -302,7 +302,7 @@
             _ = _appClient ??
               throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
-            var scheduleGroups = scheduleRequestDTO.Schedules.SplitIntoGroups(100);
+            var scheduleGroups = scheduleRequestDTO.Schedules.SplitIntoGroups(55);
             var combinedResult = new CalendarGetScheduleCollectionPage();
             foreach (var scheduleGroup in scheduleGroups)
             {
