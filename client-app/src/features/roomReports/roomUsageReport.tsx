@@ -106,18 +106,21 @@ export default observer(function RoomUsageReport() {
     }
   }, [startDate, endDate, graphRooms.length, loadGraphRooms, buildingCategories]);
 
-  const handleBarClick = (data: BarChartDataRow) => {
+const handleBarClick = (data: any) => {
+  if (data && data.activePayload && data.activePayload.length > 0) {
+    const payload = data.activePayload[0].payload;
     openModal(
       <RoomUsageReportDetailModal
-       name={data.name}
-       used={data.used}
-       unused={data.unused}
-       start={startDate || new Date()}
-       end={endDate || new Date()}
-       />, 'large'
-     )
-    
-  };
+        name={payload.name}
+        used={payload.used}
+        unused={payload.unused}
+        start={startDate || new Date()}
+        end={endDate || new Date()}
+      />,
+      'large'
+    );
+  }
+};
 
   const handleLabelClick = (buildingCategory: BuildingCategory) => {
     setBuildingCategories(prevCategories => {
@@ -221,6 +224,7 @@ export default observer(function RoomUsageReport() {
           data={barChartData}
           layout="vertical"
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          onClick={(data, index) => handleBarClick(data)}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis type="number" orientation="top"
@@ -228,7 +232,7 @@ export default observer(function RoomUsageReport() {
            />
           <YAxis type="category" dataKey="name" width={500} />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="used" stackId="a" onClick={(data, index) => handleBarClick(data)}> 
+          <Bar dataKey="used" stackId="a" > 
             {barChartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={getColor(entry.usedPercentage)} />
             ))}

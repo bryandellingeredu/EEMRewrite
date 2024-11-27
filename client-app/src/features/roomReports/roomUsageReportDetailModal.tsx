@@ -58,7 +58,7 @@ export default observer(function RoomUsageDetailModal({name, used, unused, start
                 <strong> To: </strong>{format(end, 'MM/dd/yyyy')}
               </Header.Subheader>
               <Header.Subheader>
-               <strong>Total: </strong> {used + unused} hours
+               <strong>Total: </strong> {(used + unused).toFixed(2)} hours
                <strong> Used: </strong> {used} hours
                <strong> Unused: </strong> {unused} hours
                <strong> Percent Used: </strong> {getPercentage()} %
