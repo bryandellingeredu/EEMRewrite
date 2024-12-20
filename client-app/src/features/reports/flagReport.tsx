@@ -39,6 +39,7 @@ export default function FlagReport(){
 
 const handleChange = (selectedMonth : OptionType | null) => {
     if (selectedMonth) {
+        const currentIndex = orderedMonths.findIndex(month => month.value === selectedMonth.value);
         const selectedIndex = orderedMonths.findIndex(month => month.value === selectedMonth.value);
 
         let direction;

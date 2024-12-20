@@ -39,24 +39,24 @@ namespace Application.HostingReports
                 var allrooms = await GraphHelper.GetRoomsAsync();
 
                 int currentYear = DateTime.Now.Year;
+                int currentMonth = DateTime.Now.Month;
+                int targetYear = GetTargetYear(currentMonth, request.Month, request.Direction);
 
-                var hostingReports = await _context.HostingReports
-                .Join(_context.Activities,
-                    hr => hr.ActivityId,
-                    a => a.Id,
-                    (hr, a) => new { HostingReport = hr, Activity = a })
-                .Where(joined => joined.Activity.Report == "Hosting Report")
-                .Where(joined => joined.HostingReport.FlagSupport == true)
-                .Where(joined => joined.Activity.LogicalDeleteInd == false)
-                .Where(joined => request.Direction == "forward" ?
-                    (joined.Activity.Start.Month == request.Month && joined.Activity.Start.Year >= currentYear) :
-                    (joined.Activity.Start.Month == request.Month && joined.Activity.Start.Year <= currentYear))
-                .Select(joined => new
-                {
-                    HostingReport = joined.HostingReport,
-                    Activity = joined.Activity
-                })
-                .ToListAsync(cancellationToken);
+            var hostingReports = await _context.HostingReports
+    .Join(_context.Activities,
+        hr => hr.ActivityId,
+        a => a.Id,
+        (hr, a) => new { HostingReport = hr, Activity = a })
+    .Where(joined => joined.Activity.Report == "Hosting Report")
+    .Where(joined => joined.HostingReport.FlagSupport == true)
+    .Where(joined => joined.Activity.LogicalDeleteInd == false)
+    .Where(joined => joined.Activity.Start.Month == request.Month && joined.Activity.Start.Year == targetYear) // Use calculated year
+    .Select(joined => new
+    {
+        HostingReport = joined.HostingReport,
+        Activity = joined.Activity
+    })
+    .ToListAsync(cancellationToken);
 
                 List<FlagReportDTO> flagReports = new List<FlagReportDTO>();
 
@@ -131,6 +131,22 @@ namespace Application.HostingReports
                 }
                 return location;
             }
+
+private int GetTargetYear(int currentMonth, int requestedMonth, string direction)
+{
+    int currentYear = DateTime.Now.Year;
+
+    if (direction == "backward" && requestedMonth > currentMonth)
+    {
+        return currentYear - 1; // Go to the previous year
+    }
+    else if (direction == "forward" && requestedMonth < currentMonth)
+    {
+        return currentYear + 1; // Move to the next year
+    }
+
+    return currentYear; // Same year
+}
         }
     }
 }
