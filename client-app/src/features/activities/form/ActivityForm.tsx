@@ -14,7 +14,9 @@ import {
   ButtonGroup,
   Modal,
   Image,
-  FormInput
+  FormInput,
+  Loader,
+  Progress
 } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
@@ -138,7 +140,10 @@ export default observer(function ActivityForm() {
   } = activityStore;
   const {user, isLoggedIn} = userStore
   const {getBackToCalendarInfoRecord} = backToCalendarStore;
-  const [armyTeamLink, setArmyTeamLink] = useState('');
+  const [updatingRoomCalendar, setUpdatingRoomCalendar] = useState(false);
+  const [calendarId, setCalendarId] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [armyTeamLink, setArmyTeamLink] = useState(''); 
   const [hyperlinkEDUTeams, setHyperlinkEDUTeams] = useState('');
   const [teamOwner, setTeamOwner] = useState('')
   const [teamOwnerChangeIsDisabled, setTeamOwnerChangeIsDisabled] = useState(false);
@@ -1066,7 +1071,40 @@ export default observer(function ActivityForm() {
               const backToCalendarRecord : BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
               if(backToCalendarRecord){
                const url : string = `${backToCalendarRecord.url}/${backToCalendarRecord.id}`
-               history.push(url);
+               
+               if (roomEmails && roomEmails.length > 0) {
+                setCalendarId(backToCalendarId);
+                setUpdatingRoomCalendar(true);
+              
+                // Delay scrolling to the bottom to allow the progress bar to render
+                setTimeout(() => {
+                  window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth',
+                  });
+                }, 500); // Adjust delay time as needed (500ms should suffice)
+              
+                let currentProgress = 0;
+              
+                // Start a timer to increment progress
+                const interval = setInterval(() => {
+                  currentProgress += 3; // Increment by whole numbers
+                  setProgress(Math.min(currentProgress, 100)); // Cap at 100%
+                  if (currentProgress >= 100) {
+                    clearInterval(interval);
+                  }
+                }, 1000);
+              
+                // Redirect after 30 seconds
+                setTimeout(() => {
+                  clearInterval(interval);
+                  history.push(url);
+                }, 30000);
+              }
+              
+              else{
+                history.push(url);
+               }
               }else{
                 history.push(
                   `${process.env.PUBLIC_URL}/activitydetail/${newActivity.id}/${category.id}/true`
@@ -5178,6 +5216,22 @@ label="USAHEC Contract:"
                             </Grid.Row>
                           </Grid>
                           <Divider color="black" />
+                          {updatingRoomCalendar && 
+               <div style={{ textAlign: 'center', marginTop: '20px' }}>
+               <Loader
+                 active
+                 inline="centered"
+                 content={'Updating The Calendar with your room reservations,  this will take 30 seconds'}
+               />
+               <div style={{ marginTop: '20px', width: '80%', margin: '0 auto' }}>
+                 <Progress
+                   percent={progress}
+                   indicating
+                   progress="percent"
+                 />
+               </div>
+             </div>
+            }
             <Button
               disabled={submitting || 
                  (!studentCalendarAdmin && !memberOfExecServices && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar") ||
@@ -5195,6 +5249,7 @@ label="USAHEC Contract:"
               type="button"
               content="Cancel"
             />
+         
 
 {!ifCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="International Fellows" &&
   <div style={{
