@@ -689,7 +689,7 @@ namespace Application
         {
             string title = "You have selected a SVTC in your room request";
             string body = "<p>You have selected an SVTC in your room request. Please coordinate with the CIO AV team at ";
-            body = body + "<a href='mailto:usarmy.carlisle.awc.list.csl-vi-vtc-mailing-list@amy.mil'>mailto:usarmy.carlisle.awc.list.csl-vi-vtc-mailing-list@amy.mil </a>";
+            body = body + "<a href='mailto:usarmy.carlisle.awc.list.csl-vi-vtc-mailing-list@army.mil'>mailto:usarmy.carlisle.awc.list.csl-vi-vtc-mailing-list@army.mil </a>";
             body = body + " prior to the scheduled SVTC to ensure all required capabilities are currently operational.";
             body = body + " SVTC capable rooms cannot be assumed to have all capabilities requested and some adjustments or training may be necesary based on your requirements.</p>";
             body = body + $"<p><strong> Event Title: </strong> {_activity.Title} </p>";
