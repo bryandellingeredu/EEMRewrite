@@ -455,12 +455,12 @@ namespace Application
 
         private async Task SendAddToMyCalendarEmails()
         {
-            var emails = _context.ActivityNotifications
+           var emails = _context.ActivityNotifications
              .Where(x => x.ActivityId == _activity.Id)
-            .Select(x => x.Email)
+             .Select(x => x.Email.Trim()) // Trim whitespace from emails
              .AsEnumerable() // Move the subsequent operations to in-memory
              .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+             .ToArray();
 
             if (emails.Any())
                     {
