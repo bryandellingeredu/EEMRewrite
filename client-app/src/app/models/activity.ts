@@ -44,6 +44,8 @@ export interface Activity{
     makeTeamMeeting: boolean,
     activityRooms: ActivityRoom[] | [],
     teamInvites: UserEmail[] | [],
+    roomInvites: UserEmail[] | [],
+    roomInvitesChanged: boolean,
     recurrenceInd: boolean,
     recurrenceId: string | null,
     recurrence: Recurrence | null
@@ -318,6 +320,8 @@ export class ActivityFormValues{
     makeTeamMeeting: boolean = false;
     activityRooms: ActivityRoom[] | [] = [];
     teamInvites: UserEmail[] | [] = [];
+    roomInvites: UserEmail[] | [] = [];
+    roomInvitesChanged: boolean = false;
     eventLookup: string = '';
     eventLookupCalendar: string = '';
     eventLookupCalendarEmail: string = ''
@@ -595,6 +599,8 @@ export class ActivityFormValues{
         this.activityRooms = activity.activityRooms;
         this.makeTeamMeeting = activity.makeTeamMeeting;
         this.teamInvites = activity.teamInvites;
+        this.roomInvites = activity.roomInvites;
+        this.roomInvitesChanged = activity.roomInvitesChanged;
         this.eventLookup = activity.eventLookup;
         this.eventLookupCalendar = activity.eventLookupCalendar;
         this.eventLookupCalendarEmail = activity.eventLookupCalendarEmail;

@@ -46,7 +46,10 @@ namespace Application.HostingReports
                     .Where(x => !x.LogicalDeleteInd)
                     .Where(x => !x.InternationalFellowsStaffEventPrivate)
                     .Where(x => x.HostingReport != null)
+                    .OrderBy(x => x.Start)
                     .ToListAsync(cancellationToken); 
+
+
 
        /*         var activities = await _context.Activities
              .Include(h => h.HostingReport)
@@ -54,7 +57,19 @@ namespace Application.HostingReports
              .Where(x => x.HostingReport != null)
              .ToListAsync(cancellationToken); */
 
+/*var start = new DateTime(2024, 1, 1, 0, 0, 0);
+var end = new DateTime(2024, 12, 31, 23, 59, 59);
 
+var activities = await _context.Activities
+    .Where(a => a.Report == "Hosting Report")
+    .Include(h => h.HostingReport)
+    .Include(o => o.Organization)
+    .Where(x => x.Start >= start && x.Start <= end)
+    .Where(x => !x.LogicalDeleteInd)
+    .Where(x => !x.InternationalFellowsStaffEventPrivate)
+    .Where(x => x.HostingReport != null)
+    .OrderBy(x => x.Start)
+    .ToListAsync(cancellationToken);*/
 
                 foreach (var activity in activities)
                 {

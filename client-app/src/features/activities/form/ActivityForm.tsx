@@ -73,6 +73,7 @@ import { BackToCalendarInfo } from "../../../app/models/backToCalendarInfo";
 import TeamsButtonArmy from "./TeamsButtonArmy";
 import SelectRoomWizard from "./SelectRoomWizard";
 import { GraphScheduleResponse } from "../../../app/models/graphScheduleResponse";
+import ManageRoomInvites from "./ManageRoomInvites";
 
 const devicesRequiredRooms : string[] = [
   'Bldg650CollinsHallNormandyConferenceRoomSVTC@armywarcollege.edu',
@@ -135,8 +136,11 @@ export default observer(function ActivityForm() {
     uploading,
     calendarEventParameters,
     setTempRoomEmails,
+    setTempRoomAttendees,
     getTempRoomEmails,
-    removeTempRoomEmails
+    getTempRoomAttendees,
+    removeTempRoomEmails,
+    removeTempRoomAttendees,
   } = activityStore;
   const {user, isLoggedIn} = userStore
   const {getBackToCalendarInfoRecord} = backToCalendarStore;
@@ -170,7 +174,13 @@ export default observer(function ActivityForm() {
 }, [user]);
   const [roomOptionRegistryId, setRoomOptionRegistryId] = useState<string>(uuid())
   const [attendees, setAttendees] = useState<UserEmail[]>([]);
+  const [roomAttendees, setRoomAttendees] = useState<UserEmail[]>([]);
+  const [roomAttendeesChanged, setRoomAttendeesChanged] = useState(false);
+  const setRoomAttendeesChangedTrue = () => setRoomAttendeesChanged(true);
   const updateAttendees = (newAttendees: UserEmail[]) => {setAttendees(newAttendees);};
+  const updateRoomAttendees = (newRoomAttendees: UserEmail[]) => {
+    setRoomAttendees(newRoomAttendees);
+  };
   const [makeTeamMeeting, setMakeTeamMeeting] = useState(false);
   const updateMakeTeamMeeting = () => {setMakeTeamMeeting(true)};
   const[teamIsDeleted, setTeamIsDeleted] = useState(false);
@@ -262,6 +272,7 @@ export default observer(function ActivityForm() {
     agent.Activities.cancelRoomReservations(id, manageSeries)
     .then(() => {
       setTempRoomEmails(id, roomEmails);
+      setTempRoomAttendees(id, roomAttendees);
       setRemoveEventLookup(true);
      setRoomRequired(false);
       setRoomEmails([]);
@@ -663,6 +674,22 @@ export default observer(function ActivityForm() {
           setRecurrenceInd(true);
         }
 
+        if(response?.activityRooms && response.activityRooms.length > 0 ){
+          agent.Activities.attendees(response?.id).then((attendeeArray) => {
+            if(attendeeArray.length){
+              setRoomAttendees(attendeeArray)
+            }
+          });
+        }
+
+
+        const tempRoomAttendees = getTempRoomAttendees(id);
+        debugger;
+        if(tempRoomAttendees && tempRoomAttendees.length > 0){
+          setRoomAttendees(tempRoomAttendees);
+        }
+
+
         if(response?.teamLookup && response?.teamRequester){
           agent.Teams.attendees(response?.teamLookup, response?.teamRequester).then((attendeeArray) => {
             setTeamAttendeesLoading(false);
@@ -703,6 +730,7 @@ export default observer(function ActivityForm() {
   }, [isSignedIn, graphRooms]);
 
   const handleCancelClick = () => {
+    if(getTempRoomAttendees(id)) removeTempRoomAttendees(id);
 
     if(backToCalendarId){
       const backToCalendarRecord : BackToCalendarInfo | undefined = getBackToCalendarInfoRecord(backToCalendarId);
@@ -722,6 +750,9 @@ export default observer(function ActivityForm() {
     setShowRoomWizard(false);
     if(id && getTempRoomEmails(id)){
       removeTempRoomEmails(id);
+    }
+    if(id && getTempRoomAttendees(id)){
+      removeTempRoomAttendees(id);
     }
     let eventClearanceLevelError = false;
     let eventClearanceLevelErrorIndicator = false;
@@ -1025,6 +1056,8 @@ export default observer(function ActivityForm() {
       activity.category = category;
       activity.organization = organization;
       activity.teamInvites = attendees;
+      activity.roomInvites = roomAttendees;
+      activity.roomInvitesChanged = roomAttendeesChanged;
       activity.armyTeamLink = armyTeamLink;
       activity.hyperlinkEDUTeams = hyperlinkEDUTeams;
       if(!activity.teamLink && makeTeamMeeting) activity.makeTeamMeeting = true;
@@ -1044,6 +1077,8 @@ export default observer(function ActivityForm() {
           teamRequestor: "",
           teamLookup: "",
           teamInvites: attendees,
+          roomInvites: roomAttendees,
+          roomInvitesChanged: roomAttendeesChanged,
           makeTeamMeeting: makeTeamMeeting
         };
         category.name === "Academic Calendar"
@@ -1320,6 +1355,16 @@ export default observer(function ActivityForm() {
     }
   
     return errors;
+  }
+
+  const handleRoomInviteClick = () =>{
+    openModal(
+      <ManageRoomInvites
+       roomAttendees={roomAttendees}
+       setRoomAttendees={updateRoomAttendees}
+       setRoomAttendeesChangedTrue={setRoomAttendeesChangedTrue}
+       key={roomAttendees.length}/>, 'large'
+     )
   }
 
   return (
@@ -1978,6 +2023,12 @@ export default observer(function ActivityForm() {
                     placeholder="Phone # of person requesting room"
                     label="Phone Number of Person Requesting Room:"
                   />
+
+                  <Button basic
+                   positive
+                   type="button"
+                   onClick={handleRoomInviteClick}
+                 >View / Add Room Invites</Button>
  
                { includesAny(roomEmails, devicesRequiredRooms) && 
                 <Grid>

@@ -236,6 +236,7 @@ namespace Application.Activities
                                     Start = a.StartDateAsString,
                                     End = a.EndDateAsString,
                                     RoomEmails = a.RoomEmails,
+                                    RoomInvites = (List<TextValueUser>)(request.Activity.RoomInvites.Any() ? request.Activity.RoomInvites : new List<TextValueUser>()),
                                     RequesterEmail = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
                                     RequesterFirstName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
                                     RequesterLastName = user.Email.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? user.Email : GraphHelper.GetEEMServiceAccount(),
@@ -449,6 +450,8 @@ namespace Application.Activities
             private async Task<bool> GetShouldGraphEventsBeRegenerated(Activity updatedActivity, IGraphServicePlacesCollectionPage allrooms)
             {
                 if (!updatedActivity.RoomEmails.Any()) return false;
+
+                if (updatedActivity.RoomInvitesChanged) return true;
               
                 var originalActivity = await _context.Activities.AsNoTracking().FirstOrDefaultAsync(x => x.Id == updatedActivity.Id);
 

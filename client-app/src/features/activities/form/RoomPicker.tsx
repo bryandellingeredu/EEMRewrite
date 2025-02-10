@@ -56,7 +56,7 @@ export default observer(function RoomPicker({
   const { availabilityStore, graphRoomStore, commonStore, activityStore} = useStore();
   const { loadingInitial, loadSchedule, loadSVTCSchedule } = availabilityStore;
   const { loadGraphRooms, addUpdateRoomOptions } = graphRoomStore;
-  const { getTempRoomEmails} = activityStore
+  const { getTempRoomEmails, getTempRoomAttendees} = activityStore
   const [roomOptions, setRoomOptions] = useState<Option[]>([
     { label: "", value: "", isDisabled: false },
 

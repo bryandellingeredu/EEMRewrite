@@ -52,6 +52,10 @@ namespace API.Controllers
         public async Task<ActionResult> GetActivity(Guid id) =>
          HandleResult(await Mediator.Send(new Details.Query { Id = id }));
 
+        [HttpGet("attendees/{id}")]
+        public async Task<ActionResult> GetAttendees(Guid id) =>
+        HandleResult(await Mediator.Send(new GetAttendees.Query { Id = id }));  
+
         [HttpGet("getByRoom/{title}/{start}/{end}/{id}")]
         public async Task<ActionResult> GetByRoom(string title, string start, string end, string id)
         {

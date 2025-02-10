@@ -188,7 +188,8 @@ namespace Application.Activities
                                 RequesterFirstName = a.CoordinatorFirstName,
                                 RequesterLastName = a.CoordinatorLastName,
                                 IsAllDay = a.AllDayEvent,
-                                UserEmail = user.Email
+                                UserEmail = user.Email,
+                                RoomInvites = (List<TextValueUser>)(a.RoomInvites.Any() ? a.RoomInvites : new List<TextValueUser>()),
                             };
                             Event evt = await GraphHelper.CreateEvent(graphEventDTO);
                             a.EventLookup = evt.Id;

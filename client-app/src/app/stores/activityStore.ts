@@ -12,6 +12,7 @@ import { GraphLocation } from "../models/graphLocation";
 import { SearchFormValues } from "../models/searchFormValues";
 import { toast } from "react-toastify";
 import { CalendarEventParameters } from "../models/calendarEventParameters";
+import { UserEmail } from "../models/userEmail";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -22,6 +23,7 @@ export default class ActivityStore {
   uploading = false;
   calendarEventParametersRegistry = new Map<string, CalendarEventParameters>();
   tempRoomEmailsRegistry = new Map<string,  string[]>();
+  tempRoomAttendeesRegistry = new Map<string, UserEmail[]>();
   
 
   constructor() {
@@ -57,13 +59,25 @@ export default class ActivityStore {
     this.tempRoomEmailsRegistry.set(id, tempRoomEmails)
   }
 
+  setTempRoomAttendees = (id: string, tempRoomAttendees: UserEmail[]) : void =>{
+    this.tempRoomAttendeesRegistry.set(id, tempRoomAttendees);
+  }
+
   getTempRoomEmails = (id: string): string[] | undefined => {
     return this.tempRoomEmailsRegistry.get(id);
   }
 
+  getTempRoomAttendees = (id: string): UserEmail[] | undefined =>{
+    return this.tempRoomAttendeesRegistry.get(id);
+  } 
+
   removeTempRoomEmails = (id: string): void => {
     this.tempRoomEmailsRegistry.delete(id);
-}
+   }
+
+   removeTempRoomAttendees = (id: string): void => {
+    this.tempRoomAttendeesRegistry.delete(id);
+   }
 
 
 
@@ -551,6 +565,8 @@ export default class ActivityStore {
       coordinatorName: graphEvent.organizer?.emailAddress.name || '',
       activityRooms: [],
       teamInvites: [],
+      roomInvites: [],
+      roomInvitesChanged: false,
       makeTeamMeeting: false,
       eventLookup: graphEvent.id,
       eventLookupCalendar: '',

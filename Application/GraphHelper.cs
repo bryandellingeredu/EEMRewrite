@@ -5,6 +5,7 @@
     using Application.Emails;
     using Application.GraphSchedules;
     using Application.RoomReport;
+    using AutoMapper.Execution;
     using Azure.Identity;
     using Domain;
     using Microsoft.AspNetCore.Http;
@@ -18,6 +19,7 @@
     using System;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text.RegularExpressions;
     using static System.Net.WebRequestMethods;
     using File = File;
@@ -715,6 +717,43 @@
             await _appClient.Users[calendarEmail].Events[eventId].Request().UpdateAsync(patchEvent);
         }
 
+        public static async Task<List<TextValueUser>> GetEventAttendees(string eventLookup, string eventCalendarEmail)
+        {
+            EnsureGraphForAppOnlyAuth();
+            _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            List<TextValueUser> attendeesList = new List<TextValueUser>();
+
+            var @event = await _appClient.Users[eventCalendarEmail].Events[eventLookup].Request().GetAsync();
+            if (@event != null && @event.Attendees != null)
+            {
+                var rooms = await GetRoomsAsync();
+                List<string> roomEmails = rooms
+                    .Where(x => x.AdditionalData != null && x.AdditionalData.ContainsKey("emailAddress"))
+                    .Select(x => x.AdditionalData["emailAddress"].ToString().ToLower()) 
+                    .ToList();
+
+                roomEmails.Add(GetEEMServiceAccount().ToLower());
+
+                foreach (var attendee in @event.Attendees.Where(x => x.Type == AttendeeType.Optional))
+                {
+                    string attendeeEmail = attendee.EmailAddress.Address.ToLower();
+
+                    if (!roomEmails.Contains(attendeeEmail))
+                    {
+                        attendeesList.Add(new TextValueUser
+                        {
+                            DisplayName = attendee.EmailAddress.Name,
+                            Email = attendee.EmailAddress.Address
+                        });
+                    }
+                }
+            }
+
+            return attendeesList;
+        }
+
+
 
         public static async Task<List<TextValueUser>> GetTeamsEventAttendees(string eventId, string excludedEmail)
         {
@@ -813,15 +852,55 @@
             var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room") + "?$top=200";
             var placesRequest = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
 
+            var rooms = await GetRoomsAsync();
+            List<string> roomEmails = rooms
+                .Where(x => x.AdditionalData != null && x.AdditionalData.ContainsKey("emailAddress"))
+                .Select(x => x.AdditionalData["emailAddress"].ToString().ToLower())
+                .ToList();
+
+            List<TextValueUser> expandedRoomInvites = new List<TextValueUser>();
+
+            foreach (var invitee in graphEventDTO.RoomInvites)
+            {
+                // If invitee.Email is actually a distribution list ID
+                if (IsDistributionListId(invitee.Email))
+                {
+                    // Expand the distribution list to get all email addresses
+                    var distributionListMembers = await ExpandDistributionList(invitee.Email);
+
+                    foreach (var member in distributionListMembers)
+                    {
+                        expandedRoomInvites.Add(
+                            new TextValueUser
+                            {
+                                Email = member.Email,
+                                DisplayName = member.DisplayName
+
+                            }
+                        );
+                    }
+                }
+                else
+                {
+                    expandedRoomInvites.Add(
+                            new TextValueUser
+                            {
+                                Email = invitee.Email,
+                                DisplayName = invitee.DisplayName
+
+                            });
+                }
+            }
+
             if (!string.IsNullOrEmpty(graphEventDTO.EventLookup)) // there is an existing outlook event lets try and find it.
             {
   
 
                 string[] possibleEmails = new[] { graphEventDTO.EventCalendarEmail, GetEEMServiceAccount(), graphEventDTO.CreatedBy, graphEventDTO.Updated, graphEventDTO.UserEmail, graphEventDTO.Coordinator};
-                // get the rooms
+             
 
-                foreach (var email in possibleEmails)
-                {
+                    foreach (var email in possibleEmails)
+                   {
                     if (email != null)
                     {
                         try
@@ -830,17 +909,80 @@
                             if (@event != null)
               
                             {
-                            
+                               
                                 calendarEmail = email;
                                 var calendar = await _appClient.Users[calendarEmail].Calendar.Request().GetAsync();
+                            
+
+                                // Get all attendees
                                 var attendeeList = @event.Attendees.ToList();
-                                var existingAttendeeEmails = attendeeList.Select(a => a.EmailAddress.Address).ToList();
-                                var existingRoomEmails = attendeeList.Where(a => a.Type == AttendeeType.Optional).Select(a => a.EmailAddress.Address);
-                                var roomsToRemove = existingRoomEmails.Where(existingRoom => !graphEventDTO.RoomEmails.Contains(existingRoom)).ToList();
-                                var roomsToAdd = graphEventDTO.RoomEmails.Where(newRoom => !existingRoomEmails.Contains(newRoom)).ToList();
 
-                                attendeeList.RemoveAll(a => a.Type == AttendeeType.Optional && roomsToRemove.Contains(a.EmailAddress.Address));
+                                // Convert all existing attendee emails to lowercase for case-insensitive comparison
+                                var existingAttendeeEmails = attendeeList.Select(a => a.EmailAddress.Address.ToLower()).ToHashSet();
 
+                                // Convert roomEmails to lowercase once and store in a HashSet for O(1) lookups
+                                var roomEmailsLower = new HashSet<string>(roomEmails.Select(e => e.ToLower()));
+
+                                // Get existing room emails (attendees that match roomEmails)
+                                var existingRoomEmails = attendeeList
+                                    .Where(a => a.Type == AttendeeType.Optional && roomEmailsLower.Contains(a.EmailAddress.Address.ToLower()))
+                                    .Select(a => a.EmailAddress.Address.ToLower())
+                                    .ToHashSet(); // Use HashSet for O(1) lookups
+
+                                // Get existing room invites (attendees that do NOT match roomEmails)
+                                var existingRoomInvites = attendeeList
+                                    .Where(a => a.Type == AttendeeType.Optional && !roomEmailsLower.Contains(a.EmailAddress.Address.ToLower()))
+                                    .Select(a => a.EmailAddress.Address.ToLower())
+                                    .ToHashSet(); // Use HashSet for O(1) lookups
+
+                                // Convert graphEventDTO.RoomEmails to lowercase and HashSet for fast lookup
+                                var newRoomEmails = new HashSet<string>(graphEventDTO.RoomEmails.Select(e => e.ToLower()));
+
+                                // Determine rooms to remove (existing rooms that are not in the new list)
+                                var roomsToRemove = existingRoomEmails
+                                    .Where(existingRoom => !newRoomEmails.Contains(existingRoom))
+                                    .ToList();
+
+                                // Determine rooms to add (new rooms that are not in the existing list)
+                                var roomsToAdd = newRoomEmails
+                                    .Where(newRoom => !existingRoomEmails.Contains(newRoom))
+                                    .ToList();
+
+                                // Convert expandedRoomInvites emails to a HashSet for fast lookup
+                                var expandedRoomEmails = new HashSet<string>(expandedRoomInvites.Select(x => x.Email.ToLower()));
+
+                                // Determine room invites to remove (existing invites not in expandedRoomInvites)
+                                var roomInvitesToRemove = existingRoomInvites
+                                    .Where(existingInvite => !expandedRoomEmails.Contains(existingInvite))
+                                    .ToList();
+
+                                // Determine room invites to add (expandedRoomInvites not in existingRoomInvites)
+                                var roomInvitesToAdd = expandedRoomInvites
+                                    .Where(newInvite => !existingRoomInvites.Contains(newInvite.Email.ToLower()))
+                                    .ToList();
+
+                                // Remove attendees that match roomsToRemove or roomInvitesToRemove
+                                attendeeList.RemoveAll(a =>
+                                    a.Type == AttendeeType.Optional &&
+                                    (roomsToRemove.Contains(a.EmailAddress.Address.ToLower()) ||
+                                     roomInvitesToRemove.Contains(a.EmailAddress.Address.ToLower()))
+                                );
+
+                                // Add new room invites
+                                foreach (var roomInvite in roomInvitesToAdd)
+                                {
+                                    attendeeList.Add(new Attendee
+                                    {
+                                        EmailAddress = new EmailAddress
+                                        {
+                                            Address = roomInvite.Email,
+                                            Name = roomInvite.DisplayName
+                                        },
+                                        Type = AttendeeType.Optional
+                                    });
+                                }
+
+                                // Add new room emails
                                 foreach (var roomEmail in roomsToAdd)
                                 {
                                     attendeeList.Add(new Attendee
@@ -848,11 +990,14 @@
                                         EmailAddress = new EmailAddress
                                         {
                                             Address = roomEmail,
-                                            Name = roomEmail 
+                                            Name = roomEmail
                                         },
-                                        Type = AttendeeType.Optional 
+                                        Type = AttendeeType.Optional
                                     });
                                 }
+
+
+
 
 
                                 bool isUpdated = false;
@@ -929,7 +1074,7 @@
                                 }
 
                                 // Check if Attendees need to be updated
-                                if (roomsToAdd.Any() || roomsToRemove.Any())
+                                if (roomsToAdd.Any() || roomsToRemove.Any() || roomInvitesToAdd.Any() || roomInvitesToRemove.Any())
                                 {
                                     patchEvent.Attendees = attendeeList;
                                     isUpdated = true;
@@ -938,21 +1083,32 @@
                                 // Only send PATCH request if there are changes
                                 if (isUpdated)
                                 {
-                                    // Use PATCH request with only the modified properties
-                                    var result = await _appClient.Users[email]
-                                                                 .Events[@event.Id]
-                                                                 .Request()
-                                                                 .UpdateAsync(patchEvent);
+                                    try
+                                    {
+                                        // Use PATCH request with only the modified properties
+                                        var result = await _appClient.Users[email]
+                                                                     .Events[@event.Id]
+                                                                     .Request()
+                                                                     .UpdateAsync(patchEvent);
 
-                                    // Fetch the updated event with expanded properties
-                                    var expandedEvent = await _appClient.Users[email]
-                                                                        .Calendars[calendar.Id]
-                                                                        .Events[result.Id]
-                                                                        .Request()
-                                                                        .Expand("calendar")
-                                                                        .GetAsync();
+                                        // Fetch the updated event with expanded properties
+                                        var expandedEvent = await _appClient.Users[email]
+                                                                            .Calendars[calendar.Id]
+                                                                            .Events[result.Id]
+                                                                            .Request()
+                                                                            .Expand("calendar")
+                                                                            .GetAsync();
 
-                                    return expandedEvent;
+                                        return expandedEvent;
+                                    }
+                                    catch (Exception ex)
+                                    {
+
+                                        throw;
+                                    }
+                                   
+                                 
+
                                 }
                                 else
                                 {
@@ -1011,6 +1167,21 @@
                           Type = AttendeeType.Optional
                       }
                     );
+                }
+
+                foreach (var invitee in expandedRoomInvites)
+                {
+                    attendees.Add(
+                    new Attendee
+                    {
+                        EmailAddress = new EmailAddress
+                        {
+                            Address = invitee.Email,
+                            Name = invitee.DisplayName
+                        },
+                        Type = AttendeeType.Optional
+                    }
+                  );
                 }
 
                 var @event = new Event
@@ -1109,6 +1280,45 @@
                           Type = AttendeeType.Optional
                       }
                     );
+                }
+
+                foreach (var invitee in graphEventDTO.RoomInvites)
+                {
+                    // If invitee.Email is actually a distribution list ID
+                    if (IsDistributionListId(invitee.Email))
+                    {
+                        // Expand the distribution list to get all email addresses
+                        var distributionListMembers = await ExpandDistributionList(invitee.Email);
+
+                        foreach (var member in distributionListMembers)
+                        {
+                            attendees.Add(
+                                new Attendee
+                                {
+                                    EmailAddress = new EmailAddress
+                                    {
+                                        Address = member.Email,
+                                        Name = member.DisplayName
+                                    },
+                                    Type = AttendeeType.Optional
+                                }
+                            );
+                        }
+                    }
+                    else
+                    {
+                        attendees.Add(
+                            new Attendee
+                            {
+                                EmailAddress = new EmailAddress
+                                {
+                                    Address = invitee.Email,
+                                    Name = invitee.DisplayName
+                                },
+                                Type = AttendeeType.Optional
+                            }
+                        );
+                    }
                 }
 
                 var @event = new Event

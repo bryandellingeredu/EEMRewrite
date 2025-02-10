@@ -196,6 +196,7 @@ const Activities = {
     getLocations: () => axiosRequest.get<string[]>('activities/getLocations'),
     getActionOfficers: () => axiosRequest.get<string[]>('activities/getActionOfficers'),
     getCreatedBy: () => axiosRequest.get<string[]>('activities/getCreatedBy'),
+    attendees: (id: string) => axiosRequest.get<UserEmail[]>(`activities/attendees/${id}`),
 }
 
 const Categories = {

@@ -61,6 +61,13 @@ namespace Domain
         [NotMapped]
         public IEnumerable<TextValueUser> TeamInvites { get; set; }
 
+        
+        [NotMapped]
+        public IEnumerable<TextValueUser> RoomInvites { get; set; }
+
+        [NotMapped]
+        public bool RoomInvitesChanged { get; set; }    
+
         [NotMapped]
         public bool MakeTeamMeeting { get; set; }
 

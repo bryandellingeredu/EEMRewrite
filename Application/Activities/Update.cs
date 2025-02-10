@@ -248,6 +248,7 @@ namespace Application.Activities
                         Start = request.Activity.StartDateAsString,
                         End = request.Activity.EndDateAsString,
                         RoomEmails = roomEmails,
+                        RoomInvites = (List<TextValueUser>)(request.Activity.RoomInvites.Any() ? request.Activity.RoomInvites : new List<TextValueUser>()),
                         IsAllDay = request.Activity.AllDayEvent,
                         UserEmail = user.Email,
                         EventLookup = originalEventLookup,
