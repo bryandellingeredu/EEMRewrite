@@ -522,16 +522,27 @@ namespace API.BackgroundJobs
                     writer.WriteLine("END:VEVENT");
                 }
                 writer.WriteLine("END:VCALENDAR");
+
+                string icsContent = writer.ToString();
+
+                string cleanedContent = string.Join(
+                    Environment.NewLine,
+                    icsContent
+                    .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
+                    .Where(line => !string.IsNullOrWhiteSpace(line))
+                    );
+
+
                 SyncCalendar existingSyncCalendar = _context.SyncCalendars.Where(x => x.Route == route).FirstOrDefault();
                 if (existingSyncCalendar != null) {
-                    existingSyncCalendar.Text = writer.ToString();
+                    existingSyncCalendar.Text = cleanedContent;
                     _context.SaveChanges();
                 }
                 else
                 {
                     SyncCalendar syncCalendar = new SyncCalendar();
                     syncCalendar.Route = route;
-                    syncCalendar.Text = writer.ToString();
+                    syncCalendar.Text = cleanedContent;
                     _context.SyncCalendars.Add(syncCalendar);
                     _context.SaveChanges();
                 }
@@ -616,17 +627,28 @@ namespace API.BackgroundJobs
                     }
                 }
                 writer.WriteLine("END:VCALENDAR");
+
+                   string icsContent = writer.ToString();
+
+                string cleanedContent = string.Join(
+                    Environment.NewLine,
+                    icsContent
+                    .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
+                    .Where(line => !string.IsNullOrWhiteSpace(line))
+                    );
+
+
                 SyncCalendar existingSyncCalendar = _context.SyncCalendars.Where(x => x.Route == studentType).FirstOrDefault();
                 if (existingSyncCalendar != null)
                 {
-                    existingSyncCalendar.Text = writer.ToString();
+                    existingSyncCalendar.Text = cleanedContent;
                     _context.SaveChanges();
                 }
                 else
                 {
                     SyncCalendar syncCalendar = new SyncCalendar();
                     syncCalendar.Route = studentType;
-                    syncCalendar.Text = writer.ToString();
+                    syncCalendar.Text = cleanedContent;
                     _context.SyncCalendars.Add(syncCalendar);
                     _context.SaveChanges();
                 }

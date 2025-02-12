@@ -1384,6 +1384,13 @@ export default observer(function ActivityForm() {
             if you would like to work with reports you must first sign into your
             army 365 account. Please save all pending work before doing this.{" "}
           </span>
+          <br/>
+          <span style={{ paddingRight: "10px" }}>
+            If you have a <strong style={{color: 'red'}}>Non-USAWC Visitor attending</strong> an event or 
+            <strong style={{color: 'red'}}> FOREIGN NATIONAL attending, </strong> you  <strong style={{color: 'red'}}>MUST</strong>
+            click "Log Into Army 365" and then select Hosting Report or Outsiders Report
+            {" "}
+          </span>
 
           <Link
             to={`${process.env.PUBLIC_URL}/authenticatetoarmy`}
@@ -4316,10 +4323,14 @@ label="USAHEC Contract:"
               <>
                 <Grid>
                   <Grid.Row>
-                    <Grid.Column width={3}>
-                      <strong>Hosting / Outsider Report:</strong>
+                    <Grid.Column width={6}>
+                      <strong>Hosting / Outsider Report(Non-USAWC Visitor):  
+                        <span style={{color: 'red'}}>
+                          &nbsp;If FOREIGN NATIONAL attending, must select one of these options
+                        </span>
+                         </strong>
                     </Grid.Column>
-                    <Grid.Column width={13}>
+                    <Grid.Column width={10}>
                       <SemanticForm.Group inline>
                         <MySemanticRadioButton
                           label="None"
@@ -4327,12 +4338,12 @@ label="USAHEC Contract:"
                           name="report"
                         />
                         <MySemanticRadioButton
-                          label="Hosting Report - BG (O7) and Above or Civilian SES Equivalent"
+                          label="Hosting Report (Non-USAWC Visitor) - BG (O7) and Above or Civilian SES Equivalent"
                           value="Hosting Report"
                           name="report"
                         />
                         <MySemanticRadioButton
-                          label="Outsiders Report"
+                          label="Outsiders Report (Non-USAWC Visitor) - Below BG (O7) "
                           value="Outsiders Report"
                           name="report"
                         />
