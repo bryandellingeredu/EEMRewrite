@@ -287,6 +287,8 @@ export interface Activity{
     internationalFellowsStaffEvent : boolean
     internationalFellowsStudentEvent : boolean
     internationalFellowsStaffEventPrivate : boolean
+    setUpTime : string
+    tearDownTime : string
 }
 
 export class Activity implements Activity{
@@ -572,6 +574,8 @@ export class ActivityFormValues{
     internationalFellowsStaffEvent : boolean = false
     internationalFellowsStudentEvent : boolean = false
     internationalFellowsStaffEventPrivate : boolean = false
+    setUpTime : string = ''
+    tearDownTime : string = ''
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -850,6 +854,8 @@ export class ActivityFormValues{
     this.internationalFellowsStaffEvent = activity.internationalFellowsStaffEvent
     this.internationalFellowsStudentEvent = activity.internationalFellowsStudentEvent
     this.internationalFellowsStaffEventPrivate = activity.internationalFellowsStaffEventPrivate
+    this.setUpTime = activity.setUpTime
+    this.tearDownTime = activity.tearDownTime
        } 
     }
 }

@@ -817,7 +817,9 @@ export default class ActivityStore {
     internationalFellowsStaffEvent: false,
     internationalFellowsStudentEvent: false,
     internationalFellowsStaffEventCategory: '',
-    internationalFellowsStaffEventPrivate: false
+    internationalFellowsStaffEventPrivate: false,
+    setUpTime: '',
+    tearDownTime: ''
     }
     return activity;
   }

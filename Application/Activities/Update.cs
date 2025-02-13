@@ -241,22 +241,22 @@ namespace Application.Activities
 
                 if (shouldGraphEventsBeRegenerated)
                 {
-                    GraphEventDTO graphEventDTO = new GraphEventDTO
-                    {
-                        EventTitle = request.Activity.Title,
-                        EventDescription = request.Activity.Description,
-                        Start = request.Activity.StartDateAsString,
-                        End = request.Activity.EndDateAsString,
-                        RoomEmails = roomEmails,
-                        RoomInvites = (List<TextValueUser>)(request.Activity.RoomInvites.Any() ? request.Activity.RoomInvites : new List<TextValueUser>()),
-                        IsAllDay = request.Activity.AllDayEvent,
-                        UserEmail = user.Email,
-                        EventLookup = originalEventLookup,
-                        EventCalendar = originalEventLookupCalendar,
-                        EventCalendarEmail = originalEventLookupCalendarEmail,
-                        CreatedBy = createdBy,
-                        Updated = updated,
-                    };
+                GraphEventDTO graphEventDTO = new GraphEventDTO
+                {
+                    EventTitle = request.Activity.Title,
+                    EventDescription = request.Activity.Description,
+                    Start = request.Activity.StartDateAsString,
+                    End = request.Activity.EndDateAsString,
+                    RoomEmails = roomEmails,
+                    RoomInvites = request.Activity.RoomInvites?.ToList() ?? new List<TextValueUser>(),
+                    IsAllDay = request.Activity.AllDayEvent,
+                    UserEmail = user.Email,
+                    EventLookup = originalEventLookup,
+                    EventCalendar = originalEventLookupCalendar,
+                    EventCalendarEmail = originalEventLookupCalendarEmail,
+                    CreatedBy = createdBy,
+                    Updated = updated,
+                };
 
                     Event evt = await GraphHelper.UpdateEvent(graphEventDTO);
                     activity.EventLookup = evt.Id;

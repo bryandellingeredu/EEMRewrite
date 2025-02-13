@@ -158,11 +158,14 @@ export default observer(function ActivityForm() {
   const [enlistedAidAdmin, setEnlistedAidAdmin] = useState(false);
   const [studentCalendarAdmin, setStudentCalendarAdmin] = useState(false);
   const [ifCalendarAdmin, setIFCalendarAdmin] = useState(false);
+  const [iMCAdmin, setIMCAdmin] = useState(false);
+  const [savingIMCChanges, setSavingIMCChanges] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
   const [memberOfExecServices, setMemberOfExecServices] = useState(false);
   const [svtcSchedule, setSvtcSchedule] = useState<GraphScheduleResponse[]>([]);
   const handleSetSvtcSchedule = (newSchedule : GraphScheduleResponse[] ) => setSvtcSchedule(newSchedule);
   useEffect(() => {
+    setIMCAdmin((user && user.roles && user.roles.includes("IMCAdmin")) || false);
     setIFCalendarAdmin((user && user.roles && user.roles.includes("ifCalendarAdmin")) || false);
     setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
     setEnlistedAidAdmin((user && user.roles && user.roles.includes("EnlistedAidAdmin")) || false);
@@ -1367,6 +1370,20 @@ export default observer(function ActivityForm() {
      )
   }
 
+  const handleIMCChangesClick = async (imcValue : boolean) => {
+    setSavingIMCChanges(true);
+    try {
+      // Now imcValue reflects the current state of the checkbox in Formik.
+      await agent.Activities.updateIMC(id, imcValue);
+      handleCancelClick();
+    } catch (e) {
+      toast.error('An error occurred updating the IMC');
+      console.log(e);
+    } finally {
+      setSavingIMCChanges(false);
+    }
+  };
+
   return (
     <Segment clearing>
       <Header
@@ -1518,6 +1535,7 @@ export default observer(function ActivityForm() {
 
                 <Grid.Column>
                   <Popup
+                   on="click" 
                        open={popupStartOpen}
                        onOpen={handleStartOpen}
                     trigger={
@@ -1562,6 +1580,7 @@ export default observer(function ActivityForm() {
                 </Grid.Column>
                 <Grid.Column>
                   <Popup
+                   on="click" 
                    open={popupEndOpen }
                    onOpen={handleEndOpen}
                     trigger={
@@ -2030,6 +2049,109 @@ export default observer(function ActivityForm() {
                     placeholder="Phone # of person requesting room"
                     label="Phone Number of Person Requesting Room:"
                   />
+                  
+                 {(() => {
+                    const filteredRooms = graphRooms.filter((obj) =>
+                    roomEmails.includes(obj.emailAddress)
+                  );
+                    // Only proceed if there's at least one room and none have "VTC"
+                  return filteredRooms.length > 0 && !filteredRooms.some((x) => x.displayName.includes("VTC"));
+                  })() && !values.allDayEvent && false &&
+                    <>
+                  <Grid>
+                    <Grid.Column width={16}>
+                      <Segment.Group horizontal inline>
+                        <Segment>
+                         Set Up Time (block out time for room set up): 
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="None"
+                          value="0"
+                          name="setUpTime"
+                        />
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="15 Minutes"
+                          value="15"
+                          name="setUpTime"
+                        />
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="30 Minutes"
+                          value="30"
+                          name="setUpTime"
+                        />
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="45 Minutes"
+                          value="45"
+                          name="setUpTime"
+                        />
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="60 Minutes"
+                          value="60"
+                          name="setUpTime"
+                        />
+                        </Segment>
+                      </Segment.Group>
+                      
+                    </Grid.Column>
+                  </Grid>
+
+                  <Grid>
+                    <Grid.Column width={16}>
+                      <Segment.Group horizontal inline>
+                        <Segment>
+                         Tear Down Time (block out time for clean up): 
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="None"
+                          value="0"
+                          name="tearDownTime"
+                        />
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="15 Minutes"
+                          value="15"
+                          name="tearDownTime"
+                        />
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="30 Minutes"
+                          value="30"
+                          name="tearDownTime"
+                        />
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="45 Minutes"
+                          value="45"
+                          name="tearDownTime"
+                        />
+                        </Segment>
+                        <Segment>
+                        <MySemanticRadioButton
+                          label="60 Minutes"
+                          value="60"
+                          name="tearDownTime"
+                        />
+                        </Segment>
+                      </Segment.Group>
+                      
+                    </Grid.Column>
+                  </Grid>
+                  </>
+                }
+
 
                   <Button basic
                    positive
@@ -2348,8 +2470,22 @@ export default observer(function ActivityForm() {
     margin: '1em',
     border: '1px solid #9F6000',
   }}>
+    {!iMCAdmin && 
+    <>
     <h2>You are not authorized to create or update an International Fellows Event</h2>
     <p>You do not have the necessary permissions to save events to the "International Fellows Calendar".</p>
+    </>
+    }
+       {iMCAdmin && 
+    <>
+    <h2>You are only authorized to add or remove the IMC calendar for International Fellows Event</h2>
+    <MySemanticCheckBox
+                            name="imc"
+                            label="Integrated Master Calendar (IMC)"
+                          />
+      <Button primary type='button' content = 'Save IMC changes' />
+    </>
+    }
   </div>
 }
      {!studentCalendarAdmin && !memberOfExecServices
@@ -2365,7 +2501,8 @@ export default observer(function ActivityForm() {
     borderRadius: '5px',
     margin: '1em',
     border: '1px solid #9F6000',
-  }}>
+  }}>{!iMCAdmin && 
+    <>
     <h2>You are not authorized to create or update a Student Calendar Event</h2>
     <p>You do not have the necessary permissions to save events to the "Student Calendar".</p>
     {activity.id && activity.categoryId && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
@@ -2373,6 +2510,19 @@ export default observer(function ActivityForm() {
     as={Link} to={`${process.env.PUBLIC_URL}/addToCalendars/${activity.id}/${activity.categoryId}`}
     >I would like to add this event to an EEM Calendar </Button>
     }
+    </>
+   }
+    {iMCAdmin && 
+    <>
+    <h2>You are only authorized to add or remove the IMC calendar for Student Calendar Events</h2>
+    <MySemanticCheckBox
+                            name="imc"
+                            label="Integrated Master Calendar (IMC)"
+                          />
+      <Button primary type='button' content = 'Save IMC changes' />
+    </>
+    }
+
   </div>
 }
 
@@ -5326,8 +5476,24 @@ label="USAHEC Contract:"
     margin: '1em',
     border: '1px solid #9F6000',
   }}>
-    <h2>You are not authorized!</h2>
+      {!iMCAdmin && 
+    <>
+    <h2>You are not authorized to create or update an International Fellows Event</h2>
     <p>You do not have the necessary permissions to save events to the "International Fellows Calendar".</p>
+    </>
+    }
+    {iMCAdmin && 
+    <>
+    <h2>You are only authorized to add or remove the IMC calendar for International Fellows Event</h2>
+    <MySemanticCheckBox
+                            name="imc"
+                            label="Integrated Master Calendar (IMC)"
+                          />
+      <Button primary type='button' content = 'Save IMC changes'
+        onClick={() => handleIMCChangesClick(values.imc)}
+       loading={savingIMCChanges} />
+    </>
+    }
   </div>
 }
       

@@ -320,5 +320,8 @@ namespace Domain
         public bool InternationalFellowsStaffEvent {get; set;}
         public bool InternationalFellowsStudentEvent {get; set;}
         public bool InternationalFellowsStaffEventPrivate {get; set;}
+
+        public string SetUpTime {get; set;}
+        public string TearDownTime {get; set;}
     }
 }

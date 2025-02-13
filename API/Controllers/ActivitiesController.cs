@@ -110,6 +110,11 @@ HandleResult(await Mediator.Send(
             return HandleResult(await Mediator.Send(new Update.Command { Activity = activity }));
         }
 
+        [HttpPut("updateimc/{id}")]
+        public async Task<IActionResult> UpdateIMC(Guid id, UpdateIMCDTO updateIMCDTO){
+            return HandleResult(await Mediator.Send(new UpdateIMC.Command{ UpdateIMCDTO = updateIMCDTO, Id = id }));    
+        }
+
         [HttpPut("cancel/{id}")]
         public async Task<IActionResult> CancelActivity(Guid id, CancelEventDTO cancelEventDTO)
         {

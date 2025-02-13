@@ -197,6 +197,7 @@ const Activities = {
     getActionOfficers: () => axiosRequest.get<string[]>('activities/getActionOfficers'),
     getCreatedBy: () => axiosRequest.get<string[]>('activities/getCreatedBy'),
     attendees: (id: string) => axiosRequest.get<UserEmail[]>(`activities/attendees/${id}`),
+    updateIMC: (id: string, imc: boolean) => axiosRequest.put<void>(`/activities/updateimc/${id}`, {imc}),
 }
 
 const Categories = {

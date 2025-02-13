@@ -73,12 +73,16 @@ namespace API
             {
                 OnPrepareResponse = ctx =>
                 {
-                    // Disable caching for index.html
-                    if (ctx.Context.Request.Path.Value.EndsWith("/index.html"))
+                    var path = ctx.Context.Request.Path.Value;
+                    if (string.Equals(path, "/", StringComparison.OrdinalIgnoreCase) ||
+                         string.Equals(path, "/eem/", StringComparison.OrdinalIgnoreCase) ||
+                         string.Equals(path, "/eem", StringComparison.OrdinalIgnoreCase) ||
+                        path.EndsWith("/index.html", StringComparison.OrdinalIgnoreCase))
                     {
-                        ctx.Context.Response.Headers.Append("Cache-Control", "no-cache, no-store");
-                        ctx.Context.Response.Headers.Append("Pragma", "no-cache");
-                        ctx.Context.Response.Headers.Append("Expires", "0");
+                        // Set headers to ensure that the browser doesn't cache the index file.
+                        ctx.Context.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                        ctx.Context.Response.Headers["Pragma"] = "no-cache";
+                        ctx.Context.Response.Headers["Expires"] = "0";
                     }
                 }
             });
