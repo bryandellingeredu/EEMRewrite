@@ -2056,7 +2056,7 @@ export default observer(function ActivityForm() {
                   );
                     // Only proceed if there's at least one room and none have "VTC"
                   return filteredRooms.length > 0 && !filteredRooms.some((x) => x.displayName.includes("VTC"));
-                  })() && !values.allDayEvent && false &&
+                  })() && !values.allDayEvent && 
                     <>
                   <Grid>
                     <Grid.Column width={16}>

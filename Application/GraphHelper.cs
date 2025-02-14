@@ -1234,6 +1234,146 @@
 
         }
 
+        public static async Task<Event> CreateSetUpTearDownEvent(GraphEventDTO graphEventDTO, string type, string minutes)
+        {
+            try
+            {
+                EnsureGraphForAppOnlyAuth();
+                _ = _appClient ??
+                  throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+                var calendar = await _appClient.Users[GetEEMServiceAccount()].Calendar
+                 .Request()
+                 .GetAsync();
+
+                // get the rooms
+                var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room") + "?$top=200";
+                var placesRequest = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
+
+                List<Attendee> attendees = new List<Attendee>();
+
+                foreach (var roomEmail in graphEventDTO.RoomEmails)
+                {
+                    var room = placesRequest
+                               .FirstOrDefault(x => x.AdditionalData["emailAddress"].ToString() == roomEmail);
+
+                    // Check for null in case the room isn't found
+                    if (room != null)
+                    {
+                        attendees.Add(
+                          new Attendee
+                          {
+                              EmailAddress = new EmailAddress
+                              {
+                                  Address = roomEmail,
+                                  Name = room.DisplayName
+                              },
+                              Type = AttendeeType.Optional
+                          }
+                        );
+                    }
+                }
+
+                var @event = new Event
+                {
+                    Attendees = attendees
+                };
+
+                if (graphEventDTO.RoomEmails.Any())
+                {
+                    var firstRoom = placesRequest
+                                    .FirstOrDefault(x => x.AdditionalData["emailAddress"].ToString() == graphEventDTO.RoomEmails[0]);
+                    if (firstRoom != null)
+                    {
+                        Microsoft.Graph.Location location = new Microsoft.Graph.Location
+                        {
+                            DisplayName = firstRoom.DisplayName
+                        };
+
+                        @event.Location = location;
+                    }
+                }
+
+                if (type == "setup")
+                {
+                    @event.Subject = $"Set up for {graphEventDTO.EventTitle}";
+                    @event.IsAllDay = false;
+                    @event.Body = new ItemBody
+                    {
+                        ContentType = BodyType.Html,
+                        Content = $"Set up for {graphEventDTO.EventTitle}"
+                    };
+
+                    if (!DateTime.TryParse(graphEventDTO.Start, out DateTime originalTime))
+                    {
+                        throw new Exception("Invalid date/time format.");
+                    }
+
+                    double minutesToSubtract = double.Parse(minutes);
+                    DateTime setupStartTime = originalTime.AddMinutes(-minutesToSubtract);
+
+                    @event.Start = new DateTimeTimeZone
+                    {
+                        DateTime = setupStartTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"),
+                        TimeZone = "Eastern Standard Time"
+                    };
+
+                    // Using the provided Start time (assumed to already be in the correct format)
+                    @event.End = new DateTimeTimeZone
+                    {
+                        DateTime = graphEventDTO.Start,
+                        TimeZone = "Eastern Standard Time"
+                    };
+                }
+                else
+                {
+                    @event.Subject = $"Tear down for {graphEventDTO.EventTitle}";
+                    @event.IsAllDay = false;
+                    @event.Body = new ItemBody
+                    {
+                        ContentType = BodyType.Html,
+                        Content = $"Tear down for {graphEventDTO.EventTitle}"
+                    };
+
+                    // Using the provided End time as the event start time (assumed to be in the correct format)
+                    @event.Start = new DateTimeTimeZone
+                    {
+                        DateTime = graphEventDTO.End,
+                        TimeZone = "Eastern Standard Time"
+                    };
+
+                    if (!DateTime.TryParse(graphEventDTO.End, out DateTime originalTime))
+                    {
+                        throw new Exception("Invalid date/time format.");
+                    }
+                    double minutesToAdd = double.Parse(minutes);
+                    DateTime tearDownEndTime = originalTime.AddMinutes(minutesToAdd);
+
+                    @event.End = new DateTimeTimeZone
+                    {
+                        DateTime = tearDownEndTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffff"),
+                        TimeZone = "Eastern Standard Time"
+                    };
+                }
+
+                var result = await _appClient.Users[GetEEMServiceAccount()].Calendars[calendar.Id].Events
+                  .Request()
+                  .AddAsync(@event);
+
+                var expandedEvent = await _appClient.Users[GetEEMServiceAccount()].Calendars[calendar.Id].Events[result.Id]
+                .Request()
+                .Expand("calendar")
+                .GetAsync();
+
+                return expandedEvent;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
 
         public static async Task<Event> CreateEvent(GraphEventDTO graphEventDTO)
         {
