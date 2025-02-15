@@ -859,7 +859,7 @@
                 .ToList();
 
             List<TextValueUser> expandedRoomInvites = new List<TextValueUser>();
-
+            if(graphEventDTO.RoomInvites != null){
             foreach (var invitee in graphEventDTO.RoomInvites)
             {
                 // If invitee.Email is actually a distribution list ID
@@ -890,6 +890,7 @@
 
                             });
                 }
+             }
             }
 
             if (!string.IsNullOrEmpty(graphEventDTO.EventLookup)) // there is an existing outlook event lets try and find it.
@@ -1421,7 +1422,8 @@
                       }
                     );
                 }
-
+                if(graphEventDTO.RoomInvites != null)
+                {
                 foreach (var invitee in graphEventDTO.RoomInvites)
                 {
                     // If invitee.Email is actually a distribution list ID
@@ -1459,6 +1461,7 @@
                             }
                         );
                     }
+                 }
                 }
 
                 var @event = new Event
