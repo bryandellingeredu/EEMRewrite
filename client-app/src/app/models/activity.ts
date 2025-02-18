@@ -33,6 +33,8 @@ export interface Activity{
     coordinatorLastName: string,
     coordinatorName: string,
     eventLookup: string,
+    setUpEventLookup: string,
+    tearDownEventLookup: string,
     eventLookupCalendar: string,
     eventLookupCalendarEmail: string,
     teamLookup: string,
@@ -324,6 +326,8 @@ export class ActivityFormValues{
     teamInvites: UserEmail[] | [] = [];
     roomInvites: UserEmail[] | [] = [];
     roomInvitesChanged: boolean = false;
+    setUpEventLookup: string = '';
+    tearDownEventLookup: string = '';
     eventLookup: string = '';
     eventLookupCalendar: string = '';
     eventLookupCalendarEmail: string = ''
@@ -605,6 +609,8 @@ export class ActivityFormValues{
         this.teamInvites = activity.teamInvites;
         this.roomInvites = activity.roomInvites;
         this.roomInvitesChanged = activity.roomInvitesChanged;
+        this.setUpEventLookup = activity.setUpEventLookup;
+        this.tearDownEventLookup =  activity.tearDownEventLookup;
         this.eventLookup = activity.eventLookup;
         this.eventLookupCalendar = activity.eventLookupCalendar;
         this.eventLookupCalendarEmail = activity.eventLookupCalendarEmail;

@@ -571,6 +571,8 @@ export default class ActivityStore {
       eventLookup: graphEvent.id,
       eventLookupCalendar: '',
       eventLookupCalendarEmail: '',
+      setUpEventLookup: '',
+      tearDownEventLookup: '',
       teamLookup: '',
       teamOwner: '',
       vtcLookup: '',

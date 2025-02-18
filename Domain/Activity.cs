@@ -34,6 +34,8 @@ namespace Domain
         public string CoordinatorDisplayName{ get; set; }
 
         public string EventLookup { get; set; }
+        public string SetUpEventLookup {get; set;}
+        public string TearDownEventLookup {get; set;}
         public string EventLookupCalendar { get; set; }
          public string EventLookupCalendarEmail { get; set; }
         public string TeamLookup { get; set; }
