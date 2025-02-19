@@ -65,6 +65,8 @@ namespace Application.Activities
                 var originalEnd = activity.End;
                 var originalAllDayEvent = activity.AllDayEvent;
                 var originalEventLookup = activity.EventLookup;
+                var originalSetUpEventLookup = activity.SetUpEventLookup;
+                var originalTearDownEventLookup = activity.TearDownEventLookup;
                 var originalEventLookupCalendar = activity.EventLookupCalendar;
                 var originalVTCLookup = activity.VTCLookup;
                 var originalTitle = activity.Title;
@@ -74,6 +76,7 @@ namespace Application.Activities
                 var originalLastUpdatedBy = activity.LastUpdatedBy;
                 var originalCoordinatorEmail = activity.CoordinatorEmail;
                 var originalEventLookupCalendarEmail = activity.EventLookupCalendarEmail;
+
 
                 Activity oldActivity = null;
 
@@ -185,7 +188,8 @@ namespace Application.Activities
                 {
                     try
                     {
-                        await GraphHelper.DeleteEvent(request.Activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), originalCoordinatorEmail, originalLastUpdatedBy, createdBy, originalEventLookupCalendar, originalEventLookupCalendarEmail);
+                        await GraphHelper.DeleteEvent(request.Activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), originalCoordinatorEmail, originalLastUpdatedBy, createdBy, originalEventLookupCalendar, originalEventLookupCalendarEmail,
+                        string.Empty, string.Empty );
                         request.Activity.VTCLookup = string.Empty;
                         activity.VTCLookup = string.Empty;
                     }
@@ -262,6 +266,10 @@ namespace Application.Activities
                     activity.EventLookup = evt.Id;
                     activity.EventLookupCalendar = evt.Calendar.Id;
                     activity.EventLookupCalendarEmail = evt.Organizer.EmailAddress.Address;
+                    Event setUpEvent = await GraphHelper.UpdateSetUpTearDownEvent(graphEventDTO, "setup", request.Activity.SetUpTime, originalSetUpEventLookup);
+                    activity.SetUpEventLookup = setUpEvent.Id;
+                    Event tearDownEvent = await GraphHelper.UpdateSetUpTearDownEvent(graphEventDTO, "teardown", request.Activity.TearDownTime, originalTearDownEventLookup);
+                    activity.TearDownEventLookup = tearDownEvent.Id;    
 
                 }
 

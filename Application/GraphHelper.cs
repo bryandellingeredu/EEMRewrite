@@ -835,6 +835,8 @@
             }
         }
 
+    
+
         public static async Task<Event> UpdateEvent(GraphEventDTO graphEventDTO)
         {
             EnsureGraphForAppOnlyAuth();
@@ -1235,8 +1237,220 @@
 
         }
 
+        public static async Task<Event> UpdateSetUpTearDownEvent(GraphEventDTO graphEventDTO, string type, string minutes, string eventLookup){
+              EnsureGraphForAppOnlyAuth();
+            _ = _appClient ??
+              throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+            if (string.IsNullOrEmpty(minutes)) minutes = "0";
+
+                 var calendar = await _appClient.Users[GetEEMServiceAccount()].Calendar
+                 .Request()
+                 .GetAsync();
+
+                var roomUrl = _appClient.Places.AppendSegmentToRequestUrl("microsoft.graph.room") + "?$top=200";
+                var placesRequest = await new GraphServicePlacesCollectionRequest(roomUrl, _appClient, null).GetAsync();
+
+                List<Attendee> attendees = new List<Attendee>();
+
+                 var rooms = await GetRoomsAsync();
+                 List<string> roomEmails = rooms
+                    .Where(x => x.AdditionalData != null && x.AdditionalData.ContainsKey("emailAddress"))
+                    .Select(x => x.AdditionalData["emailAddress"].ToString().ToLower())
+                    .ToList();
+
+                
+
+               HashSet<string> newRoomEmails;
+
+              // If minutes is null, empty, or "0", assign an empty HashSet
+             if (string.IsNullOrEmpty(minutes) || minutes == "0" || graphEventDTO.IsAllDay)
+             {
+               newRoomEmails = new HashSet<string>();
+             }
+             else
+             {
+               // Otherwise, populate from graphEventDTO.RoomEmails safely
+              newRoomEmails = new HashSet<string>(
+                (graphEventDTO.RoomEmails ?? Enumerable.Empty<string>())
+                 .Select(email => email.ToLower())
+               );
+             }
+
+             DateTime originalTime;
+             string startDateTime;
+             string endDateTime;
+
+                if (type == "setup")
+                {
+                    if (!DateTime.TryParse(graphEventDTO.Start, out  originalTime))
+                    {
+                        throw new Exception("Invalid date/time format.");
+                    }
+                    double minutesToSubtract = double.Parse(minutes);
+                    DateTime setupStartTime = originalTime.AddMinutes(-minutesToSubtract);
+                    startDateTime= setupStartTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
+                    endDateTime = graphEventDTO.Start;
+                }
+                else
+                {
+                    if (!DateTime.TryParse(graphEventDTO.End, out originalTime))
+                    {
+                        throw new Exception("Invalid date/time format.");
+                    }
+                    startDateTime = graphEventDTO.End;
+                     double minutesToAdd = double.Parse(minutes);
+                    DateTime tearDownEndTime = originalTime.AddMinutes(minutesToAdd);
+                     endDateTime = tearDownEndTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffff");
+
+                }
+
+                if(!string.IsNullOrEmpty(eventLookup)){
+                    var @event = await _appClient.Users[GetEEMServiceAccount()].Events[eventLookup].Request().GetAsync();
+
+                         var attendeeList = @event.Attendees.ToList();
+
+                        // Convert all existing attendee emails to lowercase for case-insensitive comparison
+                        var existingAttendeeEmails = attendeeList.Select(a => a.EmailAddress.Address.ToLower()).ToHashSet();
+
+                        // Convert roomEmails to lowercase once and store in a HashSet for O(1) lookups
+                        var roomEmailsLower = new HashSet<string>(roomEmails.Select(e => e.ToLower()));
+
+                        var existingRoomEmails = attendeeList
+                                    .Where(a => a.Type == AttendeeType.Optional && roomEmailsLower.Contains(a.EmailAddress.Address.ToLower()))
+                                    .Select(a => a.EmailAddress.Address.ToLower())
+                                    .ToHashSet();
+
+                         // Determine rooms to remove (existing rooms that are not in the new list)
+                            var roomsToRemove = existingRoomEmails
+                                    .Where(existingRoom => !newRoomEmails.Contains(existingRoom))
+                                    .ToList();
+
+                        // Determine rooms to add (new rooms that are not in the existing list)
+                            var roomsToAdd = newRoomEmails
+                                    .Where(newRoom => !existingRoomEmails.Contains(newRoom))
+                                    .ToList();
+                        
+                        
+                            bool isUpdated = false;
+
+                          // Create a new Event object to hold only the changes
+                         var patchEvent = new Event();
+
+                        if (type == "setup" && @event.Subject != $"Set up for {graphEventDTO.EventTitle}")
+                          {
+                                    patchEvent.Subject = $"Set up for {graphEventDTO.EventTitle}";
+                                    isUpdated = true;
+                          }
+                        if (type == "teardown" && @event.Subject != $"Tear down for {graphEventDTO.EventTitle}")
+                          {
+                                    patchEvent.Subject = $"Tear down for {graphEventDTO.EventTitle}";
+                                    isUpdated = true;
+                          }
+                        // Check if Attendees need to be updated
+                          if (roomsToAdd.Any() || roomsToRemove.Any())
+                            {
+                                attendeeList.RemoveAll(a =>
+                                    a.Type == AttendeeType.Optional &&
+                                    roomsToRemove.Contains(a.EmailAddress.Address.ToLower()));
+
+
+                                    // Add new room emails
+                                    foreach (var roomEmail in roomsToAdd)
+                                    {
+                                        attendeeList.Add(new Attendee
+                                        {
+                                            EmailAddress = new EmailAddress
+                                            {
+                                                Address = roomEmail,
+                                                Name = roomEmail
+                                            },
+                                            Type = AttendeeType.Optional
+                                        });
+                                    }
+
+
+
+                                    patchEvent.Attendees = attendeeList;
+                                    isUpdated = true;
+                            }
+
+                          if(@event.Start.DateTime != startDateTime)
+                          {
+                            patchEvent.Start = new DateTimeTimeZone
+                            {
+                                DateTime = startDateTime,
+                                TimeZone = "Eastern Standard Time"
+                            };
+                             isUpdated = true;
+
+                           }
+                          if (@event.End.DateTime != endDateTime)
+                            {
+                                patchEvent.End = new DateTimeTimeZone
+                                {
+                                    DateTime = endDateTime,
+                                    TimeZone = "Eastern Standard Time"
+                                };
+                                isUpdated = true;
+
+                           }
+                            if (isUpdated)
+                            {
+                                try
+                                {
+                                    // Use PATCH request with only the modified properties
+                                    var result = await _appClient.Users[GetEEMServiceAccount()]
+                                                                 .Events[@event.Id]
+                                                                 .Request()
+                                                                 .UpdateAsync(patchEvent);
+
+                                    // Fetch the updated event with expanded properties
+                                    var expandedEvent = await _appClient.Users[GetEEMServiceAccount()]
+                                                                        .Calendars[calendar.Id]
+                                                                        .Events[result.Id]
+                                                                        .Request()
+                                                                        .Expand("calendar")
+                                                                        .GetAsync();
+
+                                    return expandedEvent;
+                                }
+                                catch (Exception ex)
+                                {
+
+                                    throw;
+                                }
+
+
+
+                            }
+                            else
+                            {
+                                // No changes, fetch the existing event
+                                var expandedEvent = await _appClient.Users[GetEEMServiceAccount()]
+                                                                    .Calendars[calendar.Id]
+                                                                    .Events[graphEventDTO.EventLookup]
+                                                                    .Request()
+                                                                    .Expand("calendar")
+                                                                    .GetAsync();
+
+                                return expandedEvent;
+                            }
+                    }  else
+                    {
+                        // there is no event so create one
+                        var expandedEvent = await CreateSetUpTearDownEvent(graphEventDTO, type, minutes);
+                        return expandedEvent;
+
+                    }
+
+                 
+              
+        }
+
         public static async Task<Event> CreateSetUpTearDownEvent(GraphEventDTO graphEventDTO, string type, string minutes)
         {
+            if (string.IsNullOrEmpty(minutes)) minutes = "0";
             try
             {
                 EnsureGraphForAppOnlyAuth();
@@ -1253,26 +1467,20 @@
 
                 List<Attendee> attendees = new List<Attendee>();
 
-                foreach (var roomEmail in graphEventDTO.RoomEmails)
-                {
-                    var room = placesRequest
-                               .FirstOrDefault(x => x.AdditionalData["emailAddress"].ToString() == roomEmail);
+                HashSet<string> newRoomEmails;
 
-                    // Check for null in case the room isn't found
-                    if (room != null)
-                    {
-                        attendees.Add(
-                          new Attendee
-                          {
-                              EmailAddress = new EmailAddress
-                              {
-                                  Address = roomEmail,
-                                  Name = room.DisplayName
-                              },
-                              Type = AttendeeType.Optional
-                          }
-                        );
-                    }
+                // If minutes is null, empty, or "0", assign an empty HashSet
+                if (string.IsNullOrEmpty(minutes) || minutes == "0" || graphEventDTO.IsAllDay)
+                {
+                    newRoomEmails = new HashSet<string>();
+                }
+                else
+                {
+                    // Otherwise, populate from graphEventDTO.RoomEmails safely
+                    newRoomEmails = new HashSet<string>(
+                      (graphEventDTO.RoomEmails ?? Enumerable.Empty<string>())
+                       .Select(email => email.ToLower())
+                     );
                 }
 
                 var @event = new Event
@@ -1294,6 +1502,9 @@
                         @event.Location = location;
                     }
                 }
+
+                
+
 
                 if (type == "setup")
                 {
@@ -1520,22 +1731,23 @@
 
  
 
-        public static async Task UpdateEventTitle(string eventId, string title, string requesterEmail, string lastUpdatedBy, string createdBy, string eventCalendarId)
+        public static async Task UpdateEventTitle(
+            string eventId, string title, string requesterEmail, string lastUpdatedBy, string createdBy, string eventCalendarId,
+            string setUpEventLookup, string TearDownEventLookup, string EventLookupCalendarEmail)
         {
             EnsureGraphForAppOnlyAuth();
             _ = _appClient ??
                 throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
 
-            if (!string.IsNullOrEmpty(eventCalendarId))
-            {
+            if (!string.IsNullOrEmpty(setUpEventLookup)){
                 try
                 {
-                    Event @evt = await _appClient.Me.Calendars[eventCalendarId].Events[eventId].Request().GetAsync();
+                    Event @evt = await _appClient.Users[GetEEMServiceAccount()].Events[setUpEventLookup].Request().GetAsync();
                     if (@evt != null)
                     {
-                        @evt.Subject = title;
+                         @evt.Subject = $"Set up for {title}";
 
-                        await _appClient.Me.Calendars[eventCalendarId].Events[eventId].Request().UpdateAsync(@evt);
+                        await _appClient.Users[GetEEMServiceAccount()].Events[eventId].Request().UpdateAsync(@evt);
 
                         return; 
                     }
@@ -1546,11 +1758,31 @@
                 }
             }
 
-            string[] possibleEmails = new[] { GetEEMServiceAccount(), requesterEmail,  lastUpdatedBy, createdBy };
+              if (!string.IsNullOrEmpty(TearDownEventLookup)){
+                try
+                {
+                    Event @evt = await _appClient.Users[GetEEMServiceAccount()].Events[TearDownEventLookup].Request().GetAsync();
+                    if (@evt != null)
+                    {
+                         @evt.Subject = $"Tear down for {title}";
+
+                        await _appClient.Users[GetEEMServiceAccount()].Events[eventId].Request().UpdateAsync(@evt);
+
+                        return; 
+                    }
+                }
+                catch
+                {
+                    //continue
+                }
+            }
+
+
+            string[] possibleEmails = new[] { EventLookupCalendarEmail, GetEEMServiceAccount(), requesterEmail,  lastUpdatedBy, createdBy };
 
             foreach (var email in possibleEmails)
             {
-                if(email != null)
+                if(!string.IsNullOrEmpty(email))
                 {
                     try
                     {
@@ -1573,12 +1805,69 @@
             throw new InvalidOperationException("Event not found for any of the provided emails or calendar ID.");
         }
 
-        public static async Task<bool> DeleteEvent(string eventLookup, string coordinatorEmail, string oldCoordinatorEmail, string lastUpdatedBy, string createdBy, string eventCalendarId, string eventCalendarEmail)
+        public static async Task<bool> DeleteEvent(
+            string eventLookup, string coordinatorEmail, string oldCoordinatorEmail, string lastUpdatedBy, string createdBy, string eventCalendarId,
+             string eventCalendarEmail, string SetUpEventLookup, string TearDownEventLookup)
         {
             try
             {
                 EnsureGraphForAppOnlyAuth();
                 _ = _appClient ?? throw new System.NullReferenceException("Graph has not been initialized for app-only auth");
+
+      
+
+                       if (!string.IsNullOrEmpty(SetUpEventLookup))
+                                {
+                                    // Retrieve the event using its lookup ID.
+                                    var eventToUpdate = await _appClient.Users[GetEEMServiceAccount()].Events[SetUpEventLookup].Request().GetAsync();
+                                    
+                                    if (eventToUpdate != null)
+                                    {
+                                        // Filter out optional attendees.
+                                        // Assuming attendee.Type is an enum (e.g., AttendeeType.Optional)
+                                        var requiredAttendees = eventToUpdate.Attendees?
+                                            .Where(attendee => attendee.Type != AttendeeType.Optional)
+                                            .ToList();
+                                        
+                                        // Update the event's attendees with only the required ones.
+                                        var updatedEvent = new Microsoft.Graph.Event
+                                        {
+                                            Attendees = requiredAttendees
+                                        };
+
+                                        // Send a PATCH request to update the event.
+                                        await _appClient.Users[GetEEMServiceAccount()].Events[SetUpEventLookup]
+                                            .Request()
+                                            .UpdateAsync(updatedEvent);
+                                    }
+                       }
+                  
+
+                if(!string.IsNullOrEmpty(TearDownEventLookup)){
+                    // Retrieve the event using its lookup ID.
+                                    var eventToUpdate = await _appClient.Users[GetEEMServiceAccount()].Events[TearDownEventLookup].Request().GetAsync();
+                                    
+                                    if (eventToUpdate != null)
+                                    {
+                                        // Filter out optional attendees.
+                                        // Assuming attendee.Type is an enum (e.g., AttendeeType.Optional)
+                                        var requiredAttendees = eventToUpdate.Attendees?
+                                            .Where(attendee => attendee.Type != AttendeeType.Optional)
+                                            .ToList();
+                                        
+                                        // Update the event's attendees with only the required ones.
+                                        var updatedEvent = new Microsoft.Graph.Event
+                                        {
+                                            Attendees = requiredAttendees
+                                        };
+
+                                        // Send a PATCH request to update the event.
+                                        await _appClient.Users[GetEEMServiceAccount()].Events[TearDownEventLookup]
+                                            .Request()
+                                            .UpdateAsync(updatedEvent);
+                                    }
+                                }
+                
 
                 if (!string.IsNullOrEmpty(eventCalendarId) && !string.IsNullOrEmpty(eventCalendarEmail))
                 {
@@ -1587,7 +1876,7 @@
                         Event @event = await _appClient.Users[eventCalendarEmail].Calendars[eventCalendarId].Events[eventLookup].Request().GetAsync();
                         if (@event != null)
                         {
-                            await _appClient.Me.Calendars[eventCalendarId].Events[eventLookup]
+                            await _appClient.Users[eventCalendarEmail].Calendars[eventCalendarId].Events[eventLookup]
                         .Request()
                         .DeleteAsync();
                             return true; // Event found and deleted

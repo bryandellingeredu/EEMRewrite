@@ -49,7 +49,8 @@ namespace Application.Teams
                             {
                                 try
                                 {
-                                    var graphResult = await GraphHelper.DeleteEvent(activity.TeamLookup, activity.TeamRequester, activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail );
+                                    var graphResult = await GraphHelper.DeleteEvent(activity.TeamLookup, activity.TeamRequester, activity.CoordinatorEmail, activity.LastUpdatedBy, activity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail,
+                                    string.Empty, string.Empty );
                                 }
                                 catch (Exception)
                                 {

@@ -136,8 +136,11 @@ namespace Application.Activities
                                 var coordinatorEmail = item.CoordinatorEmail.EndsWith(GraphHelper.GetEEMServiceAccount().Split('@')[1]) ? item.CoordinatorEmail : GraphHelper.GetEEMServiceAccount();
                                 try
                                 {
-                                    await GraphHelper.DeleteEvent(item.EventLookup, item.CoordinatorEmail, request.Activity.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, item.EventLookupCalendar, item.EventLookupCalendarEmail);
+                                    await GraphHelper.DeleteEvent(item.EventLookup, item.CoordinatorEmail, request.Activity.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, item.EventLookupCalendar, item.EventLookupCalendarEmail,
+                                    item.SetUpEventLookup, item.TearDownEventLookup);
                                     item.EventLookup = string.Empty;
+                                    item.SetUpEventLookup = string.Empty;
+                                    item.TearDownEventLookup = string.Empty;    
                                     item.EventLookupCalendar = string.Empty;   
                                     item.EventLookupCalendarEmail = string.Empty;
                                 }
@@ -145,17 +148,21 @@ namespace Application.Activities
                                 {
                                     try
                                     {
-                                        await GraphHelper.DeleteEvent(item.EventLookup, GraphHelper.GetEEMServiceAccount(), request.Activity.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, item.EventLookupCalendar, item.EventLookupCalendarEmail  );
+                                        await GraphHelper.DeleteEvent(item.EventLookup, GraphHelper.GetEEMServiceAccount(), request.Activity.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, item.EventLookupCalendar, item.EventLookupCalendarEmail,
+                                         item.SetUpEventLookup, item.TearDownEventLookup );
                                         item.EventLookup = string.Empty;
+                                          item.SetUpEventLookup = string.Empty;
+                                    item.TearDownEventLookup = string.Empty; 
                                         item.EventLookupCalendar = string.Empty;
                                          item.EventLookupCalendarEmail = string.Empty;
                                     }
                                     catch (Exception)
                                     {
-
-                                        item.EventLookup = string.Empty;
-                                        item.EventLookupCalendar = string.Empty;
-                                        item.EventLookupCalendarEmail = string.Empty;
+                                    item.SetUpEventLookup = string.Empty;
+                                    item.TearDownEventLookup = string.Empty; 
+                                    item.EventLookup = string.Empty;
+                                    item.EventLookupCalendar = string.Empty;
+                                    item.EventLookupCalendarEmail = string.Empty;
                                     }
 
                                 }
@@ -164,7 +171,8 @@ namespace Application.Activities
                                 {
                                     try
                                     {
-                                        await GraphHelper.DeleteEvent(item.VTCLookup, GraphHelper.GetEEMServiceAccount(), request.Activity.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, item.EventLookupCalendar, item.EventLookupCalendarEmail    );
+                                        await GraphHelper.DeleteEvent(item.VTCLookup, GraphHelper.GetEEMServiceAccount(), request.Activity.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, item.EventLookupCalendar, item.EventLookupCalendarEmail,
+                                        string.Empty, string.Empty    );
                                         item.VTCLookup = string.Empty;
                                     }
                                     catch (Exception)
@@ -306,21 +314,24 @@ namespace Application.Activities
                                 {
                                     try
                                     {
-                                        await GraphHelper.UpdateEventTitle(a.EventLookup, request.Activity.Title, GraphHelper.GetEEMServiceAccount(), request.Activity.LastUpdatedBy, request.Activity.CreatedBy, request.Activity.EventLookupCalendar  );
+                                        await GraphHelper.UpdateEventTitle(a.EventLookup, request.Activity.Title, GraphHelper.GetEEMServiceAccount(), request.Activity.LastUpdatedBy, request.Activity.CreatedBy, request.Activity.EventLookupCalendar,
+                                           request.Activity.SetUpEventLookup, request.Activity.TearDownEventLookup, request.Activity.EventLookupCalendarEmail);
                                     }
                                     catch (Exception)
                                     {
 
                                         try
                                         {
-                                            await GraphHelper.UpdateEventTitle(a.EventLookup, request.Activity.Title, originalCoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, request.Activity.EventLookupCalendar);
+                                            await GraphHelper.UpdateEventTitle(a.EventLookup, request.Activity.Title, originalCoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, request.Activity.EventLookupCalendar,
+                                            request.Activity.SetUpEventLookup, request.Activity.TearDownEventLookup, request.Activity.EventLookupCalendarEmail);
                                         }
                                         catch (Exception)
                                         {
 
                                             try
                                             {
-                                                await GraphHelper.UpdateEventTitle(a.EventLookup, request.Activity.Title, a.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, request.Activity.EventLookupCalendar  );
+                                                await GraphHelper.UpdateEventTitle(a.EventLookup, request.Activity.Title, a.CoordinatorEmail, request.Activity.LastUpdatedBy, request.Activity.CreatedBy, request.Activity.EventLookupCalendar,
+                                                request.Activity.SetUpEventLookup, request.Activity.TearDownEventLookup, request.Activity.EventLookupCalendarEmail  );
                                             }
                                             catch (Exception)
                                             {

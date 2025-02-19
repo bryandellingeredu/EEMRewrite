@@ -58,14 +58,16 @@ namespace Application.Activities
                 {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail);
+                        await GraphHelper.DeleteEvent(activity.EventLookup, activity.CoordinatorEmail, oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail,
+                            activity.SetUpEventLookup, activity.TearDownEventLookup);
                     }
                     catch (Exception)
                     {
 
                         try
                         {
-                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail);
+                            await GraphHelper.DeleteEvent(activity.EventLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail,
+                                activity.SetUpEventLookup, activity.TearDownEventLookup);
                         }
                         catch (Exception)
                         {
@@ -80,7 +82,7 @@ namespace Application.Activities
                 {
                     try
                     {
-                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail);
+                        await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail, string.Empty, string.Empty);
                     }
                     catch (Exception ex)
                     {
