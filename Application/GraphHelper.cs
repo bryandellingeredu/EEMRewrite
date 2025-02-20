@@ -1488,6 +1488,21 @@
                     Attendees = attendees
                 };
 
+                foreach (var roomEmail in newRoomEmails)
+                {
+                    attendees.Add(
+                      new Attendee
+                      {
+                          EmailAddress = new EmailAddress
+                          {
+                              Address = roomEmail,
+                              Name = placesRequest.Where(x => x.AdditionalData["emailAddress"].ToString().ToLower() == roomEmail.ToLower()).FirstOrDefault().DisplayName
+                          },
+                          Type = AttendeeType.Optional
+                      }
+                    );
+                }
+
                 if (graphEventDTO.RoomEmails.Any())
                 {
                     var firstRoom = placesRequest
@@ -1579,7 +1594,7 @@
 
                 return expandedEvent;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -1747,9 +1762,8 @@
                     {
                          @evt.Subject = $"Set up for {title}";
 
-                        await _appClient.Users[GetEEMServiceAccount()].Events[eventId].Request().UpdateAsync(@evt);
+                        await _appClient.Users[GetEEMServiceAccount()].Events[setUpEventLookup].Request().UpdateAsync(@evt);
 
-                        return; 
                     }
                 }
                 catch
@@ -1766,9 +1780,8 @@
                     {
                          @evt.Subject = $"Tear down for {title}";
 
-                        await _appClient.Users[GetEEMServiceAccount()].Events[eventId].Request().UpdateAsync(@evt);
+                        await _appClient.Users[GetEEMServiceAccount()].Events[TearDownEventLookup].Request().UpdateAsync(@evt);
 
-                        return; 
                     }
                 }
                 catch
@@ -1816,19 +1829,16 @@
 
       
 
-                       if (!string.IsNullOrEmpty(SetUpEventLookup))
+                                if (!string.IsNullOrEmpty(SetUpEventLookup))
                                 {
                                     // Retrieve the event using its lookup ID.
-                                    var eventToUpdate = await _appClient.Users[GetEEMServiceAccount()].Events[SetUpEventLookup].Request().GetAsync();
-                                    
-                                    if (eventToUpdate != null)
+                                    try
                                     {
-                                        // Filter out optional attendees.
-                                        // Assuming attendee.Type is an enum (e.g., AttendeeType.Optional)
+                                      var eventToUpdate = await _appClient.Users[GetEEMServiceAccount()].Events[SetUpEventLookup].Request().GetAsync();
                                         var requiredAttendees = eventToUpdate.Attendees?
-                                            .Where(attendee => attendee.Type != AttendeeType.Optional)
-                                            .ToList();
-                                        
+                                             .Where(attendee => attendee.Type != AttendeeType.Optional)
+                                             .ToList();
+
                                         // Update the event's attendees with only the required ones.
                                         var updatedEvent = new Microsoft.Graph.Event
                                         {
@@ -1839,35 +1849,46 @@
                                         await _appClient.Users[GetEEMServiceAccount()].Events[SetUpEventLookup]
                                             .Request()
                                             .UpdateAsync(updatedEvent);
-                                    }
-                       }
-                  
-
-                if(!string.IsNullOrEmpty(TearDownEventLookup)){
-                    // Retrieve the event using its lookup ID.
-                                    var eventToUpdate = await _appClient.Users[GetEEMServiceAccount()].Events[TearDownEventLookup].Request().GetAsync();
-                                    
-                                    if (eventToUpdate != null)
+                                      }
+                                    catch (Exception ex)
                                     {
-                                        // Filter out optional attendees.
-                                        // Assuming attendee.Type is an enum (e.g., AttendeeType.Optional)
-                                        var requiredAttendees = eventToUpdate.Attendees?
-                                            .Where(attendee => attendee.Type != AttendeeType.Optional)
-                                            .ToList();
+                                        // no event keep going
                                         
-                                        // Update the event's attendees with only the required ones.
-                                        var updatedEvent = new Microsoft.Graph.Event
-                                        {
-                                            Attendees = requiredAttendees
-                                        };
-
-                                        // Send a PATCH request to update the event.
-                                        await _appClient.Users[GetEEMServiceAccount()].Events[TearDownEventLookup]
-                                            .Request()
-                                            .UpdateAsync(updatedEvent);
                                     }
-                                }
-                
+                                 }
+
+
+
+                                    if (!string.IsNullOrEmpty(TearDownEventLookup))
+                                    {
+                                        // Retrieve the event using its lookup ID.
+                                        try
+                                        {
+                                            var eventToUpdate = await _appClient.Users[GetEEMServiceAccount()].Events[TearDownEventLookup].Request().GetAsync();
+                                            var requiredAttendees = eventToUpdate.Attendees?
+                                                 .Where(attendee => attendee.Type != AttendeeType.Optional)
+                                                 .ToList();
+
+                                            // Update the event's attendees with only the required ones.
+                                            var updatedEvent = new Microsoft.Graph.Event
+                                            {
+                                                Attendees = requiredAttendees
+                                            };
+
+                                            // Send a PATCH request to update the event.
+                                            await _appClient.Users[GetEEMServiceAccount()].Events[TearDownEventLookup]
+                                                .Request()
+                                                .UpdateAsync(updatedEvent);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // no event keep going
+
+                                        }
+                                    }
+
+
+
 
                 if (!string.IsNullOrEmpty(eventCalendarId) && !string.IsNullOrEmpty(eventCalendarEmail))
                 {
@@ -1882,7 +1903,7 @@
                             return true; // Event found and deleted
                         }
                     }
-                    catch
+                    catch (Exception ex) 
                     {
                         //continue
                     }

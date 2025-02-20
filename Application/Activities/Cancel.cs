@@ -87,7 +87,7 @@ namespace Application.Activities
                     try
                     {
                         await GraphHelper.DeleteEvent(activity.VTCLookup, GraphHelper.GetEEMServiceAccount(), oldActivity.CoordinatorEmail, oldActivity.LastUpdatedBy, oldActivity.CreatedBy, activity.EventLookupCalendar, activity.EventLookupCalendarEmail,
-                        oldActivity.SetUpEventLookup, oldActivity.TearDownEventLookup);
+                        string.Empty, string.Empty);
                     }
                     catch (Exception)
                     {

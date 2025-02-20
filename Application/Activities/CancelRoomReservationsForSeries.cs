@@ -59,8 +59,6 @@ namespace Application.Activities
                             activity.SetUpEventLookup, activity.TearDownEventLookup
                             );
                             activity.EventLookup = string.Empty;
-                            activity.SetUpEventLookup = string.Empty;
-                            activity.TearDownEventLookup = string.Empty;
                             activity.EventLookupCalendar = string.Empty;
                         }
                         catch (Exception)
@@ -73,8 +71,6 @@ namespace Application.Activities
                                 );
                                 activity.EventLookup = string.Empty;
                                 activity.EventLookupCalendar = string.Empty;
-                                activity.SetUpEventLookup = string.Empty;
-                                activity.TearDownEventLookup = string.Empty;
                             }
                             catch (Exception)
                             {

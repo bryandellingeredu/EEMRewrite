@@ -209,13 +209,13 @@ namespace Application.Activities
                             if( !a.AllDayEvent && !string.IsNullOrEmpty(a.SetUpTime) && a.SetUpTime != "0")
                             {
                                 Event setUpEvent = await GraphHelper.CreateSetUpTearDownEvent(graphEventDTO, "setup", a.SetUpTime);
-                                a.SetUpEventLookup = evt.Id;
+                                a.SetUpEventLookup = setUpEvent.Id;
                             }
                             // create the tear down event
                             if (!a.AllDayEvent && !string.IsNullOrEmpty(a.TearDownTime) && a.TearDownTime != "0")
                             {
                                 Event tearDownEvent = await GraphHelper.CreateSetUpTearDownEvent(graphEventDTO, "teardown", a.TearDownTime);
-                                a.TearDownEventLookup = evt.Id;
+                                a.TearDownEventLookup = tearDownEvent.Id;
                             }
 
                         }
