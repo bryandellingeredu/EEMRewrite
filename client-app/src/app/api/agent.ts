@@ -36,6 +36,8 @@ import { UserEmail } from '../models/userEmail';
 import { RoomReport } from '../models/roomReport';
 import { RoomReportEventsResponseDTO } from '../models/roomReportEventsResponseDTO';
 import { Person } from '../models/person';
+import { CheckForSetUpTearDownDoubleBookingDTO } from '../models/checkForSetUpTearDownDoubleBookingDTO';
+import { CheckForSetUpTearDownDoubleBookingResultDTO } from '../models/checkForSetUpTearDownDoubleBookingResultDTO';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -240,7 +242,9 @@ const GraphRooms = {
 }
 
 const GraphSchedules = {
-    list: (graphScheduleRequest : GraphScheduleRequest) => axiosRequest.post<GraphScheduleResponse[]>('/graphschedule', graphScheduleRequest)
+    list: (graphScheduleRequest : GraphScheduleRequest) => axiosRequest.post<GraphScheduleResponse[]>('/graphschedule', graphScheduleRequest),
+    checkForSetUpTearDownDoubleBooking: (checkForSetUpTearDownDoubleBookingDTO: CheckForSetUpTearDownDoubleBookingDTO) =>
+        axiosRequest.post<CheckForSetUpTearDownDoubleBookingResultDTO>('/graphschedule/checkforsetupteardownconflicts', checkForSetUpTearDownDoubleBookingDTO)
 }
 
 const Account = {

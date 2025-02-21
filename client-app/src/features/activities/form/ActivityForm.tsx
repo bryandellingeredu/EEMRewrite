@@ -74,6 +74,7 @@ import TeamsButtonArmy from "./TeamsButtonArmy";
 import SelectRoomWizard from "./SelectRoomWizard";
 import { GraphScheduleResponse } from "../../../app/models/graphScheduleResponse";
 import ManageRoomInvites from "./ManageRoomInvites";
+import { CheckForSetUpTearDownDoubleBookingDTO } from "../../../app/models/checkForSetUpTearDownDoubleBookingDTO";
 
 const devicesRequiredRooms : string[] = [
   'Bldg650CollinsHallNormandyConferenceRoomSVTC@armywarcollege.edu',
@@ -220,6 +221,10 @@ export default observer(function ActivityForm() {
   const [roomResourceError, setRoomResourceError] = useState(false);
   const [roomResourceOtherError, setRoomResourceOtherError] = useState(false);
   const [flagRoomOtherError, setFlagRoomOtherError] = useState(false);
+  const [setUpError, setSetUpError] = useState(false);
+  const [tearDownError, setTearDownError] = useState(false);
+  const [checkingSetUpError, setCheckingSetUpError] = useState(false);
+  const [checkingTearDownError, setCheckingTearDownError] = useState(false);
   const [attachBioError, setAttachBioError] = useState(false);
   const [distantTechError, setDistantTechError] = useState(false);
   const [eventClearanceLevelError, setEventClearanceLevelError] = useState(false);
@@ -749,7 +754,7 @@ export default observer(function ActivityForm() {
     history.push(url);
   };
 
-  function handleFormSubmit(activity: ActivityFormValues) {
+  async function  handleFormSubmit(activity: ActivityFormValues) {
     setShowRoomWizard(false);
     if(id && getTempRoomEmails(id)){
       removeTempRoomEmails(id);
@@ -770,6 +775,8 @@ export default observer(function ActivityForm() {
     let roomResourceOtherErrorIndicator = false;
     let flagRoomOtherErrorIndicator = false;
     let internationalFellowsStaffEventPrivateErrorIndicator = false;
+    let setUpErrorIndicator = false;
+    let tearDownErrorIndicator = false;
     setDistantTechError(false);
     setAttachBioError(false);
     setAttachNoAttachmentError(false);
@@ -782,7 +789,71 @@ export default observer(function ActivityForm() {
     setRoomResourceError(false);
     setRoomResourceOtherError(false);
     setFlagRoomOtherError(false);
-    setInternationalFellowsStaffEventPrivateError(false)
+    setInternationalFellowsStaffEventPrivateError(false);
+    setSetUpError(false);
+    setTearDownError(false);
+
+    debugger;
+
+    if(!id && activity.setUpTime && activity.setUpTime !== "0" && !activity.allDayEvent && roomEmails && roomEmails.length > 0){
+       setCheckingSetUpError(true);
+       try{
+        const checkForDoubleBookingDTO : CheckForSetUpTearDownDoubleBookingDTO = {
+          start: activity.start.toISOString(),
+          end: activity.end.toISOString(),
+          type: "setup",
+          minutes: activity.setUpTime,
+          recurrence: recurrenceInd  && recurrence ? recurrence : null,
+          roomEmails
+        }
+        var result = await agent.GraphSchedules.checkForSetUpTearDownDoubleBooking(checkForDoubleBookingDTO);
+        if(result.isConflict){
+          setSetUpError(true);
+          setUpErrorIndicator = true;
+          const setUpErrorAnchor = document.getElementById("setUpErrorAnchor");
+          if (setUpErrorAnchor) {
+            setUpErrorAnchor.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
+        }
+       }catch(e){
+        console.log(e);
+       }finally{
+        setCheckingSetUpError(true);
+       }
+    }
+
+    if(!id && activity.tearDownTime && activity.tearDownTime !== "0" && !activity.allDayEvent && roomEmails && roomEmails.length > 0){
+      setCheckingTearDownError(true);
+      try{
+       const checkForDoubleBookingDTO : CheckForSetUpTearDownDoubleBookingDTO = {
+         start: activity.start.toISOString(),
+         end: activity.end.toISOString(),
+         type: "teaardown",
+         minutes: activity.tearDownTime,
+         recurrence: null,
+         roomEmails
+       }
+       var result = await agent.GraphSchedules.checkForSetUpTearDownDoubleBooking(checkForDoubleBookingDTO);
+       if(result.isConflict){
+         setTearDownError(true);
+         tearDownErrorIndicator = true;
+         const tearDownErrorAnchor = document.getElementById("tearDownErrorAnchor");
+         if (tearDownErrorAnchor) {
+           tearDownErrorAnchor.scrollIntoView({
+             behavior: "smooth",
+             block: "center",
+           });
+         }
+       }
+      }catch(e){
+       console.log(e);
+      }finally{
+       setCheckingTearDownError(true);
+      }
+   }
 
     if(activity.internationalFellowsStaffEventPrivate && activity.copiedTointernationalfellows && activity.internationalFellowsStaffEvent){
       if(activity.internationalFellowsStudentEvent || activity.imc || (roomEmails && roomEmails.length > 0 )) {
@@ -989,7 +1060,8 @@ export default observer(function ActivityForm() {
     }
     if (!hostingReportError && !distantTechErrorIndicator && !subCalendarErrorIndicator && !noRoomErrorIndicator && !noRegistrationSiteErrorIndicator &&
        !noLeaderDateErrorIndicator && !eventClearanceLevelErrorIndicator && !vtcSchedulingErrorIndicator && !roomResourceErrorIndicator &&
-        !roomResourceOtherErrorIndicator && !flagRoomOtherErrorIndicator && !internationalFellowsStaffEventPrivateErrorIndicator) {
+        !roomResourceOtherErrorIndicator && !flagRoomOtherErrorIndicator && !internationalFellowsStaffEventPrivateErrorIndicator &&
+       !setUpErrorIndicator && !tearDownErrorIndicator) {
       setSubmitting(true);
       if(activity.title) activity.title = activity.title.replace(/#[\w-]+/g, '').trim();
       if(activity.description) activity.description = activity.description.replace(/#[\w-]+/g, '').trim();
@@ -2062,7 +2134,14 @@ export default observer(function ActivityForm() {
                     <Grid.Column width={16}>
                       <Segment.Group horizontal inline>
                         <Segment>
-                         Set Up Time (block out time for room set up): 
+                       <span id="setUpErrorAnchor"> Set Up Time (block out time for room set up): </span> 
+                         {setUpError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      There is a room conflict for this set up time
+                                    </Label>
+                                  </p>
+                           )}
                         </Segment>
                         <Segment>
                         <MySemanticRadioButton
@@ -2108,7 +2187,14 @@ export default observer(function ActivityForm() {
                     <Grid.Column width={16}>
                       <Segment.Group horizontal inline>
                         <Segment>
-                         Tear Down Time (block out time for clean up): 
+                         <span id="tearDownErrorAnchor">Tear Down Time (block out time for clean up): </span>
+                         {tearDownError && (
+                                  <p>
+                                    <Label basic color="red">
+                                      There is a room conflict for this tear down time
+                                    </Label>
+                                  </p>
+                           )}
                         </Segment>
                         <Segment>
                         <MySemanticRadioButton
@@ -5445,11 +5531,11 @@ label="USAHEC Contract:"
              </div>
             }
             <Button
-              disabled={submitting || 
+              disabled={submitting || checkingSetUpError || checkingTearDownError ||
                  (!studentCalendarAdmin && !memberOfExecServices && categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar") ||
                  (!ifCalendarAdmin  && categories.find((x) => x.id === values.categoryId)?.name ==="International Fellows")
                 }
-              loading={submitting}
+              loading={submitting || checkingSetUpError || checkingTearDownError}
               floated="right"
               positive
               type="submit"
