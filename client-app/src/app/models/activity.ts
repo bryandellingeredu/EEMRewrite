@@ -291,6 +291,10 @@ export interface Activity{
     internationalFellowsStaffEventPrivate : boolean
     setUpTime : string
     tearDownTime : string
+    distinguishedVisitorNotificationToExecServices : boolean
+    distinguishedVisitorNotificationToExecServicesNotificationSent : boolean
+    distinguishedVisitorAttending : boolean
+    distinguishedVisitorAttendingNotificationSent : boolean
 }
 
 export class Activity implements Activity{
@@ -580,6 +584,10 @@ export class ActivityFormValues{
     internationalFellowsStaffEventPrivate : boolean = false
     setUpTime : string = ''
     tearDownTime : string = ''
+    distinguishedVisitorNotificationToExecServices : boolean = false
+    distinguishedVisitorNotificationToExecServicesNotificationSent : boolean = false
+    distinguishedVisitorAttending : boolean = false
+    distinguishedVisitorAttendingNotificationSent : boolean = false
 
     constructor(activity?: ActivityFormValues){
        if(activity){
@@ -862,6 +870,10 @@ export class ActivityFormValues{
     this.internationalFellowsStaffEventPrivate = activity.internationalFellowsStaffEventPrivate
     this.setUpTime = activity.setUpTime
     this.tearDownTime = activity.tearDownTime
+    this.distinguishedVisitorNotificationToExecServices = activity.distinguishedVisitorNotificationToExecServices 
+    this.distinguishedVisitorNotificationToExecServicesNotificationSent = activity.distinguishedVisitorNotificationToExecServicesNotificationSent
+    this.distinguishedVisitorAttending = activity.distinguishedVisitorAttending
+    this.distinguishedVisitorAttendingNotificationSent = activity.distinguishedVisitorAttendingNotificationSent
        } 
     }
 }

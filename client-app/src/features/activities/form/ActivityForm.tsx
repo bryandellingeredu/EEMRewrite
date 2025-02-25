@@ -162,10 +162,12 @@ export default observer(function ActivityForm() {
   const [iMCAdmin, setIMCAdmin] = useState(false);
   const [savingIMCChanges, setSavingIMCChanges] = useState(false);
   const [cioEventPlanningAdmin, setCIOEventPlanningAdmin] = useState(false);
+  const [distinguishedVisitorAdmin, setDistinguishedVisitorAdmin]  = useState(false);
   const [memberOfExecServices, setMemberOfExecServices] = useState(false);
   const [svtcSchedule, setSvtcSchedule] = useState<GraphScheduleResponse[]>([]);
   const handleSetSvtcSchedule = (newSchedule : GraphScheduleResponse[] ) => setSvtcSchedule(newSchedule);
   useEffect(() => {
+    setDistinguishedVisitorAdmin((user && user.roles && user.roles.includes("DistinguishedVisitor")) || false);
     setIMCAdmin((user && user.roles && user.roles.includes("IMCAdmin")) || false);
     setIFCalendarAdmin((user && user.roles && user.roles.includes("ifCalendarAdmin")) || false);
     setStudentCalendarAdmin((user && user.roles && user.roles.includes("studentCalendarAdmin")) || false);
@@ -2543,6 +2545,26 @@ export default observer(function ActivityForm() {
               </Grid>
             </Segment>
 
+           {distinguishedVisitorAdmin && 
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={16}>
+                <Segment.Group horizontal>
+                  <Segment >
+                    <strong>Distinguished Visitor:</strong>
+                  </Segment>
+                  <Segment >
+                  <MySemanticCheckBox
+                      name="distinguishedVisitorAttending"
+                      label="Distinguished Visitor Attending"
+                    />
+                    </Segment>
+                  </Segment.Group>
+                  </Grid.Column>
+                </Grid.Row> 
+            </Grid>
+            }
+
             {!ifCalendarAdmin &&  categories.find((x) => x.id === values.categoryId)?.name ==="Student Calendar" &&
   <div style={{
     display: 'flex',
@@ -2983,7 +3005,29 @@ export default observer(function ActivityForm() {
                       name="studentCalendarNotes"
                       label="Notes:"
                     />
-                  
+
+
+
+           <Grid>
+              <Grid.Row>
+                <Grid.Column width={16}>
+                <Segment.Group horizontal>
+                  <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                    <strong>Distinguished Visitor:</strong>
+                  </Segment>
+                  <Segment style={{ backgroundColor: "#f4e9f7" }}>
+                  <MySemanticCheckBox
+                      name="distinguishedVisitorNotificationToExecServices"
+                      label="Notify Executive Services that a distinguished visitor is attending"
+                    />
+                    </Segment>
+                  </Segment.Group>
+                  </Grid.Column>
+                </Grid.Row> 
+            </Grid>
+
+
+
                </Segment>
             }
 

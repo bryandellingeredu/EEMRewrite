@@ -821,7 +821,11 @@ export default class ActivityStore {
     internationalFellowsStaffEventCategory: '',
     internationalFellowsStaffEventPrivate: false,
     setUpTime: '',
-    tearDownTime: ''
+    tearDownTime: '',
+    distinguishedVisitorNotificationToExecServices : false,
+    distinguishedVisitorNotificationToExecServicesNotificationSent :  false,
+    distinguishedVisitorAttending : false,
+    distinguishedVisitorAttendingNotificationSent : false
     }
     return activity;
   }

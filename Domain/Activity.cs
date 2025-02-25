@@ -325,5 +325,12 @@ namespace Domain
 
         public string SetUpTime {get; set;}
         public string TearDownTime {get; set;}
+
+        public bool DistinguishedVisitorNotificationToExecServices {get; set;}
+        public bool DistinguishedVisitorNotificationToExecServicesNotificationSent {get; set;}
+
+        
+        public bool DistinguishedVisitorAttending {get; set;}
+        public bool DistinguishedVisitorAttendingNotificationSent {get; set;}
     }
 }
