@@ -11,6 +11,8 @@ namespace Application
         public string[] GraphUserScopes { get; set; }
         public string ServiceAccount { get; set; }
         public string BaseUrl { get; set; }
+        public List<string> ErrorEmailRecipients { get; set;} = new();  
+        public string LocalNotificationEmail  {get; set;}
 
 
         public Settings LoadSettings(IConfiguration config)

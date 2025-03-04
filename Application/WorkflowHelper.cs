@@ -50,7 +50,7 @@ namespace Application
             if (_webHostEnvironment.IsDevelopment())
             {
                 // When running locally, always send to this email
-                return new[] { "bryan.d.dellinger.civ@army.mil" };
+                return new[] { _settings.LocalNotificationEmail};
             }
             else
             {
@@ -68,7 +68,7 @@ namespace Application
             if (_webHostEnvironment.IsDevelopment())
             {
                 // When running locally, always send to this email
-                return new[] { "bryan.d.dellinger.civ@army.mil" };
+                return new[] { _settings.LocalNotificationEmail};
             }
             else
             {
@@ -1025,7 +1025,7 @@ namespace Application
             if (_webHostEnvironment.IsDevelopment())
             {
                 // When running locally, always send to this email
-                emails =  new[] { "bryan.d.dellinger.civ@army.mil" };
+                emails =  new[] { _settings.LocalNotificationEmail};
             }
 
          

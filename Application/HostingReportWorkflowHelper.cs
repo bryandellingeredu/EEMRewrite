@@ -20,7 +20,7 @@ namespace Application
             if (_webHostEnvironment.IsDevelopment())
             {
                 // When running locally, always send to this email
-                return new[] { "bryan.d.dellinger.civ@army.mil" };
+                return new[] { _settings.LocalNotificationEmail };
             }
             else
             {

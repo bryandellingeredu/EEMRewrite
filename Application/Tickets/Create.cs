@@ -46,9 +46,7 @@ namespace Application.Tickets
                 }
                 body = body + "<p></p><p></p><p> An email will be sent to you when the event has been fixed </p>";
 
-                List<string> recipients = new List<string>();
-                recipients.Add("bryan.d.dellinger.civ@army.mil");
-                recipients.Add(request.Email);
+                List<string> recipients = [.. settings.ErrorEmailRecipients, request.Email];
 
                 await GraphHelper.SendEmail(recipients.ToArray(), subject, body);
                 return Result<Unit>.Success(Unit.Value);
