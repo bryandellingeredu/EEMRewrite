@@ -81,6 +81,13 @@ export default observer( function FullScreenStudentCalendar (){
     const [initialDate, setInitialDate] = useState<Date | null>(null);
     const [canViewIFCalendarEvents, setCanViewIFCalendarEvents] = useState(false);
 
+    const getFiscalYear = (startDate: string | Date, offset: number = 0): number => {
+      const date = new Date(startDate);
+      const year = date.getFullYear();
+      const isFiscalNextYear = date.getMonth() >= 9; // October or later moves to next fiscal year
+      return year + (isFiscalNextYear ? 1 : 0) + offset;
+    };
+
     useEffect(() => {
       if (user && user.roles && user.roles.includes("ifCalendarAdmin") ) setCanViewIFCalendarEvents(true);
       if (user && user.userName && user.userName.toLowerCase().endsWith('.fm@armywarcollege.edu')) setCanViewIFCalendarEvents(true);
@@ -99,10 +106,9 @@ export default observer( function FullScreenStudentCalendar (){
               setStudentCategories([
                 { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B', visible: true },
                 { id: 2, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true },
-                { id: 3, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false },
-                { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true },
-                { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true },
-                { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup4', title: 'DEP 2027', color: '#B22222', visible: true },
+                { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true },
+                { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: `DEP ${getFiscalYear(initialDate || new Date(), 1)}`, color: '#800080', visible: true },
+                { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup4', title: `DEP ${getFiscalYear(initialDate || new Date(), 2)}`, color: '#B22222', visible: true },
               ]);
             }
           } else {
@@ -110,10 +116,9 @@ export default observer( function FullScreenStudentCalendar (){
             setStudentCategories([
               { id: 1, isSelected: false, group: '', title: 'Show All', color: '#00008B', visible: true },
               { id: 2, isSelected: user.studentType === "Resident", group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true  },
-              { id: 3, isSelected: user.studentType === "DL24", group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false  },
-              { id: 4, isSelected: user.studentType === "DL25", group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true  },
-              { id: 5, isSelected: user.studentType === "DL26", group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true  },
-              { id: 6, isSelected: user.studentType === "DL27", group: 'studentCalendarDistanceGroup4', title: 'DEP 2027', color: '#B22222', visible: true  },
+              { id: 4, isSelected: user.studentType === `DL${getFiscalYear(initialDate || new Date(), 0).toString().slice(-2)}`, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true  },
+              { id: 5, isSelected: user.studentType === `DL${getFiscalYear(initialDate || new Date(), 0).toString().slice(-2)}`, group: 'studentCalendarDistanceGroup3', title: `DEP ${getFiscalYear(initialDate || new Date(), 1)}`, color: '#800080', visible: true  },
+              { id: 6, isSelected: user.studentType === `DL${getFiscalYear(initialDate || new Date(), 0).toString().slice(-2)}`, group: 'studentCalendarDistanceGroup4', title: `DEP ${getFiscalYear(initialDate || new Date(), 2)}`, color: '#B22222', visible: true  },
             ]);
           }
         }
@@ -326,16 +331,13 @@ const checkCategoryVisibility = (studentType: string): boolean => {
     case "Resident":
       categoryId = 2;
       break;
-    case "DEP2024":
-      categoryId = 3;
-      break;
-    case "DEP2025":
+    case `DEP${getFiscalYear(initialDate || new Date(), 0)}`:
       categoryId = 4;
       break;
-    case "DEP2026":
+      case `DEP${getFiscalYear(initialDate || new Date(), 2)}`:
       categoryId = 5;
       break;
-    case "DEP2027":
+      case `DEP${getFiscalYear(initialDate || new Date(), 3)}`:
       categoryId = 6;
       break;
     default:

@@ -50,6 +50,13 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
     const [ifCalendarAdmin, setIFCalendarAdmin] = useState(false);
     const [view, setView] = useState(localStorage.getItem("residentAndDistanceAndFacultyFellowsCalendarView") || "timeGridWeek");
 
+    const getFiscalYear = (startDate: string | Date, offset: number = 0): number => {
+      const date = new Date(startDate);
+      const year = date.getFullYear();
+      const isFiscalNextYear = date.getMonth() >= 9; // October or later moves to next fiscal year
+      return year + (isFiscalNextYear ? 1 : 0) + offset;
+    };
+
     useEffect(() => {
       setIFCalendarAdmin((user && user.roles && user.roles.includes("ifCalendarAdmin")) || false);
     }, [user]);
@@ -65,9 +72,8 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
             setStudentCategories([
                 { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B', visible: true },
                 { id: 3, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true },
-                { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false },
-                { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true },
-                { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true },
+                { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup2', title:  `DEP ${getFiscalYear(initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true },
+                { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup3', title:  `DEP ${getFiscalYear(initialDate || new Date(), 1)}`, color: '#800080', visible: true },
                 { id: 7, isSelected: false, group: 'Leave / TDY', title: 'Leave / TDY', color: '#000000', visible: true },
                 { id: 8, isSelected: false, group: 'FSP', title: 'FSP', color: '#D87093', visible: true },
                 { id: 9, isSelected: false, group: 'MTGS', title: 'MTGS', color: '#B8860B', visible: true },
@@ -211,10 +217,9 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
         let programs = [];
         if(extendedProps.internationalFellowsStaffEvent) programs.push('Staff')
         if(extendedProps.studentCalendarResident ) programs.push('Resident');
-        if(extendedProps.studentCalendarDistanceGroup1 ) programs.push('DEP 2024');
-        if(extendedProps.studentCalendarDistanceGroup2 ) programs.push('DEP 2025');
-        if(extendedProps.studentCalendarDistanceGroup3 ) programs.push('DEP 2026');
-        if(extendedProps.studentCalendarDistanceGroup4 ) programs.push('DEP 2027');
+        if(extendedProps.studentCalendarDistanceGroup2 ) programs.push( `DEP ${getFiscalYear(initialDate || new Date(), 0)}`);
+        if(extendedProps.studentCalendarDistanceGroup3 ) programs.push( `DEP ${getFiscalYear(initialDate || new Date(), 1)}`);
+        if(extendedProps.studentCalendarDistanceGroup4 ) programs.push( `DEP ${getFiscalYear(initialDate || new Date(), 2)}`);
         if(programs.length < 1) programs.push('Resident');
         return programs.join(', ');
     }
@@ -350,16 +355,13 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
           case "Resident":
             categoryId = 3;
             break;
-          case "DEP2024":
-            categoryId = 4;
-            break;
-          case "DEP2025":
+          case  `DEP${getFiscalYear(initialDate || new Date(), 0)}`:
             categoryId = 5;
             break;
-          case "DEP2026":
+            case  `DEP${getFiscalYear(initialDate || new Date(), 1)}`:
             categoryId = 6;
             break;
-          case "DEP2027":
+            case  `DEP${getFiscalYear(initialDate || new Date(), 2)}`:
             categoryId = 7;
             break;
           default:

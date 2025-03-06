@@ -30,6 +30,13 @@ const devicesRequiredRooms : string[] = [
   
   const includesAny = (arr : string[], values : string []) => values.some(v => arr.includes(v));
 
+  const getFiscalYear = (startDate: string | Date, offset: number = 0): number => {
+    const date = new Date(startDate);
+    const year = date.getFullYear();
+    const isFiscalNextYear = date.getMonth() >= 9; // October or later moves to next fiscal year
+    return year + (isFiscalNextYear ? 1 : 0) + offset;
+  };
+
 
 export default observer(function ActivityDetailedSidebar ({activity}: Props) {
     const [activityAttachments, setActivityAttachments] = useState<ActivityAttachment[]>([]);
@@ -1499,19 +1506,6 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
 </Segment>
 }
 
-{(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) &&
-   activity.studentCalendarDistanceGroup1 &&
-   <Segment attached>
-   <Grid verticalAlign='middle'>
-       <Grid.Column width={1}>
-       <Icon name='user' size='large' color='teal' />
-       </Grid.Column>
-       <Grid.Column width={14}>
-        Student Type:  DEP 2024
-       </Grid.Column>
-   </Grid>
-</Segment>
-}
 
 {(activity.category.name  === 'Student Calendar' || activity.copiedTostudentCalendar) &&
    activity.studentCalendarDistanceGroup2 &&
@@ -1521,7 +1515,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
        <Icon name='user' size='large' color='teal' />
        </Grid.Column>
        <Grid.Column width={14}>
-        Student Type:  DEP 2025
+       {`Student Type:  DEP ${getFiscalYear(activity.start,0)}`}
        </Grid.Column>
    </Grid>
 </Segment>
@@ -1535,7 +1529,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
        <Icon name='user' size='large' color='teal' />
        </Grid.Column>
        <Grid.Column width={14}>
-        Student Type:  DEP 2026
+       {`Student Type:  DEP ${getFiscalYear(activity.start,1)}`}
        </Grid.Column>
    </Grid>
 </Segment>
@@ -1549,7 +1543,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
        <Icon name='user' size='large' color='teal' />
        </Grid.Column>
        <Grid.Column width={14}>
-        Student Type:  DEP 2027
+       {`Student Type:  DEP ${getFiscalYear(activity.start,2)}`}
        </Grid.Column>
    </Grid>
 </Segment>
@@ -1600,7 +1594,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <Icon name='street view' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={14}>
-                  DEP 2025 Attendance is Mandatory
+                 {`DEP ${getFiscalYear(activity.start, 0)} Attendance is Mandatory`}
                  </Grid.Column>
              </Grid>
  </Segment>
@@ -1612,7 +1606,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <Icon name='street view' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={14}>
-                  DEP 2026 Attendance is Mandatory
+                 {`DEP ${getFiscalYear(activity.start, 1)} Attendance is Mandatory`}
                  </Grid.Column>
              </Grid>
  </Segment>
@@ -1624,7 +1618,7 @@ export default observer(function ActivityDetailedSidebar ({activity}: Props) {
                  <Icon name='street view' size='large' color='teal' />
                  </Grid.Column>
                  <Grid.Column width={14}>
-                  DEP 2027 Attendance is Mandatory
+                 {`DEP ${getFiscalYear(activity.start, 2)} Attendance is Mandatory`}
                  </Grid.Column>
              </Grid>
  </Segment>

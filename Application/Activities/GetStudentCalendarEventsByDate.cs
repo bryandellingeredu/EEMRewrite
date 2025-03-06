@@ -34,10 +34,9 @@ namespace Application.Activities
                 List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>
             {
                 new StudentCalendarInfo{StudentType = "Resident", Color = "#006400", StudentCalendarResident = true, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
-                new StudentCalendarInfo{StudentType = "DEP2024", Color = "#FF8C00", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = true, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
-                new StudentCalendarInfo{StudentType = "DEP2025", Color = "#EE4B2B", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = true, StudentCalendarDistanceGroup3 = false,StudentCalendarDistanceGroup4 = false},
-                new StudentCalendarInfo{StudentType = "DEP2026", Color = "#800080", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = true,StudentCalendarDistanceGroup4 = false},
-                new StudentCalendarInfo{StudentType = "DEP2027", Color = "#B22222", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false,StudentCalendarDistanceGroup4 = true},
+                new StudentCalendarInfo{StudentType = $"DEP{Helper.GetFiscalYear(start,0)}", Color = "#EE4B2B", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = true, StudentCalendarDistanceGroup3 = false,StudentCalendarDistanceGroup4 = false},
+                new StudentCalendarInfo{StudentType = $"DEP{Helper.GetFiscalYear(start,1)}", Color = "#800080", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = true,StudentCalendarDistanceGroup4 = false},
+                new StudentCalendarInfo{StudentType = $"DEP{Helper.GetFiscalYear(start,2)}", Color = "#B22222", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false,StudentCalendarDistanceGroup4 = true},
         };
 
                 var activities = await _context.Activities.Include(x => x.Organization)

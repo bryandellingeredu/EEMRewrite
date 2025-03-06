@@ -795,7 +795,6 @@ export default observer(function ActivityForm() {
     setSetUpError(false);
     setTearDownError(false);
 
-    debugger;
 
     if(!id && activity.setUpTime && activity.setUpTime !== "0" && !activity.allDayEvent && roomEmails && roomEmails.length > 0){
        setCheckingSetUpError(true);
@@ -1278,6 +1277,13 @@ export default observer(function ActivityForm() {
       }
     }
   }
+
+  const getFiscalYear = (startDate: string | Date, offset: number = 0): number => {
+    const date = new Date(startDate);
+    const year = date.getFullYear();
+    const isFiscalNextYear = date.getMonth() >= 9; // October or later moves to next fiscal year
+    return year + (isFiscalNextYear ? 1 : 0) + offset;
+  };
 
   if (
     loadingInitial ||
@@ -2791,7 +2797,7 @@ export default observer(function ActivityForm() {
                     <Segment style={{ backgroundColor: "#d7f5f3" }}>
                     <MySemanticCheckBox
                       name="studentCalendarDistanceGroup2"
-                      label="DEP 2025"
+                      label={`DEP ${getFiscalYear(values.start, 0)}`}
                     />
                       {values.studentCalendarDistanceGroup2 && 
                     <div>
@@ -2805,7 +2811,7 @@ export default observer(function ActivityForm() {
                     <Segment style={{ backgroundColor: "#d7f5f3" }}>
                     <MySemanticCheckBox
                       name="studentCalendarDistanceGroup3"
-                      label="DEP 2026"
+                      label={`DEP ${getFiscalYear(values.start, 1)}`}
                     />
                       {values.studentCalendarDistanceGroup3 && 
                     <div>
@@ -2820,7 +2826,7 @@ export default observer(function ActivityForm() {
                     <Segment style={{ backgroundColor: "#d7f5f3" }}>
                     <MySemanticCheckBox
                       name="studentCalendarDistanceGroup4"
-                      label="DEP 2027"
+                      label={`DEP ${getFiscalYear(values.start, 2)}`}
                     />
                       {values.studentCalendarDistanceGroup4 && 
                     <div>
@@ -2929,7 +2935,7 @@ export default observer(function ActivityForm() {
                     <Segment style={{ backgroundColor: "#f4e9f7" }}>
                     <MySemanticCheckBox
                       name="studentCalendarDistanceGroup2"
-                      label="DEP 2025"
+                      label={`DEP ${getFiscalYear(values.start, 0)}`}
                     />
                       {values.studentCalendarDistanceGroup2 && 
                     <div>
@@ -2943,7 +2949,7 @@ export default observer(function ActivityForm() {
                     <Segment style={{ backgroundColor: "#f4e9f7" }}>
                     <MySemanticCheckBox
                       name="studentCalendarDistanceGroup3"
-                      label="DEP 2026"
+                      label={`DEP ${getFiscalYear(values.start, 1)}`}
                     />
                       {values.studentCalendarDistanceGroup3 && 
                     <div>
@@ -2958,7 +2964,7 @@ export default observer(function ActivityForm() {
                     <Segment style={{ backgroundColor: "#f4e9f7" }}>
                     <MySemanticCheckBox
                       name="studentCalendarDistanceGroup4"
-                      label="DEP 2027"
+                      label={`DEP ${getFiscalYear(values.start, 2)}`}
                     />
                       {values.studentCalendarDistanceGroup4 && 
                     <div>

@@ -567,10 +567,9 @@ namespace API.BackgroundJobs
             List<StudentCalendarInfo> studentCalendarInfoList = new List<StudentCalendarInfo>
                 {
                     new StudentCalendarInfo{StudentType = "Resident", Color = "#006400", StudentCalendarResident = true, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
-                    new StudentCalendarInfo{StudentType = "DEP2024", Color = "#FF8C00", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = true, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
-                    new StudentCalendarInfo{StudentType = "DEP2025", Color = "#EE4B2B", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = true, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
-                    new StudentCalendarInfo{StudentType = "DEP2026", Color = "#800080", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = true, StudentCalendarDistanceGroup4 = false},
-                    new StudentCalendarInfo{StudentType = "DEP2027", Color = "#B22222", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = true},
+                    new StudentCalendarInfo{StudentType = $"DEP{Helper.GetFiscalYear(DateTime.Now,0)}", Color = "#EE4B2B", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = true, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = false},
+                    new StudentCalendarInfo{StudentType = $"DEP{Helper.GetFiscalYear(DateTime.Now,1)}", Color = "#800080", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = true, StudentCalendarDistanceGroup4 = false},
+                    new StudentCalendarInfo{StudentType = $"DEP{Helper.GetFiscalYear(DateTime.Now,2)}", Color = "#B22222", StudentCalendarResident = false, StudentCalendarDistanceGroup1 = false, StudentCalendarDistanceGroup2 = false, StudentCalendarDistanceGroup3 = false, StudentCalendarDistanceGroup4 = true},
                 };
 
             Settings s = new Settings();
@@ -578,7 +577,7 @@ namespace API.BackgroundJobs
             GraphHelper.InitializeGraph(settings, (info, cancel) => Task.FromResult(0));
             var allrooms = await GraphHelper.GetRoomsAsync();
 
-            string[] studentTypes = { "notastudent", "Resident", "DEP2024", "DEP2025", "DEP2026", "DEP2027" };
+            string[] studentTypes = { "notastudent", "Resident", $"DEP{Helper.GetFiscalYear(DateTime.Now,0)}", $"DEP{Helper.GetFiscalYear(DateTime.Now,1)}", $"DEP{Helper.GetFiscalYear(DateTime.Now,2)}" };
 
             foreach (var studentType in studentTypes) {
                 StringWriter writer = new StringWriter();
@@ -620,10 +619,9 @@ namespace API.BackgroundJobs
                         {
                             await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
                         }
-                        if ((studentType == "DL24" || studentType == "DEP2024" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup1 && activity.StudentCalendarDistanceGroup1) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
-                        if ((studentType == "DL25" || studentType == "DEP2025" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup2) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
-                        if ((studentType == "DL26" || studentType == "DEP2026"  ||studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup3) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
-                        if ((studentType == "DL27" || studentType == "DEP2027"  ||studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup4 && activity.StudentCalendarDistanceGroup4) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                        if ((studentType == $"DL{Helper.GetFiscalYear(DateTime.Now,0)}" || studentType == $"DEP{Helper.GetFiscalYear(DateTime.Now,0)}" || studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup2 && activity.StudentCalendarDistanceGroup2) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                        if ((studentType == $"DL{Helper.GetFiscalYear(DateTime.Now,1)}" || studentType == $"DEP{Helper.GetFiscalYear(DateTime.Now,1)}"  ||studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup3 && activity.StudentCalendarDistanceGroup3) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
+                        if ((studentType == $"DL{Helper.GetFiscalYear(DateTime.Now,2)}" || studentType == $"DEP{Helper.GetFiscalYear(DateTime.Now,2)}"  ||studentType == "notastudent") && studentCalendarInfo.StudentCalendarDistanceGroup4 && activity.StudentCalendarDistanceGroup4) await WriteActivityDetails(writer, activity, studentCalendarInfo, studentType, allrooms);
                     }
                 }
                 writer.WriteLine("END:VCALENDAR");
