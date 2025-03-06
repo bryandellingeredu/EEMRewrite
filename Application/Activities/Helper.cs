@@ -287,6 +287,15 @@ namespace Application.Activities
             return dateTime;
         }
 
+        
+     public static string GetFiscalYear(DateTime date, int offset = 0)
+    {
+        int year = date.Year;
+        bool isFiscalNextYear = date.Month >= 10; // October or later moves to next fiscal year
+
+        return (year + (isFiscalNextYear ? 1 : 0) + offset).ToString();
+    }
+
         public static string GetStringFromDateTime(DateTime dateTime, bool allDayEvent)
         {
             string year = dateTime.Year.ToString();

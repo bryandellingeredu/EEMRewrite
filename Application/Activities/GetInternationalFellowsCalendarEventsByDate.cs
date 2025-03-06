@@ -5,10 +5,6 @@ using Persistence;
 using Microsoft.Extensions.Configuration;
 using Application.GraphSchedules;
 using Domain;
-using Azure.Core;
-using System.Security.Claims;
-using Application.Interfaces;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.Activities
 {
@@ -44,10 +40,9 @@ namespace Application.Activities
                 List<InternationalFellowCalendarInfo> internationalFellowInfoList = new List<InternationalFellowCalendarInfo>
             {
                 new InternationalFellowCalendarInfo{InternationalFellowType = "Resident", Color = "#006400", InternationalFellowCalendarResident = true, InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = false, InternationalFellowCalendarDistanceGroup3 = false, InternationalFellowCalendarDistanceGroup4 = false, InternationalFellowsStaffEvent = false},
-                new InternationalFellowCalendarInfo{InternationalFellowType = "DEP2024", Color = "#FF8C00", InternationalFellowCalendarResident = false, InternationalFellowCalendarDistanceGroup1 = true, InternationalFellowCalendarDistanceGroup2 = false, InternationalFellowCalendarDistanceGroup3 = false, InternationalFellowCalendarDistanceGroup4 = false , InternationalFellowsStaffEvent = false },
-                new InternationalFellowCalendarInfo{InternationalFellowType = "DEP2025", Color = "#EE4B2B", InternationalFellowCalendarResident = false, InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = true, InternationalFellowCalendarDistanceGroup3 = false,InternationalFellowCalendarDistanceGroup4 = false , InternationalFellowsStaffEvent = false},
-                new InternationalFellowCalendarInfo{InternationalFellowType = "DEP2026", Color = "#800080", InternationalFellowCalendarResident = false, InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = false, InternationalFellowCalendarDistanceGroup3 = true,InternationalFellowCalendarDistanceGroup4 = false , InternationalFellowsStaffEvent = false},
-                new InternationalFellowCalendarInfo{InternationalFellowType = "DEP2027", Color = "#B22222", InternationalFellowCalendarResident = false, InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = false, InternationalFellowCalendarDistanceGroup3 = false,InternationalFellowCalendarDistanceGroup4 = true , InternationalFellowsStaffEvent = false},
+                new InternationalFellowCalendarInfo{InternationalFellowType =  $"DEP{Helper.GetFiscalYear(start, 0)}", Color = "#EE4B2B", InternationalFellowCalendarResident = false, InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = true, InternationalFellowCalendarDistanceGroup3 = false,InternationalFellowCalendarDistanceGroup4 = false , InternationalFellowsStaffEvent = false},
+                new InternationalFellowCalendarInfo{InternationalFellowType =  $"DEP{Helper.GetFiscalYear(start, 1)}", Color = "#800080", InternationalFellowCalendarResident = false, InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = false, InternationalFellowCalendarDistanceGroup3 = true,InternationalFellowCalendarDistanceGroup4 = false , InternationalFellowsStaffEvent = false},
+                new InternationalFellowCalendarInfo{InternationalFellowType =  $"DEP{Helper.GetFiscalYear(start, 2)}", Color = "#B22222", InternationalFellowCalendarResident = false, InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = false, InternationalFellowCalendarDistanceGroup3 = false,InternationalFellowCalendarDistanceGroup4 = true , InternationalFellowsStaffEvent = false},
                 new InternationalFellowCalendarInfo{InternationalFellowType = "Staff", Color = "#708090", InternationalFellowCalendarResident = false, InternationalFellowCalendarDistanceGroup1 = false, InternationalFellowCalendarDistanceGroup2 = false, InternationalFellowCalendarDistanceGroup3 = false,InternationalFellowCalendarDistanceGroup4 = false , InternationalFellowsStaffEvent = true},
         };
 

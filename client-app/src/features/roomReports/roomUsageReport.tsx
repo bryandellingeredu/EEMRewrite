@@ -106,18 +106,7 @@ export default observer(function RoomUsageReport() {
     }
   }, [startDate, endDate, graphRooms.length, loadGraphRooms, buildingCategories]);
 
-  const handleBarClick = (data: BarChartDataRow) => {
-    openModal(
-      <RoomUsageReportDetailModal
-       name={data.name}
-       used={data.used}
-       unused={data.unused}
-       start={startDate || new Date()}
-       end={endDate || new Date()}
-       />, 'large'
-     )
-    
-  };
+
 
   const handleLabelClick = (buildingCategory: BuildingCategory) => {
     setBuildingCategories(prevCategories => {
@@ -228,11 +217,7 @@ export default observer(function RoomUsageReport() {
            />
           <YAxis type="category" dataKey="name" width={500} />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="used" stackId="a" onClick={(data, index) => handleBarClick(data)}> 
-            {barChartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getColor(entry.usedPercentage)} />
-            ))}
-          </Bar>
+    
           <Bar dataKey="unused" stackId="a" fill="#D3D3D3" />
         </BarChart>
       }

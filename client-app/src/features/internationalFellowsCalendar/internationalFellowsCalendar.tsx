@@ -91,27 +91,60 @@ export default  function InternationalFellowsCalendar(){
          internationalFellowsStaffEventCategory: '',
         });
 
+        const getFiscalYear = (startDate: string | Date, offset: number = 0): number => {
+          const date = new Date(startDate);
+          const year = date.getFullYear();
+          const isFiscalNextYear = date.getMonth() >= 9; // October or later moves to next fiscal year
+          return year + (isFiscalNextYear ? 1 : 0) + offset;
+        };
+    
+        const [calendarDate, setCalendarDate] = useState<Date | null>(null);
+
         useEffect(() => {
-            if (localStorage.getItem("internationalFellowsCategories7")) {
-                setStudentCategories(JSON.parse(localStorage.getItem("internationalFellowsCategories7") || '{}'));
-            }else{
-                setStudentCategories([
+          const storedCategories = localStorage.getItem("internationalFellowsCategories7");
+          let updatedCategories;
+          
+          if (storedCategories) {
+              const selectedCategories = JSON.parse(storedCategories) as ResidentAndDistanceAndStaffFellowsCategory[];
+              
+              // Create a mapping of stored selections
+              const selectionMap = new Map(selectedCategories.map(cat => [cat.id, cat.isSelected]));
+      
+              // Update only `isSelected` while keeping other properties unchanged
+              updatedCategories = [
+                  { id: 1, isSelected: selectionMap.get(1) ?? true, group: '', title: 'Show All', color: '#00008B', visible: true },
+                  { id: 3, isSelected: selectionMap.get(3) ?? false, group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true },
+                  { id: 5, isSelected: selectionMap.get(5) ?? false, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(calendarDate || initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true },
+                  { id: 6, isSelected: selectionMap.get(6) ?? false, group: 'studentCalendarDistanceGroup3', title: `DEP ${getFiscalYear(calendarDate || initialDate || new Date(), 1)}`, color: '#800080', visible: true },
+                  { id: 7, isSelected: selectionMap.get(7) ?? false, group: 'Leave / TDY', title: 'Leave / TDY', color: '#000000', visible: true },
+                  { id: 8, isSelected: selectionMap.get(8) ?? false, group: 'FSP', title: 'FSP', color: '#D87093', visible: true },
+                  { id: 9, isSelected: selectionMap.get(9) ?? false, group: 'MTGS', title: 'MTGS', color: '#B8860B', visible: true },
+                  { id: 10, isSelected: selectionMap.get(10) ?? false, group: 'Office Birthday', title: 'Office Birthday', color: '#654321', visible: true },
+                  { id: 11, isSelected: selectionMap.get(11) ?? false, group: 'IF Birthday', title: 'IF Birthday', color: '#008080', visible: true },
+                  { id: 12, isSelected: selectionMap.get(12) ?? false, group: 'IF Holiday', title: 'IF Holiday', color: '#808000', visible: true },
+                  { id: 2, isSelected: selectionMap.get(2) ?? false, group: 'staff', title: 'IF Staff Event', color: '#708090', visible: true },
+                  { id: 13, isSelected: selectionMap.get(13) ?? false, group: 'TDY', title: 'TDY', color: '#B22222', visible: true },
+              ];
+          } else {
+              updatedCategories = [
                   { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B', visible: true },
                   { id: 3, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true },
-                  { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup1', title: 'DEP 2024', color: '#FF8C00', visible: false },
-                  { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup2', title: 'DEP 2025', color: '#EE4B2B', visible: true },
-                  { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup3', title: 'DEP 2026', color: '#800080', visible: true },
+                  { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(calendarDate || initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true },
+                  { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup3', title: `DEP ${getFiscalYear(calendarDate || initialDate || new Date(), 1)}`, color: '#800080', visible: true },
                   { id: 7, isSelected: false, group: 'Leave / TDY', title: 'Leave / TDY', color: '#000000', visible: true },
                   { id: 8, isSelected: false, group: 'FSP', title: 'FSP', color: '#D87093', visible: true },
                   { id: 9, isSelected: false, group: 'MTGS', title: 'MTGS', color: '#B8860B', visible: true },
                   { id: 10, isSelected: false, group: 'Office Birthday', title: 'Office Birthday', color: '#654321', visible: true },
                   { id: 11, isSelected: false, group: 'IF Birthday', title: 'IF Birthday', color: '#008080', visible: true },
                   { id: 12, isSelected: false, group: 'IF Holiday', title: 'IF Holiday', color: '#808000', visible: true },
-                  { id: 2, isSelected: false, group: 'staff', title: 'IF Staff Event', color: '#708090', visible: true},
+                  { id: 2, isSelected: false, group: 'staff', title: 'IF Staff Event', color: '#708090', visible: true },
                   { id: 13, isSelected: false, group: 'TDY', title: 'TDY', color: '#B22222', visible: true },
-                ]);
-            }
-        }, []);
+              ];
+          }
+      
+          setStudentCategories(updatedCategories);
+      }, [calendarDate]);
+      
 
         const checkCategoryVisibility = (studentType: string): boolean => {
             // Map studentType to category IDs directly
@@ -123,16 +156,13 @@ export default  function InternationalFellowsCalendar(){
               case "Resident":
                 categoryId = 3;
                 break;
-              case "DEP2024":
-                categoryId = 4;
-                break;
-              case "DEP2025":
+              case  `DEP${getFiscalYear(initialDate || new Date(), 0)}`:
                 categoryId = 5;
                 break;
-              case "DEP2026":
+                case  `DEP${getFiscalYear(initialDate || new Date(), 1)}`:
                 categoryId = 6;
                 break;
-              case "DEP2027":
+                case  `DEP${getFiscalYear(initialDate || new Date(), 2)}`:
                 categoryId = 7;
                 break;
               default:
@@ -236,9 +266,12 @@ export default  function InternationalFellowsCalendar(){
           };
 
           const handleLabelClick = (clickedCategory: ResidentAndDistanceAndStaffFellowsCategory) => {
+            debugger;
             const calendarApi = calendarRef.current?.getApi();
+            debugger;
             if (calendarApi) {
               setInitialDate(calendarApi.getDate());
+              const x = calendarApi.getDate();
             }
            
               let updatedCategories;
@@ -279,6 +312,7 @@ export default  function InternationalFellowsCalendar(){
             localStorage.setItem("calendarViewSCM", arg.view.type);
             setView(arg.view.type);
             setTitle(arg.view.title); 
+            setCalendarDate(arg.start);
             handleButtonClick();
           }
 
