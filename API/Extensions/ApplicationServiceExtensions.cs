@@ -45,7 +45,6 @@ namespace API.Extensions
             services.AddScoped<ICACAccessor, CACAccessor>();
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<Create>();
-            services.AddScoped<BackgroundJobs.BackgroundJobs>();
 
             return services;
         }
