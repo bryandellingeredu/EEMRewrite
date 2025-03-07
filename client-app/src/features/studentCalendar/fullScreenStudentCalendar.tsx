@@ -115,7 +115,7 @@ export default observer( function FullScreenStudentCalendar (){
                 { id: 6, isSelected: selectionMap.get(6) ?? false, group: 'studentCalendarDistanceGroup4', title: `DEP ${getFiscalYear(calendarDate ||initialDate || new Date(), 2)}`, color: '#B22222', visible: true },
               ];
             } else {
-              setStudentCategories([
+              updatedCategories =([
                 { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B', visible: true },
                 { id: 2, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true },
                 { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(calendarDate || initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true },
