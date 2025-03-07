@@ -93,6 +93,8 @@ export default observer( function FullScreenStudentCalendar (){
       if (user && user.userName && user.userName.toLowerCase().endsWith('.fm@armywarcollege.edu')) setCanViewIFCalendarEvents(true);
     }, [user]);
 
+    const [calendarDate, setCalendarDate] = useState<Date | null>(null);
+
     useEffect(() => {
       if (user) {
         if (!user.studentType) {
@@ -100,30 +102,41 @@ export default observer( function FullScreenStudentCalendar (){
         } else {
           if (user.studentType === 'not a student') {
             setShowLabels(true);
-            if (localStorage.getItem("studentCategories")) {
-              setStudentCategories(JSON.parse(localStorage.getItem("studentCategories1") || '{}'));
+            const storedCategories = localStorage.getItem("studentCategories1");
+            let updatedCategories : ResidentAndDistanceStudentCalendarCategory[] = [];
+            if (storedCategories) {
+              const selectedCategories = JSON.parse(storedCategories) as ResidentAndDistanceStudentCalendarCategory[];
+              const selectionMap = new Map(selectedCategories.map(cat => [cat.id, cat.isSelected]));
+              updatedCategories = [
+                { id: 1, isSelected: selectionMap.get(1) ?? true, group: '', title: 'Show All', color: '#00008B', visible: true },
+                { id: 2, isSelected: selectionMap.get(2) ?? false, group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true },
+                { id: 4, isSelected: selectionMap.get(4) ?? false, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(calendarDate ||initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true },
+                { id: 5, isSelected: selectionMap.get(5) ?? false, group: 'studentCalendarDistanceGroup3', title: `DEP ${getFiscalYear(calendarDate ||initialDate || new Date(), 1)}`, color: '#800080', visible: true },
+                { id: 6, isSelected: selectionMap.get(6) ?? false, group: 'studentCalendarDistanceGroup4', title: `DEP ${getFiscalYear(calendarDate ||initialDate || new Date(), 2)}`, color: '#B22222', visible: true },
+              ];
             } else {
               setStudentCategories([
                 { id: 1, isSelected: true, group: '', title: 'Show All', color: '#00008B', visible: true },
                 { id: 2, isSelected: false, group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true },
-                { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true },
-                { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: `DEP ${getFiscalYear(initialDate || new Date(), 1)}`, color: '#800080', visible: true },
-                { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup4', title: `DEP ${getFiscalYear(initialDate || new Date(), 2)}`, color: '#B22222', visible: true },
+                { id: 4, isSelected: false, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(calendarDate || initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true },
+                { id: 5, isSelected: false, group: 'studentCalendarDistanceGroup3', title: `DEP ${getFiscalYear(calendarDate || initialDate || new Date(), 1)}`, color: '#800080', visible: true },
+                { id: 6, isSelected: false, group: 'studentCalendarDistanceGroup4', title: `DEP ${getFiscalYear(calendarDate || initialDate || new Date(), 2)}`, color: '#B22222', visible: true },
               ]);
             }
+            setStudentCategories(updatedCategories);
           } else {
             setShowLabels(false);
             setStudentCategories([
               { id: 1, isSelected: false, group: '', title: 'Show All', color: '#00008B', visible: true },
-              { id: 2, isSelected: user.studentType === "Resident", group: 'studentCalendarResident', title: 'Resident', color: '#006400', visible: true  },
-              { id: 4, isSelected: user.studentType === `DL${getFiscalYear(initialDate || new Date(), 0).toString().slice(-2)}`, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true  },
-              { id: 5, isSelected: user.studentType === `DL${getFiscalYear(initialDate || new Date(), 0).toString().slice(-2)}`, group: 'studentCalendarDistanceGroup3', title: `DEP ${getFiscalYear(initialDate || new Date(), 1)}`, color: '#800080', visible: true  },
-              { id: 6, isSelected: user.studentType === `DL${getFiscalYear(initialDate || new Date(), 0).toString().slice(-2)}`, group: 'studentCalendarDistanceGroup4', title: `DEP ${getFiscalYear(initialDate || new Date(), 2)}`, color: '#B22222', visible: true  },
+              { id: 2, isSelected: user.studentType === "Resident", group: 'studentCalendarResident', title: 'Resident', color: '#006400' , visible: true },
+              { id: 4, isSelected: user.studentType === `DL${getFiscalYear(initialDate || new Date(), 0).toString().slice(-2)}`, group: 'studentCalendarDistanceGroup2', title: `DEP ${getFiscalYear(initialDate || new Date(), 0)}`, color: '#EE4B2B', visible: true },
+              { id: 5, isSelected: user.studentType === `DL${getFiscalYear(initialDate || new Date(), 1).toString().slice(-2)}`, group: 'studentCalendarDistanceGroup3', title: `DEP ${getFiscalYear(initialDate || new Date(), 1)}`, color: '#800080', visible: true },
+              { id: 6, isSelected: user.studentType === `DL${getFiscalYear(initialDate || new Date(), 2).toString().slice(-2)}`, group: 'studentCalendarDistanceGroup4', title: `DEP ${getFiscalYear(initialDate || new Date(), 2)}`, color: '#B22222', visible: true },
             ]);
           }
         }
       }
-    }, [user, user?.studentType]);
+    }, [user, user?.studentType, initialDate, calendarDate]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -583,6 +596,11 @@ if (!shouldDisplayEvent || !checkCategoryVisibility(info.event.extendedProps.stu
               // Save the user's view selection
               localStorage.setItem("calendarViewSC", arg.view.type);
               setView(arg.view.type);
+              if (arg.view.title.toLowerCase().includes("october")) {
+                setCalendarDate(new Date(new Date(arg.start).getFullYear(), 9, 1)); // October 1st (Month is 0-based, Oct = 9)
+            } else {
+                setCalendarDate(arg.start);
+            }
             }}
           />
           </>

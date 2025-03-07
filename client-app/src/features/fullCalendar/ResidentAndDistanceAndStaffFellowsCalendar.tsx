@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { BackToCalendarInfo } from "../../app/models/backToCalendarInfo"
 import { useHistory, useParams } from "react-router-dom"
 import { useStore } from "../../app/stores/store"
-import FullCalendar, { EventClickArg } from "@fullcalendar/react"
+import FullCalendar, { DatesSetArg, EventClickArg } from "@fullcalendar/react"
 import { v4 as uuid } from "uuid";
 import { format } from "date-fns";
 import tippy from "tippy.js";
@@ -111,7 +111,6 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
     
         setStudentCategories(updatedCategories);
     }, [calendarDate]);
-    
 
 
     useEffect(() => {
@@ -522,6 +521,11 @@ export default observer(function ResidentAndDistanceAndStaffFellowsCalendar(){
         // Save the user's view selection
         localStorage.setItem("residentAndDistanceAndFacultyFellowsCalendarView", arg.view.type);
         setView(arg.view.type);
+        if (arg.view.title.toLowerCase().includes("october")) {
+          setCalendarDate(new Date(new Date(arg.start).getFullYear(), 9, 1)); // October 1st (Month is 0-based, Oct = 9)
+      } else {
+          setCalendarDate(arg.start);
+      }
       }}
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
       events={`${process.env.REACT_APP_API_URL}/activities/GetInternationalFellowsCalendarEventsByDate/${ifCalendarAdmin?'true':'false'}`}
