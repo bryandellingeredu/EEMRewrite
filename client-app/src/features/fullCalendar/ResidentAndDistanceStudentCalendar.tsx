@@ -587,7 +587,8 @@ return(
             if (eventDot) {
                 eventDot.style.borderColor = eventColor;
             }
-            if (info.event.extendedProps.studentCalendarMandatory) {
+            const duration = (info.event.end.getTime() - info.event.start.getTime()) / (1000 * 60);
+            if (info.event.extendedProps.studentCalendarMandatory && duration > 30 ) {
               const eventContent = info.el.querySelector('.fc-event-title');
               if (eventContent) {
                 const icon = document.createElement('i');

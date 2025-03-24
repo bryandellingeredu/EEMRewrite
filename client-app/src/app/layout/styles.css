@@ -193,3 +193,8 @@ mgt-login {
 }
 
 
+.fc-timegrid-event {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  min-height: 21px !important;
+}
